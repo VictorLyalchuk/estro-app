@@ -6,7 +6,7 @@ import TextArea from "antd/es/input/TextArea";
 import { ICategory, IMainCategory, ISubCategory } from "../interfaces/Site/IMainCategory";
 import { IImageItem } from "../interfaces/Site/IProduct";
 import { IProductCreate } from "../interfaces/Site/IProductCreate";
-import {APP_ENV} from "../env/config";
+import { APP_ENV } from "../env/config";
 
 const AddProduct = () => {
     const baseUrl = APP_ENV.BASE_URL;
@@ -385,6 +385,7 @@ const AddProduct = () => {
                                         <Select
                                             id="CategoryId"
                                             value={selectedCategory?.id ?? null}
+
                                             className="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                                             onChange={handleCategoryChange}
                                         >
