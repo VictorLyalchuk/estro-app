@@ -9,7 +9,7 @@ import { BagReducerActionType, IBagReducerState } from "./BagReducer";
 import { CardReducerActionType, ICardReducerState } from "./CardReducer";
 import { Form, Input, message } from "antd";
 import { IOrderCreate } from "../interfaces/Info/IOrderCreate";
-import {APP_ENV} from "../env/config";
+import { APP_ENV } from "../env/config";
 
 const Bag = () => {
   const baseUrl = APP_ENV.BASE_URL;
@@ -343,17 +343,15 @@ const Bag = () => {
               </div>
             </Form>
           ) : (
-            <div >
+            <div className="container mx-auto p-8 flex justify-center relative bg-gray-100 mx-auto max-w-7xl px-2 sm:px-2 lg:px-2   flex-col lg:flex-row  border-b">
+              <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0">
+                <div className="mt-8 flex justify-center">
+                  <p>No items in the bag.</p>
+
+                </div>
+              </div>
             </div>
           )}
-        </div>
-      </div>
-      <div className="container mx-auto p-8 flex justify-center relative bg-gray-100 mx-auto max-w-7xl px-2 sm:px-2 lg:px-2   flex-col lg:flex-row  border-b">
-        <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0">
-          <div className="mt-8 flex justify-center">
-            <p>No items in the bag.</p>
-
-          </div>
         </div>
       </div>
     </div>
