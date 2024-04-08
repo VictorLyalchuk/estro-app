@@ -3,7 +3,7 @@ export interface IUserEdit {
     firstName: string,
     lastName: string,
     email: string,
-    emailconfirmed: boolean,
+    emailConfirmed: boolean,
     role: string,
     imagePath: string,
     phoneNumber: string,

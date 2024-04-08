@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import 'tailwindcss/tailwind.css';
-import '../../../index.css';
-import { APP_ENV } from "../../../env/config";
+import '../../../../../index.css';
+import { APP_ENV } from "../../../../../env/config";
 import { Button, FormControl, TextField } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 

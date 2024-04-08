@@ -1,5 +1,5 @@
 import 'tailwindcss/tailwind.css';
-import '../../index.css';
+import '../../../../index.css';
 import { Tab } from '@headlessui/react'
 import RegisterPage from './register/RegisterPage';
 import LoginPage from './login/LoginPage';
@@ -26,6 +26,7 @@ const AuthPage = () => {
             setActiveTab(2); 
         }
     }, [email, token]);
+
     return (
         <>
             <div className="bg-gray-100">

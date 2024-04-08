@@ -163,13 +163,6 @@ export default function CategoryFilters() {
     Load();
   }, [subName, urlName, location.search, page]);
 
-  // useEffect(() => {
-  //   dispatch({
-  //     type: PaginationReducerCatalogActionType.CURRENT_CATALOG_PAGE,
-  //     payload: { currentPage: 1 },
-  //   });
-  // }, [location.search]);
-
   return (
     <div className="bg-gray-100 ">
       <div>

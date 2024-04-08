@@ -1,10 +1,10 @@
 import { Route, Routes } from "react-router-dom";
-import NotFound from "./components/pages/notFound/NotFound";
-import Logo from "./components/pages/logo/Logo";
-import Bag from "./components/user/bag/Bag";
+import NotFound from "./components/notFound/NotFound";
+import Logo from "./components/logo/Logo";
+import Bag from "./components/header/headerPages/bag/Bag";
 import Product from "./components/user/product/Product";
 import Catalog from "./components/user/catalog/Catalog";
-import Header from "./components/pages/header/Header";
+import Header from "./components/header/HeaderPage";
 import { Suspense, useEffect, useState } from "react";
 import Loader from "./components/Dashboard/common/Loader";
 import DefaultLayout from "./components/Dashboard/layout/DefaultLayout";
@@ -14,17 +14,17 @@ import routes from './components/Dashboard/routes';
 import AddProduct from "./components/admin/product/AddProduct";
 import EditProduct from "./components/admin/product/EditProduct";
 import AddStorage from "./components/admin/product/AddStorage";
-import HomePage from "./components/pages/homePage/HomePage";
-import Footer from "./components/pages/footer/Footer";
-import DeliveryandPayment from "./components/pages/footer/DeliveryAndPayment";
-import ReturnExchange from "./components/pages/footer/ReturnExchange";
-import WarrantyProductCare from "./components/pages/footer/WarrantyProductCare";
-import PrivacyPolicy from "./components/pages/footer/PrivacyPolicy";
-import About from "./components/pages/footer/About";
-import StoreLocations from "./components/pages/footer/StoreLocations";
+import HomePage from "./components/homePage/HomePage";
+import Footer from "./components/footer/FooterPage";
+import DeliveryandPayment from "./components/footer/footerPages/DeliveryAndPayment";
+import ReturnExchange from "./components/footer/footerPages/ReturnExchange";
+import WarrantyProductCare from "./components/footer/footerPages/WarrantyProductCare";
+import PrivacyPolicy from "./components/footer/footerPages/PrivacyPolicy";
+import About from "./components/footer/footerPages/About";
+import StoreLocations from "./components/footer/footerPages/StoreLocations";
 import AdminLayout from "./components/layout/AdminLayout";
-import AuthPage from "./components/auth/AuthPage";
-import ResetPassword from "./components/auth/forgotPassword/ResetPassword";
+import AuthPage from "./components/header/headerPages/auth/AuthPage";
+import AccountPage from "./components/account/AccountPage";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -72,6 +72,12 @@ function App() {
         <Route path="catalog/:subName/:urlName" element={<Catalog />} />
         <Route path="product/:Id" element={<Product />} />
         <Route path='/bag' element={<Bag /> } />
+
+        <Route path='account/settings' element={<AccountPage /> } />
+        <Route path='account/settings/:email/:token' element={<AccountPage /> } />
+
+
+
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="add-product" element={<AddProduct />} />

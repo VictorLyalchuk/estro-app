@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import axios from 'axios';
 import 'tailwindcss/tailwind.css';
-import '../../../index.css';
-import { APP_ENV } from "../../../env/config";
+import '../../../../../index.css';
+import { APP_ENV } from "../../../../../env/config";
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Button, FormControl, IconButton, InputAdornment, TextField } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
@@ -96,7 +96,6 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(formData);
         if (validateForm()) {
 
             try {

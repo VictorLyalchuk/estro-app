@@ -1,9 +1,9 @@
 import axios from 'axios';
 import { ChangeEvent, useState } from 'react';
-import { IRegister } from '../../../interfaces/Auth/IRegister';
+import { IRegister } from '../../../../../interfaces/Auth/IRegister';
 import 'tailwindcss/tailwind.css';
-import '../../../index.css';
-import { APP_ENV } from "../../../env/config";
+import '../../../../../index.css';
+import { APP_ENV } from "../../../../../env/config";
 import { Button, FormControl, IconButton, Input, InputAdornment, InputLabel, TextField } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';

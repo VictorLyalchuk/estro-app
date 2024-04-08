@@ -1,7 +1,7 @@
 import { lazy } from 'react';
 
 const Orders = lazy(() => import('../pages/Orders'));
-const Settings = lazy(() => import('../pages/Settings'));
+const Settings = lazy(() => import('../../account/settings/Settings'));
 const Tables = lazy(() => import('../pages/Tables'));
 
 const coreRoutes = [

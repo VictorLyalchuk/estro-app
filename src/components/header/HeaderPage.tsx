@@ -3,12 +3,12 @@ import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, UserIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
-import { AuthReducerActionType, IAuthReducerState } from "../../../store/accounts/AuthReducer.ts";
-import { IMainCategory, ISubCategory, ICategory } from '../../../interfaces/Site/IMainCategory.ts';
+import { AuthReducerActionType, IAuthReducerState } from "../../store/accounts/AuthReducer.ts";
+import { IMainCategory, ISubCategory, ICategory } from '../../interfaces/Site/IMainCategory.ts';
 import axios from 'axios';
-import DropdownUser from '../../Dashboard/components/DropdownUser.tsx';
-import { BagReducerActionType, IBagReducerState } from '../../../store/bag/BagReducer.tsx';
-import { APP_ENV } from "../../../env/config.ts";
+import DropdownUser from '../Dashboard/components/DropdownUser.tsx';
+import { BagReducerActionType, IBagReducerState } from '../../store/bag/BagReducer.tsx';
+import { APP_ENV } from "../../env/config.ts";
 
 const navigation = {
     featured: [
@@ -151,7 +151,7 @@ function classNames(...classes: string[]) {
 }
 
 
-const Header = () => {
+const HeaderPage = () => {
     const baseUrl = APP_ENV.BASE_URL;
     const { isAuth, user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
     const { count } = useSelector((redux: any) => redux.bagReducer as IBagReducerState);
@@ -471,18 +471,7 @@ const Header = () => {
                                                 </Popover>
                                             ))}
 
-                                            {/* {navigation.pages.map((page) => (
-                                            <a
-                                                key={page.name}
-                                                href={page.href}
-                                                className="flex items-center text-sm font-medium text-gray-700 hover:text-gray-800"
-                                            >
-                                                {page.name}
-                                            </a>
-                                        ))} */}
                                             <Link to={"/store-locations"}
-                                                // key={page.name}
-                                                // href={page.href}
                                                 className="flex items-center text-sm font-medium text-gray-700 hover:text-indigo-500"
                                             >
                                                 Store
@@ -505,16 +494,6 @@ const Header = () => {
                                         </div>
                                         {isAuth ? (
                                             <>
-                                                {/* <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                                                <div className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                                                    <Link to={"/dashBoard"}>{user?.Email}</Link>
-
-                                                </div>
-                                                <span className="h-6 w-px bg-gray-200" aria-hidden="true" />
-                                                <div className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                                                    <Link to={"/"} onClick={handleLogout}>Logout </Link>
-                                                </div>
-                                            </div> */}
                                                 <div className="pl-7">
                                                     <DropdownUser />
                                                 </div>
@@ -529,23 +508,12 @@ const Header = () => {
                                                     </Link>
                                                 </a>
                                             </div>
-
-                                            // <div className="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:space-x-6">
-                                            //     <div className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                                            //         <UserIcon className="h-6 w-6" aria-hidden="true" />
-                                            //         {/* <Link to={"/login"}>Sign in</Link> */}
-                                            //     </div>
-                                            //     <span className="h-6 w-px bg-gray-100" aria-hidden="true" />
-                                            //     <div className="text-sm font-medium text-gray-700 hover:text-gray-800">
-                                            //         <Link to={"/register"}>Create account</Link>
-                                            //     </div>
-                                            // </div>
                                         )}
 
                                         {/* Search */}
                                         <div className="ml-4 flow-root lg:ml-6">
                                             <a href="#" className="p-2 text-gray-400 hover:text-gray-500">
-                                                <span className="sr-only">Search</span>
+                                                <div className="sr-only">Search</div>
                                                 <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
                                             </a>
                                         </div>
@@ -572,4 +540,4 @@ const Header = () => {
         </div >
     )
 }
-export default Header;
+export default HeaderPage;

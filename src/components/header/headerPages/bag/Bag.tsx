@@ -1,15 +1,15 @@
 import { useDispatch, useSelector } from "react-redux";
-import { IAuthReducerState } from "../../../store/accounts/AuthReducer";
+import { IAuthReducerState } from "../../../../store/accounts/AuthReducer";
 import { useEffect, useState } from "react";
-import { BagItems, IBagUser } from "../../../interfaces/Info/IBagUser";
+import { BagItems, IBagUser } from "../../../../interfaces/Info/IBagUser";
 import axios from "axios";
 import moment from "moment";
 import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { BagReducerActionType, IBagReducerState } from "../../../store/bag/BagReducer";
-import { CardReducerActionType, ICardReducerState } from "../../../store/bag/CardReducer";
+import { BagReducerActionType, IBagReducerState } from "../../../../store/bag/BagReducer";
+import { CardReducerActionType, ICardReducerState } from "../../../../store/bag/CardReducer";
 import { Form, Input, message } from "antd";
-import { IOrderCreate } from "../../../interfaces/Info/IOrderCreate";
-import { APP_ENV } from "../../../env/config";
+import { IOrderCreate } from "../../../../interfaces/Info/IOrderCreate";
+import { APP_ENV } from "../../../../env/config";
 
 const Bag = () => {
   const baseUrl = APP_ENV.BASE_URL;

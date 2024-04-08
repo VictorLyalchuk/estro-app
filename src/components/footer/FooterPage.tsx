@@ -2,16 +2,13 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faInstagram, faYoutube, faTelegram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { Link } from 'react-router-dom';
 
-const Footer = () => {
+const FooterPage = () => {
     return (
 
         <footer className="bg-gray-100 p-8 ">
             <div className="border-t p-8 mx-auto max-w-7xl px-2 sm:px-2 lg:px-2 justify-items-center">
                 <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-         
-
-
-                    {/* Column 2 */}
+                    {/* Column 1 */}
                     <div className="mb-4">
                         <h3 className="text-lg font-bold mb-4 text-center">Company</h3>
                         <ul className='text-gray-500'>
@@ -27,7 +24,7 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Column 3 */}
+                    {/* Column 2 */}
                     <div className="mb-4">
                         <h3 className="text-lg font-bold mb-4 text-center">Information</h3>
                         <ul className='text-gray-500'>
@@ -46,7 +43,7 @@ const Footer = () => {
                         </ul>
                     </div>
 
-                    {/* Column 4 */}
+                    {/* Column 3 */}
                     <div className="mb-4">
                         <h3 className="text-lg font-bold mb-4 text-center">Support Service</h3>
                         <ul className='text-gray-500'>
@@ -65,7 +62,7 @@ const Footer = () => {
                             <li className="text-xs mb-4 text-gray-400 text-center">Monday - Saturday from 09:00 to 18:00</li>
                         </ul>
                     </div>
-                    {/* Column 5 */}
+                    {/* Column 4 */}
                     <div className="mb-4 order-2 ">
                         <h3 className="text-lg font-bold mb-4 text-center">Social Media</h3>
                         <ul className="flex space-x-2 text-gray-500 flex justify-center">
@@ -88,7 +85,6 @@ const Footer = () => {
                     </div>
                 </div>
 
-
                 {/* Copyright */}
                 <div className="text-center mt-8">
                     <p className="text-sm text-gray-500 hover:text-indigo-500">&copy; 2024 Victor Lyalchuk, Inc. All rights reserved.</p>
@@ -98,4 +94,4 @@ const Footer = () => {
     );
 };
 
-export default Footer;
+export default FooterPage;

@@ -1,4 +1,4 @@
-import Breadcrumb from '../components/Breadcrumb';
+import Breadcrumb from '../../Dashboard/components/Breadcrumb';
 import { useSelector } from 'react-redux';
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer';
 import { ChangeEventHandler, useEffect, useState } from 'react';
@@ -30,11 +30,7 @@ const Settings = () => {
           firstName: resp.data.firstName,
           lastName: resp.data.lastName,
           email: resp.data.email,
-          emailconfirmed: resp.data.emailconfirmed
-            ? (typeof resp.data.emailconfirmed === 'boolean'
-              ? resp.data.emailconfirmed
-              : (resp.data.emailconfirmed as string).toLowerCase() === 'true')
-            : false,
+          emailConfirmed: resp.data.emailConfirmed,
           imagePath: resp.data.imagePath,
           phoneNumber: resp.data.phoneNumber,
           birthday: birthdayDate,
@@ -127,7 +123,6 @@ const Settings = () => {
     }
   };
 
-
   const onSubmit = async (values: any) => {
     const model: IUserEdit = {
       id: values.id,
@@ -139,7 +134,7 @@ const Settings = () => {
       birthday: values.birthday,
       password: values.password,
       role: values.role,
-      emailconfirmed: values.emailconfirmed
+      emailConfirmed: values.emailconfirmed
     };
 
     try {
@@ -389,18 +384,18 @@ const Settings = () => {
                     <div className="w-full sm:w-1/2">
                       <label
                         className="mb-3 block text-sm font-medium text-black dark:text-white"
-                        htmlFor="emailconfirmed"
+                        htmlFor="emailConfirmed"
                       >
                         Email Confirmed
                       </label>
                       <Form.Item className="relative"
-                        name="emailconfirmed"
-                        htmlFor="emailconfirmed">
+                        name="emailConfirmed"
+                        htmlFor="emailConfirmed">
                         <Input
                           className="w-full rounded border border-stroke bg-gray py-3 px-4.5 text-black focus:border-primary focus-visible:outline-none dark:border-strokedark dark:bg-meta-4 dark:text-white dark:focus:border-primary"
                           type="text"
-                          name="emailconfirmed"
-                          id="emailconfirmed"
+                          name="emailConfirmed"
+                          id="emailConfirmed"
                           readOnly
                         />
                       </Form.Item>

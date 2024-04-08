@@ -54,10 +54,11 @@ const DropdownUser = () => {
       <Link
         ref={trigger}
         onClick={() => setDropdownOpen(!dropdownOpen)}
+        
         className="flex items-center gap-4"
         to="#"
       >
-        <div className="hidden text-right lg:block hover:text-indigo-500">
+        <div className=" text-right lg:block hover:text-indigo-500">
           <div className={`block text-sm font-medium ${isAuth ? 'text-gray-900 hover:text-indigo-500' : 'text-gray-700 hover:text-indigo-500'}`}>
             {user?.FirstName} {' '} {user?.LastName} 
             {/* <br /> {user?.Role} */}
@@ -71,7 +72,7 @@ const DropdownUser = () => {
             alt="User" />
         </span>
 
-        <svg
+        {/* <svg
           className={`hidden fill-current sm:block ${dropdownOpen ? 'rotate-180' : ''
             }`}
           width="12"
@@ -86,7 +87,7 @@ const DropdownUser = () => {
             d="M0.410765 0.910734C0.736202 0.585297 1.26384 0.585297 1.58928 0.910734L6.00002 5.32148L10.4108 0.910734C10.7362 0.585297 11.2638 0.585297 11.5893 0.910734C11.9147 1.23617 11.9147 1.76381 11.5893 2.08924L6.58928 7.08924C6.26384 7.41468 5.7362 7.41468 5.41077 7.08924L0.410765 2.08924C0.0853277 1.76381 0.0853277 1.23617 0.410765 0.910734Z"
             fill=""
           />
-        </svg>
+        </svg> */}
       </Link>
 
       {/* <!-- Dropdown Start --> */}
@@ -101,6 +102,7 @@ const DropdownUser = () => {
           <li>
             <Link
               to="/dashBoard/orders"
+              onClick={() => setDropdownOpen(false)} 
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500 "
             >
               <svg
@@ -126,6 +128,7 @@ const DropdownUser = () => {
           <li>
             <Link
               to="/dashBoard/settings"
+              onClick={() => setDropdownOpen(false)} 
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500"
             >
               <svg

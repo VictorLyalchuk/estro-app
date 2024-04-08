@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
-import { IHomeImage } from '../../../interfaces/Site/IHomeImage';
+import { IHomeImage } from '../../interfaces/Site/IHomeImage';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { APP_ENV } from "../../../env/config";
+import { APP_ENV } from "../../env/config";
 import { makeStyles } from '@material-ui/core/styles';
 import { Card, CardContent, Grid } from '@material-ui/core';
 
