@@ -11,7 +11,7 @@ import { IInfo } from '../../../interfaces/Info/IInfo.ts';
 import PaginationCatalog from './PaginationCatalog.tsx';
 import { useDispatch, useSelector } from 'react-redux';
 import { PaginationReducerCatalogActionType } from './CatalogPaginationReducer.tsx';
-import {APP_ENV} from "../../../env/config.ts";
+import { APP_ENV } from "../../../env/config.ts";
 
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
@@ -122,9 +122,9 @@ export default function CategoryFilters() {
           type: PaginationReducerCatalogActionType.UPDATE_FILTERS,
           payload: { filters: newFilters },
         });
-             
+
         // створення і відправка даних на сервер
-        
+
         const filterDTO = {
           Size: newFilters.find(f => f.name === 'Size')?.values || undefined,
           Material: newFilters.find(f => f.name === 'Material')?.values || undefined,
@@ -148,7 +148,7 @@ export default function CategoryFilters() {
           }
         });
 
-        
+
         const resp = await axios.get<IProduct[]>(`${baseUrl}/api/Product/FilterProducts/${subName}/${urlName}`, {
           params: filterDTO,
           paramsSerializer: (params) => {
@@ -366,7 +366,7 @@ export default function CategoryFilters() {
                   </Link>
                 </div>
                 {filterOptionsList.map((section) => (
-                  <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6" 
+                  <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6"
                   // defaultOpen={true}
                   >
                     {({ open }) => (
@@ -427,13 +427,15 @@ export default function CategoryFilters() {
                   {/* <h2 className="text-2xl font-bold tracking-tight text-gray-900">Customers also purchased</h2> */}
                   <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
                     {productList.map((product) => (
-                      <div key={product.id} className="group relative ">
+                      <div key={product.id} className="group relative">
                         <Link to={`/product/${product.id}`}>
-                          <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none  lg:h-80 hover14 hover13">
+                          <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none lg:h-80 hover14 hover13">
                             <img
                               src={`${baseUrl}/uploads/320_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`}
                               alt={product.name}
-                              className="h-full w-full object-cover object-center lg:h-full lg:w-full"
+
+                              // className="h-full w-full lg:h-full lg:w-full object-contain object-center"
+                              className="h-full w-full lg:h-full lg:w-full object-cover object-center"
                             />
                           </div>
                           <div className="mt-4 flex justify-between">

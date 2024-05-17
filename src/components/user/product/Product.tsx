@@ -4,7 +4,7 @@ import { RadioGroup } from '@headlessui/react'
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { IProduct, IStorages } from '../../../interfaces/Site/IProduct';
 import axios from 'axios';
-import { Carousel, message } from 'antd';
+import {Image, message} from 'antd';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -39,7 +39,6 @@ export default function Product() {
   const [product, setProduct] = useState<IProduct>();
   const [selectedSize, setSelectedSize] = useState<IStorages | null>(null);
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(2);
-  const [isModalOpen, setIsModalOpen] = useState(false);
   const dispatch = useDispatch();
   const navigate = useNavigate();
   
@@ -50,14 +49,12 @@ export default function Product() {
       });
   }, [Id]);
 
-
-  
   if (!product) {
     return <p></p>
   }
 
   const handleImageChange = (index: number) => {
-    openModal(index);
+    setCurrentImageIndex(index);
   };
 
   const settings = {
@@ -70,18 +67,9 @@ export default function Product() {
     autoplaySpeed: 5000,
   };
 
-  const openModal = (index: number) => {
-    setCurrentImageIndex(index);
-    setIsModalOpen(true);
-  };
-
-  const closeModal = () => {
-    setIsModalOpen(false);
-  };
-
   const addToBag = async () => {
     if (!isAuth) {
-      navigate("/register");
+      navigate("/auth");
     }
     else {
       const model: IBag = {
@@ -198,7 +186,7 @@ export default function Product() {
                 className={`aspect-h-4 aspect-w-3 overflow-hidden rounded-lg ${index === currentImageIndex ? 'lg:block' : 'hidden lg:grid lg:grid-cols-1 lg:gap-y-8'
                   }`}
               >
-                <img
+                <Image
                   src={`${baseUrl}/uploads/1200_${image?.imagePath || '/uploads/default.jpg'}`}
                   alt={product.name}
                   className="h-full w-full object-cover object-center cursor-pointer"
@@ -206,29 +194,7 @@ export default function Product() {
               </div>
             ))}
           </Slider >
-          {isModalOpen && (
-            <div className="fixed inset-0 z-50 overflow-hidden bg-black bg-opacity-50 flex items-center justify-center">
-              <div className="max-w-3xl w-full max-h-full overflow-hidden">
-                <Carousel {...settings}>
-                  {product?.images?.map((image, index2) => (
-                    <div key={index2} className="relative h-full w-full">
-                      <img
-                        src={`${baseUrl}/uploads/1200_${image?.imagePath || '/uploads/default.jpg'}`}
-                        alt={product.name}
-                        className="h-full w-full object-cover object-center cursor-pointer"
-                      />
-                    </div>
-                  ))}
-                </Carousel>
-                <button
-                  onClick={closeModal}
-                  className="absolute top-0 right-0 mt-4 mr-4 text-white text-xl cursor-pointer"
-                >
-                  &times;
-                </button>
-              </div>
-            </div>
-          )}
+         
 
           <div className="mt-4 lg:row-span-3 lg:mt-0 lg:col-start-3">
             {/* Options */}
