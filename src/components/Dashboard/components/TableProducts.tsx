@@ -117,7 +117,7 @@ const TableTwo = () => {
                                 <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
 
                                     <div className=" w-25 rounded-md mr-6">
-                                        <img src={`${baseUrl}/uploads/320_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`} alt="Product" />
+                                        <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`} alt="Product" />
                                     </div>
                                 </div>
                                     <p className="text-sm dark:text-white">{product.name}</p>
