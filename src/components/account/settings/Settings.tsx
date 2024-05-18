@@ -23,8 +23,8 @@ const Settings = () => {
       .then(async resp => {
         setUserEdit(resp.data);
         setUserImage(resp.data.imagePath);
-
         const birthdayDate = moment(resp.data.birthday, 'YYYY-MM-DD').format('YYYY-MM-DD');
+
         form.setFieldsValue({
           id: resp.data.id,
           firstName: resp.data.firstName,
@@ -131,12 +131,13 @@ const Settings = () => {
       email: values.email,
       imagePath: userImage || "",
       phoneNumber: values.phoneNumber,
-      birthday: values.birthday,
+      birthday: new Date(values.birthday),
       password: values.password,
       role: values.role,
       emailConfirmed: values.emailconfirmed
-    };
 
+    };
+    
     try {
         await axios.post(`${baseUrl}/api/AccountControllers/Edit`, model, {
             headers: {
