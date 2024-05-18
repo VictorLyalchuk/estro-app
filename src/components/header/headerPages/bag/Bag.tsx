@@ -171,7 +171,7 @@ const Bag = () => {
                   </div>
                   <div className="border-t pt-4 flex ">
                     <img
-                      src={`${baseUrl}/uploads/320_${item?.image || '/uploads/default.jpg'}`}
+                      src={`${baseUrl}/uploads/1200_${item?.image || '/uploads/default.jpg'}`}
                       alt={item?.image}
                       className="w-24 h-36 object-cover rounded-md mr-4"
                     />
