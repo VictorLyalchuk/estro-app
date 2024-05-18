@@ -471,7 +471,7 @@ const HeaderPage = () => {
                                             ))}
 
                                             <Link to={"/store-locations"}
-                                                className="flex items-center text-sm font-medium text-gray-700 hover:text-indigo-500"
+                                                className="flex items-center -mb-px text-sm font-medium text-gray-700 hover:text-indigo-500"
                                             >
                                                 Store
                                             </Link>
