@@ -257,3 +257,19 @@ Input:hover, Form.Item:hover {
 	  background-color: #ffffff;
 	}
   }
+
+  .bg-white-container-header {
+	transition: background-color 0.8s, border-color 0.8s, color 0.8s;
+	background-image: linear-gradient(rgb(66, 60, 60), #303A47), linear-gradient(#303A47, #303A47 );
+	background-blend-mode: hard-light;
+	animation: colorChange 10s infinite alternate;
+  }
+  
+  @keyframes colorChange {
+	0% {
+	  background-color: #303A47;
+	}
+	100% {
+	  background-color: #ffffff;
+	}
+  }
