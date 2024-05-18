@@ -431,7 +431,7 @@ export default function CategoryFilters() {
                         <Link to={`/product/${product.id}`}>
                           <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none lg:h-80 hover14 hover13">
                             <img
-                              src={`${baseUrl}/uploads/320_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`}
+                              src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`}
                               alt={product.name}
 
                               // className="h-full w-full lg:h-full lg:w-full object-contain object-center"
