@@ -150,7 +150,6 @@ function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
-
 const HeaderPage = () => {
     const baseUrl = APP_ENV.BASE_URL;
     const { isAuth, user } = useSelector((redux: any) => redux.auth as IAuthReducerState);

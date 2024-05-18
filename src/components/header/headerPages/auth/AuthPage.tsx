@@ -85,7 +85,6 @@ const AuthPage = () => {
                                         <RegisterPage></RegisterPage>
                                     </Tab.Panel>
                                     <Tab.Panel>
-                                        {/* {isResettingPassword ? ( */}
                                         {email && token ? (
                                             <ResetPassword email={email} token={token} />
                                         ) : (

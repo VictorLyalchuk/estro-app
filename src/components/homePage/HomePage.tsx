@@ -1,11 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import { IHomeImage } from '../../interfaces/Site/IHomeImage';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
 import { APP_ENV } from "../../env/config";
 import { makeStyles } from '@material-ui/core/styles';
-import { Card, CardContent, Grid } from '@material-ui/core';
 
 const useStyles = makeStyles(() => ({
     imageContainer: {
@@ -20,11 +17,8 @@ const useStyles = makeStyles(() => ({
         width: '100%',
         height: '100%',
         objectFit: 'cover',
-        // opacity: 0.9,
         transition: 'transform 1.2s ease-in-out',
         '&:hover': {
-            //   transform: 'scale(1.1)', 
-            //   opacity: 1,
         },
     },
     brighten: {
@@ -67,29 +61,138 @@ const HomePage = () => {
     }, []);
 
     return (
-        <div className="bg-gray-100" >
+        <div className="bg-gray-100">
             <div className="mx-auto max-w-2xl px-2 py-8 lg:max-w-7xl lg:px-2 justify-center">
+                <div className="flex flex-wrap justify-center">
+                    {images.length >= 15 && (
+                        <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
+                            <div className="aspect-h-4 aspect-w-3 overflow-hidden rounded-lg lg:block mt-7 bp-7">
+                                <img
+                                    src={`${baseUrl}/uploads/${images[0].imagePath}`}
+                                    className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
+                                />
+                            </div>
 
-                <Grid container spacing={3}>
-                    {images.map((image, index) => (
-                        <Grid key={index} item xs={12} sm={6} md={6} lg={4}>
-                            <Card>
-                                <CardContent style={{ height: '100%', display: 'flex', padding: '0', justifyContent: 'center', alignItems: 'center' }}>
-                                    <div className={`hover14 column ${classes.hover08} ${classes.image}`}>
-                                            <img
-                                                src={`${baseUrl}/uploads/${image.imagePath}`}
-                                                alt={`Image ${index + 1}`}
-                                                className={classes.image}
-                                            />
+                            <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8 mt-7 bp-7">
+                                <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
+                                    <img
+                                        src={`${baseUrl}/uploads/${images[2].imagePath}`}
+                                        className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
+                                    />
+                                </div>
+                                <div className="aspect-h-2 aspect-w-3 rounded-lg">
+                                    <div className="bg-white-container-home flex flex-col justify-center items-center h-full p-4">
+                                        <h1 className="text-white text-7xl hover:text-indigo-300">estro</h1>
+                                        <p className="text-white text-sx mb-10 hover:text-indigo-300">SHOES & ACCESSORIES</p>
+
                                     </div>
+                                </div>
+                            </div>
 
-                                </CardContent>
-                            </Card>
-                        </Grid>
-                    ))}
-                </Grid>
+                            <div className="aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg mt-7 bp-7">
+                                <img
+                                    src={`${baseUrl}/uploads/${images[3].imagePath}`}
+                                    className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
+                                />
+                            </div>
 
+                            <div className="aspect-h-4 aspect-w-3 overflow-hidden rounded-lg lg:block mt-7 bp-7">
+                                <img
+                                    src={`${baseUrl}/uploads/${images[1].imagePath}`}
+                                    className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
+                                />
+                            </div>
 
+                            <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8 mt-7 bp-7">
+                                <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
+                                    <img
+                                        src={`${baseUrl}/uploads/${images[8].imagePath}`}
+                                        className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
+                                    />
+                                </div>
+                                <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
+                                    <img
+                                        src={`${baseUrl}/uploads/${images[5].imagePath}`}
+                                        className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8 mt-7 bp-7">
+                                <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
+                                    <img
+                                        src={`${baseUrl}/uploads/${images[6].imagePath}`}
+                                        className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
+                                    />
+                                </div>
+                                <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
+                                    <img
+                                        src={`${baseUrl}/uploads/${images[4].imagePath}`}
+                                        className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="aspect-h-4 aspect-w-3 overflow-hidden rounded-lg lg:block mt-7 bp-7">
+                                <img
+                                    src={`${baseUrl}/uploads/${images[8].imagePath}`}
+                                    className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
+                                />
+                            </div>
+
+                            <div className="hidden lg:grid lg:grid-cols-1 lg:gap-y-8 mt-7 bp-7">
+                                <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
+                                    <img
+                                        src={`${baseUrl}/uploads/${images[9].imagePath}`}
+                                        className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
+                                    />
+                                </div>
+                                <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
+                                    <img
+                                        src={`${baseUrl}/uploads/${images[12].imagePath}`}
+                                        className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg mt-7 bp-7">
+                                <img
+                                    src={`${baseUrl}/uploads/${images[11].imagePath}`}
+                                    className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
+                                />
+                            </div>
+
+                            <div className="aspect-h-4 aspect-w-3 overflow-hidden rounded-lg lg:block mt-7 bp-7">
+                                <img
+                                    src={`${baseUrl}/uploads/${images[10].imagePath}`}
+                                    className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
+                                />
+                            </div>
+
+                            <div className="lg:grid lg:grid-cols-1 lg:gap-y-8 mt-7 bp-7">
+                                <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
+                                    <img
+                                        src={`${baseUrl}/uploads/${images[13].imagePath}`}
+                                        className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
+                                    />
+                                </div>
+                                <div className="aspect-h-2 aspect-w-3 overflow-hidden rounded-lg">
+                                    <img
+                                        src={`${baseUrl}/uploads/${images[7].imagePath}`}
+                                        className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="aspect-h-5 aspect-w-4 lg:aspect-h-4 lg:aspect-w-3 sm:overflow-hidden sm:rounded-lg mt-7 bp-7">
+                                <img
+                                    src={`${baseUrl}/uploads/${images[14].imagePath}`}
+                                    className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
+                                />
+                            </div>
+                        </div>
+                    )}
+                </div>
             </div>
         </div>
     )
