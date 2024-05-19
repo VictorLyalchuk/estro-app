@@ -87,7 +87,7 @@ const FooterPage = () => {
 
                 {/* Copyright */}
                 <div className="text-center mt-8">
-                    <p className="text-sm text-gray-500 hover:text-indigo-500">&copy; 2024 Victor Lyalchuk, Inc. All rights reserved.</p>
+                    <p className="text-sm text-gray-500 hover:text-indigo-500">&copy; 2024 Estro Shop Team, Inc. All rights reserved.</p>
                 </div>
             </div>
         </footer>

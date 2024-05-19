@@ -499,9 +499,8 @@ const HeaderPage = () => {
                                             </>
                                         ) : (
 
-
                                             <div className="ml-4 flow-root lg:ml-6">
-                                                    <Link className="p-2 text-gray-400 hover:text-gray-500" to={"/auth"} >
+                                                    <Link className="group -m-2 p-2 text-gray-400 hover:text-gray-500" to={"/auth"} >
                                                         <UserIcon className="h-6 w-6" aria-hidden="true" />
                                                     </Link>
                                             </div>
