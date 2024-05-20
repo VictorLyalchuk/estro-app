@@ -7,15 +7,65 @@ import moment from "moment";
 import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { BagReducerActionType, IBagReducerState } from "../../../../store/bag/BagReducer";
 import { CardReducerActionType, ICardReducerState } from "../../../../store/bag/CardReducer";
-import { Form, Input, message } from "antd";
+import { message } from "antd";
 import { IOrderCreate } from "../../../../interfaces/Info/IOrderCreate";
 import { APP_ENV } from "../../../../env/config";
+import GoodsNotFound from "../../../../assets/goods-not-found.png";
+import { Button, FormControl, TextField } from '@material-ui/core';
+import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import MaskedInput from 'react-text-mask';
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+      flexWrap: 'wrap',
+    },
+    margin: {
+      margin: theme.spacing(0),
+    },
+    input: {
+    },
+    button: {
+      textTransform: 'none',
+    },
+    withoutLabel: {
+      marginTop: theme.spacing(3),
+    },
+    textField: {
+      '& .MuiInputBase-root': {
+        height: '60px',
+      },
+    },
+  }),
+);
+
+interface TextMaskCustomProps {
+  inputRef: (ref: HTMLInputElement | null) => void;
+}
+
+function TextMaskCustom(props: TextMaskCustomProps) {
+  const { inputRef, ...other } = props;
+
+  return (
+    <MaskedInput
+      {...other}
+      ref={(ref: any) => {
+        inputRef(ref ? ref.inputElement : null);
+      }}
+      mask={['(', /[0-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
+      placeholderChar={'\u2000'}
+    />
+  );
+}
+
+interface State {
+  textmask: string;
+}
 const Bag = () => {
   const baseUrl = APP_ENV.BASE_URL;
   const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
   const [bagUser, setBagUser] = useState<IBagUser>();
-  const [form] = Form.useForm();
   const dispatch = useDispatch();
   const { count } = useSelector((redux: any) => redux.bagReducer as IBagReducerState);
   const { total } = useSelector((redux: any) => redux.cardReducer as ICardReducerState);
@@ -23,6 +73,10 @@ const Bag = () => {
   const { totalWithOutTax } = useSelector((redux: any) => redux.cardReducer as ICardReducerState);
   const { initialIndividualItemPrice } = useSelector((redux: any) => redux.cardReducer as ICardReducerState);
   const bagItems = useSelector((state: { cardReducer: ICardReducerState }) => state.cardReducer.items) || [];
+  const classes = useStyles();
+  const [values, setValues] = useState<State>({
+    textmask: '(   )    -  -  ',
+  });
 
   useEffect(() => {
     if (user) {
@@ -36,7 +90,6 @@ const Bag = () => {
             orderDate: moment(resp.data.orderDate, 'YYYY-MM-DD').format('DD MMMM YYYY'),
           };
           setBagUser(formattedData);
-
         })
         .catch(itemsError => {
           console.error("Error fetching bag items:", itemsError);
@@ -110,18 +163,18 @@ const Bag = () => {
       });
     }
   }
-
-  const onSubmit = async (values: any) => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
     const model: IOrderCreate = {
-      email: values.email,
+      email: formData.email,
       emailUser: user?.Email || "",
-      firstName: values.firstName,
-      lastName: values.lastName,
-      phonenumber: values.phonenumber,
-      address: values.address,
+      firstName: formData.firstName,
+      lastName: formData.lastName,
+      phonenumber: formData.phoneNumber,
+      address: formData.address,
     };
-    console.log(model);
+    event.preventDefault();
+    if (validateForm()) {
     try {
       await axios.post(`${baseUrl}/api/OrderControllers/CreateOrder`, model, {
         headers: {
@@ -141,20 +194,154 @@ const Bag = () => {
         minuscount: 0
       }
     });
-
+  } else {
+    console.log(formData);
+}
   }
-  const onSubmitFailed = (errorInfo: any) => {
-    console.log("Error Form data", errorInfo);
-  }
 
+  const [formData, setFormData] = useState({
+    firstName: user?.FirstName || '',
+    lastName: user?.LastName || '',
+    email: user?.Email || '',
+    phoneNumber: user?.PhoneNumber || '',
+    address: '',
+  });
+
+  const [errors, setErrors] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    address: '',
+  });
+
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+
+    setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors: {
+      firstName: string;
+      lastName: string;
+      confirmPassword: string;
+      phoneNumber: string;
+      email: string;
+      password: string;
+      address: string;
+    } = {
+      firstName: "",
+      lastName: "",
+      confirmPassword: "",
+      phoneNumber: "",
+      email: "",
+      password: "",
+      address: ""
+    };
+
+    if (formData.firstName.trim() === '') {
+      newErrors.firstName = 'First Name is required';
+      isValid = false;
+    }
+
+    if (formData.lastName.trim() === '') {
+      newErrors.lastName = 'Last Name is required';
+      isValid = false;
+    }
+    const cleanedPhoneNumber = values.textmask.replace(/\D/g, '');
+    if (cleanedPhoneNumber.trim() === '') {
+      newErrors.phoneNumber = 'Phone Number is required';
+      isValid = false;
+    }
+    else if (!/^(067|095|099|066|063|098|097|096)\d{7}$/.test(cleanedPhoneNumber)) {
+      newErrors.phoneNumber = 'Invalid phone number format';
+      isValid = false;
+    }
+
+    if (formData.email.trim() === '' || !/\S+@\S+\.\S+/.test(formData.email)) {
+      newErrors.email = 'Invalid email address';
+      isValid = false;
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleChangePhoneNumber = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+    
+    const cleanedValue = value.replace(/\D/g, '');
+
+    setFormData((prevData) => ({
+      ...prevData,
+      phoneNumber: cleanedValue,
+    }));
+    validatePhoneNumber(cleanedValue);
+  };
+
+  const validatePhoneNumber = (value: string) => {
+    const isValidPrefix = /^(067|095|099|066|063|098|097|096)/.test(value.substr(0, 3));
+
+    const isValidDigits = /^\d{7}$/.test(value.substr(3));
+
+    const isValid = isValidPrefix && isValidDigits;
+
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      phoneNumber: isValid ? '' : 'Invalid phone number format',
+    }));
+  };
+
+  useEffect(() => {
+    GetCity();
+  }, []);
+
+  const GetCity = async () => {
+    const apiUrl = 'https://api.novaposhta.ua/v2.0/json/';
+    const payload = {
+      apiKey: 'f8df4fb4933f7b40c96b872a1901be8e',
+      modelName: 'Address',
+      calledMethod: 'getCities',
+      methodProperties: {
+        "FindByString": "Рівне"
+      }
+    };
+
+    try {
+      const response = await axios.post(apiUrl, payload);
+
+      console.log(response.data);
+    } catch (error) {
+      console.error('Error fetching departments', error);
+    }
+  }
 
   return (
     <div className="bg-gray-100">
       <div className="container mx-auto p-8 flex  relative bg-gray-100 mx-auto max-w-7xl px-2 sm:px-2 lg:px-2   flex-col lg:flex-row justify-between">
-        <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0">
-          <div className="mb-4 ">
-            {bagItems && bagItems.length > 0 ? (
-              bagItems.map((item, index) => (
+        {bagItems && bagItems.length > 0 ? (
+          <>
+            <div className="w-full lg:w-2/4 p-5 lg:mb-0">
+              <div className="bg-white p-5 rounded-md shadow-md mb-8">
+                <div className="flex justify-between items-center">
+                  <h3 className="text-2xl font-semibold">Order Summary</h3>
+                  <h3 className="text-2xl font-semibold">{bagUser?.orderDate}</h3>
+                </div>
+              </div>
+              {bagItems.map((item, index) => (
                 <div key={item.id} className="border-b bg-white pt-4 p-6 rounded-md shadow-md mb-8">
                   <div className="flex justify-end">
                   </div>
@@ -182,7 +369,7 @@ const Bag = () => {
                       <p className="text-gray-600 mb-2">Price: {item.price} ₴</p>
                       <div className="flex items-center ml-auto mt-6">
                         <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-md mr-2 hover:bg-gray-300" onClick={() => decrease(item)}>
-                          <MinusIcon className="h-5 w-3"  />
+                          <MinusIcon className="h-5 w-3" />
                         </button>
                         <span className="mx-2 w-3">{item.quantity}</span>
                         <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-md ml-2 hover:bg-gray-300" onClick={() => increase(item)} >
@@ -194,167 +381,176 @@ const Bag = () => {
                   </div>
 
                 </div>
-              ))
-            ) : (
-              <p></p>
-            )}
-          </div>
-        </div>
+              ))}
+            </div>
 
-        {/* Order Summary */}
-        <div className="w-full lg:w-2/4 p-5 lg:mb-0">
-          {bagItems && bagItems.length > 0 ? (
-            <Form
-              form={form}
-              encType="multipart/form-data"
-              initialValues={{ remember: true }}
-              onFinish={onSubmit}
-              onFinishFailed={onSubmitFailed}
-            >
-              <div className="bg-white p-5 rounded-md shadow-md ">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-2xl font-semibold mb-4">Order Summary</h3>
-                  <h3 className="text-2xl font-semibold mb-4">{bagUser?.orderDate}</h3>
-                </div>
-                <div className="border-t pt-4">
+            <div className="w-full lg:w-2/4 p-5 lg:mb-0">
 
+              <form onSubmit={onSubmit}>
+                <div className="bg-white p-5 rounded-md shadow-md mb-8">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-2xl font-semibold mb-4">Personal Information</h3>
+                  </div>
 
-                  <div className="mb-5 border-b pb-4">
+                  <div className="border-t pt-4">
+                    <div className="">
 
-                    <div className="sm:col-span-2">
-                      <label htmlFor="firstName" className="text-gray-600 mb-4 font-semibold">
+                      <label htmlFor="firstName" className="text-gray-600 font-semibold">
                         First Name
                       </label>
-                      <Form.Item
-                        name="firstName"
-                        htmlFor="firstName"
-                        noStyle>
-                        <Input
-                          id="firstName"
+                      <FormControl fullWidth className={classes.margin} variant="outlined">
+                        <TextField
                           name="firstName"
-                          type="text"
-                          autoComplete="firstName"
-                          placeholder="Enter your First Name"
-                          className="text-gray-600 mb-4 font-semibold "
-                          required
+                          value={formData.firstName}
+                          onChange={handleChange}
+                          error={!!errors.firstName}
+                          variant="outlined"
+                          size="small"
                         />
-                      </Form.Item >
-                    </div>
-                    <div className="sm:col-span-2">
-                      <label htmlFor="lastName" className="text-gray-600 mb-4 font-semibold">
+                        {errors.firstName ? (
+                          <div className="h-6 text-xs text-red-500">Error: {errors.firstName}</div>
+                        ) : (<div className="h-6 text-xs "> </div>)}
+                      </FormControl>
+
+                      <label htmlFor="LastName" className="text-gray-600 font-semibold">
                         Last Name
                       </label>
-                      <Form.Item
-                        name="lastName"
-                        htmlFor="lastName"
-                        noStyle>
-                        <Input
-                          id="lastName"
+                      <FormControl fullWidth className={classes.margin} variant="outlined">
+                        <TextField
                           name="lastName"
-                          type="text"
-                          autoComplete="lastName"
-                          placeholder="Enter your Last Name"
-                          className="text-gray-600 mb-4 font-semibold "
-                          required
+                          value={formData.lastName}
+                          onChange={handleChange}
+                          error={!!errors.lastName}
+                          variant="outlined"
+                          size="small"
                         />
-                      </Form.Item >
-                    </div>
-                    <div className="sm:col-span-2">
-                      <label htmlFor="phonenumber" className="text-gray-600 mb-4 font-semibold">
-                        Phone number
-                      </label>
-                      <Form.Item
-                        name="phonenumber"
-                        htmlFor="phonenumber"
-                        noStyle>
-                        <Input
-                          id="phonenumber"
-                          name="phonenumber"
-                          type="tel"
-                          pattern="[0-9]*"
-                          autoComplete="phonenumber"
-                          placeholder="Enter your Phone number"
-                          className="text-gray-600 mb-4 font-semibold "
-                          required
-                        />
-                      </Form.Item >
-                    </div>
-                    <div className="sm:col-span-2">
-                      <label htmlFor="email" className="text-gray-600 mb-4 font-semibold">
+                        {errors.lastName ? (
+                          <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
+                        ) : (<div className="h-6 text-xs "> </div>)}
+                      </FormControl>
+
+                      <label htmlFor="email" className="text-gray-600 font-semibold">
                         Email
                       </label>
-                      <Form.Item
-                        name="email"
-                        htmlFor="email"
-                        noStyle>
-                        <Input
-                          id="email"
+                      <FormControl fullWidth className={classes.margin} variant="outlined">
+                        <TextField
                           name="email"
-                          type="email"
-                          placeholder="Enter your Email"
-                          className="text-gray-600 mb-4 font-semibold "
-                          required
+                          value={formData.email}
+                          onChange={handleChange}
+                          error={!!errors.email}
+                          variant="outlined"
+                          size="small"
                         />
-                      </Form.Item >
+                        {errors.email ? (
+                          <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
+                        ) : (<div className="h-6 text-xs "> </div>)}
+                      </FormControl>
+
+                      <label htmlFor="phoneNumber" className="text-gray-600 font-semibold">
+                        Phone Number
+                      </label>
+                      <FormControl fullWidth className={classes.margin} variant="outlined">
+                        <TextField
+                          name="textmask"
+                          value={values.textmask}
+                          onChange={handleChangePhoneNumber}
+                          id="formatted-text-mask-input"
+                          error={!!errors.phoneNumber}
+                          variant="outlined"
+                          size="small"
+                          InputProps={{
+                            inputComponent: TextMaskCustom as any,
+                          }}
+                        />
+                        {errors.phoneNumber ? (
+                          <div className="h-6 text-xs text-red-500">Error: {errors.phoneNumber}</div>
+                        ) : (<div className="h-6 text-xs "> </div>)}
+                      </FormControl>
+
                     </div>
-                    <div className="sm:col-span-2">
-                      <label htmlFor="address" className="text-gray-600 mb-4 font-semibold">
+                  </div>
+                </div>
+
+                <div className="bg-white p-5 rounded-md shadow-md mb-8">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-2xl font-semibold mb-4">Delivery Information</h3>
+                  </div>
+                  <div className="border-t pt-4">
+                    <div className="">
+                      <label htmlFor="address" className="text-gray-600 font-semibold">
                         Delivery Address
                       </label>
-                      <Form.Item
-                        name="address"
-                        htmlFor="address"
-                        noStyle>
-                        <Input
-                          id="address"
+                      <FormControl fullWidth className={classes.margin} variant="outlined">
+                        <TextField
                           name="address"
-                          type="text"
-                          placeholder="Enter Delivery Address"
-                          className="text-gray-600 mb-4 font-semibold "
-                          required
+                          value={formData.address}
+                          onChange={handleChange}
+                          variant="outlined"
+                          size="small"
                         />
-                      </Form.Item >
+                        {errors.address ? (
+                          <div className="h-6 text-xs text-red-500">Error: {errors.address}</div>
+                        ) : (<div className="h-6 text-xs "> </div>)}
+                      </FormControl>
                     </div>
-                    {/* <button type="submit" className="bg-blue-500 text-white px-6 py-3 rounded-md custom-button-style">
-                Proceed to Checkout
-              </button> */}
-                  </div>
-                  <div className="flex justify-between items-center ">
-                    <p className="text-lg font-semibold">Without Taxes:</p>
-                    <p className="text-lg">{totalWithOutTax} ₴</p>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <p className="text-lg font-semibold">Taxes:</p>
-                    <p className="text-lg">{taxes} ₴</p>
-                  </div>
-                  <div className="flex justify-between items-center mt-4">
-                    <p className="text-xl font-semibold">Total Sum:</p>
-                    <p className="text-xl">{total} ₴</p>
                   </div>
                 </div>
-              </div>
-              {/* Checkout Button */}
-              <div className="mt-8 flex justify-end">
-                <button type="submit"
-                  // onClick={onSubmit} 
-                  className="bg-blue-500 text-white px-6 py-3 rounded-md custom-button-style">
-                  Proceed to Checkout
-                </button>
-              </div>
-            </Form>
-          ) : (
-            <div className="container mx-auto p-8 flex justify-center relative bg-gray-100 mx-auto max-w-7xl px-2 sm:px-2 lg:px-2   flex-col lg:flex-row  ">
-              <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0">
-                <div className="mt-8 flex justify-center">
-                  <p>No items in the bag.</p>
 
+                <div className="bg-white p-5 rounded-md shadow-md mb-4">
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-2xl font-semibold mb-4">Payment Information</h3>
+                  </div>
+                  <div className="border-t pt-4">
+                    <div className="mb-5 border-b pb-4">
+
+                      <div className="flex justify-between items-center ">
+                        <p className="text-lg font-semibold">Without Taxes:</p>
+                        <p className="text-lg">{totalWithOutTax} ₴</p>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <p className="text-lg font-semibold">Taxes:</p>
+                        <p className="text-lg">{taxes} ₴</p>
+                      </div>
+                      <div className="flex justify-between items-center mt-4">
+                        <p className="text-xl font-semibold">Total Sum:</p>
+                        <p className="text-xl">{total} ₴</p>
+                      </div>
+                    </div>
+                  </div>
                 </div>
+                {/* Checkout Button */}
+
+                <div className="mt-8 flex justify-end">
+                  <FormControl fullWidth className={classes.margin} variant="outlined">
+                    <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
+                      Proceed to Checkout
+                    </Button>
+                  </FormControl>
+
+                  {/* <button type="submit"
+
+                    className="bg-blue-500 text-white px-6 py-3 rounded-md custom-button-style">
+                    Proceed to Checkout
+                  </button> */}
+                </div>
+              </form>
+            </div>
+
+          </>
+        ) : (
+          <div className="container mx-auto p-8 flex justify-center relative bg-gray-100 mx-auto max-w-7xl px-2 sm:px-2 lg:px-2   flex-col lg:flex-row  ">
+            <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0">
+              <div className="mt-8 flex justify-center">
+                <img src={GoodsNotFound}></img>
+              </div>
+              <div className="mt-8 flex justify-center">
+                <p>No items in the bag.</p>
               </div>
             </div>
-          )}
-        </div>
+          </div>
+        )}
       </div>
-    </div>
+    </div >
   );
 }
 

@@ -159,7 +159,7 @@ const RegisterPage = () => {
             newErrors.phoneNumber = 'Phone Number is required';
             isValid = false;
         }
-        else if (!/^(067|099|066|063|098|097)\d{7}$/.test(cleanedPhoneNumber)) {
+        else if (!/^(067|095|099|066|063|098|097|096)\d{7}$/.test(cleanedPhoneNumber)) {
             newErrors.phoneNumber = 'Invalid phone number format';
             isValid = false;
         }
@@ -206,18 +206,18 @@ const RegisterPage = () => {
             ...prevValues,
             [name]: value,
         }));
-
-        validatePhoneNumber(value);
-
+        
         const cleanedValue = value.replace(/\D/g, '');
         setFormData((prevData) => ({
             ...prevData,
             phoneNumber: cleanedValue,
         }));
+
+        validatePhoneNumber(cleanedValue);
     };
 
     const validatePhoneNumber = (value: string) => {
-        const isValidPrefix = /^(067|099|066|063|098|097)/.test(value.substr(0, 3));
+        const isValidPrefix = /^(067|095|099|066|063|098|097|096)/.test(value.substr(0, 3));
 
         const isValidDigits = /^\d{7}$/.test(value.substr(3));
 
