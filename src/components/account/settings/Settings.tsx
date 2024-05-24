@@ -304,7 +304,8 @@ const Settings = () => {
                       <Form.Item className="relative"
                         name="email"
                         htmlFor="email">
-                        {/* <span className="absolute left-4.5 top-4">
+
+                                {/* <span className="absolute left-4.5 top-4">
                         <svg
                           className="fill-current"
                           width="20"
@@ -329,15 +330,30 @@ const Settings = () => {
                           </g>
                         </svg>
                       </span> */}
-                        <Input
-                          className="w-full rounded border border-stroke bg-gray py-3 pr-4.5 text-black "
-                          type="email"
-                          name="email"
-                          id="email"
-                          placeholder="Enter your email"
-                          autoComplete="email"
-                          required
-                        />
+                        {user?.AuthType == "google" ? (
+                            <Input
+                                className="w-full rounded border border-stroke bg-gray py-3 pr-4.5 text-black "
+                                type="email"
+                                name="email"
+                                id="email"
+                                placeholder="Enter your email"
+                                autoComplete="email"
+                                readOnly
+
+                            />
+                        ) : (
+                            <Input
+                                className="w-full rounded border border-stroke bg-gray py-3 pr-4.5 text-black "
+                                type="email"
+                                name="email"
+                                id="email"
+                                placeholder="Enter your email"
+                                autoComplete="email"
+                                required
+                            />
+                        )}
+
+
                       </Form.Item>
                     </div>
                   </div>
@@ -403,61 +419,64 @@ const Settings = () => {
                     </div>
                   </div>
 
+                  {user?.AuthType == "standard" ? (
+                      <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
+                        <div className="w-full sm:w-1/2">
+                          <label
+                              className="mb-3 block text-sm font-medium text-black dark:text-white"
+                              htmlFor="password"
+                          >
+                            Password
+                          </label>
+                          <Form.Item className="relative"
+                                     name="password"
+                                     htmlFor="password">
+                            <Input
+                                className="w-full rounded border border-stroke bg-gray py-3 text-black"
+                                type="password"
+                                name="password"
+                                id="password"
+                                required
+                                placeholder="Enter your password"
+                            />
+                          </Form.Item>
+                        </div>
 
-                  <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
-                    <div className="w-full sm:w-1/2">
-                      <label
-                        className="mb-3 block text-sm font-medium text-black dark:text-white"
-                        htmlFor="password"
-                      >
-                        Password
-                      </label>
-                      <Form.Item className="relative"
-                        name="password"
-                        htmlFor="password">
-                        <Input
-                          className="w-full rounded border border-stroke bg-gray py-3 text-black"
-                          type="password"
-                          name="password"
-                          id="password"
-                          required
-                          placeholder="Enter your password"
-                        />
-                      </Form.Item>
-                    </div>
+                        <div className="w-full sm:w-1/2">
+                          <label
+                              className="mb-3 block text-sm font-medium text-black dark:text-white"
+                              htmlFor={"confirm"}
+                          >
+                            Confirm Password
+                          </label>
+                          <Form.Item className="relative"
+                                     name="confirm_password"
+                                     htmlFor="confirm_password"
+                                     dependencies={['password']}
+                                     hasFeedback
+                                     rules={[{ required: true, message: 'Confirm Password!' },
+                                       ({ getFieldValue }) => ({
+                                         validator(_, value) {
+                                           if (!value || getFieldValue('password') === value) {
+                                             return Promise.resolve();
+                                           }
+                                           return Promise.reject(new Error('The password does not match!'));
+                                         },
+                                       }),]}
+                          >
+                            <Input
+                                className="w-full rounded border border-stroke bg-gray py-3 pr-4.5 text-black input-container-confirm-password"
+                                type="password"
+                                name="confirm_password"
+                                id={"confirm"}
+                                placeholder="Confirm Your password"
+                            />
+                          </Form.Item>
+                        </div>
+                      </div>
 
-                    <div className="w-full sm:w-1/2">
-                      <label
-                        className="mb-3 block text-sm font-medium text-black dark:text-white"
-                        htmlFor={"confirm"}
-                      >
-                        Confirm Password
-                      </label>
-                      <Form.Item className="relative"
-                        name="confirm_password"
-                        htmlFor="confirm_password"
-                        dependencies={['password']}
-                        hasFeedback
-                        rules={[{ required: true, message: 'Confirm Password!' },
-                        ({ getFieldValue }) => ({
-                          validator(_, value) {
-                            if (!value || getFieldValue('password') === value) {
-                              return Promise.resolve();
-                            }
-                            return Promise.reject(new Error('The password does not match!'));
-                          },
-                        }),]}
-                      >
-                        <Input
-                          className="w-full rounded border border-stroke bg-gray py-3 pr-4.5 text-black input-container-confirm-password"
-                          type="password"
-                          name="confirm_password"
-                          id={"confirm"}
-                          placeholder="Confirm Your password"
-                        />
-                      </Form.Item>
-                    </div>
-                  </div>
+                  ) : (null)}
+
 
                   <div className="flex justify-end gap-4.5">
                     <button
@@ -494,14 +513,16 @@ const Settings = () => {
                 <div className="mb-4 flex items-center gap-3">
                   <div className="h-14 w-14 rounded-full">
                     {userImage ? (
-
-                      <img src={`${baseUrl}/uploads/${userImage}`} alt="User" className='rounded-full' />
+                        user?.AuthType === 'standard' ? (
+                            <img src={`${baseUrl}/uploads/${userImage}`} alt="User" className="rounded-full" />
+                        ) : (
+                            <img src={`${userImage}`} alt="User" className="rounded-full" />
+                        )
                     ) : (
-
-                      <img src={`${baseUrl}/uploads/user404.webp`} alt="User" className='rounded-full' />
-                    )
-                    }
+                        <img src={`${baseUrl}/uploads/user404.webp`} alt="User" className="rounded-full" />
+                    )}
                   </div>
+
                   <div>
                     <span className="mb-1.5 text-black dark:text-white">
                       Edit your photo
