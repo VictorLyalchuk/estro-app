@@ -12,6 +12,13 @@ import MaskedInput from 'react-text-mask';
 import { GiftIcon } from '@heroicons/react/24/outline';
 import { BanknotesIcon } from '@heroicons/react/24/outline';
 import { TrophyIcon } from '@heroicons/react/24/outline';
+import {GoogleLogin} from "@react-oauth/google";
+import { jwtDecode } from 'jwt-decode';
+import {IUser} from "../../../../../interfaces/Auth/IUser.ts";
+import {AuthReducerActionType} from "../../../../../store/accounts/AuthReducer.ts";
+import {useDispatch} from "react-redux";
+import {useNavigate} from "react-router-dom";
+import {Divider} from "antd";
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -63,6 +70,8 @@ interface State {
 
 const RegisterPage = () => {
     const baseUrl = APP_ENV.BASE_URL;
+    const dispatch = useDispatch();
+    const navigate = useNavigate();
     const classes = useStyles();
     const [isRegistered, setIsRegistered] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -81,6 +90,7 @@ const RegisterPage = () => {
         password: '',
         confirmPassword: '',
         imageFile: null,
+        authType: "standard"
     });
 
     const [errors, setErrors] = useState({
@@ -90,6 +100,7 @@ const RegisterPage = () => {
         phoneNumber: '',
         password: '',
         confirmPassword: '',
+        authType: "standard"
     });
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -125,6 +136,37 @@ const RegisterPage = () => {
         } else {
             console.log(formData);
         }
+    };
+    const googleSuccess = async (response) => {
+        const token = response.credential;
+        const user = jwtDecode(token);
+        console.log(user);
+        const formData = new FormData();
+        formData.append('UserName', user?.name);
+        formData.append('FirstName', user?.given_name);
+        formData.append('LastName', user?.family_name);
+        formData.append('Email', user?.email);
+        formData.append('AuthType', 'google');
+        formData.append('ImagePath', user?.picture);
+        formData.append('ClientId', user?.sub);
+
+        try {
+            await axios.post(`${baseUrl}/api/AccountControllers/Registration`, formData);
+            setIsRegistered(true);
+
+        } catch (error) {
+            console.error("Register error:", error);
+            setErrorMessage("Register error. Try again later");
+            setTimeout(() => {
+                setErrorMessage("");
+            }, 1000);
+        }
+
+
+    };
+
+    const googleErrorMessage = (error) => {
+        console.log(error);
     };
 
     const validateForm = () => {
@@ -454,6 +496,12 @@ const RegisterPage = () => {
                                         </FormControl>
 
                                     </form>
+                                    <Divider>or</Divider>
+
+                                    <div className={"flex justify-center"}>
+                                        <GoogleLogin  onSuccess={googleSuccess} onError={googleErrorMessage} />
+
+                                    </div>
 
                                 </div >
                             )}

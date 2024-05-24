@@ -25,6 +25,7 @@ const DropdownUser = () => {
 
   // close on click outside
   useEffect(() => {
+    console.log(user);
     const clickHandler = ({ target }: MouseEvent) => {
       if (!dropdown.current) return;
       if (
@@ -67,9 +68,13 @@ const DropdownUser = () => {
         </div>
 
         <span className="h-12 w-12 " >
-          <img src={`${baseUrl}/uploads/${user?.ImagePath || "user404.webp"}`}
-            className='rounded-full'
-            alt="User" />
+ {user?.AuthType == 'standard' ?
+     (  <img src={`${baseUrl}/uploads/${user?.ImagePath || "user404.webp"}`}
+             className='rounded-full'
+             alt="User" />) : (  <img src={`${user?.ImagePath || "user404.webp"}`}
+                                      className='rounded-full'
+                                      alt="User" />)}
+
         </span>
 
         {/* <svg

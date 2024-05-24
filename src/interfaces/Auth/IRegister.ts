@@ -6,4 +6,5 @@ export interface IRegister {
     password: string,
     confirmPassword: string,
     imageFile: File | null;
+    authType: string;
 }
