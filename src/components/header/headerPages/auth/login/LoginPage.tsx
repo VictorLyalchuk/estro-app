@@ -15,6 +15,21 @@ import { useDispatch } from 'react-redux';
 import { AuthReducerActionType } from '../../../../../store/accounts/AuthReducer';
 import { BanknotesIcon } from '@heroicons/react/24/outline';
 import { TrophyIcon } from '@heroicons/react/24/outline';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import '../../../../../satoshi.css';
+
+const theme = createTheme({
+    typography: {
+        fontFamily: 'Satoshi, sans-serif',
+    },
+    overrides: {
+        MuiTextField: {
+            root: {
+                fontFamily: 'Satoshi, sans-serif',
+            },
+        },
+    },
+});
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -141,43 +156,43 @@ const LoginPage = () => {
                                 </div>
 
                                 <form onSubmit={handleSubmit}>
-                                    <FormControl fullWidth className={classes.margin} variant="outlined">
-                                        <TextField
-                                            label="Email"
-                                            name="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            error={!!errors.email}
-                                        />
-                                        {errors.email ? (
-                                            <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
-                                        ) : (<div className="h-6 text-xs "> </div>)}
-                                    </FormControl>
+                                    <ThemeProvider theme={theme}>
+                                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                                            <TextField
+                                                label="Email"
+                                                name="email"
+                                                value={formData.email}
+                                                onChange={handleChange}
+                                                error={!!errors.email}
+                                            />
+                                            {errors.email ? (
+                                                <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
+                                            ) : (<div className="h-6 text-xs "> </div>)}
+                                        </FormControl>
 
-                                    <FormControl fullWidth className={classes.margin} variant="outlined">
-                                        <TextField
-                                            label="Password"
-                                            type={showPassword ? 'text' : 'password'}
-                                            name="password"
-                                            value={formData.password}
-                                            onChange={handleChange}
-                                            error={!!errors.password}
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <InputAdornment position="end">
-                                                        <IconButton onClick={handlePasswordToggle} edge="end">
-                                                            {showPassword ? <Visibility /> : <VisibilityOff />}
-                                                        </IconButton>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                        />
-                                        {errors.password ? (
-                                            <div className="h-6 text-xs text-red-500">Error: {errors.password}</div>
-                                        ) : (<div className="h-6 text-xs "> </div>)}
-                                    </FormControl >
-
-
+                                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                                            <TextField
+                                                label="Password"
+                                                type={showPassword ? 'text' : 'password'}
+                                                name="password"
+                                                value={formData.password}
+                                                onChange={handleChange}
+                                                error={!!errors.password}
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            <IconButton onClick={handlePasswordToggle} edge="end">
+                                                                {showPassword ? <Visibility /> : <VisibilityOff />}
+                                                            </IconButton>
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                            {errors.password ? (
+                                                <div className="h-6 text-xs text-red-500">Error: {errors.password}</div>
+                                            ) : (<div className="h-6 text-xs "> </div>)}
+                                        </FormControl >
+                                        </ThemeProvider>
 
                                     <FormControl fullWidth className={classes.margin} variant="outlined">
                                         <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>

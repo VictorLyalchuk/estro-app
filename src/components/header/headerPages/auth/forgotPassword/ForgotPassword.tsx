@@ -5,6 +5,21 @@ import '../../../../../index.css';
 import { APP_ENV } from "../../../../../env/config";
 import { Button, FormControl, TextField } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import '../../../../../satoshi.css';
+
+const theme = createTheme({
+    typography: {
+        fontFamily: 'Satoshi, sans-serif',
+    },
+    overrides: {
+        MuiTextField: {
+            root: {
+                fontFamily: 'Satoshi, sans-serif',
+            },
+        },
+    },
+});
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -103,7 +118,7 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
                             {isSendEmail ? (
                                 <div className="text-center">
                                     <h2 className="text-2xl font-bold text-gray-900">Email Was Successfully Received</h2>
-                                    <br/>
+                                    <br />
                                     <p className="text-gray-500">
                                         Check your email and continue the password recovery process.</p>
                                 </div>
@@ -116,24 +131,26 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
                                     </div>
 
                                     <form onSubmit={handleSubmit}>
-                                        <FormControl fullWidth className={classes.margin} variant="outlined">
-                                            <TextField
-                                                label="Email"
-                                                name="email"
-                                                value={formData.email}
-                                                onChange={handleChange}
-                                                error={!!errors.email}
-                                            />
-                                            {errors.email ? (
-                                                <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
-                                            ) : (<div className="h-6 text-xs "> </div>)}
-                                        </FormControl>
+                                        <ThemeProvider theme={theme}>
+                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                <TextField
+                                                    label="Email"
+                                                    name="email"
+                                                    value={formData.email}
+                                                    onChange={handleChange}
+                                                    error={!!errors.email}
+                                                />
+                                                {errors.email ? (
+                                                    <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
+                                                ) : (<div className="h-6 text-xs "> </div>)}
+                                            </FormControl>
+                                        </ThemeProvider>
 
-                                        <FormControl fullWidth className={classes.margin} variant="outlined">
-                                            <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
-                                                Reset Password
-                                            </Button>
-                                        </FormControl>
+                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
+                                                    Reset Password
+                                                </Button>
+                                            </FormControl>
 
                                     </form>
 

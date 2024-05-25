@@ -12,6 +12,21 @@ import MaskedInput from 'react-text-mask';
 import { GiftIcon } from '@heroicons/react/24/outline';
 import { BanknotesIcon } from '@heroicons/react/24/outline';
 import { TrophyIcon } from '@heroicons/react/24/outline';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import '../../../../../satoshi.css';
+
+const theme = createTheme({
+    typography: {
+        fontFamily: 'Satoshi, sans-serif',
+    },
+    overrides: {
+        MuiTextField: {
+            root: {
+                fontFamily: 'Satoshi, sans-serif',
+            },
+        },
+    },
+});
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -206,7 +221,7 @@ const RegisterPage = () => {
             ...prevValues,
             [name]: value,
         }));
-        
+
         const cleanedValue = value.replace(/\D/g, '');
         setFormData((prevData) => ({
             ...prevData,
@@ -312,46 +327,47 @@ const RegisterPage = () => {
                                     </div>
 
                                     <form onSubmit={handleSubmit}>
+                                        <ThemeProvider theme={theme}>
+                                            <FormControl fullWidth className={classes.margin} variant="outlined">
 
-                                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                <TextField
+                                                    label="First Name"
+                                                    name="firstName"
+                                                    value={formData.firstName}
+                                                    onChange={handleChange}
+                                                    error={!!errors.firstName}
+                                                />
+                                                {errors.firstName ? (
+                                                    <div className="h-6 text-xs text-red-500">Error: {errors.firstName}</div>
+                                                ) : (<div className="h-6 text-xs "> </div>)}
+                                            </FormControl>
 
-                                            <TextField
-                                                label="First Name"
-                                                name="firstName"
-                                                value={formData.firstName}
-                                                onChange={handleChange}
-                                                error={!!errors.firstName}
-                                            />
-                                            {errors.firstName ? (
-                                                <div className="h-6 text-xs text-red-500">Error: {errors.firstName}</div>
-                                            ) : (<div className="h-6 text-xs "> </div>)}
-                                        </FormControl>
+                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                <TextField
+                                                    label="Last Name"
+                                                    name="lastName"
+                                                    value={formData.lastName}
+                                                    onChange={handleChange}
+                                                    error={!!errors.lastName}
+                                                />
+                                                {errors.lastName ? (
+                                                    <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
+                                                ) : (<div className="h-6 text-xs "> </div>)}
+                                            </FormControl>
 
-                                        <FormControl fullWidth className={classes.margin} variant="outlined">
-                                            <TextField
-                                                label="Last Name"
-                                                name="lastName"
-                                                value={formData.lastName}
-                                                onChange={handleChange}
-                                                error={!!errors.lastName}
-                                            />
-                                            {errors.lastName ? (
-                                                <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
-                                            ) : (<div className="h-6 text-xs "> </div>)}
-                                        </FormControl>
-
-                                        <FormControl fullWidth className={classes.margin} variant="outlined">
-                                            <TextField
-                                                label="Email"
-                                                name="email"
-                                                value={formData.email}
-                                                onChange={handleChange}
-                                                error={!!errors.email}
-                                            />
-                                            {errors.email ? (
-                                                <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
-                                            ) : (<div className="h-6 text-xs "> </div>)}
-                                        </FormControl>
+                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                <TextField
+                                                    label="Email"
+                                                    name="email"
+                                                    value={formData.email}
+                                                    onChange={handleChange}
+                                                    error={!!errors.email}
+                                                />
+                                                {errors.email ? (
+                                                    <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
+                                                ) : (<div className="h-6 text-xs "> </div>)}
+                                            </FormControl>
+                                        </ThemeProvider>
 
                                         <FormControl fullWidth className={classes.margin} variant="outlined">
                                             <div className="mb-5 mt-2 flex justify-center items-center gap-x-3 relative">
@@ -381,71 +397,72 @@ const RegisterPage = () => {
                                                 </Button>
                                             </div>
                                         </FormControl>
+                                        <ThemeProvider theme={theme}>
 
-                                        <FormControl fullWidth className={classes.margin} >
-                                            <InputLabel >Phone Number</InputLabel>
+                                            <FormControl fullWidth className={classes.margin} >
+                                                <InputLabel >Phone Number</InputLabel>
 
-                                            <Input
-                                                name="textmask"
-                                                value={values.textmask}
-                                                onChange={handleChangePhoneNumber}
-                                                id="formatted-text-mask-input"
-                                                inputComponent={TextMaskCustom as any}
-                                                error={!!errors.phoneNumber}
-                                            />
-                                            {errors.phoneNumber ? (
-                                                <div className="h-6 text-xs text-red-500">Error: {errors.phoneNumber}</div>
-                                            ) : (<div className="h-6 text-xs "> </div>)}
-                                        </FormControl>
+                                                <Input
+                                                    name="textmask"
+                                                    value={values.textmask}
+                                                    onChange={handleChangePhoneNumber}
+                                                    id="formatted-text-mask-input"
+                                                    inputComponent={TextMaskCustom as any}
+                                                    error={!!errors.phoneNumber}
+                                                />
+                                                {errors.phoneNumber ? (
+                                                    <div className="h-6 text-xs text-red-500">Error: {errors.phoneNumber}</div>
+                                                ) : (<div className="h-6 text-xs "> </div>)}
+                                            </FormControl>
 
 
-                                        <FormControl fullWidth className={classes.margin} variant="outlined">
-                                            <TextField
-                                                label="Password"
-                                                type={showPassword ? 'text' : 'password'}
-                                                name="password"
-                                                value={formData.password}
-                                                onChange={handleChange}
-                                                error={!!errors.password}
-                                                InputProps={{
-                                                    endAdornment: (
-                                                        <InputAdornment position="end">
-                                                            <IconButton onClick={handlePasswordToggle} edge="end">
-                                                                {showPassword ? <Visibility /> : <VisibilityOff />}
-                                                            </IconButton>
-                                                        </InputAdornment>
-                                                    ),
-                                                }}
-                                            />
-                                            {errors.password ? (
-                                                <div className="h-6 text-xs text-red-500">Error: {errors.password}</div>
-                                            ) : (<div className="h-6 text-xs "> </div>)}
-                                        </FormControl >
+                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                <TextField
+                                                    label="Password"
+                                                    type={showPassword ? 'text' : 'password'}
+                                                    name="password"
+                                                    value={formData.password}
+                                                    onChange={handleChange}
+                                                    error={!!errors.password}
+                                                    InputProps={{
+                                                        endAdornment: (
+                                                            <InputAdornment position="end">
+                                                                <IconButton onClick={handlePasswordToggle} edge="end">
+                                                                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                                                                </IconButton>
+                                                            </InputAdornment>
+                                                        ),
+                                                    }}
+                                                />
+                                                {errors.password ? (
+                                                    <div className="h-6 text-xs text-red-500">Error: {errors.password}</div>
+                                                ) : (<div className="h-6 text-xs "> </div>)}
+                                            </FormControl >
 
-                                        <FormControl fullWidth className={classes.margin} variant="outlined">
-                                            <TextField
-                                                label="Confirm Password "
-                                                type={showConfirmPassword ? 'text' : 'password'}
-                                                name="confirmPassword"
-                                                value={formData.confirmPassword}
-                                                onChange={handleChange}
-                                                error={!!errors.confirmPassword}
-                                                helperText={errors.confirmPassword}
-                                                InputProps={{
-                                                    endAdornment: (
-                                                        <InputAdornment position="end">
-                                                            <IconButton onClick={handleConfirmPasswordToggle} edge="end">
-                                                                {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
-                                                            </IconButton>
-                                                        </InputAdornment>
-                                                    ),
-                                                }}
-                                            />
-                                            {errors.confirmPassword ? (
-                                                <div className="h-6 text-xs text-red-500">Error: {errors.confirmPassword}</div>
-                                            ) : (<div className="h-12 text-xs "> </div>)}
-                                        </FormControl>
-
+                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                <TextField
+                                                    label="Confirm Password "
+                                                    type={showConfirmPassword ? 'text' : 'password'}
+                                                    name="confirmPassword"
+                                                    value={formData.confirmPassword}
+                                                    onChange={handleChange}
+                                                    error={!!errors.confirmPassword}
+                                                    helperText={errors.confirmPassword}
+                                                    InputProps={{
+                                                        endAdornment: (
+                                                            <InputAdornment position="end">
+                                                                <IconButton onClick={handleConfirmPasswordToggle} edge="end">
+                                                                    {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                                                                </IconButton>
+                                                            </InputAdornment>
+                                                        ),
+                                                    }}
+                                                />
+                                                {errors.confirmPassword ? (
+                                                    <div className="h-6 text-xs text-red-500">Error: {errors.confirmPassword}</div>
+                                                ) : (<div className="h-12 text-xs "> </div>)}
+                                            </FormControl>
+                                        </ThemeProvider>
 
                                         <FormControl fullWidth className={classes.margin} variant="outlined">
                                             <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>

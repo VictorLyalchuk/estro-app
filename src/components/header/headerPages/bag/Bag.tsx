@@ -11,31 +11,40 @@ import { message } from "antd";
 import { IOrderCreate } from "../../../../interfaces/Info/IOrderCreate";
 import { APP_ENV } from "../../../../env/config";
 import GoodsNotFound from "../../../../assets/goods-not-found.png";
-import { Button, FormControl, TextField } from '@material-ui/core';
+import { Button, FormControl, TextField, TextFieldProps } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import MaskedInput from 'react-text-mask';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import '../../../../satoshi.css';
+import Autocomplete from '@material-ui/lab/Autocomplete';
+import { JSX } from "react/jsx-runtime";
+import { IAreas } from "../../../../interfaces/Bag/IAreas";
+import { ICity } from "../../../../interfaces/Bag/ICity";
+import { IWarehouse } from "../../../../interfaces/Bag/IWarehouse";
+
+const theme = createTheme({
+  typography: {
+    fontFamily: 'Satoshi, sans-serif',
+  },
+  overrides: {
+    MuiTextField: {
+      root: {
+        fontFamily: 'Satoshi, sans-serif',
+      },
+    },
+  },
+});
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      display: 'flex',
-      flexWrap: 'wrap',
-    },
     margin: {
       margin: theme.spacing(0),
-    },
-    input: {
     },
     button: {
       textTransform: 'none',
     },
-    withoutLabel: {
-      marginTop: theme.spacing(3),
-    },
-    textField: {
-      '& .MuiInputBase-root': {
-        height: '60px',
-      },
+    satoshiFont: {
+      fontFamily: 'Satoshi, sans-serif',
     },
   }),
 );
@@ -175,28 +184,28 @@ const Bag = () => {
     };
     event.preventDefault();
     if (validateForm()) {
-    try {
-      await axios.post(`${baseUrl}/api/OrderControllers/CreateOrder`, model, {
-        headers: {
-          "Content-Type": "application/json"
+      try {
+        await axios.post(`${baseUrl}/api/OrderControllers/CreateOrder`, model, {
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+      }
+      catch (ex) {
+        message.error('Error adding product!');
+      }
+      dispatch({
+        type: CardReducerActionType.DELETE_ALL,
+      });
+      dispatch({
+        type: BagReducerActionType.DELETE_PRODUCT_BAG_COUNT,
+        payload: {
+          minuscount: 0
         }
       });
+    } else {
+      console.log(formData);
     }
-    catch (ex) {
-      message.error('Error adding product!');
-    }
-    dispatch({
-      type: CardReducerActionType.DELETE_ALL,
-    });
-    dispatch({
-      type: BagReducerActionType.DELETE_PRODUCT_BAG_COUNT,
-      payload: {
-        minuscount: 0
-      }
-    });
-  } else {
-    console.log(formData);
-}
   }
 
   const [formData, setFormData] = useState({
@@ -282,7 +291,7 @@ const Bag = () => {
       ...prevValues,
       [name]: value,
     }));
-    
+
     const cleanedValue = value.replace(/\D/g, '');
 
     setFormData((prevData) => ({
@@ -305,9 +314,73 @@ const Bag = () => {
     }));
   };
 
+  const [areaSelected, setSelectedArea] = useState(false);
+  const [warehouseSelected, setSelectedWarehouse] = useState(false);
+
+  const [warehouseOptions, setWarehouseOptions] = useState<IWarehouse[]>([]);
+  const [cityOptions, setCityOptions] = useState<ICity[]>([]);
+  const [areaOptions, setAreaOptions] = useState<IAreas[]>([]);
+
+  const [selectedWarehouseOptions, setSelectedWarehouseOptions] = useState<IWarehouse | null>(null);
+  const [selectedCityOptions, setSelectedCityOptions] = useState<ICity | null>(null);
+
+  const [city, setCity] = useState<string>('');
+  const [area, setArea] = useState<string>('');
+
+  const handleChangeArea = (_e: React.ChangeEvent<{}>, value: IAreas | null) => {
+    if (value) {
+      setArea(value?.Ref);
+      setSelectedArea(true);
+    }
+  };
+
+  const handleChangeCity = (_e: React.ChangeEvent<{}>, value: ICity | null) => {
+    if (!value) {
+      setSelectedCityOptions(null);
+    } else {
+      setSelectedWarehouse(true);
+      setCity(value.Ref);
+      setSelectedCityOptions(value);
+    }
+  }
+
+  const handleChangeWarehouse = (_e: React.ChangeEvent<{}>, value: IWarehouse | null) => {
+    if (!value) {
+      setSelectedWarehouseOptions(null);
+    } else {
+      setSelectedWarehouseOptions(value);
+    }
+  }
+  useEffect(() => {
+    GetArea();
+  }, []);
+
   useEffect(() => {
     GetCity();
-  }, []);
+  }, [area]);
+
+  useEffect(() => {
+    GetWarehouse();
+  }, [city]);
+
+  const GetWarehouse = async () => {
+    const apiUrl = 'https://api.novaposhta.ua/v2.0/json/';
+    const payload = {
+      apiKey: 'f8df4fb4933f7b40c96b872a1901be8e',
+      modelName: 'Address',
+      calledMethod: 'getWarehouses',
+      methodProperties: {
+        "CityRef": city
+      }
+    };
+
+    try {
+      const response = await axios.post(apiUrl, payload);
+      setWarehouseOptions(response.data.data);
+    } catch (error) {
+      console.error('Error fetching warehouses', error);
+    }
+  }
 
   const GetCity = async () => {
     const apiUrl = 'https://api.novaposhta.ua/v2.0/json/';
@@ -316,16 +389,35 @@ const Bag = () => {
       modelName: 'Address',
       calledMethod: 'getCities',
       methodProperties: {
-        "FindByString": "Рівне"
+        // "FindByString": city,
+        "AreaRef": area
       }
     };
 
     try {
       const response = await axios.post(apiUrl, payload);
-
-      console.log(response.data);
+      setCityOptions(response.data.data);
     } catch (error) {
-      console.error('Error fetching departments', error);
+      console.error('Error fetching cities', error);
+    }
+  }
+
+  const GetArea = async () => {
+    const apiUrl = 'https://api.novaposhta.ua/v2.0/json/';
+    const payload = {
+      apiKey: 'f8df4fb4933f7b40c96b872a1901be8e',
+      modelName: 'Address',
+      calledMethod: 'getAreas',
+      methodProperties: {
+        "FindByString": area
+      }
+    };
+
+    try {
+      const response = await axios.post(apiUrl, payload);
+      setAreaOptions(response.data.data);
+    } catch (error) {
+      console.error('Error fetching ares', error);
     }
   }
 
@@ -398,75 +490,75 @@ const Bag = () => {
                       <label htmlFor="firstName" className="text-gray-600 font-semibold">
                         First Name
                       </label>
-                      <FormControl fullWidth className={classes.margin} variant="outlined">
-                        <TextField
-                          name="firstName"
-                          value={formData.firstName}
-                          onChange={handleChange}
-                          error={!!errors.firstName}
-                          variant="outlined"
-                          size="small"
-                        />
-                        {errors.firstName ? (
-                          <div className="h-6 text-xs text-red-500">Error: {errors.firstName}</div>
-                        ) : (<div className="h-6 text-xs "> </div>)}
-                      </FormControl>
+                      <ThemeProvider theme={theme}>
+                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                          <TextField
+                            name="firstName"
+                            value={formData.firstName}
+                            onChange={handleChange}
+                            error={!!errors.firstName}
+                            variant="outlined"
+                            size="small"
+                          />
+                          {errors.firstName ? (
+                            <div className="h-6 text-xs text-red-500">Error: {errors.firstName}</div>
+                          ) : (<div className="h-6 text-xs "> </div>)}
+                        </FormControl>
+                        <label htmlFor="LastName" className="text-gray-600 font-semibold">
+                          Last Name
+                        </label>
+                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                          <TextField
+                            name="lastName"
+                            value={formData.lastName}
+                            onChange={handleChange}
+                            error={!!errors.lastName}
+                            variant="outlined"
+                            size="small"
+                          />
+                          {errors.lastName ? (
+                            <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
+                          ) : (<div className="h-6 text-xs "> </div>)}
+                        </FormControl>
 
-                      <label htmlFor="LastName" className="text-gray-600 font-semibold">
-                        Last Name
-                      </label>
-                      <FormControl fullWidth className={classes.margin} variant="outlined">
-                        <TextField
-                          name="lastName"
-                          value={formData.lastName}
-                          onChange={handleChange}
-                          error={!!errors.lastName}
-                          variant="outlined"
-                          size="small"
-                        />
-                        {errors.lastName ? (
-                          <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
-                        ) : (<div className="h-6 text-xs "> </div>)}
-                      </FormControl>
+                        <label htmlFor="email" className="text-gray-600 font-semibold">
+                          Email
+                        </label>
+                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                          <TextField
+                            name="email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            error={!!errors.email}
+                            variant="outlined"
+                            size="small"
+                          />
+                          {errors.email ? (
+                            <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
+                          ) : (<div className="h-6 text-xs "> </div>)}
+                        </FormControl>
 
-                      <label htmlFor="email" className="text-gray-600 font-semibold">
-                        Email
-                      </label>
-                      <FormControl fullWidth className={classes.margin} variant="outlined">
-                        <TextField
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          error={!!errors.email}
-                          variant="outlined"
-                          size="small"
-                        />
-                        {errors.email ? (
-                          <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
-                        ) : (<div className="h-6 text-xs "> </div>)}
-                      </FormControl>
-
-                      <label htmlFor="phoneNumber" className="text-gray-600 font-semibold">
-                        Phone Number
-                      </label>
-                      <FormControl fullWidth className={classes.margin} variant="outlined">
-                        <TextField
-                          name="textmask"
-                          value={values.textmask}
-                          onChange={handleChangePhoneNumber}
-                          id="formatted-text-mask-input"
-                          error={!!errors.phoneNumber}
-                          variant="outlined"
-                          size="small"
-                          InputProps={{
-                            inputComponent: TextMaskCustom as any,
-                          }}
-                        />
-                        {errors.phoneNumber ? (
-                          <div className="h-6 text-xs text-red-500">Error: {errors.phoneNumber}</div>
-                        ) : (<div className="h-6 text-xs "> </div>)}
-                      </FormControl>
-
+                        <label htmlFor="phoneNumber" className="text-gray-600 font-semibold">
+                          Phone Number
+                        </label>
+                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                          <TextField
+                            name="textmask"
+                            value={values.textmask}
+                            onChange={handleChangePhoneNumber}
+                            id="formatted-text-mask-input"
+                            error={!!errors.phoneNumber}
+                            variant="outlined"
+                            size="small"
+                            InputProps={{
+                              inputComponent: TextMaskCustom as any,
+                            }}
+                          />
+                          {errors.phoneNumber ? (
+                            <div className="h-6 text-xs text-red-500">Error: {errors.phoneNumber}</div>
+                          ) : (<div className="h-6 text-xs "> </div>)}
+                        </FormControl>
+                      </ThemeProvider>
                     </div>
                   </div>
                 </div>
@@ -478,20 +570,89 @@ const Bag = () => {
                   <div className="border-t pt-4">
                     <div className="">
                       <label htmlFor="address" className="text-gray-600 font-semibold">
-                        Delivery Address
+                        Area
                       </label>
-                      <FormControl fullWidth className={classes.margin} variant="outlined">
-                        <TextField
-                          name="address"
-                          value={formData.address}
-                          onChange={handleChange}
-                          variant="outlined"
-                          size="small"
-                        />
-                        {errors.address ? (
-                          <div className="h-6 text-xs text-red-500">Error: {errors.address}</div>
-                        ) : (<div className="h-6 text-xs "> </div>)}
-                      </FormControl>
+
+                      <ThemeProvider theme={theme}>
+                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                          <Autocomplete
+                            id="area"
+                            options={areaOptions}
+                            getOptionLabel={(option) => option.Description}
+                            getOptionSelected={(option, value) => option.Ref === value.Ref}
+                            onChange={handleChangeArea}
+                            className={classes.satoshiFont} 
+
+                            renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"
+                                fullWidth
+                                size="small"
+                                className={classes.satoshiFont}
+                              />
+                            )}
+                          />
+                          {errors.lastName ? (
+                            <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
+                          ) : (<div className="h-6 text-xs "> </div>)}
+                        </FormControl>
+
+                      <label htmlFor="address" className="text-gray-600 font-semibold">
+                        City
+                      </label>
+
+                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                          <Autocomplete
+                            id="city"
+                            options={cityOptions}
+                            getOptionLabel={(option) => option.Description}
+                            getOptionSelected={(option, value) => option.Ref === value.Ref}
+                            value={cityOptions.find(option => option.Ref === selectedCityOptions?.Ref) || null}
+                            onChange={handleChangeCity}
+                            disabled={!areaSelected}
+                            renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"
+                                fullWidth
+                                size="small"
+                              />
+                            )}
+                          />
+                          {errors.lastName ? (
+                            <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
+                          ) : (<div className="h-6 text-xs "> </div>)}
+                        </FormControl>
+
+                        <label htmlFor="address" className="text-gray-600 font-semibold">
+                        Warehouse
+                      </label>
+
+                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                          <Autocomplete
+                            id="warehouse"
+                            options={warehouseOptions.filter(option => option.CategoryOfWarehouse === 'Branch')}
+                            getOptionLabel={(option) => option.Description}
+                            getOptionSelected={(option, value) => option.Ref === value.Ref}
+                            value={warehouseOptions.find(option => option.Ref === selectedWarehouseOptions?.Ref) || null}
+                            onChange={handleChangeWarehouse}
+                            disabled={!warehouseSelected}
+                            renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
+                              <TextField
+                                {...params}
+                                variant="outlined"
+                                fullWidth
+                                size="small"
+                              />
+                            )}
+                          />
+                          {errors.lastName ? (
+                            <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
+                          ) : (<div className="h-6 text-xs "> </div>)}
+                        </FormControl>
+
+                      </ThemeProvider>
                     </div>
                   </div>
                 </div>
