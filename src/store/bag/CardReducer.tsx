@@ -13,22 +13,22 @@ export interface ICardReducerState {
     items: BagItems[] | null,
     quantity: number,
     total: number,
-    taxes: string,
-    totalWithOutTax: string,
+    taxes: number,
+    totalWithOutTax: number,
     initialIndividualItemPrice: { [itemId: number]: number };
 }
 
 interface ICardReducerAction {
     type: CardReducerActionType;
-    payload?: { items?: BagItems[]; itemId?: number; quantity?: number; total?: number; taxes: string; totalWithOutTax: string };
+    payload?: { items?: BagItems[]; itemId?: number; quantity?: number; total?: number; taxes: number; totalWithOutTax: number };
 }
 
 const initState: ICardReducerState = {
     items: null,
     quantity: 0,
     total: 0,
-    taxes: "",
-    totalWithOutTax: ",",
+    taxes: 0,
+    totalWithOutTax: 0,
     initialIndividualItemPrice: {},
 }
 
@@ -49,8 +49,8 @@ const cardReducer = (state = initState, action: ICardReducerAction): ICardReduce
                 ...state,
                 items: items,
                 total: initialTotal,
-                taxes: (initialTaxes).toFixed(2),
-                totalWithOutTax: (initialTotalWithOutTax).toFixed(2),
+                taxes: (initialTaxes),
+                totalWithOutTax: (initialTotalWithOutTax),
                 initialIndividualItemPrice: initialIndividualItemPrice,
             };
         case CardReducerActionType.DELETE:
@@ -70,9 +70,9 @@ const cardReducer = (state = initState, action: ICardReducerAction): ICardReduce
                 items: [],
                 total: 0,
                 quantity: 0,
-                totalWithOutTax: "",
+                totalWithOutTax: 0,
                 initialIndividualItemPrice: {},
-                taxes: "",
+                taxes: 0,
             };
 
 

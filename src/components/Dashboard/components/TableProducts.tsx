@@ -73,7 +73,7 @@ const TableTwo = () => {
     return (
         <>
             <div className="rounded-sm border border-stroke bg-gray-100 shadow-default dark:border-strokedark dark:bg-boxdark">
-                <div className="py-6 px-4 md:px-6 xl:px-7.5">
+                <div className="py-6 px-4 md:px-6 xl:px-7.5 bg-gray-100">
                     <h4 className="text-xl font-semibold text-black dark:text-white">
                         Products
                     </h4>
@@ -109,7 +109,7 @@ const TableTwo = () => {
 
                 {productList.map((product) => (
                     <>
-                        <div className="grid grid-cols-7 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-11 md:px-6 2xl:px-7.5 hover:bg-indigo-300 hover:text-white">
+                        <div className="grid grid-cols-7 border-t border-stroke py-4.5 px-4 dark:border-strokedark sm:grid-cols-11 md:px-6 2xl:px-7.5 hover:bg-indigo-500 hover:text-white">
                             <div className="col-span-1 hidden items-center sm:flex">
                                 <p className="text-sm dark:text-white ">{product.id}</p>
                             </div>
