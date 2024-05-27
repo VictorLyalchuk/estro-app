@@ -21,6 +21,7 @@ if (localStorage.token) {
       LastName: user.LastName,
       Role: user.Role,
       ImagePath: user.ImagePath,
+      PhoneNumber: user.PhoneNumber
     } as IUser
   });
 

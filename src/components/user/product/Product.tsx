@@ -10,7 +10,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { BagReducerActionType } from '../../../store/bag/BagReducer';
-import { IBag } from '../../../interfaces/Info/IBag';
+import { IBag } from '../../../interfaces/Bag/IBag';
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer';
 import {APP_ENV} from "../../../env/config";
 

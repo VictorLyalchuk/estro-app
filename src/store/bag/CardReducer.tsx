@@ -1,4 +1,4 @@
-import { BagItems } from "../../interfaces/Info/IBagUser";
+import { BagItems } from "../../interfaces/Bag/IBagUser";
 
 export enum CardReducerActionType {
     SET = "SET_ITEM",

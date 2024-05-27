@@ -1,26 +1,26 @@
 import { useDispatch, useSelector } from "react-redux";
 import { IAuthReducerState } from "../../../../store/accounts/AuthReducer";
 import { useEffect, useState } from "react";
-import { BagItems, IBagUser } from "../../../../interfaces/Info/IBagUser";
+import { BagItems, IBagUser } from "../../../../interfaces/Bag/IBagUser";
 import axios from "axios";
 import moment from "moment";
 import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { BagReducerActionType, IBagReducerState } from "../../../../store/bag/BagReducer";
 import { CardReducerActionType, ICardReducerState } from "../../../../store/bag/CardReducer";
 import { message } from "antd";
-import { IOrderCreate } from "../../../../interfaces/Info/IOrderCreate";
+import { IOrderCreate } from "../../../../interfaces/Bag/IOrderCreate";
 import { APP_ENV } from "../../../../env/config";
 import GoodsNotFound from "../../../../assets/goods-not-found.png";
-import { Button, FormControl, TextField, TextFieldProps } from '@material-ui/core';
+import { FormControl, TextField, TextFieldProps } from '@material-ui/core';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import MaskedInput from 'react-text-mask';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import '../../../../satoshi.css';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { JSX } from "react/jsx-runtime";
-import { IAreas } from "../../../../interfaces/Bag/IAreas";
 import { ICity } from "../../../../interfaces/Bag/ICity";
 import { IWarehouse } from "../../../../interfaces/Bag/IWarehouse";
+import { RadioGroup } from '@headlessui/react';
+import { IStore } from "../../../../interfaces/Site/IStore";
 
 const theme = createTheme({
   typography: {
@@ -49,28 +49,16 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 );
 
-interface TextMaskCustomProps {
-  inputRef: (ref: HTMLInputElement | null) => void;
-}
+const deliveryList = [
+  { id: 'Branch', title: 'Sending to the Branch', subtitle: 'Money Transfer Fees' },
+  { id: 'Postomat', title: 'Sending to the Postomat', subtitle: 'Full payment required' },
+  { id: 'Store', title: 'Sending to the Store', subtitle: 'Free shipping' },
+];
 
-function TextMaskCustom(props: TextMaskCustomProps) {
-  const { inputRef, ...other } = props;
-
-  return (
-    <MaskedInput
-      {...other}
-      ref={(ref: any) => {
-        inputRef(ref ? ref.inputElement : null);
-      }}
-      mask={['(', /[0-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
-      placeholderChar={'\u2000'}
-    />
-  );
-}
-
-interface State {
-  textmask: string;
-}
+const paymentList = [
+  { id: 'PaymentAfter', title: 'Payment upon receipt', subtitle: 'Delivery payment at the carriers rates, including cash on delivery services. The service is available for goods worth 1,000 hryvnias or more. WARNING! All ordered goods are sent by separate parcels.' },
+  { id: 'PaymentBefore', title: 'Payment on the website', subtitle: 'If the cost of a product unit is over 1,000 hryvnias - delivery is free. WARNING! All goods are sent by separate parcels' },
+];
 const Bag = () => {
   const baseUrl = APP_ENV.BASE_URL;
   const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
@@ -83,9 +71,20 @@ const Bag = () => {
   const { initialIndividualItemPrice } = useSelector((redux: any) => redux.cardReducer as ICardReducerState);
   const bagItems = useSelector((state: { cardReducer: ICardReducerState }) => state.cardReducer.items) || [];
   const classes = useStyles();
-  const [values, setValues] = useState<State>({
-    textmask: '(   )    -  -  ',
-  });
+
+  const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
+  const [selectedShipping, setSelectedShipping] = useState<string | null>(null);
+  const [warehouseSelected, setSelectedWarehouse] = useState(false);
+  const [warehouseOptions, setWarehouseOptions] = useState<IWarehouse[]>([]);
+  const [selectedWarehouseOptions, setSelectedWarehouseOptions] = useState<IWarehouse | null>(null);
+  const [warehouse, setWarehouse] = useState<string>('');
+  const [cityOptions, setCityOptions] = useState<ICity[]>([]);
+  const [city, setCity] = useState<string>('');
+  const [storeOptions, setStoreOptions] = useState<IStore[]>([]);
+  const [filteredStores, setFilteredStores] = useState(storeOptions);
+  const [storeCities, setStoreCities] = useState<string[]>([]);
+  const [selectedStoreCity, setSelectedStoreCity] = useState<string | null>('');
+  const [selectedStore, setSelectedStore] = useState<IStore | null>(null);
 
   useEffect(() => {
     if (user) {
@@ -117,7 +116,18 @@ const Bag = () => {
           console.error("Error fetching bag data:", error);
         });
     }
+    GetCity();
+    GetStore();
+    setSelectedShipping('Branch');
   }, [user, count]);
+
+  useEffect(() => {
+    GetWarehouse();
+  }, [city]);
+
+  useEffect(() => {
+    clearFields();
+  }, [selectedShipping]);
 
   const deleteItems = async (item: BagItems) => {
     const quant = item.quantity;
@@ -180,7 +190,7 @@ const Bag = () => {
       firstName: formData.firstName,
       lastName: formData.lastName,
       phonenumber: formData.phoneNumber,
-      address: formData.address,
+      address: selectedWarehouseOptions ? selectedWarehouseOptions?.CityDescription + ', ' + selectedWarehouseOptions?.Description : selectedStore?.city + ' ' + selectedStore?.name + ' ' + selectedStore?.address,
     };
     event.preventDefault();
     if (validateForm()) {
@@ -203,8 +213,6 @@ const Bag = () => {
           minuscount: 0
         }
       });
-    } else {
-      console.log(formData);
     }
   }
 
@@ -212,7 +220,7 @@ const Bag = () => {
     firstName: user?.FirstName || '',
     lastName: user?.LastName || '',
     email: user?.Email || '',
-    phoneNumber: user?.PhoneNumber || '',
+    phoneNumber: '+38' + user?.PhoneNumber,
     address: '',
   });
 
@@ -221,15 +229,12 @@ const Bag = () => {
     lastName: '',
     email: '',
     phoneNumber: '',
-    address: '',
+    city: '',
+    warehouse: '',
   });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
-    setValues((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
 
     setFormData((prevData) => ({
       ...prevData,
@@ -246,7 +251,8 @@ const Bag = () => {
       phoneNumber: string;
       email: string;
       password: string;
-      address: string;
+      city: string;
+      warehouse: string;
     } = {
       firstName: "",
       lastName: "",
@@ -254,7 +260,8 @@ const Bag = () => {
       phoneNumber: "",
       email: "",
       password: "",
-      address: ""
+      city: "",
+      warehouse: "",
     };
 
     if (formData.firstName.trim() === '') {
@@ -266,81 +273,43 @@ const Bag = () => {
       newErrors.lastName = 'Last Name is required';
       isValid = false;
     }
-    const cleanedPhoneNumber = values.textmask.replace(/\D/g, '');
-    if (cleanedPhoneNumber.trim() === '') {
-      newErrors.phoneNumber = 'Phone Number is required';
-      isValid = false;
-    }
-    else if (!/^(067|095|099|066|063|098|097|096)\d{7}$/.test(cleanedPhoneNumber)) {
-      newErrors.phoneNumber = 'Invalid phone number format';
-      isValid = false;
-    }
 
     if (formData.email.trim() === '' || !/\S+@\S+\.\S+/.test(formData.email)) {
       newErrors.email = 'Invalid email address';
       isValid = false;
     }
 
+    if (city.trim() === '') {
+      newErrors.city = 'City is required';
+      isValid = false;
+    }
+
+    if (selectedShipping === 'Branch') {
+      if (warehouse.trim() === '') {
+        newErrors.warehouse = 'Warehouse is required';
+        isValid = false;
+      }
+    }
+    if (selectedShipping === 'Postomat') {
+      if (warehouse.trim() === '') {
+        newErrors.warehouse = 'Postomat is required';
+        isValid = false;
+      }
+    }
+    if (selectedShipping === 'Store') {
+      if (warehouse.trim() === '') {
+        newErrors.warehouse = 'Store is required';
+        isValid = false;
+      }
+    }
     setErrors(newErrors);
     return isValid;
   };
 
-  const handleChangePhoneNumber = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = event.target;
-    setValues((prevValues) => ({
-      ...prevValues,
-      [name]: value,
-    }));
-
-    const cleanedValue = value.replace(/\D/g, '');
-
-    setFormData((prevData) => ({
-      ...prevData,
-      phoneNumber: cleanedValue,
-    }));
-    validatePhoneNumber(cleanedValue);
-  };
-
-  const validatePhoneNumber = (value: string) => {
-    const isValidPrefix = /^(067|095|099|066|063|098|097|096)/.test(value.substr(0, 3));
-
-    const isValidDigits = /^\d{7}$/.test(value.substr(3));
-
-    const isValid = isValidPrefix && isValidDigits;
-
-    setErrors((prevErrors) => ({
-      ...prevErrors,
-      phoneNumber: isValid ? '' : 'Invalid phone number format',
-    }));
-  };
-
-  const [areaSelected, setSelectedArea] = useState(false);
-  const [warehouseSelected, setSelectedWarehouse] = useState(false);
-
-  const [warehouseOptions, setWarehouseOptions] = useState<IWarehouse[]>([]);
-  const [cityOptions, setCityOptions] = useState<ICity[]>([]);
-  const [areaOptions, setAreaOptions] = useState<IAreas[]>([]);
-
-  const [selectedWarehouseOptions, setSelectedWarehouseOptions] = useState<IWarehouse | null>(null);
-  const [selectedCityOptions, setSelectedCityOptions] = useState<ICity | null>(null);
-
-  const [city, setCity] = useState<string>('');
-  const [area, setArea] = useState<string>('');
-
-  const handleChangeArea = (_e: React.ChangeEvent<{}>, value: IAreas | null) => {
-    if (value) {
-      setArea(value?.Ref);
-      setSelectedArea(true);
-    }
-  };
-
   const handleChangeCity = (_e: React.ChangeEvent<{}>, value: ICity | null) => {
-    if (!value) {
-      setSelectedCityOptions(null);
-    } else {
+    if (value) {
       setSelectedWarehouse(true);
       setCity(value.Ref);
-      setSelectedCityOptions(value);
     }
   }
 
@@ -348,20 +317,27 @@ const Bag = () => {
     if (!value) {
       setSelectedWarehouseOptions(null);
     } else {
+      setWarehouse(value.Ref);
       setSelectedWarehouseOptions(value);
     }
   }
-  useEffect(() => {
-    GetArea();
-  }, []);
 
-  useEffect(() => {
-    GetCity();
-  }, [area]);
+  const handleChangeStoreCity = (_e: React.ChangeEvent<{}>, value: string | null) => {
+    if (value !== selectedStoreCity) {
+      setSelectedWarehouse(true);
+      setSelectedStoreCity(value);
+      const filtered = value ? storeOptions.filter(store => store.city === value) : storeOptions;
+      setFilteredStores(filtered);
+      setCity(value || '');
+    }
+  }
 
-  useEffect(() => {
-    GetWarehouse();
-  }, [city]);
+  const handleChangeStore = (_e: React.ChangeEvent<{}>, value: IStore | null) => {
+    if (value) {
+      setSelectedStore(value);
+      setWarehouse(value?.name);
+    };
+  }
 
   const GetWarehouse = async () => {
     const apiUrl = 'https://api.novaposhta.ua/v2.0/json/';
@@ -389,8 +365,6 @@ const Bag = () => {
       modelName: 'Address',
       calledMethod: 'getCities',
       methodProperties: {
-        // "FindByString": city,
-        "AreaRef": area
       }
     };
 
@@ -402,24 +376,25 @@ const Bag = () => {
     }
   }
 
-  const GetArea = async () => {
-    const apiUrl = 'https://api.novaposhta.ua/v2.0/json/';
-    const payload = {
-      apiKey: 'f8df4fb4933f7b40c96b872a1901be8e',
-      modelName: 'Address',
-      calledMethod: 'getAreas',
-      methodProperties: {
-        "FindByString": area
-      }
-    };
-
+  const GetStore = async () => {
     try {
-      const response = await axios.post(apiUrl, payload);
-      setAreaOptions(response.data.data);
+      const resp = await axios.get<IStore[]>(`${baseUrl}/api/StoreControllers/StoreAll`);
+      setStoreOptions(resp.data);
+      const uniqueCities = Array.from(new Set(resp.data.map(option => option.city)));
+      setStoreCities(uniqueCities);
+
     } catch (error) {
-      console.error('Error fetching ares', error);
+      console.error('Error fetching stores', error);
     }
   }
+
+  const clearFields = async () => {
+    setWarehouse("");
+    setCity("");
+    setSelectedWarehouseOptions(null);
+    setSelectedStore(null);
+    setSelectedWarehouse(false);
+  };
 
   return (
     <div className="bg-gray-100">
@@ -543,15 +518,14 @@ const Bag = () => {
                         </label>
                         <FormControl fullWidth className={classes.margin} variant="outlined">
                           <TextField
-                            name="textmask"
-                            value={values.textmask}
-                            onChange={handleChangePhoneNumber}
+                            name="PhoneNumber"
+                            value={formData.phoneNumber}
                             id="formatted-text-mask-input"
-                            error={!!errors.phoneNumber}
                             variant="outlined"
                             size="small"
+                            disabled
                             InputProps={{
-                              inputComponent: TextMaskCustom as any,
+                              style: { fontWeight: 'bold' },
                             }}
                           />
                           {errors.phoneNumber ? (
@@ -569,89 +543,207 @@ const Bag = () => {
                   </div>
                   <div className="border-t pt-4">
                     <div className="">
-                      <label htmlFor="address" className="text-gray-600 font-semibold">
-                        Area
-                      </label>
 
                       <ThemeProvider theme={theme}>
-                        <FormControl fullWidth className={classes.margin} variant="outlined">
-                          <Autocomplete
-                            id="area"
-                            options={areaOptions}
-                            getOptionLabel={(option) => option.Description}
-                            getOptionSelected={(option, value) => option.Ref === value.Ref}
-                            onChange={handleChangeArea}
-                            className={classes.satoshiFont} 
 
-                            renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
-                              <TextField
-                                {...params}
-                                variant="outlined"
-                                fullWidth
-                                size="small"
-                                className={classes.satoshiFont}
+                        <div className={classes.margin}>
+                          <RadioGroup value={selectedShipping} onChange={setSelectedShipping} >
+                            <RadioGroup.Label className="sr-only">Delivery Information</RadioGroup.Label>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                              {deliveryList.map((delivery) => (
+                                <RadioGroup.Option
+                                  key={delivery.id}
+                                  value={delivery.id}
+                                  className={({ active, checked }) =>
+                                    `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer ${active ? 'border-2 border-blue-700' : ''
+                                    } ${checked ? 'border-2 border-blue-700' : 'border-2 border-gray-200'}`
+                                  }
+                                >
+                                  {({ checked }) => (
+                                    <div className="px-6 py-4">
+                                      <div className="flex items-center justify-between">
+                                        <RadioGroup.Label as="div" className="font-bold text-xl mb-2 mr-10">
+                                          {delivery.title}
+                                        </RadioGroup.Label>
+                                        {checked && (
+                                          <span className="text-blue-700 font-bold">&#10003;</span>
+                                        )}
+                                      </div>
+                                      <p className="text-gray-700 text-base">{delivery.subtitle}</p>
+                                    </div>
+                                  )}
+                                </RadioGroup.Option>
+                              ))}
+                            </div>
+                          </RadioGroup>
+                        </div>
+
+                        {selectedShipping === 'Branch' && (
+                          <div className="mt-5">
+                            <label htmlFor="address" className="text-gray-600 font-semibold">
+                              City
+                            </label>
+
+                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                              <Autocomplete
+                                id="city"
+                                options={cityOptions.filter(option => option.SettlementTypeDescription === 'місто')}
+                                getOptionLabel={(option) => option.Description}
+                                onChange={handleChangeCity}
+                                renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
+                                  <TextField
+                                    {...params}
+                                    variant="outlined"
+                                    fullWidth
+                                    size="small"
+                                    error={!!errors.city}
+                                  />
+                                )}
                               />
-                            )}
-                          />
-                          {errors.lastName ? (
-                            <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
-                          ) : (<div className="h-6 text-xs "> </div>)}
-                        </FormControl>
+                              {errors.city ? (
+                                <div className="h-6 text-xs text-red-500">Error: {errors.city}</div>
+                              ) : (<div className="h-6 text-xs "> </div>)}
+                            </FormControl>
 
-                      <label htmlFor="address" className="text-gray-600 font-semibold">
-                        City
-                      </label>
+                            <label htmlFor="address" className="text-gray-600 font-semibold">
+                              Warehouse
+                            </label>
 
-                        <FormControl fullWidth className={classes.margin} variant="outlined">
-                          <Autocomplete
-                            id="city"
-                            options={cityOptions}
-                            getOptionLabel={(option) => option.Description}
-                            getOptionSelected={(option, value) => option.Ref === value.Ref}
-                            value={cityOptions.find(option => option.Ref === selectedCityOptions?.Ref) || null}
-                            onChange={handleChangeCity}
-                            disabled={!areaSelected}
-                            renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
-                              <TextField
-                                {...params}
-                                variant="outlined"
-                                fullWidth
-                                size="small"
+                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                              <Autocomplete
+                                id="warehouse"
+                                options={warehouseOptions.filter(option => option.CategoryOfWarehouse === 'Branch')}
+                                getOptionLabel={(option) => option.Description}
+                                value={warehouseOptions.find(option => option.CityRef === selectedWarehouseOptions?.CityRef) || null}
+                                onChange={handleChangeWarehouse}
+                                disabled={!warehouseSelected}
+                                renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
+                                  <TextField
+                                    {...params}
+                                    variant="outlined"
+                                    fullWidth
+                                    size="small"
+                                    error={!!errors.warehouse}
+                                  />
+                                )}
                               />
-                            )}
-                          />
-                          {errors.lastName ? (
-                            <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
-                          ) : (<div className="h-6 text-xs "> </div>)}
-                        </FormControl>
+                              {errors.warehouse ? (
+                                <div className="h-6 text-xs text-red-500">Error: {errors.warehouse}</div>
+                              ) : (<div className="h-6 text-xs "> </div>)}
+                            </FormControl>
+                          </div>
+                        )}
 
-                        <label htmlFor="address" className="text-gray-600 font-semibold">
-                        Warehouse
-                      </label>
+                        {selectedShipping === 'Postomat' && (
+                          <div className="mt-5">
+                            <label htmlFor="address" className="text-gray-600 font-semibold">
+                              City
+                            </label>
 
-                        <FormControl fullWidth className={classes.margin} variant="outlined">
-                          <Autocomplete
-                            id="warehouse"
-                            options={warehouseOptions.filter(option => option.CategoryOfWarehouse === 'Branch')}
-                            getOptionLabel={(option) => option.Description}
-                            getOptionSelected={(option, value) => option.Ref === value.Ref}
-                            value={warehouseOptions.find(option => option.Ref === selectedWarehouseOptions?.Ref) || null}
-                            onChange={handleChangeWarehouse}
-                            disabled={!warehouseSelected}
-                            renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
-                              <TextField
-                                {...params}
-                                variant="outlined"
-                                fullWidth
-                                size="small"
+                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                              <Autocomplete
+                                id="city"
+                                options={cityOptions.filter(option => option.SettlementTypeDescription === 'місто')}
+                                getOptionLabel={(option) => option.Description}
+                                onChange={handleChangeCity}
+                                renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
+                                  <TextField
+                                    {...params}
+                                    variant="outlined"
+                                    fullWidth
+                                    size="small"
+                                    error={!!errors.city}
+                                  />
+                                )}
                               />
-                            )}
-                          />
-                          {errors.lastName ? (
-                            <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
-                          ) : (<div className="h-6 text-xs "> </div>)}
-                        </FormControl>
+                              {errors.city ? (
+                                <div className="h-6 text-xs text-red-500">Error: {errors.city}</div>
+                              ) : (<div className="h-6 text-xs "> </div>)}
+                            </FormControl>
 
+                            <label htmlFor="address" className="text-gray-600 font-semibold">
+                              Postomat
+                            </label>
+
+                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                              <Autocomplete
+                                id="warehouse"
+                                options={warehouseOptions.filter(option => option.CategoryOfWarehouse === 'Postomat')}
+                                getOptionLabel={(option) => option.Description}
+                                value={warehouseOptions.find(option => option.CityRef === selectedWarehouseOptions?.CityRef) || null}
+                                onChange={handleChangeWarehouse}
+                                disabled={!warehouseSelected}
+                                renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
+                                  <TextField
+                                    {...params}
+                                    variant="outlined"
+                                    fullWidth
+                                    size="small"
+                                    error={!!errors.warehouse}
+                                  />
+                                )}
+                              />
+                              {errors.warehouse ? (
+                                <div className="h-6 text-xs text-red-500">Error: {errors.warehouse}</div>
+                              ) : (<div className="h-6 text-xs "> </div>)}
+                            </FormControl>
+                          </div>
+                        )}
+
+                        {selectedShipping === 'Store' && (
+                          <div className="mt-5">
+                            <label htmlFor="address" className="text-gray-600 font-semibold">
+                              City
+                            </label>
+
+                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                              <Autocomplete
+                                id="city"
+                                options={storeCities}
+                                onChange={handleChangeStoreCity}
+                                renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
+                                  <TextField
+                                    {...params}
+                                    variant="outlined"
+                                    fullWidth
+                                    size="small"
+                                    error={!!errors.city}
+                                  />
+                                )}
+                              />
+                              {errors.city ? (
+                                <div className="h-6 text-xs text-red-500">Error: {errors.city}</div>
+                              ) : (<div className="h-6 text-xs "> </div>)}
+                            </FormControl>
+
+                            <label htmlFor="address" className="text-gray-600 font-semibold">
+                              Store
+                            </label>
+
+                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                              <Autocomplete
+                                id="store"
+                                options={filteredStores}
+                                getOptionLabel={(option) => option.name}
+                                value={selectedStoreCity ? selectedStore : null}
+                                onChange={handleChangeStore}
+                                disabled={!warehouseSelected}
+                                renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
+                                  <TextField
+                                    {...params}
+                                    variant="outlined"
+                                    fullWidth
+                                    size="small"
+                                    error={!!errors.warehouse}
+                                  />
+                                )}
+                              />
+                              {errors.warehouse ? (
+                                <div className="h-6 text-xs text-red-500">Error: {errors.warehouse}</div>
+                              ) : (<div className="h-6 text-xs "> </div>)}
+                            </FormControl>
+                          </div>
+                        )}
                       </ThemeProvider>
                     </div>
                   </div>
@@ -663,7 +755,54 @@ const Bag = () => {
                   </div>
                   <div className="border-t pt-4">
                     <div className="mb-5 border-b pb-4">
+                      <div className="pb-4">
+                        <ThemeProvider theme={theme}>
 
+                          <div className={classes.margin}>
+                            <RadioGroup value={selectedPayment} onChange={setSelectedPayment} >
+                              <RadioGroup.Label className="sr-only">Delivery Information</RadioGroup.Label>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {paymentList.map((payment) => (
+                                  <RadioGroup.Option
+                                    key={payment.id}
+                                    value={payment.id}
+                                    className={({ active, checked }) =>
+                                      `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer ${active ? 'border-2 border-blue-700' : ''
+                                      } ${checked ? 'border-2 border-blue-700' : 'border-2 border-gray-200'}`
+                                    }
+                                  >
+                                    {({ checked }) => (
+                                      <div className="px-6 py-4">
+                                        <div className="flex items-center justify-between">
+                                          <RadioGroup.Label as="div" className="font-bold text-xl mb-2 mr-10">
+                                            {payment.title}
+                                          </RadioGroup.Label>
+                                          {checked && (
+                                            <span className="text-blue-700 font-bold">&#10003;</span>
+                                          )}
+                                        </div>
+                                        <p className="text-gray-700 text-base">{payment.subtitle}</p>
+                                      </div>
+                                    )}
+                                  </RadioGroup.Option>
+                                ))}
+                              </div>
+                            </RadioGroup>
+                          </div>
+
+                          {selectedPayment === 'PaymentBefore' && (
+                            <div className="mt-5">
+                              <button
+                                type="button"
+                                // onClick={addToBag}
+                                className='mt-10 flex w-40 mx-auto items-center justify-center rounded-md border bg-indigo-600 hover:bg-indigo-700
+                                px-8 py-3 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'>
+                                Pay Now
+                              </button>
+                            </div>
+                          )}
+                        </ThemeProvider>
+                      </div>
                       <div className="flex justify-between items-center ">
                         <p className="text-lg font-semibold">Without Taxes:</p>
                         <p className="text-lg">{totalWithOutTax} ₴</p>
@@ -683,20 +822,19 @@ const Bag = () => {
 
                 <div className="mt-8 flex justify-end">
                   <FormControl fullWidth className={classes.margin} variant="outlined">
-                    <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
-                      Proceed to Checkout
-                    </Button>
+                    {/* <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
+                    Confirm The Order
+                    </Button> */}
+                    <button
+                      type="submit"
+                      className='flex w-full items-center justify-center rounded-md border bg-indigo-600 hover:bg-indigo-700
+                  px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'>
+                      Confirm The Order
+                    </button>
                   </FormControl>
-
-                  {/* <button type="submit"
-
-                    className="bg-blue-500 text-white px-6 py-3 rounded-md custom-button-style">
-                    Proceed to Checkout
-                  </button> */}
                 </div>
               </form>
             </div>
-
           </>
         ) : (
           <div className="container mx-auto p-8 flex justify-center relative bg-gray-100 mx-auto max-w-7xl px-2 sm:px-2 lg:px-2   flex-col lg:flex-row  ">

@@ -409,6 +409,7 @@ const RegisterPage = () => {
                                                     id="formatted-text-mask-input"
                                                     inputComponent={TextMaskCustom as any}
                                                     error={!!errors.phoneNumber}
+                                                    placeholder='(099) 00-00-000'
                                                 />
                                                 {errors.phoneNumber ? (
                                                     <div className="h-6 text-xs text-red-500">Error: {errors.phoneNumber}</div>

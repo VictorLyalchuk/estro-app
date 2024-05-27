@@ -95,7 +95,8 @@ const LoginPage = () => {
                         FirstName: user.FirstName,
                         LastName: user.LastName,
                         Role: user.Role,
-                        ImagePath: user.ImagePath
+                        ImagePath: user.ImagePath,
+                        PhoneNumber: user.PhoneNumber
                     } as IUser,
                 });
 
