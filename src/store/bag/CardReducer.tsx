@@ -3,15 +3,12 @@ import { BagItems } from "../../interfaces/Bag/IBagUser";
 export enum CardReducerActionType {
     SET = "SET_ITEM",
     DELETE = "DELETE_ITEM",
-    ADD_QUANTITY = "ADD_QUANTITY",
-    SUBTRACT_QUANTITY = "SUBTRACT_QUANTITY",
     UPDATE_TOTAL = "UPDATE_TOTAL",
     DELETE_ALL = "DELETE_ALL",
 }
 
 export interface ICardReducerState {
     items: BagItems[] | null,
-    quantity: number,
     total: number,
     taxes: number,
     totalWithOutTax: number,
@@ -20,12 +17,11 @@ export interface ICardReducerState {
 
 interface ICardReducerAction {
     type: CardReducerActionType;
-    payload?: { items?: BagItems[]; itemId?: number; quantity?: number; total?: number; taxes: number; totalWithOutTax: number };
+    payload?: { items?: BagItems[]; itemId?: number; total?: number; taxes: number; totalWithOutTax: number };
 }
 
 const initState: ICardReducerState = {
     items: null,
-    quantity: 0,
     total: 0,
     taxes: 0,
     totalWithOutTax: 0,
@@ -69,36 +65,9 @@ const cardReducer = (state = initState, action: ICardReducerAction): ICardReduce
             return {
                 items: [],
                 total: 0,
-                quantity: 0,
                 totalWithOutTax: 0,
                 initialIndividualItemPrice: {},
                 taxes: 0,
-            };
-
-
-        case CardReducerActionType.ADD_QUANTITY:
-            const itemIdToAdd = action.payload?.itemId;
-            if (!itemIdToAdd || !state.items) {
-                return state;
-            }
-
-            const updatedItemsAdd = state.items.map((item) =>
-                item.id === itemIdToAdd ? { ...item, quantity: item.quantity + 1 } : item);
-
-            return {
-                ...state,
-                items: updatedItemsAdd,
-            };
-        case CardReducerActionType.SUBTRACT_QUANTITY:
-            const itemIdToSubtract = action.payload?.itemId;
-            if (!itemIdToSubtract || !state.items) {
-                return state;
-            }
-
-            const updatedItemsSubtract = state.items.map((item) => item.id === itemIdToSubtract && item.quantity > 0 ? { ...item, quantity: item.quantity - 1 } : item);
-            return {
-                ...state,
-                items: updatedItemsSubtract,
             };
 
         default:

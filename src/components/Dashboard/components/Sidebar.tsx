@@ -105,7 +105,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }: SidebarProps) => {
             </h1>
 
             <ul className="mb-6 flex flex-col gap-1.5">
-              {user?.Role == "Admin" ? (
+              {user?.Role == "Administrator" ? (
 
                 <SidebarLinkGroup
                 activeCondition={

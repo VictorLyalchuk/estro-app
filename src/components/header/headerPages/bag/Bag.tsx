@@ -57,15 +57,15 @@ const card = (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 2
 </svg>);
 
 const branch = (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-7 hover:text-indigo-700" style={{ transition: "color 0.3s" }}>
-<path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
+  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
 </svg>);
 
 const postomat = (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-7 hover:text-indigo-700" style={{ transition: "color 0.3s" }}>
-<path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+  <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
 </svg>);
 
 const store = (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-7 hover:text-indigo-700" style={{ transition: "color 0.3s" }}>
-<path strokeLinecap="round" strokeLinejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" />
+  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" />
 </svg>);
 
 const deliveryList = [
@@ -152,7 +152,12 @@ const Bag = () => {
   const deleteItems = async (item: BagItems) => {
     const quant = item.quantity;
     const itemId = item.id
-    await axios.delete(`${baseUrl}/api/Bag/DeleteBagItem/${item.id}`)
+
+    try {
+      await axios.delete(`${baseUrl}/api/Bag/DeleteBagItem/${item.id}`)
+    } catch (error) {
+      console.error("Сталася помилка під час видалення елемента на сервері:", error);
+    }
     dispatch({
       type: BagReducerActionType.DELETE_PRODUCT_BAG_COUNT,
       payload: {
@@ -167,7 +172,6 @@ const Bag = () => {
     });
   }
   const increase = async (item: BagItems) => {
-    const itemId = item.id
     if (item.quantity < 10) {
       await axios.post(`${baseUrl}/api/Bag/SetIncrease/${item.id}`);
       dispatch({
@@ -176,28 +180,15 @@ const Bag = () => {
           pluscount: 1
         }
       });
-      dispatch({
-        type: CardReducerActionType.ADD_QUANTITY,
-        payload: {
-          itemId: itemId
-        }
-      });
     }
   }
   const decrease = async (item: BagItems) => {
-    const itemId = item.id
     if (item.quantity > 1) {
       await axios.post(`${baseUrl}/api/Bag/SetDecrease/${item.id}`)
       dispatch({
         type: BagReducerActionType.DECREASE_PRODUCT_BAG_COUNT,
         payload: {
           minuscount: 1
-        }
-      });
-      dispatch({
-        type: CardReducerActionType.SUBTRACT_QUANTITY,
-        payload: {
-          itemId: itemId
         }
       });
     }
@@ -452,14 +443,14 @@ const Bag = () => {
                       />
                     </button>
                   </div>
-                  <div className="border-t pt-4 flex ">
+                  <div className="border-t pt-4 flex">
                     <img
                       src={`${baseUrl}/uploads/1200_${item?.image || '/uploads/default.jpg'}`}
                       alt={item?.image}
                       className="w-24 h-36 object-cover rounded-md mr-4"
                     />
-                    <div className="w-1/2 ml-4">
-                      <h3 className="text-lg font-semibold mb-2">Total product price: {initialIndividualItemPrice[item.id].toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</h3>
+                    <div className="w-1/2 ml-4 mx-auto">
+                      <h3 className="text-lg font-semibold mb-2 mr-auto " style={{ whiteSpace: 'nowrap' }}>Total product price: {initialIndividualItemPrice[item.id].toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</h3>
                       <p className="text-gray-600 mb-2">Size: {item.size}</p>
                       <p className="text-gray-600 mb-2">Article: {item.article}</p>
                       <p className="text-gray-600 mb-2">Price: {item.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
