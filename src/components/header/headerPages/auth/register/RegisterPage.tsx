@@ -96,6 +96,7 @@ const RegisterPage = () => {
         password: '',
         confirmPassword: '',
         imageFile: null,
+        role: 'User'
     });
 
     const [errors, setErrors] = useState({

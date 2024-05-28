@@ -7,7 +7,7 @@ export enum BagReducerActionType {
 }
 
 export interface IBagReducerState {
-    count: number | 0;
+    count: number ;
 }
 
 interface IBagReducerAction {
@@ -32,9 +32,12 @@ const bagReducer = (state = initState, action: IBagReducerAction): IBagReducerSt
                 count: state.count - 1,
             };
         case BagReducerActionType.DELETE_PRODUCT_BAG_COUNT:
+            const newCount = state.count - action.payload.count;
+
             return {
                 ...state,
-                count: state.count - action.payload?.count || 0,
+                count: newCount || 0,
+                // count: state.count - action.payload?.count || 0,
             };
         case BagReducerActionType.GET_PRODUCT_BAG_COUNT:
             return {

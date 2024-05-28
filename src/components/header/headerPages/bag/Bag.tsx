@@ -149,48 +149,69 @@ const Bag = () => {
     clearFields();
   }, [selectedShipping]);
 
-  const deleteItems = async (item: BagItems) => {
-    const quant = item.quantity;
-    const itemId = item.id
-
-    try {
-      await axios.delete(`${baseUrl}/api/Bag/DeleteBagItem/${item.id}`)
-    } catch (error) {
-      console.error("Сталася помилка під час видалення елемента на сервері:", error);
-    }
-    dispatch({
-      type: BagReducerActionType.DELETE_PRODUCT_BAG_COUNT,
-      payload: {
-        delete: quant
-      }
-    });
-    dispatch({
-      type: CardReducerActionType.DELETE,
-      payload: {
-        itemId: itemId
-      }
-    });
+  const refreashCount = async () => {
+    axios.get<number>(`${baseUrl}/api/Bag/GetCountBagByEmail/${user?.Email}`)
+      .then(resp => {
+        dispatch({
+          type: BagReducerActionType.GET_PRODUCT_BAG_COUNT,
+          payload: {
+            count: resp.data
+          }
+        });
+      });
   }
+
+  const deleteItems = async (item: BagItems) => {
+    // const quant = item.quantity;
+    const itemId = item.id
+    if (itemId) {
+
+      try {
+        await axios.delete(`${baseUrl}/api/Bag/DeleteBagItem/${item.id}`)
+        dispatch({
+          type: CardReducerActionType.DELETE,
+          payload: {
+            itemId: itemId
+          }
+        });
+
+        refreashCount();
+
+        // dispatch({
+        //   type: BagReducerActionType.DELETE_PRODUCT_BAG_COUNT,
+        //   payload: {
+        //     delete: quant
+        //   }
+        // });
+      } catch (error) {
+        console.error("Error deleting bag items:", error);
+      }
+
+    }
+  }
+
   const increase = async (item: BagItems) => {
     if (item.quantity < 10) {
       await axios.post(`${baseUrl}/api/Bag/SetIncrease/${item.id}`);
-      dispatch({
-        type: BagReducerActionType.PRODUCT_BAG_COUNT,
-        payload: {
-          pluscount: 1
-        }
-      });
+      refreashCount();
+      // dispatch({
+      //   type: BagReducerActionType.PRODUCT_BAG_COUNT,
+      //   payload: {
+      //     pluscount: 1
+      //   }
+      // });
     }
   }
   const decrease = async (item: BagItems) => {
     if (item.quantity > 1) {
       await axios.post(`${baseUrl}/api/Bag/SetDecrease/${item.id}`)
-      dispatch({
-        type: BagReducerActionType.DECREASE_PRODUCT_BAG_COUNT,
-        payload: {
-          minuscount: 1
-        }
-      });
+      refreashCount();
+      // dispatch({
+      //   type: BagReducerActionType.DECREASE_PRODUCT_BAG_COUNT,
+      //   payload: {
+      //     minuscount: 1
+      //   }
+      // });
     }
   }
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -489,6 +510,7 @@ const Bag = () => {
                         <FormControl fullWidth className={classes.margin} variant="outlined">
                           <TextField
                             name="firstName"
+                            id="firstName"
                             value={formData.firstName}
                             onChange={handleChange}
                             error={!!errors.firstName}
@@ -499,12 +521,13 @@ const Bag = () => {
                             <div className="h-6 text-xs text-red-500">Error: {errors.firstName}</div>
                           ) : (<div className="h-6 text-xs "> </div>)}
                         </FormControl>
-                        <label htmlFor="LastName" className="text-gray-600 font-semibold">
+                        <label htmlFor="lastName" className="text-gray-600 font-semibold">
                           Last Name
                         </label>
                         <FormControl fullWidth className={classes.margin} variant="outlined">
                           <TextField
                             name="lastName"
+                            id="lastName"
                             value={formData.lastName}
                             onChange={handleChange}
                             error={!!errors.lastName}
@@ -522,25 +545,28 @@ const Bag = () => {
                         <FormControl fullWidth className={classes.margin} variant="outlined">
                           <TextField
                             name="email"
+                            id="email"
                             value={formData.email}
                             onChange={handleChange}
                             error={!!errors.email}
                             variant="outlined"
                             size="small"
+                            autoComplete="email"
+
                           />
                           {errors.email ? (
                             <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
                           ) : (<div className="h-6 text-xs "> </div>)}
                         </FormControl>
 
-                        <label htmlFor="phoneNumber" className="text-gray-600 font-semibold">
+                        <label htmlFor="formatted-text-mask-input" className="text-gray-600 font-semibold">
                           Phone Number
                         </label>
                         <FormControl fullWidth className={classes.margin} variant="outlined">
                           <TextField
-                            name="PhoneNumber"
-                            value={formData.phoneNumber}
+                            name="formatted-text-mask-input"
                             id="formatted-text-mask-input"
+                            value={formData.phoneNumber}
                             variant="outlined"
                             size="small"
                             disabled
@@ -600,7 +626,7 @@ const Bag = () => {
 
                         {selectedShipping === 'Branch' && (
                           <div className="mt-5">
-                            <label htmlFor="address" className="text-gray-600 font-semibold">
+                            <label htmlFor="city" className="text-gray-600 font-semibold">
                               City
                             </label>
 
@@ -625,7 +651,7 @@ const Bag = () => {
                               ) : (<div className="h-6 text-xs "> </div>)}
                             </FormControl>
 
-                            <label htmlFor="address" className="text-gray-600 font-semibold">
+                            <label htmlFor="warehouse" className="text-gray-600 font-semibold">
                               Warehouse
                             </label>
 
@@ -656,7 +682,7 @@ const Bag = () => {
 
                         {selectedShipping === 'Postomat' && (
                           <div className="mt-5">
-                            <label htmlFor="address" className="text-gray-600 font-semibold">
+                            <label htmlFor="city" className="text-gray-600 font-semibold">
                               City
                             </label>
 
@@ -681,7 +707,7 @@ const Bag = () => {
                               ) : (<div className="h-6 text-xs "> </div>)}
                             </FormControl>
 
-                            <label htmlFor="address" className="text-gray-600 font-semibold">
+                            <label htmlFor="warehouse" className="text-gray-600 font-semibold">
                               Postomat
                             </label>
 
@@ -712,7 +738,7 @@ const Bag = () => {
 
                         {selectedShipping === 'Store' && (
                           <div className="mt-5">
-                            <label htmlFor="address" className="text-gray-600 font-semibold">
+                            <label htmlFor="city" className="text-gray-600 font-semibold">
                               City
                             </label>
 
@@ -736,7 +762,7 @@ const Bag = () => {
                               ) : (<div className="h-6 text-xs "> </div>)}
                             </FormControl>
 
-                            <label htmlFor="address" className="text-gray-600 font-semibold">
+                            <label htmlFor="store" className="text-gray-600 font-semibold">
                               Store
                             </label>
 
