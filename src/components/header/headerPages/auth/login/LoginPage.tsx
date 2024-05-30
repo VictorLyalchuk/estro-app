@@ -17,6 +17,8 @@ import { BanknotesIcon } from '@heroicons/react/24/outline';
 import { TrophyIcon } from '@heroicons/react/24/outline';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import '../../../../../satoshi.css';
+import {Divider} from "antd";
+import { GoogleLogin } from '@react-oauth/google';
 
 const theme = createTheme({
     typography: {
@@ -66,11 +68,13 @@ const LoginPage = () => {
     const [formData, setFormData] = useState<ILogin>({
         email: '',
         password: '',
+        authType: 'standard'
     });
 
     const [errors, setErrors] = useState({
         email: '',
         password: '',
+        authType: 'standard'
     });
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,7 +100,8 @@ const LoginPage = () => {
                         LastName: user.LastName,
                         Role: user.Role,
                         ImagePath: user.ImagePath,
-                        PhoneNumber: user.PhoneNumber
+                        PhoneNumber: user.PhoneNumber,
+                        AuthType: user.AuthType
                     } as IUser,
                 });
 
@@ -112,6 +117,47 @@ const LoginPage = () => {
         } else {
             console.log(formData);
         }
+    };
+
+    const googleSuccess = async (response) => {
+        const token = response.credential;
+        const user = jwtDecode(token);
+    
+        const loginData = {
+            email: user?.email,
+            authType: 'google',
+        };
+    
+        try {
+            const response = await axios.post(`${baseUrl}/api/AccountControllers/Login`, loginData);
+            const { token } = response.data;
+            const user = jwtDecode(token) as IUser;
+    
+            dispatch({
+                type: AuthReducerActionType.LOGIN_USER,
+                payload: {
+                    Email: user.Email,
+                    FirstName: user.FirstName,
+                    LastName: user.LastName,
+                    Role: user.Role,
+                    ImagePath: user.ImagePath,
+                    AuthType: user.AuthType
+                } as IUser,
+            });
+    
+            localStorage.setItem("token", token);
+            navigate("/");
+        } catch (error) {
+            console.error("Login error:", error);
+            setErrorMessage("Invalid email or password");
+            setTimeout(() => {
+                setErrorMessage("");
+            }, 1000);
+        }
+    };        
+    
+    const googleErrorMessage = (error) => {
+        console.log(error);
     };
 
     const validateForm = () => {
@@ -202,6 +248,11 @@ const LoginPage = () => {
                                     </FormControl>
 
                                 </form>
+                                <Divider>or</Divider>
+                                <div className={"flex justify-center"}>
+                                    <GoogleLogin  onSuccess={googleSuccess} onError={googleErrorMessage} />
+
+                                </div>
 
                             </div >
                         </div >

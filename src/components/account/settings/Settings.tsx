@@ -329,15 +329,28 @@ const Settings = () => {
                           </g>
                         </svg>
                       </span> */}
-                        <Input
-                          className="w-full rounded border border-stroke bg-gray py-3 pr-4.5 text-black "
-                          type="email"
-                          name="email"
-                          id="email"
-                          placeholder="Enter your email"
-                          autoComplete="email"
-                          required
-                        />
+                        {user?.AuthType == "google" ? (
+                            <Input
+                                className="w-full rounded border border-stroke bg-gray py-3 pr-4.5 text-black "
+                                type="email"
+                                name="email"
+                                id="email"
+                                placeholder="Enter your email"
+                                autoComplete="email"
+                                readOnly
+
+                            />
+                        ) : (
+                            <Input
+                                className="w-full rounded border border-stroke bg-gray py-3 pr-4.5 text-black "
+                                type="email"
+                                name="email"
+                                id="email"
+                                placeholder="Enter your email"
+                                autoComplete="email"
+                                required
+                            />
+                        )}
                       </Form.Item>
                     </div>
                   </div>
@@ -403,7 +416,7 @@ const Settings = () => {
                     </div>
                   </div>
 
-
+                  {user?.AuthType == "standard" ? (
                   <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div className="w-full sm:w-1/2">
                       <label
@@ -458,6 +471,7 @@ const Settings = () => {
                       </Form.Item>
                     </div>
                   </div>
+                  ) : (null)}
 
                   <div className="flex justify-end gap-4.5">
                     <button
@@ -493,14 +507,15 @@ const Settings = () => {
 
                 <div className="mb-4 flex items-center gap-3">
                   <div className="h-14 w-14 rounded-full">
-                    {userImage ? (
-
-                      <img src={`${baseUrl}/uploads/${userImage}`} alt="User" className='rounded-full' />
+                  {userImage ? (
+                        user?.AuthType === 'standard' ? (
+                            <img src={`${baseUrl}/uploads/${userImage}`} alt="User" className="rounded-full" />
+                        ) : (
+                            <img src={`${userImage}`} alt="User" className="rounded-full" />
+                        )
                     ) : (
-
-                      <img src={`${baseUrl}/uploads/user404.webp`} alt="User" className='rounded-full' />
-                    )
-                    }
+                        <img src={`${baseUrl}/uploads/user404.webp`} alt="User" className="rounded-full" />
+                    )}
                   </div>
                   <div>
                     <span className="mb-1.5 text-black dark:text-white">

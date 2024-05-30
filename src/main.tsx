@@ -8,7 +8,7 @@ import { IUser } from './interfaces/Auth/IUser.ts'
 import { AuthReducerActionType } from './store/accounts/AuthReducer.ts'
 import './index.css'
 import './satoshi.css';
-
+import { GoogleOAuthProvider } from '@react-oauth/google';
 
 if (localStorage.token) {
   const user = jwtDecode(localStorage.token) as IUser;
@@ -31,12 +31,15 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import theme from './theme';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <ThemeProvider theme={theme}>
+  <GoogleOAuthProvider clientId="840790221401-5im429egocjlphps0jaonapq1j7jo1j8.apps.googleusercontent.com">
 
-    <Provider store={store}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </Provider>
-  </ThemeProvider>
+    <ThemeProvider theme={theme}>
+
+      <Provider store={store}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </Provider>
+    </ThemeProvider>
+  </GoogleOAuthProvider>
 )

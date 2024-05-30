@@ -8,4 +8,5 @@ export interface IUser {
     PhoneNumber: string,
     Password: string,
     Birthday: Date,
+    AuthType: string
 }

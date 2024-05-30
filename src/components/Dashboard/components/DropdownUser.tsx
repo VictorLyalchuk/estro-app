@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { AuthReducerActionType, IAuthReducerState } from '../../../store/accounts/AuthReducer';
-import {APP_ENV} from "../../../env/config";
+import { APP_ENV } from "../../../env/config";
 import { BagReducerActionType } from '../../../store/bag/BagReducer';
 
 const DropdownUser = () => {
@@ -20,7 +20,7 @@ const DropdownUser = () => {
     });
     dispatch({
       type: BagReducerActionType.DELETE_ALL,
-  });
+    });
   };
 
   // close on click outside
@@ -54,22 +54,26 @@ const DropdownUser = () => {
       <Link
         ref={trigger}
         onClick={() => setDropdownOpen(!dropdownOpen)}
-        
+
         className="flex items-center gap-4"
         to="#"
       >
         <div className=" text-right lg:block hover:text-indigo-500">
           <div className={`block text-sm font-medium ${isAuth ? 'text-gray-900 hover:text-indigo-500' : 'text-gray-700 hover:text-indigo-500'}`}>
-            {user?.FirstName} {' '} {user?.LastName} 
+            {user?.FirstName} {' '} {user?.LastName}
             {/* <br /> {user?.Role} */}
           </div>
 
         </div>
 
         <span className="h-12 w-12 " >
-          <img src={`${baseUrl}/uploads/${user?.ImagePath || "user404.webp"}`}
-            className='rounded-full'
-            alt="User" />
+          {user?.AuthType == 'standard' ?
+            (<img src={`${baseUrl}/uploads/${user?.ImagePath || "user404.webp"}`}
+              className='rounded-full'
+              alt="User" />) : (<img src={`${user?.ImagePath || "user404.webp"}`}
+                className='rounded-full'
+                alt="User" />)}
+
         </span>
 
         {/* <svg
@@ -102,7 +106,7 @@ const DropdownUser = () => {
           <li>
             <Link
               to="/dashBoard/orders"
-              onClick={() => setDropdownOpen(false)} 
+              onClick={() => setDropdownOpen(false)}
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500 "
             >
               <svg
@@ -128,7 +132,7 @@ const DropdownUser = () => {
           <li>
             <Link
               to="/dashBoard/settings"
-              onClick={() => setDropdownOpen(false)} 
+              onClick={() => setDropdownOpen(false)}
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500"
             >
               <svg
