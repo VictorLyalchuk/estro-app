@@ -19,8 +19,6 @@ import {Divider} from "antd";
 import { GoogleLogin } from '@react-oauth/google';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import '../../../../../satoshi.css';
-import {Divider} from "antd";
-import { GoogleLogin } from '@react-oauth/google';
 
 const theme = createTheme({
     typography: {
@@ -158,7 +156,7 @@ const LoginPage = () => {
                 setErrorMessage("");
             }, 1000);
         }
-
+    }
     const googleErrorMessage = (error) => {
         console.log(error);
     };
@@ -191,12 +189,8 @@ const LoginPage = () => {
         setShowPassword((prevShowPassword) => !prevShowPassword);
     };
 
-
-
     return (
         <>
-
-
             <div className="bg-gray-100">
                 <div className="container mx-auto">
                     <div className="bg-white rounded-md shadow-md p-5 flex flex-col lg:flex-row">
@@ -258,13 +252,6 @@ const LoginPage = () => {
                                 <Divider>or</Divider>
                                 <div className={"flex justify-center"}>
                                     <GoogleLogin  onSuccess={googleSuccess} onError={googleErrorMessage} />
-
-                                </div>
-
-                                <Divider>or</Divider>
-                                <div className={"flex justify-center"}>
-                                    <GoogleLogin  onSuccess={googleSuccess} onError={googleErrorMessage} />
-
                                 </div>
 
                             </div >

@@ -186,38 +186,6 @@ const RegisterPage = () => {
         console.log(error);
     };
 
-    const googleSuccess = async (response) => {
-        const token = response.credential;
-        const user = jwtDecode(token);
-        console.log(user);
-        const formData = new FormData();
-        formData.append('UserName', user?.name);
-        formData.append('FirstName', user?.given_name);
-        formData.append('LastName', user?.family_name);
-        formData.append('Email', user?.email);
-        formData.append('AuthType', 'google');
-        formData.append('ImagePath', user?.picture);
-        formData.append('ClientId', user?.sub);
-
-        try {
-            await axios.post(`${baseUrl}/api/AccountControllers/Registration`, formData);
-            setIsRegistered(true);
-
-        } catch (error) {
-            console.error("Register error:", error);
-            setErrorMessage("Register error. Try again later");
-            setTimeout(() => {
-                setErrorMessage("");
-            }, 1000);
-        }
-
-
-    };
-
-    const googleErrorMessage = (error) => {
-        console.log(error);
-    };
-
     const validateForm = () => {
         let isValid = true;
         const newErrors: {
@@ -551,16 +519,10 @@ const RegisterPage = () => {
                                     <Divider>or</Divider>
 
                                     <div className={"flex justify-center"}>
-                                        <GoogleLogin  onSuccess={googleSuccess} onError={googleErrorMessage} />
-
-                                    </div>
-
-                                    <Divider>or</Divider>
-
-                                    <div className={"flex justify-center"}>
                                         <GoogleLogin onSuccess={googleSuccess} onError={googleErrorMessage} />
 
                                     </div>
+
                                 </div >
                             )}
                         </div >
