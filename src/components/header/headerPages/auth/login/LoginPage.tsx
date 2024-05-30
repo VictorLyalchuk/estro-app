@@ -15,6 +15,8 @@ import { useDispatch } from 'react-redux';
 import { AuthReducerActionType } from '../../../../../store/accounts/AuthReducer';
 import { BanknotesIcon } from '@heroicons/react/24/outline';
 import { TrophyIcon } from '@heroicons/react/24/outline';
+import {Divider} from "antd";
+import { GoogleLogin } from '@react-oauth/google';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import '../../../../../satoshi.css';
 import {Divider} from "antd";
@@ -32,6 +34,7 @@ const theme = createTheme({
         },
     },
 });
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -71,6 +74,7 @@ const LoginPage = () => {
         authType: 'standard'
     });
 
+
     const [errors, setErrors] = useState({
         email: '',
         password: '',
@@ -87,6 +91,7 @@ const LoginPage = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        console.log(formData);
         if (validateForm()) {
             try {
                 const response = await axios.post(`${baseUrl}/api/AccountControllers/Login`, formData);
@@ -122,17 +127,16 @@ const LoginPage = () => {
     const googleSuccess = async (response) => {
         const token = response.credential;
         const user = jwtDecode(token);
-    
         const loginData = {
             email: user?.email,
             authType: 'google',
         };
-    
-        try {
+
+      try {
             const response = await axios.post(`${baseUrl}/api/AccountControllers/Login`, loginData);
             const { token } = response.data;
             const user = jwtDecode(token) as IUser;
-    
+
             dispatch({
                 type: AuthReducerActionType.LOGIN_USER,
                 payload: {
@@ -144,7 +148,7 @@ const LoginPage = () => {
                     AuthType: user.AuthType
                 } as IUser,
             });
-    
+
             localStorage.setItem("token", token);
             navigate("/");
         } catch (error) {
@@ -154,8 +158,7 @@ const LoginPage = () => {
                 setErrorMessage("");
             }, 1000);
         }
-    };        
-    
+
     const googleErrorMessage = (error) => {
         console.log(error);
     };
@@ -188,8 +191,12 @@ const LoginPage = () => {
         setShowPassword((prevShowPassword) => !prevShowPassword);
     };
 
+
+
     return (
         <>
+
+
             <div className="bg-gray-100">
                 <div className="container mx-auto">
                     <div className="bg-white rounded-md shadow-md p-5 flex flex-col lg:flex-row">
@@ -248,6 +255,12 @@ const LoginPage = () => {
                                     </FormControl>
 
                                 </form>
+                                <Divider>or</Divider>
+                                <div className={"flex justify-center"}>
+                                    <GoogleLogin  onSuccess={googleSuccess} onError={googleErrorMessage} />
+
+                                </div>
+
                                 <Divider>or</Divider>
                                 <div className={"flex justify-center"}>
                                     <GoogleLogin  onSuccess={googleSuccess} onError={googleErrorMessage} />
