@@ -304,7 +304,8 @@ const Settings = () => {
                       <Form.Item className="relative"
                         name="email"
                         htmlFor="email">
-                        {/* <span className="absolute left-4.5 top-4">
+
+                                {/* <span className="absolute left-4.5 top-4">
                         <svg
                           className="fill-current"
                           width="20"
@@ -417,6 +418,7 @@ const Settings = () => {
                   </div>
 
                   {user?.AuthType == "standard" ? (
+
                   <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div className="w-full sm:w-1/2">
                       <label
@@ -473,6 +475,7 @@ const Settings = () => {
                   </div>
                   ) : (null)}
 
+
                   <div className="flex justify-end gap-4.5">
                     <button
                       className="flex justify-center rounded border border-stroke py-2 px-6 font-medium text-black hover:shadow-1 dark:border-strokedark dark:text-white"
@@ -507,7 +510,9 @@ const Settings = () => {
 
                 <div className="mb-4 flex items-center gap-3">
                   <div className="h-14 w-14 rounded-full">
+
                   {userImage ? (
+
                         user?.AuthType === 'standard' ? (
                             <img src={`${baseUrl}/uploads/${userImage}`} alt="User" className="rounded-full" />
                         ) : (
@@ -517,6 +522,7 @@ const Settings = () => {
                         <img src={`${baseUrl}/uploads/user404.webp`} alt="User" className="rounded-full" />
                     )}
                   </div>
+
                   <div>
                     <span className="mb-1.5 text-black dark:text-white">
                       Edit your photo
