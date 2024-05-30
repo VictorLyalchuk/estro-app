@@ -64,7 +64,6 @@ export default function Product() {
         UserId: user?.Id || "",
         UserEmail: user?.Email || "",
         productId: selectedSize?.productId || 0,
-        // productQuantity : selectedSize?.productQuantity || 0,
         size: selectedSize?.size || 0,
       };
 

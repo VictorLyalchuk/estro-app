@@ -162,7 +162,6 @@ const Bag = () => {
   }
 
   const deleteItems = async (item: BagItems) => {
-    // const quant = item.quantity;
     const itemId = item.id
     if (itemId) {
 
@@ -174,15 +173,7 @@ const Bag = () => {
             itemId: itemId
           }
         });
-
-        refreashCount();
-
-        // dispatch({
-        //   type: BagReducerActionType.DELETE_PRODUCT_BAG_COUNT,
-        //   payload: {
-        //     delete: quant
-        //   }
-        // });
+        await refreashCount();
       } catch (error) {
         console.error("Error deleting bag items:", error);
       }
@@ -193,25 +184,13 @@ const Bag = () => {
   const increase = async (item: BagItems) => {
     if (item.quantity < 10) {
       await axios.post(`${baseUrl}/api/Bag/SetIncrease/${item.id}`);
-      refreashCount();
-      // dispatch({
-      //   type: BagReducerActionType.PRODUCT_BAG_COUNT,
-      //   payload: {
-      //     pluscount: 1
-      //   }
-      // });
+      await refreashCount();
     }
   }
   const decrease = async (item: BagItems) => {
     if (item.quantity > 1) {
       await axios.post(`${baseUrl}/api/Bag/SetDecrease/${item.id}`)
-      refreashCount();
-      // dispatch({
-      //   type: BagReducerActionType.DECREASE_PRODUCT_BAG_COUNT,
-      //   payload: {
-      //     minuscount: 1
-      //   }
-      // });
+      await refreashCount();
     }
   }
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
