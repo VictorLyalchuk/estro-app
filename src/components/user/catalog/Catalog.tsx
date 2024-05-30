@@ -433,21 +433,18 @@ export default function CategoryFilters() {
                             <img
                               src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`}
                               alt={product.name}
-
-                              // className="h-full w-full lg:h-full lg:w-full object-contain object-center"
                               className="h-full w-full lg:h-full lg:w-full object-cover object-center"
                             />
                           </div>
                           <div className="mt-4 flex justify-between">
                             <div>
                               <h3 className="text-xs text-gray-700 meta-5 font-bold">
-                                {/* <span aria-hidden="true" className="absolute inset-0" /> */}
                                 {product.name}
                               </h3>
                               <p className="mt-1 text-xs text-gray-500">{product.article}</p>
                               <p className="mt-1 text-xs text-gray-500">{product.purpose}</p>
                             </div>
-                            <p className="text-sm font-bold text-red-800">{product.price} ₴</p>
+                            <p className="text-sm font-bold text-red-800">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
                           </div>
                         </Link>
                       </div>

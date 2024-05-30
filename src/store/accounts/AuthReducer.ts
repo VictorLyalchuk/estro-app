@@ -8,7 +8,6 @@ export enum AuthReducerActionType {
 export interface IAuthReducerState {
     isAuth: boolean,
     user: IUser | null,
-
 }
 
 interface IAuthReducerAction {
@@ -19,7 +18,6 @@ interface IAuthReducerAction {
 const initState: IAuthReducerState = {
     isAuth: false,
     user: null,
-
 }
 
 const AuthReducer = (state = initState, action: IAuthReducerAction): IAuthReducerState => {

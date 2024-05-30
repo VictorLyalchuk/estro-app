@@ -5,4 +5,5 @@ export interface IOrderCreate{
     lastName: string;
     phonenumber: string;
     address: string;
+    payment: string;
 }

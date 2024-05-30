@@ -10,22 +10,10 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useDispatch, useSelector } from 'react-redux';
 import { BagReducerActionType } from '../../../store/bag/BagReducer';
-import { IBag } from '../../../interfaces/Info/IBag';
+import { IBag } from '../../../interfaces/Bag/IBag';
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer';
 import {APP_ENV} from "../../../env/config";
 
-const productDefault = {
-  description:
-    'The Basic Tee 6-Pack allows you to fully express your vibrant personality with three grayscale options. Feeling adventurous? Put on a heather gray tee. Want to be a trendsetter? Try our exclusive colorway: "Black". Need to add an extra pop of color to your outfit? Our white tee has you covered.',
-  highlights: [
-    'Hand cut and sewn locally',
-    'Dyed with our proprietary colors',
-    'Pre-washed & pre-shrunk',
-    'Ultra-soft 100% cotton',
-  ],
-  details:
-    'The 6-Pack includes two black, two white, and two heather gray Basic Tees. Sign up for our subscription service and be the first to get new, exciting colors, like our upcoming "Charcoal Gray" limited release.',
-}
 const reviews = { href: '#', average: 4, totalCount: 117 }
 
 function classNames(...classes: string[]) {
@@ -76,7 +64,6 @@ export default function Product() {
         UserId: user?.Id || "",
         UserEmail: user?.Email || "",
         productId: selectedSize?.productId || 0,
-        // productQuantity : selectedSize?.productQuantity || 0,
         size: selectedSize?.size || 0,
       };
 
@@ -109,7 +96,7 @@ export default function Product() {
           <ol role="list" className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
             {/* {product .breadcrumbs.map((breadcrumb) => ( */}
 
-            <li key={product.id}>
+            <li key={`${product.id}-mainCategory`}>
               <div className="flex items-center">
                 <a
                   // href={`/catalog/${product.urlMainCategoryName}`} 
@@ -129,7 +116,8 @@ export default function Product() {
               </div>
             </li>
 
-            <li key={product.id}>
+            <li key={`${product.id}-subCategory`}>
+
               <div className="flex items-center">
                 <a
                   // href={`/catalog/${product.urlSubCategoryName}`} 
@@ -149,7 +137,8 @@ export default function Product() {
               </div>
             </li>
 
-            <li key={product.id}>
+            <li key={`${product.id}-category`}>
+
               <div className="flex items-center">
                 <Link to={`/catalog/${product.urlSubCategoryName}/${product.urlCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
                   {product.categoryName}
@@ -205,16 +194,16 @@ export default function Product() {
 
             <div className="mt-4 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
-              <p className="text-3xl tracking-tight text-red-800">{product.price} ₴</p>
+              <p className="text-3xl tracking-tight text-red-800">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
             </div>
             {/* Reviews */}
             <div className="mt-6">
               <h3 className="sr-only">Reviews</h3>
               <div className="flex items-center">
                 <div className="flex items-center">
-                  {[0, 1, 2, 3, 4].map((rating) => (
+                  {[0, 1, 2, 3, 4].map((rating, index) => (
                     <StarIcon
-                      // key={rating}
+                      key={index}
                       className={classNames(
                         reviews.average > rating ? 'text-gray-900' : 'text-gray-200',
                         'h-5 w-5 flex-shrink-0'
@@ -341,9 +330,9 @@ export default function Product() {
 
               <div className="mt-4">
                 <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
-                  {productDefault.highlights.map((highlight) => (
+                  {product.highlights.map((highlight, index) => (
                     <li
-                      // key={highlight} 
+                      key={index} 
                       className="text-gray-400">
                       <span className="text-sm text-gray-600">{highlight}</span>
                     </li>
@@ -356,7 +345,7 @@ export default function Product() {
               <h2 className="text-sm font-medium text-gray-900">Details</h2>
 
               <div className="mt-4 space-y-6">
-                <p className="text-sm text-gray-600">{productDefault.description}</p>
+                <p className="text-sm text-gray-600">{product.details}</p>
               </div>
             </div>
           </div>

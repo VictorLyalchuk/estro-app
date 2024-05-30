@@ -17,6 +17,22 @@ import { BanknotesIcon } from '@heroicons/react/24/outline';
 import { TrophyIcon } from '@heroicons/react/24/outline';
 import {Divider} from "antd";
 import { GoogleLogin } from '@react-oauth/google';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import '../../../../../satoshi.css';
+
+const theme = createTheme({
+    typography: {
+        fontFamily: 'Satoshi, sans-serif',
+    },
+    overrides: {
+        MuiTextField: {
+            root: {
+                fontFamily: 'Satoshi, sans-serif',
+            },
+        },
+    },
+});
+
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -87,6 +103,7 @@ const LoginPage = () => {
                         LastName: user.LastName,
                         Role: user.Role,
                         ImagePath: user.ImagePath,
+                        PhoneNumber: user.PhoneNumber,
                         AuthType: user.AuthType
                     } as IUser,
                 });
@@ -108,13 +125,12 @@ const LoginPage = () => {
     const googleSuccess = async (response) => {
         const token = response.credential;
         const user = jwtDecode(token);
-
         const loginData = {
             email: user?.email,
             authType: 'google',
         };
 
-        try {
+      try {
             const response = await axios.post(`${baseUrl}/api/AccountControllers/Login`, loginData);
             const { token } = response.data;
             const user = jwtDecode(token) as IUser;
@@ -140,11 +156,7 @@ const LoginPage = () => {
                 setErrorMessage("");
             }, 1000);
         }
-    };
-
-
-   
-
+    }
     const googleErrorMessage = (error) => {
         console.log(error);
     };
@@ -177,12 +189,8 @@ const LoginPage = () => {
         setShowPassword((prevShowPassword) => !prevShowPassword);
     };
 
-
-
     return (
         <>
-
-
             <div className="bg-gray-100">
                 <div className="container mx-auto">
                     <div className="bg-white rounded-md shadow-md p-5 flex flex-col lg:flex-row">
@@ -196,43 +204,43 @@ const LoginPage = () => {
                                 </div>
 
                                 <form onSubmit={handleSubmit}>
-                                    <FormControl fullWidth className={classes.margin} variant="outlined">
-                                        <TextField
-                                            label="Email"
-                                            name="email"
-                                            value={formData.email}
-                                            onChange={handleChange}
-                                            error={!!errors.email}
-                                        />
-                                        {errors.email ? (
-                                            <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
-                                        ) : (<div className="h-6 text-xs "> </div>)}
-                                    </FormControl>
+                                    <ThemeProvider theme={theme}>
+                                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                                            <TextField
+                                                label="Email"
+                                                name="email"
+                                                value={formData.email}
+                                                onChange={handleChange}
+                                                error={!!errors.email}
+                                            />
+                                            {errors.email ? (
+                                                <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
+                                            ) : (<div className="h-6 text-xs "> </div>)}
+                                        </FormControl>
 
-                                    <FormControl fullWidth className={classes.margin} variant="outlined">
-                                        <TextField
-                                            label="Password"
-                                            type={showPassword ? 'text' : 'password'}
-                                            name="password"
-                                            value={formData.password}
-                                            onChange={handleChange}
-                                            error={!!errors.password}
-                                            InputProps={{
-                                                endAdornment: (
-                                                    <InputAdornment position="end">
-                                                        <IconButton onClick={handlePasswordToggle} edge="end">
-                                                            {showPassword ? <Visibility /> : <VisibilityOff />}
-                                                        </IconButton>
-                                                    </InputAdornment>
-                                                ),
-                                            }}
-                                        />
-                                        {errors.password ? (
-                                            <div className="h-6 text-xs text-red-500">Error: {errors.password}</div>
-                                        ) : (<div className="h-6 text-xs "> </div>)}
-                                    </FormControl >
-
-
+                                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                                            <TextField
+                                                label="Password"
+                                                type={showPassword ? 'text' : 'password'}
+                                                name="password"
+                                                value={formData.password}
+                                                onChange={handleChange}
+                                                error={!!errors.password}
+                                                InputProps={{
+                                                    endAdornment: (
+                                                        <InputAdornment position="end">
+                                                            <IconButton onClick={handlePasswordToggle} edge="end">
+                                                                {showPassword ? <Visibility /> : <VisibilityOff />}
+                                                            </IconButton>
+                                                        </InputAdornment>
+                                                    ),
+                                                }}
+                                            />
+                                            {errors.password ? (
+                                                <div className="h-6 text-xs text-red-500">Error: {errors.password}</div>
+                                            ) : (<div className="h-6 text-xs "> </div>)}
+                                        </FormControl >
+                                        </ThemeProvider>
 
                                     <FormControl fullWidth className={classes.margin} variant="outlined">
                                         <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
@@ -241,11 +249,9 @@ const LoginPage = () => {
                                     </FormControl>
 
                                 </form>
-
                                 <Divider>or</Divider>
                                 <div className={"flex justify-center"}>
                                     <GoogleLogin  onSuccess={googleSuccess} onError={googleErrorMessage} />
-
                                 </div>
 
                             </div >

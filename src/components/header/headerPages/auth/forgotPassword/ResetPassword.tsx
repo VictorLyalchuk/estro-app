@@ -6,7 +6,21 @@ import { APP_ENV } from "../../../../../env/config";
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { Button, FormControl, IconButton, InputAdornment, TextField } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import '../../../../../satoshi.css';
 
+const theme = createTheme({
+    typography: {
+        fontFamily: 'Satoshi, sans-serif',
+    },
+    overrides: {
+        MuiTextField: {
+            root: {
+                fontFamily: 'Satoshi, sans-serif',
+            },
+        },
+    },
+});
 
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
@@ -99,7 +113,7 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
         if (validateForm()) {
 
             try {
-                await axios.post(`${baseUrl}/api/AccountControllers/ResetPassword`,  formData, {
+                await axios.post(`${baseUrl}/api/AccountControllers/ResetPassword`, formData, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
@@ -148,52 +162,54 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
                                     </div>
 
                                     <form onSubmit={handleSubmit}>
-                                        <FormControl fullWidth className={classes.margin} variant="outlined">
-                                            <TextField
-                                                label="New Password"
-                                                type={showPassword ? 'text' : 'password'}
-                                                name="newPassword"
-                                                value={formData.newPassword}
-                                                onChange={handleChange}
-                                                error={!!errors.newPassword}
-                                                InputProps={{
-                                                    endAdornment: (
-                                                        <InputAdornment position="end">
-                                                            <IconButton onClick={handlePasswordToggle} edge="end">
-                                                                {showPassword ? <Visibility /> : <VisibilityOff />}
-                                                            </IconButton>
-                                                        </InputAdornment>
-                                                    ),
-                                                }}
-                                            />
-                                            {errors.newPassword ? (
-                                                <div className="h-6 text-xs text-red-500">Error: {errors.newPassword}</div>
-                                            ) : (<div className="h-6 text-xs "> </div>)}
-                                        </FormControl >
+                                        <ThemeProvider theme={theme}>
+                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                <TextField
+                                                    label="New Password"
+                                                    type={showPassword ? 'text' : 'password'}
+                                                    name="newPassword"
+                                                    value={formData.newPassword}
+                                                    onChange={handleChange}
+                                                    error={!!errors.newPassword}
+                                                    InputProps={{
+                                                        endAdornment: (
+                                                            <InputAdornment position="end">
+                                                                <IconButton onClick={handlePasswordToggle} edge="end">
+                                                                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                                                                </IconButton>
+                                                            </InputAdornment>
+                                                        ),
+                                                    }}
+                                                />
+                                                {errors.newPassword ? (
+                                                    <div className="h-6 text-xs text-red-500">Error: {errors.newPassword}</div>
+                                                ) : (<div className="h-6 text-xs "> </div>)}
+                                            </FormControl >
 
-                                        <FormControl fullWidth className={classes.margin} variant="outlined">
-                                            <TextField
-                                                label="Confirm New Password "
-                                                type={showConfirmPassword ? 'text' : 'password'}
-                                                name="confirmPassword"
-                                                value={formData.confirmPassword}
-                                                onChange={handleChange}
-                                                error={!!errors.confirmPassword}
-                                                helperText={errors.confirmPassword}
-                                                InputProps={{
-                                                    endAdornment: (
-                                                        <InputAdornment position="end">
-                                                            <IconButton onClick={handleConfirmPasswordToggle} edge="end">
-                                                                {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
-                                                            </IconButton>
-                                                        </InputAdornment>
-                                                    ),
-                                                }}
-                                            />
-                                            {errors.confirmPassword ? (
-                                                <div className="h-6 text-xs text-red-500">Error: {errors.confirmPassword}</div>
-                                            ) : (<div className="h-12 text-xs "> </div>)}
-                                        </FormControl>
+                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                <TextField
+                                                    label="Confirm New Password "
+                                                    type={showConfirmPassword ? 'text' : 'password'}
+                                                    name="confirmPassword"
+                                                    value={formData.confirmPassword}
+                                                    onChange={handleChange}
+                                                    error={!!errors.confirmPassword}
+                                                    helperText={errors.confirmPassword}
+                                                    InputProps={{
+                                                        endAdornment: (
+                                                            <InputAdornment position="end">
+                                                                <IconButton onClick={handleConfirmPasswordToggle} edge="end">
+                                                                    {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                                                                </IconButton>
+                                                            </InputAdornment>
+                                                        ),
+                                                    }}
+                                                />
+                                                {errors.confirmPassword ? (
+                                                    <div className="h-6 text-xs text-red-500">Error: {errors.confirmPassword}</div>
+                                                ) : (<div className="h-12 text-xs "> </div>)}
+                                            </FormControl>
+                                        </ThemeProvider>
 
                                         <FormControl fullWidth className={classes.margin} variant="outlined">
                                             <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>

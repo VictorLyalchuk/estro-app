@@ -9,11 +9,11 @@ const AdminLayout = () => {
 
   const navigate = useNavigate();
 
-  const isAdmin = isAuth && user?.Role === "Admin";
+  const isAdmin = isAuth && user?.Role === "Administrator";
   useEffect(() => {
     if (!isAuth) navigate("/login");
     if (isAuth) {
-      if (user?.Role != "Admin") {
+      if (user?.Role != "Administrator") {
         navigate("/pages/403")
       }
     }
