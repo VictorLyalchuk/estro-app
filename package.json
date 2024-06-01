@@ -18,9 +18,7 @@
     "@heroicons/react": "^2.1.1",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
-
     "@material-ui/lab": "^4.0.0-alpha.61",
-
     "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^1.9.7",
     "@tailwindcss/aspect-ratio": "^0.4.2",
@@ -36,6 +34,7 @@
     "qs": "^6.11.2",
     "react": "^18.2.0",
     "react-apexcharts": "^1.4.1",
+    "react-code-input": "^3.10.1",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",
     "react-number-format": "^5.3.1",

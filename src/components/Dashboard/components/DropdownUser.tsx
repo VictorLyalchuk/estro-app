@@ -69,7 +69,7 @@ const DropdownUser = () => {
 
         <span className="h-12 w-12 " >
 
-          {user?.AuthType == 'standard' ?
+          {user?.AuthType == 'standard' || user?.AuthType == 'phone' ?
             (<img src={`${baseUrl}/uploads/${user?.ImagePath || "user404.webp"}`}
               className='rounded-full'
               alt="User" />) : (<img src={`${user?.ImagePath || "user404.webp"}`}

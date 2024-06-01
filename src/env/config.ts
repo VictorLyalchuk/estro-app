@@ -1,7 +1,11 @@
 const BASE_URL: string = import.meta.env.VITE_BASE_URL as string;
 
 const APP_ENV = {
-  BASE_URL: BASE_URL
+  BASE_URL: BASE_URL,
+  TWILIO_ACC_SID: "AC816f3b680a38c579c5d27c5d0b745b04",
+  TWILIO_AUTH_TOKEN: "b4b4285d409b6cb7b79fb9c7d68e82cf",
+  TWILIO_SERVICE_SID: "VA5b0b4bd87f33099252c85f6fc7e6674a"
 };
+
 
 export { APP_ENV };

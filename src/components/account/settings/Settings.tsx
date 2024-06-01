@@ -19,27 +19,56 @@ const Settings = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    axios.get<IUserEdit>(`${baseUrl}/api/AccountControllers/${user?.Email}`)
-      .then(async resp => {
-        setUserEdit(resp.data);
-        setUserImage(resp.data.imagePath);
-        const birthdayDate = moment(resp.data.birthday, 'YYYY-MM-DD').format('YYYY-MM-DD');
+    if(user?.AuthType == "standard" || user?.AuthType == "google")
+    {
+      axios.get<IUserEdit>(`${baseUrl}/api/AccountControllers/${user?.Email}`)
+          .then(async resp => {
+            setUserEdit(resp.data);
+            setUserImage(resp.data.imagePath);
+            const birthdayDate = moment(resp.data.birthday, 'YYYY-MM-DD').format('YYYY-MM-DD');
 
-        form.setFieldsValue({
-          id: resp.data.id,
-          firstName: resp.data.firstName,
-          lastName: resp.data.lastName,
-          email: resp.data.email,
-          emailConfirmed: resp.data.emailConfirmed,
-          imagePath: resp.data.imagePath,
-          phoneNumber: resp.data.phoneNumber,
-          birthday: birthdayDate,
-          role: resp.data.role
-        });
-      })
-      .catch(error => {
-        console.error('Error user data:', error);
-      });
+            form.setFieldsValue({
+              id: resp.data.id,
+              firstName: resp.data.firstName,
+              lastName: resp.data.lastName,
+              email: resp.data.email,
+              emailConfirmed: resp.data.emailConfirmed,
+              imagePath: resp.data.imagePath,
+              phoneNumber: resp.data.phoneNumber,
+              birthday: birthdayDate,
+              role: resp.data.role
+            });
+          })
+          .catch(error => {
+            console.error('Error user data:', error);
+          });
+
+    }
+    else if(user?.AuthType == "phone")
+    {
+      axios.get<IUserEdit>(`${baseUrl}/api/AccountControllers/GetByPhone/${user?.PhoneNumber}`)
+          .then(async resp => {
+            setUserEdit(resp.data);
+            setUserImage(resp.data.imagePath);
+            const birthdayDate = moment(resp.data.birthday, 'YYYY-MM-DD').format('YYYY-MM-DD');
+
+            form.setFieldsValue({
+              id: resp.data.id,
+              firstName: resp.data.firstName,
+              lastName: resp.data.lastName,
+              email: resp.data.email,
+              emailConfirmed: resp.data.emailConfirmed,
+              imagePath: resp.data.imagePath,
+              phoneNumber: resp.data.phoneNumber,
+              birthday: birthdayDate,
+              role: resp.data.role
+            });
+          })
+          .catch(error => {
+            console.error('Error user data:', error);
+          });
+
+    }
   }, [user?.Email]);
 
   const beforeUpload = (file: File) => {
@@ -417,7 +446,7 @@ const Settings = () => {
                     </div>
                   </div>
 
-                  {user?.AuthType == "standard" ? (
+                  {user?.AuthType == "standard" || user?.AuthType == "phone" ? (
 
                   <div className="mb-5.5 flex flex-col gap-5.5 sm:flex-row">
                     <div className="w-full sm:w-1/2">
@@ -513,7 +542,7 @@ const Settings = () => {
 
                   {userImage ? (
 
-                        user?.AuthType === 'standard' ? (
+                        user?.AuthType === 'standard' || user?.AuthType == "phone" ?  (
                             <img src={`${baseUrl}/uploads/${userImage}`} alt="User" className="rounded-full" />
                         ) : (
                             <img src={`${userImage}`} alt="User" className="rounded-full" />
