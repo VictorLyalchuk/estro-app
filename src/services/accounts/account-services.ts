@@ -1,0 +1,92 @@
+import axios from "axios";
+import { APP_ENV } from "../../env/config";
+import { IUserEdit } from "../../interfaces/Auth/IUserEdit";
+
+const baseUrl = APP_ENV.BASE_URL;
+
+// Створюємо екземпляр axios
+const instance = axios.create({
+    baseURL: `${baseUrl}/api/AccountControllers`,
+    headers: {
+        "Content-Type": "application/json"
+    }
+});
+
+// Інтерцептор для додавання токену до заголовків
+instance.interceptors.request.use(
+    (config) => {
+        const token = getToken();
+        if (token) {
+            config.headers["Authorization"] = "Bearer " + token;
+        }
+        return config;
+    },
+    (error) => {
+        return Promise.reject(error);
+    }
+);
+
+// Інтерцептор для обробки помилок і оновлення токену
+instance.interceptors.response.use(
+    (response) => {
+        return response;
+    },
+    async (error) => {
+        const originalRequest = error.config;
+        if (error.response.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
+            try {
+                const newToken = await refreshToken();
+                setToken(newToken);
+                originalRequest.headers["Authorization"] = "Bearer " + newToken;
+                return instance(originalRequest);
+            } catch (err) {
+                console.error("Failed to refresh token:", err);
+                return Promise.reject(err);
+            }
+        }
+        return Promise.reject(error);
+    }
+);
+
+// Функція для отримання токену з локального сховища
+export function getToken() {
+    const token = window.localStorage.getItem("token");
+    return token;
+}
+
+// Функція для збереження токену в локальне сховище
+export function setToken(token: string) {
+    window.localStorage.setItem("token", token);
+}
+
+// Функція для видалення токенів з локального сховища
+export function removeTokens() {
+    window.localStorage.removeItem("token");
+}
+
+
+export async function refreshToken() {
+    try {
+      const response = await instance.put("/refresh-token", {
+        token: getToken(),
+      });
+      const token = response.data;
+      setToken(response.data);
+      console.log("Token refreshed");
+      return token;
+    } catch (error) {
+      console.error("Failed to refresh token:", error);
+      throw error;
+    }
+  }
+
+  export async function getUserData(userEmail: string | null) {
+    try {
+        const response = await instance.get<IUserEdit>(`${baseUrl}/api/AccountControllers/${userEmail}`);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        throw error;
+    }
+}

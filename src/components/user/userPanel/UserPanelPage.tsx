@@ -14,13 +14,11 @@ import TabsOrdersComponent from './TabsOrdersComponent';
 import { useLocation } from 'react-router-dom';
 import Profile from './profile/Profile';
 import { IUserEdit } from '../../../interfaces/Auth/IUserEdit';
-import { refreshToken } from '../../../store/accounts/accounts.actions';
-import { useAppDispatch } from '../../../hooks/redux';
+import { getUserData, refreshToken } from '../../../services/accounts/account-services'; 
 
 const UserPanelPage = () => {
     const baseUrl = APP_ENV.BASE_URL;
     const location = useLocation();
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
     const { email, token } = useParams<{ email: string, token: string }>();
     const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
@@ -64,17 +62,28 @@ const UserPanelPage = () => {
             component: <Settings />,
         },
     ];
-
+      
     useEffect(() => {
-        if (location.pathname === '/account/orders') {
+        if (location.pathname.startsWith('/account/orders')) {
             setActiveTab(0);
-        }
-        if (location.pathname === '/account/profile') {
+        } 
+        else if (location.pathname.startsWith('/account/profile')) {
             setActiveTab(1);
         } 
-        if (location.pathname === '/account/settings') {
+        else if (location.pathname.startsWith('/account/settings')) {
             setActiveTab(2);
         } 
+
+
+        // if (location.pathname === '/account/orders') {
+        //     setActiveTab(0);
+        // }
+        // if (location.pathname === '/account/profile' || location.pathname === 'account/settings/:email/:token') {
+        //     setActiveTab(1);
+        // } 
+        // if (location.pathname === '/account/settings') {
+        //     setActiveTab(2);
+        // } 
     }, [location.pathname]);
 
     useEffect(() => {
@@ -89,15 +98,13 @@ const UserPanelPage = () => {
     }, [user, page]);
 
     useEffect(() => {
-        axios.get<IUserEdit>(`${baseUrl}/api/AccountControllers/${user?.Email}`)
-          .then(async resp => {
-            setUserEdit(resp.data);
-            // setUserImage(resp.data.imagePath);
-            // const birthdayDate = moment(resp.data.birthday, 'YYYY-MM-DD').format('YYYY-MM-DD');
-            })
-          .catch(error => {
-            console.error('Error user data:', error);
-          });
+        getUserData(user?.Email ?? 'null')
+        .then(data => {
+            setUserEdit(data);
+        })
+        .catch(error => {
+            console.error('Error fetching user data:', error);
+        });
       }, [user?.Email]);
 
     const ConfirmEmail = async () => {
@@ -106,12 +113,11 @@ const UserPanelPage = () => {
                 'Content-Type': 'application/json'
             }
         });
-            try {
-                const result = await dispatch(refreshToken());
-                console.log('Token refreshed:', result);
-            } catch (error) {
-                console.error('Failed to refresh token:', error);
-            }
+        await refreshToken();
+        await getUserData(user?.Email ?? 'null')
+        .then(data => {
+            setUserEdit(data);
+        })
     }
 
     const getOrders = async () => {

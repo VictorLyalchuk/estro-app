@@ -25,6 +25,7 @@ import StoreLocations from "./components/footer/footerPages/StoreLocations";
 import AdminLayout from "./components/layout/AdminLayout";
 import AuthPage from "./components/header/headerPages/auth/AuthPage";
 import UserPanelPage from "./components/user/userPanel/UserPanelPage";
+import UserLayout from "./components/layout/UserLayout";
 
 
 function App() {
@@ -45,7 +46,7 @@ function App() {
         reverseOrder={false}
         containerClassName="overflow-auto"
       />
-      <Logo/>
+      <Logo />
       <Header />
       <Routes>
         <Route path='/dashboard' element={<DefaultLayout />}>
@@ -58,9 +59,9 @@ function App() {
                 path={path}
                 element={
                   <Suspense fallback={<Loader />}>
-                    <Component orders={[]} onViewModeChange={function (): void { } } page={0} countPage={0} onPageChange={function ( ): void {
+                    <Component orders={[]} onViewModeChange={function (): void { }} page={0} countPage={0} onPageChange={function (): void {
                       ;
-                    } } />
+                    }} />
                   </Suspense>
                 }
               />
@@ -69,29 +70,30 @@ function App() {
         </Route>
 
         <Route path='/auth' element={<AuthPage />} />
-        <Route path="/auth/:email/:token" element={<AuthPage/>} />
+        <Route path="/auth/:email/:token" element={<AuthPage />} />
 
         <Route path="/" element={<HomePage />}></Route>
         <Route path="catalog/:subName/:urlName" element={<Catalog />} />
         <Route path="product/:Id" element={<Product />} />
-        <Route path='/bag' element={<Bag /> } />
+        <Route path='/bag' element={<Bag />} />
 
-        <Route path='account/orders' element={<UserPanelPage /> } />
-        <Route path='account/profile' element={<UserPanelPage /> } />
-        <Route path='account/settings' element={<UserPanelPage /> } />
-        <Route path='account/settings/:email/:token' element={<UserPanelPage /> } />
-
+        <Route element={<UserLayout />}>
+          <Route path="account/orders" element={<UserPanelPage />} />
+          <Route path='account/profile' element={<UserPanelPage />} />
+          <Route path='account/profile/:email/:token' element={<UserPanelPage />} />
+          <Route path='account/settings' element={<UserPanelPage />} />
+        </Route>
 
 
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="add-product" element={<AddProduct />} />
-          <Route path="edit-product/:Id" element={ <EditProduct />} />
-          <Route path="add-storage/:Id" element={ <AddStorage />} />
+          <Route path="edit-product/:Id" element={<EditProduct />} />
+          <Route path="add-storage/:Id" element={<AddStorage />} />
         </Route>
 
         <Route path='*' element={<NotFound />} />
-        <Route path="/delivery-and-payment" element={<DeliveryandPayment /> } />
+        <Route path="/delivery-and-payment" element={<DeliveryandPayment />} />
         <Route path="/return-exchange" element={<ReturnExchange />} />
         <Route path="/warranty-product-care" element={<WarrantyProductCare />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
@@ -99,7 +101,7 @@ function App() {
         <Route path="/store-locations" element={<StoreLocations />} />
 
       </Routes>
-      <Footer/>
+      <Footer />
 
     </>
   );
