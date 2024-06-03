@@ -107,7 +107,7 @@ const DropdownUser = () => {
         <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-7.5 dark:border-strokedark">
           <li>
             <Link
-              to="/dashBoard/orders"
+              to="/account/orders"
               onClick={() => setDropdownOpen(false)}
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500 "
             >
@@ -133,7 +133,7 @@ const DropdownUser = () => {
           </li>
           <li>
             <Link
-              to="/dashBoard/settings"
+              to="/account/settings"
               onClick={() => setDropdownOpen(false)}
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500"
             >

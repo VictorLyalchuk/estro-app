@@ -57,9 +57,20 @@ const AccountPage = () => {
                                                     : 'text-white hover:bg-white/[0.12] hover:text-white'
                                             )
                                         }
-                                    >Login
+                                    >Settings
                                     </Tab>
-
+                                    <Tab
+                                        className={({ selected }) =>
+                                            classNames(
+                                                'w-full rounded-md py-2.5 text-sm font-medium leading-5',
+                                                'ring-white/60 ring-offset-2 ring-offset-gray-400 focus:outline-none ',
+                                                selected
+                                                    ? 'bg-white text-gray-700 '
+                                                    : 'text-white hover:bg-white/[0.12] hover:text-white'
+                                            )
+                                        }
+                                    >Settings
+                                    </Tab>
 
                                 </Tab.List>
 
