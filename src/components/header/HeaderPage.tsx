@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AuthReducerActionType, IAuthReducerState } from "../../store/accounts/AuthReducer.ts";
 import { IMainCategory, ISubCategory, ICategory } from '../../interfaces/Site/IMainCategory.ts';
 import axios from 'axios';
-import DropdownUser from '../Dashboard/components/DropdownUser.tsx';
+import DropdownUser from './headerPages/DropdownUser/DropdownUser.tsx';
 import { BagReducerActionType, IBagReducerState } from '../../store/bag/BagReducer.tsx';
 import { APP_ENV } from "../../env/config.ts";
 

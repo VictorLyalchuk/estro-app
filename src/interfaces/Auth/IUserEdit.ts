@@ -7,6 +7,7 @@ export interface IUserEdit {
     role: string,
     imagePath: string,
     phoneNumber: string,
+    phoneNumberConfirmed: boolean,
     password: string,
     birthday: Date,
 }

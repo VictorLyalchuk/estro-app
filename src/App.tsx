@@ -24,7 +24,8 @@ import About from "./components/footer/footerPages/About";
 import StoreLocations from "./components/footer/footerPages/StoreLocations";
 import AdminLayout from "./components/layout/AdminLayout";
 import AuthPage from "./components/header/headerPages/auth/AuthPage";
-import AccountPage from "./components/account/AccountPage";
+import UserPanelPage from "./components/user/userPanel/UserPanelPage";
+
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -57,7 +58,9 @@ function App() {
                 path={path}
                 element={
                   <Suspense fallback={<Loader />}>
-                    <Component />
+                    <Component orders={[]} onViewModeChange={function (): void { } } page={0} countPage={0} onPageChange={function ( ): void {
+                      ;
+                    } } />
                   </Suspense>
                 }
               />
@@ -73,8 +76,10 @@ function App() {
         <Route path="product/:Id" element={<Product />} />
         <Route path='/bag' element={<Bag /> } />
 
-        <Route path='account/settings' element={<AccountPage /> } />
-        <Route path='account/settings/:email/:token' element={<AccountPage /> } />
+        <Route path='account/orders' element={<UserPanelPage /> } />
+        <Route path='account/profile' element={<UserPanelPage /> } />
+        <Route path='account/settings' element={<UserPanelPage /> } />
+        <Route path='account/settings/:email/:token' element={<UserPanelPage /> } />
 
 
 

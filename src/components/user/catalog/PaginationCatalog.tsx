@@ -78,7 +78,7 @@ export default function PaginationCatalog() {
     };
 
     return (
-        <div className="flex items-center justify-between border-b border-gray-200  px-4 py-3 sm:px-6 bg-gray-100">
+        <div className="flex items-center justify-between pt-8 border-t border-gray-200  px-4 py-3 sm:px-6 bg-gray-100">
             <div className="flex flex-1 justify-between sm:hidden">
                 <button
                     onClick={() => handlePageClick(currentPage - 1)}

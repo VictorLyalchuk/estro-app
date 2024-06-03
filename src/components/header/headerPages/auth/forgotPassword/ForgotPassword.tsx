@@ -1,47 +1,23 @@
 import { useState } from 'react';
 import axios from 'axios';
-import 'tailwindcss/tailwind.css';
-import '../../../../../index.css';
 import { APP_ENV } from "../../../../../env/config";
 import { Button, FormControl, TextField } from '@material-ui/core';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import '../../../../../satoshi.css';
+import '../../../../../index.css';
+import 'tailwindcss/tailwind.css';
 
 const theme = createTheme({
     typography: {
         fontFamily: 'Satoshi, sans-serif',
     },
-    overrides: {
-        MuiTextField: {
-            root: {
-                fontFamily: 'Satoshi, sans-serif',
-            },
-        },
-    },
 });
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
-        root: {
-            display: 'flex',
-            flexWrap: 'wrap',
-        },
-        margin: {
-            margin: theme.spacing(0),
-        },
-        input: {
-        },
         button: {
             textTransform: 'none',
-        },
-        withoutLabel: {
-            marginTop: theme.spacing(3),
-        },
-        textField: {
-            '& .MuiInputBase-root': {
-                height: '60px',
-            },
         },
     }),
 );
@@ -68,7 +44,6 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
 
     const handleSubmit = async (event: { preventDefault: () => void; }) => {
         event.preventDefault();
-        console.log(formData);
         if (validateForm()) {
             try {
                 await axios.post(`${baseUrl}/api/AccountControllers/ForgotPassword`, formData.email, {
@@ -132,7 +107,7 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
 
                                     <form onSubmit={handleSubmit}>
                                         <ThemeProvider theme={theme}>
-                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                            <FormControl fullWidth variant="outlined">
                                                 <TextField
                                                     label="Email"
                                                     name="email"
@@ -146,7 +121,7 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
                                             </FormControl>
                                         </ThemeProvider>
 
-                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                            <FormControl fullWidth variant="outlined">
                                                 <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
                                                     Reset Password
                                                 </Button>

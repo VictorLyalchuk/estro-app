@@ -1,48 +1,24 @@
 import { useState } from 'react';
 import axios from 'axios';
-import 'tailwindcss/tailwind.css';
-import '../../../../../index.css';
 import { APP_ENV } from "../../../../../env/config";
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Button, FormControl, IconButton, InputAdornment, TextField } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import 'tailwindcss/tailwind.css';
+import '../../../../../index.css';
 import '../../../../../satoshi.css';
 
 const theme = createTheme({
     typography: {
         fontFamily: 'Satoshi, sans-serif',
     },
-    overrides: {
-        MuiTextField: {
-            root: {
-                fontFamily: 'Satoshi, sans-serif',
-            },
-        },
-    },
 });
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
-        root: {
-            display: 'flex',
-            flexWrap: 'wrap',
-        },
-        margin: {
-            margin: theme.spacing(0),
-        },
-        input: {
-        },
         button: {
             textTransform: 'none',
-        },
-        withoutLabel: {
-            marginTop: theme.spacing(3),
-        },
-        textField: {
-            '& .MuiInputBase-root': {
-                height: '60px',
-            },
         },
     }),
 );
@@ -163,7 +139,7 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
 
                                     <form onSubmit={handleSubmit}>
                                         <ThemeProvider theme={theme}>
-                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                            <FormControl fullWidth variant="outlined">
                                                 <TextField
                                                     label="New Password"
                                                     type={showPassword ? 'text' : 'password'}
@@ -186,7 +162,7 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
                                                 ) : (<div className="h-6 text-xs "> </div>)}
                                             </FormControl >
 
-                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                            <FormControl fullWidth variant="outlined">
                                                 <TextField
                                                     label="Confirm New Password "
                                                     type={showConfirmPassword ? 'text' : 'password'}
@@ -211,7 +187,7 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
                                             </FormControl>
                                         </ThemeProvider>
 
-                                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                                        <FormControl fullWidth variant="outlined">
                                             <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
                                                 Reset Password
                                             </Button>

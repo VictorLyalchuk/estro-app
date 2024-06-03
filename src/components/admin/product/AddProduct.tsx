@@ -146,7 +146,7 @@ const AddProduct = () => {
             CategoryId: values.CategoryId,
             storageId: values.storageId || null,
         };
-        console.log("Send model files:", model);
+        // console.log("Send model files:", model);
 
         try {
             await axios.post(`${baseUrl}/api/Product/CreateProduct`, model, {

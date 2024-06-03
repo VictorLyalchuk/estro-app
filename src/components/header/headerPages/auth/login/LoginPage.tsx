@@ -6,7 +6,7 @@ import '../../../../../index.css';
 import { APP_ENV } from "../../../../../env/config";
 import { Button, FormControl, IconButton, InputAdornment, TextField } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { GiftIcon } from '@heroicons/react/24/outline';
 import { ILogin } from '../../../../../interfaces/Auth/ILogin';
 import { IUser } from '../../../../../interfaces/Auth/IUser';
@@ -15,8 +15,8 @@ import { useDispatch } from 'react-redux';
 import { AuthReducerActionType } from '../../../../../store/accounts/AuthReducer';
 import { BanknotesIcon } from '@heroicons/react/24/outline';
 import { TrophyIcon } from '@heroicons/react/24/outline';
-import {Divider} from "antd";
-import { GoogleLogin } from '@react-oauth/google';
+// import {Divider} from "antd";
+// import { GoogleLogin } from '@react-oauth/google';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import '../../../../../satoshi.css';
 
@@ -24,37 +24,12 @@ const theme = createTheme({
     typography: {
         fontFamily: 'Satoshi, sans-serif',
     },
-    overrides: {
-        MuiTextField: {
-            root: {
-                fontFamily: 'Satoshi, sans-serif',
-            },
-        },
-    },
 });
 
-
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
-        root: {
-            display: 'flex',
-            flexWrap: 'wrap',
-        },
-        margin: {
-            margin: theme.spacing(0),
-        },
-        input: {
-        },
         button: {
             textTransform: 'none',
-        },
-        withoutLabel: {
-            marginTop: theme.spacing(3),
-        },
-        textField: {
-            '& .MuiInputBase-root': {
-                height: '60px',
-            },
         },
     }),
 );
@@ -89,11 +64,11 @@ const LoginPage = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        console.log(formData);
         if (validateForm()) {
             try {
                 const response = await axios.post(`${baseUrl}/api/AccountControllers/Login`, formData);
                 const { token } = response.data;
+                console.log(response.data)
                 const user = jwtDecode(token) as IUser;
                 dispatch({
                     type: AuthReducerActionType.LOGIN_USER,
@@ -107,7 +82,7 @@ const LoginPage = () => {
                         AuthType: user.AuthType
                     } as IUser,
                 });
-
+                
                 localStorage.setItem("token", token);
                 navigate("/");
             } catch (error) {
@@ -122,53 +97,56 @@ const LoginPage = () => {
         }
     };
 
-    const googleSuccess = async (response) => {
-        const token = response.credential;
-        const user = jwtDecode(token);
-        const loginData = {
-            email: user?.email,
-            authType: 'google',
-        };
+    // const googleSuccess = async (response) => {
+    //     const token = response.credential;
+    //     const user = jwtDecode(token);
+    //     const loginData = {
+    //         email: user?.email,
+    //         authType: 'google',
+    //     };
 
-      try {
-            const response = await axios.post(`${baseUrl}/api/AccountControllers/Login`, loginData);
-            const { token } = response.data;
-            const user = jwtDecode(token) as IUser;
+    //   try {
+    //         const response = await axios.post(`${baseUrl}/api/AccountControllers/Login`, loginData);
+    //         const { token } = response.data;
+    //         const user = jwtDecode(token) as IUser;
 
-            dispatch({
-                type: AuthReducerActionType.LOGIN_USER,
-                payload: {
-                    Email: user.Email,
-                    FirstName: user.FirstName,
-                    LastName: user.LastName,
-                    Role: user.Role,
-                    ImagePath: user.ImagePath,
-                    AuthType: user.AuthType
-                } as IUser,
-            });
+    //         dispatch({
+    //             type: AuthReducerActionType.LOGIN_USER,
+    //             payload: {
+    //                 Email: user.Email,
+    //                 FirstName: user.FirstName,
+    //                 LastName: user.LastName,
+    //                 Role: user.Role,
+    //                 ImagePath: user.ImagePath,
+    //                 AuthType: user.AuthType
+    //             } as IUser,
+    //         });
 
-            localStorage.setItem("token", token);
-            navigate("/");
-        } catch (error) {
-            console.error("Login error:", error);
-            setErrorMessage("Invalid email or password");
-            setTimeout(() => {
-                setErrorMessage("");
-            }, 1000);
-        }
-    }
-    const googleErrorMessage = (error) => {
-        console.log(error);
-    };
+    //         localStorage.setItem("token", token);
+    //         navigate("/");
+    //     } catch (error) {
+    //         console.error("Login error:", error);
+    //         setErrorMessage("Invalid email or password");
+    //         setTimeout(() => {
+    //             setErrorMessage("");
+    //         }, 1000);
+    //     }
+    // }
+    // const googleErrorMessage = (error) => {
+    //     console.log(error);
+    // };
 
     const validateForm = () => {
         let isValid = true;
         const newErrors: {
             email: string;
             password: string;
+            authType: string;
+
         } = {
             email: "",
-            password: ""
+            password: "",
+            authType: "",
         };
 
         if (formData.email.trim() === '' || !/\S+@\S+\.\S+/.test(formData.email)) {
@@ -205,7 +183,7 @@ const LoginPage = () => {
 
                                 <form onSubmit={handleSubmit}>
                                     <ThemeProvider theme={theme}>
-                                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                                        <FormControl fullWidth variant="outlined">
                                             <TextField
                                                 label="Email"
                                                 name="email"
@@ -218,7 +196,7 @@ const LoginPage = () => {
                                             ) : (<div className="h-6 text-xs "> </div>)}
                                         </FormControl>
 
-                                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                                        <FormControl fullWidth variant="outlined">
                                             <TextField
                                                 label="Password"
                                                 type={showPassword ? 'text' : 'password'}
@@ -242,17 +220,17 @@ const LoginPage = () => {
                                         </FormControl >
                                         </ThemeProvider>
 
-                                    <FormControl fullWidth className={classes.margin} variant="outlined">
+                                    <FormControl fullWidth variant="outlined">
                                         <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
                                             Sign in
                                         </Button>
                                     </FormControl>
 
                                 </form>
-                                <Divider>or</Divider>
+                                {/* <Divider>or</Divider>
                                 <div className={"flex justify-center"}>
                                     <GoogleLogin  onSuccess={googleSuccess} onError={googleErrorMessage} />
-                                </div>
+                                </div> */}
 
                             </div >
                         </div >

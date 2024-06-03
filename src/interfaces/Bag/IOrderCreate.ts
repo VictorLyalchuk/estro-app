@@ -4,6 +4,9 @@ export interface IOrderCreate{
     firstName: string;
     lastName: string;
     phonenumber: string;
-    address: string;
     payment: string;
+    state: string;
+    region: string;
+    city: string;
+    street: string;
 }

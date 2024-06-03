@@ -1,14 +1,14 @@
-import Breadcrumb from '../../Dashboard/components/Breadcrumb';
+import Breadcrumb from '../../../Dashboard/components/Breadcrumb';
 import { useSelector } from 'react-redux';
-import { IAuthReducerState } from '../../../store/accounts/AuthReducer';
+import { IAuthReducerState } from '../../../../store/accounts/AuthReducer';
 import { ChangeEventHandler, useEffect, useState } from 'react';
 import axios from 'axios';
-import { IUserEdit } from '../../../interfaces/Auth/IUserEdit';
+import { IUserEdit } from '../../../../interfaces/Auth/IUserEdit';
 import { Form, Input, message } from 'antd';
 import { useNavigate } from 'react-router-dom';
 import moment from 'moment/moment';
-import { IIUserImageEdit } from '../../../interfaces/Auth/IIUserImageEdit';
-import {APP_ENV} from "../../../env/config";
+import { IIUserImageEdit } from '../../../../interfaces/Auth/IIUserImageEdit';
+import {APP_ENV} from "../../../../env/config";
 
 const Settings = () => {
   const baseUrl = APP_ENV.BASE_URL;
@@ -134,8 +134,8 @@ const Settings = () => {
       birthday: new Date(values.birthday),
       password: values.password,
       role: values.role,
-      emailConfirmed: values.emailconfirmed
-
+      emailConfirmed: values.emailconfirmed,
+      phoneNumberConfirmed: false
     };
     
     try {
@@ -210,31 +210,6 @@ const Settings = () => {
                       <Form.Item className="relative"
                         name="firstName"
                         htmlFor="firstName">
-                        {/* <span className="absolute left-4.5 top-4">
-                          <svg
-                            className="fill-current"
-                            width="20"
-                            height="20"
-                            viewBox="0 0 20 20"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <g opacity="0.8">
-                              <path
-                                fillRule="evenodd"
-                                clipRule="evenodd"
-                                d="M3.72039 12.887C4.50179 12.1056 5.5616 11.6666 6.66667 11.6666H13.3333C14.4384 11.6666 15.4982 12.1056 16.2796 12.887C17.061 13.6684 17.5 14.7282 17.5 15.8333V17.5C17.5 17.9602 17.1269 18.3333 16.6667 18.3333C16.2064 18.3333 15.8333 17.9602 15.8333 17.5V15.8333C15.8333 15.1703 15.5699 14.5344 15.1011 14.0655C14.6323 13.5967 13.9964 13.3333 13.3333 13.3333H6.66667C6.00363 13.3333 5.36774 13.5967 4.8989 14.0655C4.43006 14.5344 4.16667 15.1703 4.16667 15.8333V17.5C4.16667 17.9602 3.79357 18.3333 3.33333 18.3333C2.8731 18.3333 2.5 17.9602 2.5 17.5V15.8333C2.5 14.7282 2.93899 13.6684 3.72039 12.887Z"
-                                fill=""
-                              />
-                              <path
-                                fillRule="evenodd"
-                                clipRule="evenodd"
-                                d="M9.99967 3.33329C8.61896 3.33329 7.49967 4.45258 7.49967 5.83329C7.49967 7.214 8.61896 8.33329 9.99967 8.33329C11.3804 8.33329 12.4997 7.214 12.4997 5.83329C12.4997 4.45258 11.3804 3.33329 9.99967 3.33329ZM5.83301 5.83329C5.83301 3.53211 7.69849 1.66663 9.99967 1.66663C12.3009 1.66663 14.1663 3.53211 14.1663 5.83329C14.1663 8.13448 12.3009 9.99996 9.99967 9.99996C7.69849 9.99996 5.83301 8.13448 5.83301 5.83329Z"
-                                fill=""
-                              />
-                            </g>
-                          </svg>
-                        </span> */}
                         <Input
                           className="w-full rounded border border-stroke bg-gray py-3 text-black"
                           id="firstName"
@@ -515,7 +490,8 @@ const Settings = () => {
 
                         user?.AuthType === 'standard' ? (
                             <img src={`${baseUrl}/uploads/${userImage}`} alt="User" className="rounded-full" />
-                        ) : (
+                        ) 
+                        : (
                             <img src={`${userImage}`} alt="User" className="rounded-full" />
                         )
                     ) : (
@@ -609,7 +585,6 @@ const Settings = () => {
                       Save
                     </button>
                   </div> */}
-                {/* </form> */}
               </div>
             </div>
           </div>

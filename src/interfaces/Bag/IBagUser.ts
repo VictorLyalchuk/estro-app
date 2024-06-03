@@ -4,7 +4,6 @@ export interface IBagUser{
     orderDate: string;
     userEmail: string;
     userId: string;
-    // bagItems: BagItems [];
 }
 
 export interface BagItems{

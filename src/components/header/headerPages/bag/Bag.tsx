@@ -12,7 +12,6 @@ import { IOrderCreate } from "../../../../interfaces/Bag/IOrderCreate";
 import { APP_ENV } from "../../../../env/config";
 import GoodsNotFound from "../../../../assets/goods-not-found.png";
 import { FormControl, TextField, TextFieldProps } from '@material-ui/core';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import '../../../../satoshi.css';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -21,33 +20,14 @@ import { ICity } from "../../../../interfaces/Bag/ICity";
 import { IWarehouse } from "../../../../interfaces/Bag/IWarehouse";
 import { RadioGroup } from '@headlessui/react';
 import { IStore } from "../../../../interfaces/Site/IStore";
+import { CheckCircleIcon } from '@heroicons/react/20/solid'
 
 const theme = createTheme({
   typography: {
     fontFamily: 'Satoshi, sans-serif',
   },
-  overrides: {
-    MuiTextField: {
-      root: {
-        fontFamily: 'Satoshi, sans-serif',
-      },
-    },
-  },
 });
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    margin: {
-      margin: theme.spacing(0),
-    },
-    button: {
-      textTransform: 'none',
-    },
-    satoshiFont: {
-      fontFamily: 'Satoshi, sans-serif',
-    },
-  }),
-);
 const money = (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-10 hover:text-indigo-700" style={{ transition: "color 0.3s" }}>
   <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
 </svg>);
@@ -89,8 +69,6 @@ const Bag = () => {
   const { totalWithOutTax } = useSelector((redux: any) => redux.cardReducer as ICardReducerState);
   const { initialIndividualItemPrice } = useSelector((redux: any) => redux.cardReducer as ICardReducerState);
   const bagItems = useSelector((state: { cardReducer: ICardReducerState }) => state.cardReducer.items) || [];
-  const classes = useStyles();
-
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
   const [selectedShipping, setSelectedShipping] = useState<string | null>(null);
   const [warehouseSelected, setSelectedWarehouse] = useState(false);
@@ -135,14 +113,14 @@ const Bag = () => {
           console.error("Error fetching bag data:", error);
         });
     }
-    GetCity();
-    GetStore();
+    getCity();
+    getStore();
     setSelectedShipping('Branch');
     setSelectedPayment('PaymentAfter');
   }, [user, count]);
 
   useEffect(() => {
-    GetWarehouse();
+    getWarehouse();
   }, [city]);
 
   useEffect(() => {
@@ -196,13 +174,16 @@ const Bag = () => {
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
     const model: IOrderCreate = {
-      email: formData.email,
-      emailUser: user?.Email || "",
       firstName: formData.firstName,
       lastName: formData.lastName,
       phonenumber: formData.phoneNumber,
+      email: formData.email,
+      emailUser: user?.Email || "",
       payment: formData.payment,
-      address: selectedWarehouseOptions ? selectedWarehouseOptions?.CityDescription + ', ' + selectedWarehouseOptions?.Description : selectedStore?.city + ' ' + selectedStore?.name + ' ' + selectedStore?.address,
+      state: "Ukraine",
+      region: selectedWarehouseOptions?.SettlementAreaDescription || "",
+      city: selectedWarehouseOptions?.CityDescription || selectedStore?.city || "",
+      street: selectedWarehouseOptions?.Description || (selectedStore ? `${selectedStore.name} ${selectedStore.address}` : ""),
     };
     event.preventDefault();
     if (validateForm()) {
@@ -352,7 +333,7 @@ const Bag = () => {
     };
   }
 
-  const GetWarehouse = async () => {
+  const getWarehouse = async () => {
     const apiUrl = 'https://api.novaposhta.ua/v2.0/json/';
     const payload = {
       apiKey: 'f8df4fb4933f7b40c96b872a1901be8e',
@@ -371,7 +352,7 @@ const Bag = () => {
     }
   }
 
-  const GetCity = async () => {
+  const getCity = async () => {
     const apiUrl = 'https://api.novaposhta.ua/v2.0/json/';
     const payload = {
       apiKey: 'f8df4fb4933f7b40c96b872a1901be8e',
@@ -389,7 +370,7 @@ const Bag = () => {
     }
   }
 
-  const GetStore = async () => {
+  const getStore = async () => {
     try {
       const resp = await axios.get<IStore[]>(`${baseUrl}/api/StoreControllers/StoreAll`);
       setStoreOptions(resp.data);
@@ -423,15 +404,25 @@ const Bag = () => {
           <>
             <div className="w-full lg:w-2/4 p-5 lg:mb-0">
               <div className="bg-white p-5 rounded-md shadow-md mb-8">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-2xl font-semibold">Order Summary</h3>
-                  <h3 className="text-2xl font-semibold">{bagUser?.orderDate}</h3>
-                </div>
+              <div className="grid grid-rows-1">
+                    <h1 className="text-3xl font-bold tracking-tight text-gray-900 ">Order Summary</h1>
+                    <dl className="flex mt-2">
+                      <dt className="text-gray-500">Order Date&nbsp;</dt>
+                      <dd className="font-medium text-gray-900"></dd>
+                      <dt>
+                        <span className="sr-only">Date</span>
+                        <span className="mx-2 text-gray-400" aria-hidden="true">
+                          &middot;
+                        </span>
+                      </dt>
+                      <dd className="font-medium text-gray-900">
+                        <time dateTime="2021-03-22">{bagUser?.orderDate}</time>
+                      </dd>
+                    </dl>
+                  </div>
               </div>
               {bagItems.map((item, index) => (
                 <div key={item.id} className="border-b bg-white pt-4 p-6 rounded-md shadow-md mb-8">
-                  <div className="flex justify-end">
-                  </div>
                   <div className="flex justify-between">
                     <div className="flex justify-between">
                       <h3 className="font-semibold mb-4 mr-14">Product {index + 1}</h3>
@@ -482,11 +473,11 @@ const Bag = () => {
                   <div className="border-t pt-4">
                     <div className="">
 
-                      <label htmlFor="firstName" className="text-gray-600 font-semibold">
+                      <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
                         First Name
                       </label>
                       <ThemeProvider theme={theme}>
-                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                        <FormControl fullWidth variant="outlined">
                           <TextField
                             name="firstName"
                             id="firstName"
@@ -494,16 +485,17 @@ const Bag = () => {
                             onChange={handleChange}
                             error={!!errors.firstName}
                             variant="outlined"
+                            className="mt-1"
                             size="small"
                           />
                           {errors.firstName ? (
                             <div className="h-6 text-xs text-red-500">Error: {errors.firstName}</div>
                           ) : (<div className="h-6 text-xs "> </div>)}
                         </FormControl>
-                        <label htmlFor="lastName" className="text-gray-600 font-semibold">
+                        <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
                           Last Name
                         </label>
-                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                        <FormControl fullWidth variant="outlined">
                           <TextField
                             name="lastName"
                             id="lastName"
@@ -518,10 +510,10 @@ const Bag = () => {
                           ) : (<div className="h-6 text-xs "> </div>)}
                         </FormControl>
 
-                        <label htmlFor="email" className="text-gray-600 font-semibold">
+                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
                           Email
                         </label>
-                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                        <FormControl fullWidth variant="outlined">
                           <TextField
                             name="email"
                             id="email"
@@ -538,10 +530,10 @@ const Bag = () => {
                           ) : (<div className="h-6 text-xs "> </div>)}
                         </FormControl>
 
-                        <label htmlFor="formatted-text-mask-input" className="text-gray-600 font-semibold">
-                          Phone Number
+                        <label htmlFor="formatted-text-mask-input" className="block text-sm font-medium text-gray-700 mb-2">
+                          Phone
                         </label>
-                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                        <FormControl fullWidth variant="outlined">
                           <TextField
                             name="formatted-text-mask-input"
                             id="formatted-text-mask-input"
@@ -571,7 +563,7 @@ const Bag = () => {
 
                       <ThemeProvider theme={theme}>
 
-                        <div className={classes.margin}>
+                        <div >
                           <RadioGroup value={selectedShipping} onChange={setSelectedShipping} >
                             <RadioGroup.Label className="sr-only">Delivery Information</RadioGroup.Label>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -580,8 +572,8 @@ const Bag = () => {
                                   key={delivery.id}
                                   value={delivery.id}
                                   className={({ active, checked }) =>
-                                    `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer ${active ? 'border-2 border-blue-700' : ''
-                                    } ${checked ? 'border-2 border-blue-700' : 'border-2 border-gray-200'}`
+                                    `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer ${active ? 'border-2 border-indigo-600 ring-2 ring-indigo-600' : ''
+                                    } ${checked ? 'border-2 border-indigo-600' : 'border-2 border-gray-200'}`
                                   }
                                 >
                                   {({ checked }) => (
@@ -591,7 +583,7 @@ const Bag = () => {
                                           {delivery.logo}{delivery.title}
                                         </RadioGroup.Label>
                                         {checked && (
-                                          <span className="text-blue-700 font-bold">&#10003;</span>
+                                         <CheckCircleIcon className="h-5 w-5 text-indigo-600" aria-hidden="true" />
                                         )}
                                       </div>
                                       <p className="text-gray-700 text-base">{delivery.subtitle}</p>
@@ -605,11 +597,11 @@ const Bag = () => {
 
                         {selectedShipping === 'Branch' && (
                           <div className="mt-5">
-                            <label htmlFor="city" className="text-gray-600 font-semibold">
+                            <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
                               City
                             </label>
 
-                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                            <FormControl fullWidth variant="outlined">
                               <Autocomplete
                                 id="city"
                                 options={cityOptions.filter(option => option.SettlementTypeDescription === 'місто')}
@@ -630,11 +622,11 @@ const Bag = () => {
                               ) : (<div className="h-6 text-xs "> </div>)}
                             </FormControl>
 
-                            <label htmlFor="warehouse" className="text-gray-600 font-semibold">
+                            <label htmlFor="warehouse" className="block text-sm font-medium text-gray-700 mb-2">
                               Warehouse
                             </label>
 
-                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                            <FormControl fullWidth variant="outlined">
                               <Autocomplete
                                 id="warehouse"
                                 options={warehouseOptions.filter(option => option.CategoryOfWarehouse === 'Branch')}
@@ -661,11 +653,11 @@ const Bag = () => {
 
                         {selectedShipping === 'Postomat' && (
                           <div className="mt-5">
-                            <label htmlFor="city" className="text-gray-600 font-semibold">
+                            <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
                               City
                             </label>
 
-                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                            <FormControl fullWidth variant="outlined">
                               <Autocomplete
                                 id="city"
                                 options={cityOptions.filter(option => option.SettlementTypeDescription === 'місто')}
@@ -686,11 +678,11 @@ const Bag = () => {
                               ) : (<div className="h-6 text-xs "> </div>)}
                             </FormControl>
 
-                            <label htmlFor="warehouse" className="text-gray-600 font-semibold">
+                            <label htmlFor="warehouse" className="block text-sm font-medium text-gray-700 mb-2">
                               Postomat
                             </label>
 
-                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                            <FormControl fullWidth variant="outlined">
                               <Autocomplete
                                 id="warehouse"
                                 options={warehouseOptions.filter(option => option.CategoryOfWarehouse === 'Postomat')}
@@ -717,11 +709,11 @@ const Bag = () => {
 
                         {selectedShipping === 'Store' && (
                           <div className="mt-5">
-                            <label htmlFor="city" className="text-gray-600 font-semibold">
+                            <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
                               City
                             </label>
 
-                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                            <FormControl fullWidth variant="outlined">
                               <Autocomplete
                                 id="city"
                                 options={storeCities}
@@ -741,11 +733,11 @@ const Bag = () => {
                               ) : (<div className="h-6 text-xs "> </div>)}
                             </FormControl>
 
-                            <label htmlFor="store" className="text-gray-600 font-semibold">
+                            <label htmlFor="store" className="block text-sm font-medium text-gray-700 mb-2">
                               Store
                             </label>
 
-                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                            <FormControl fullWidth variant="outlined">
                               <Autocomplete
                                 id="store"
                                 options={filteredStores}
@@ -785,7 +777,7 @@ const Bag = () => {
 
                           {formData.payment === 'The money has not been paid' && (
                             <>
-                              <div className={classes.margin}>
+                              <div>
                                 <RadioGroup value={selectedPayment} onChange={setSelectedPayment} >
                                   <RadioGroup.Label className="sr-only">Delivery Information</RadioGroup.Label>
                                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -794,8 +786,8 @@ const Bag = () => {
                                         key={payment.id}
                                         value={payment.id}
                                         className={({ active, checked }) =>
-                                          `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer ${active ? 'border-2 border-blue-700' : ''
-                                          } ${checked ? 'border-2 border-blue-700' : 'border-2 border-gray-200'}`
+                                          `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer ${active ? 'border-2 border-indigo-600 ring-2 ring-indigo-600' : ''
+                                          } ${checked ? 'border-2 border-indigo-600' : 'border-2 border-gray-200'}`
                                         }
                                       >
                                         {({ checked }) => (
@@ -805,7 +797,8 @@ const Bag = () => {
                                                 {payment.logo} {payment.title}
                                               </RadioGroup.Label>
                                               {checked && (
-                                                <span className="text-blue-700 font-bold">&#10003;</span>
+                                               <CheckCircleIcon className="h-5 w-5 text-indigo-600" aria-hidden="true" />
+                                                // <span className="text-blue-700 font-bold">&#10003;</span>
                                               )}
                                             </div>
                                             <p className="text-gray-700 text-base">{payment.subtitle}</p>
@@ -833,36 +826,37 @@ const Bag = () => {
 
                         </ThemeProvider>
                       </div>
-                      <div className="text-base	flex justify-between items-center ">
-                        <p className="text-base	font-semibold">Subtotal:</p>
-                        <p className="text-base">{totalWithOutTax.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</p>
+
+                      <dl className="pt-2 mt-8 divide-y divide-gray-200 text-sm ">
+                      <div className="flex items-center justify-between pb-4">
+                        <dt className="text-gray-600">Subtotal</dt>
+                        <dd className="font-medium text-gray-900">{totalWithOutTax.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</dd>
                       </div>
-                      <div className="text-base	flex justify-between items-center">
-                        <p className="text-base	font-semibold">Taxes:</p>
-                        <p className="text-base">{taxes.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</p>
+                      <div className="flex items-center justify-between py-4">
+                        <dt className="text-gray-600">Tax</dt>
+                        <dd className="font-medium text-gray-900">{taxes.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</dd>
                       </div>
-                      <div className="text-base	flex justify-between items-center">
-                        <p className="text-base	font-semibold">Discount:</p>
-                        <p className="text-base">0 ₴</p>
+                      <div className="flex items-center justify-between py-4">
+                        <dt className="text-gray-600">Discount</dt>
+                        <dd className="font-medium text-red-600">0 ₴</dd>
                       </div>
-                      <div className="text-base	flex justify-between items-center">
-                        <p className="text-base	font-semibold">Payment:</p>
-                        <p className={`text-base ${formData.payment === 'The money has not been paid' ? 'text-red-500' : 'text-green-500'}`}>{formData.payment}</p>
+                      <div className="flex items-center justify-between py-4">
+                        <dt className="text-gray-600">Payment</dt>
+                        <dd className={`font-medium ${formData.payment === 'The money has not been paid' ? 'text-red-500' : 'text-green-500'}`}>{formData.payment}</dd>
                       </div>
-                      <div className="text-2xl flex justify-between items-center mt-4 border-t pt-4">
-                        <p className="text-2xl font-semibold">Total:</p>
-                        <p className="text-2xl">{total.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
+                      <div className="flex items-center justify-between pt-4">
+                        <dt className="font-medium text-gray-900">Order total</dt>
+                        <dd className="font-medium text-indigo-600">{total.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</dd>
                       </div>
+                    </dl>                    
+
                     </div>
                   </div>
                 </div>
                 {/* Checkout Button */}
 
                 <div className="mt-8 flex justify-end">
-                  <FormControl fullWidth className={classes.margin} variant="outlined">
-                    {/* <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
-                    Confirm The Order
-                    </Button> */}
+                  <FormControl fullWidth variant="outlined">
                     <button
                       type="submit"
                       className='flex w-full items-center justify-center rounded-md border bg-indigo-600 hover:bg-indigo-700

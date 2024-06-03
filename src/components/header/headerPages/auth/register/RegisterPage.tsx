@@ -6,57 +6,32 @@ import '../../../../../index.css';
 import { APP_ENV } from "../../../../../env/config";
 import { Button, FormControl, IconButton, Input, InputAdornment, InputLabel, TextField } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
 import MaskedInput from 'react-text-mask';
 import { GiftIcon } from '@heroicons/react/24/outline';
 import { BanknotesIcon } from '@heroicons/react/24/outline';
 import { TrophyIcon } from '@heroicons/react/24/outline';
-
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import '../../../../../satoshi.css';
-import { GoogleLogin } from "@react-oauth/google";
-import { jwtDecode } from 'jwt-decode';
-import { IUser } from "../../../../../interfaces/Auth/IUser.ts";
-import { AuthReducerActionType } from "../../../../../store/accounts/AuthReducer.ts";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { Divider } from "antd";
+// import { GoogleLogin } from "@react-oauth/google";
+// import { jwtDecode } from 'jwt-decode';
+// import { IUser } from "../../../../../interfaces/Auth/IUser.ts";
+// import { AuthReducerActionType } from "../../../../../store/accounts/AuthReducer.ts";
+// import { useDispatch } from "react-redux";
+// import { useNavigate } from "react-router-dom";
+// import { Divider } from "antd";
 
 const theme = createTheme({
     typography: {
         fontFamily: 'Satoshi, sans-serif',
     },
-    overrides: {
-        MuiTextField: {
-            root: {
-                fontFamily: 'Satoshi, sans-serif',
-            },
-        },
-    },
 });
 
-const useStyles = makeStyles((theme: Theme) =>
+const useStyles = makeStyles(() =>
     createStyles({
-        root: {
-            display: 'flex',
-            flexWrap: 'wrap',
-        },
-        margin: {
-            margin: theme.spacing(0),
-        },
-        input: {
-        },
         button: {
             textTransform: 'none',
-        },
-        withoutLabel: {
-            marginTop: theme.spacing(3),
-        },
-        textField: {
-            '& .MuiInputBase-root': {
-                height: '60px',
-            },
         },
     }),
 );
@@ -86,8 +61,6 @@ interface State {
 
 const RegisterPage = () => {
     const baseUrl = APP_ENV.BASE_URL;
-    const dispatch = useDispatch();
-    const navigate = useNavigate();
     const classes = useStyles();
     const [isRegistered, setIsRegistered] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -154,37 +127,37 @@ const RegisterPage = () => {
             console.log(formData);
         }
     };
-    const googleSuccess = async (response) => {
-        const token = response.credential;
-        const user = jwtDecode(token);
-        console.log(user);
-        const formData = new FormData();
-        formData.append('UserName', user?.name);
-        formData.append('FirstName', user?.given_name);
-        formData.append('LastName', user?.family_name);
-        formData.append('Email', user?.email);
-        formData.append('AuthType', 'google');
-        formData.append('ImagePath', user?.picture);
-        formData.append('ClientId', user?.sub);
+    // const googleSuccess = async (response) => {
+    //     const token = response.credential;
+    //     const user = jwtDecode(token);
+    //     console.log(user);
+    //     const formData = new FormData();
+    //     formData.append('UserName', user?.name);
+    //     formData.append('FirstName', user?.given_name);
+    //     formData.append('LastName', user?.family_name);
+    //     formData.append('Email', user?.email);
+    //     formData.append('AuthType', 'google');
+    //     formData.append('ImagePath', user?.picture);
+    //     formData.append('ClientId', user?.sub);
 
-        try {
-            await axios.post(`${baseUrl}/api/AccountControllers/Registration`, formData);
-            setIsRegistered(true);
+    //     try {
+    //         await axios.post(`${baseUrl}/api/AccountControllers/Registration`, formData);
+    //         setIsRegistered(true);
 
-        } catch (error) {
-            console.error("Register error:", error);
-            setErrorMessage("Register error. Try again later");
-            setTimeout(() => {
-                setErrorMessage("");
-            }, 1000);
-        }
+    //     } catch (error) {
+    //         console.error("Register error:", error);
+    //         setErrorMessage("Register error. Try again later");
+    //         setTimeout(() => {
+    //             setErrorMessage("");
+    //         }, 1000);
+    //     }
 
 
-    };
+    // };
 
-    const googleErrorMessage = (error) => {
-        console.log(error);
-    };
+    // const googleErrorMessage = (error) => {
+    //     console.log(error);
+    // };
 
     const validateForm = () => {
         let isValid = true;
@@ -195,13 +168,16 @@ const RegisterPage = () => {
             phoneNumber: string;
             email: string;
             password: string;
+            authType: string;
+
         } = {
             firstName: "",
             lastName: "",
             confirmPassword: "",
             phoneNumber: "",
             email: "",
-            password: ""
+            password: "",
+            authType: "",
         };
 
         if (formData.firstName.trim() === '') {
@@ -372,7 +348,7 @@ const RegisterPage = () => {
 
                                     <form onSubmit={handleSubmit}>
                                         <ThemeProvider theme={theme}>
-                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                            <FormControl fullWidth variant="outlined">
 
                                                 <TextField
                                                     label="First Name"
@@ -386,7 +362,7 @@ const RegisterPage = () => {
                                                 ) : (<div className="h-6 text-xs "> </div>)}
                                             </FormControl>
 
-                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                            <FormControl fullWidth variant="outlined">
                                                 <TextField
                                                     label="Last Name"
                                                     name="lastName"
@@ -399,7 +375,7 @@ const RegisterPage = () => {
                                                 ) : (<div className="h-6 text-xs "> </div>)}
                                             </FormControl>
 
-                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                            <FormControl fullWidth variant="outlined">
                                                 <TextField
                                                     label="Email"
                                                     name="email"
@@ -413,7 +389,7 @@ const RegisterPage = () => {
                                             </FormControl>
                                         </ThemeProvider>
 
-                                        <FormControl fullWidth className={classes.margin} variant="outlined">
+                                        <FormControl fullWidth variant="outlined">
                                             <div className="mb-5 mt-2 flex justify-center items-center gap-x-3 relative">
                                                 {selectedImage ? (
                                                     <img
@@ -434,7 +410,6 @@ const RegisterPage = () => {
                                                     variant="contained"
                                                     size="small"
                                                     color="primary"
-                                                    className={classes.margin}
                                                     onClick={handleSelectFile}
                                                 >
                                                     Select
@@ -443,7 +418,7 @@ const RegisterPage = () => {
                                         </FormControl>
                                         <ThemeProvider theme={theme}>
 
-                                            <FormControl fullWidth className={classes.margin} >
+                                            <FormControl fullWidth >
                                                 <InputLabel >Phone Number</InputLabel>
 
                                                 <Input
@@ -460,8 +435,7 @@ const RegisterPage = () => {
                                                 ) : (<div className="h-6 text-xs "> </div>)}
                                             </FormControl>
 
-
-                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                            <FormControl fullWidth variant="outlined">
                                                 <TextField
                                                     label="Password"
                                                     type={showPassword ? 'text' : 'password'}
@@ -484,7 +458,7 @@ const RegisterPage = () => {
                                                 ) : (<div className="h-6 text-xs "> </div>)}
                                             </FormControl >
 
-                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                            <FormControl fullWidth variant="outlined">
                                                 <TextField
                                                     label="Confirm Password "
                                                     type={showConfirmPassword ? 'text' : 'password'}
@@ -509,19 +483,17 @@ const RegisterPage = () => {
                                             </FormControl>
                                         </ThemeProvider>
 
-                                        <FormControl fullWidth className={classes.margin} variant="outlined">
-                                            <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
+                                        <FormControl fullWidth variant="outlined">
+                                            <Button  type="submit" className={classes.button} variant="contained" size="large" color="primary" disableElevation>
                                                 Register
                                             </Button>
                                         </FormControl>
 
                                     </form>
-                                    <Divider>or</Divider>
-
+                                    {/* <Divider>or</Divider>
                                     <div className={"flex justify-center"}>
                                         <GoogleLogin onSuccess={googleSuccess} onError={googleErrorMessage} />
-
-                                    </div>
+                                    </div> */}
 
                                 </div >
                             )}

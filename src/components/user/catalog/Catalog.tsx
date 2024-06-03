@@ -422,10 +422,10 @@ export default function CategoryFilters() {
               {/* <Catalog></Catalog> */}
               <div className="min-h-[950px] overflow-hidden rounded-sm dark:border-strokedark dark:bg-boxdark bg-gray-100">
                 {/* <CategoryFilters></CategoryFilters> */}
-                <PaginationCatalog></PaginationCatalog>
+                {/* <PaginationCatalog></PaginationCatalog> */}
                 <div className="mx-auto max-w-2xl px-2 py-8  lg:max-w-7xl lg:px-2 bg-gray-100">
                   {/* <h2 className="text-2xl font-bold tracking-tight text-gray-900">Customers also purchased</h2> */}
-                  <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8">
+                  <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8 pb-8">
                     {productList.map((product) => (
                       <div key={product.id} className="group relative">
                         <Link to={`/product/${product.id}`}>
@@ -449,7 +449,9 @@ export default function CategoryFilters() {
                         </Link>
                       </div>
                     ))}
+
                   </div>
+                    <PaginationCatalog></PaginationCatalog>
                 </div>
               </div>
             </div>
