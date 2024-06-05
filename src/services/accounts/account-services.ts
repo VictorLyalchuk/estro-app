@@ -159,15 +159,13 @@ export async function refreshRedux(dispatch: any) {
     }
 }
 
-export async function ConfirmEmail(email: string | null, token: string | null) {
+export async function ConfirmEmail(email: string | null, token: string | null, callback: (error: any, result?: any) => void) {
     try {
         await instance.post(`${baseUrl}/api/AccountControllers/ConfirmEmail`, { email, token });
         await refreshToken();
-        // if (user) {
-        //     const data = await getUserData(user.Email);
-        //     setUserProfile(data);
-        // }
+        callback(null, "Success"); 
     } catch (error) {
         console.error('Error confirming email:', error);
+        callback(error); 
     }
 }

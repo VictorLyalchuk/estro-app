@@ -61,8 +61,13 @@ const HomePage = () => {
 
     const homePage = async (email: string | null | undefined, token: string | null | undefined) => {
         if (email && token) {
-            await ConfirmEmail(email, token);
-            setEmailConfirm(true);
+            ConfirmEmail(email, token, (error) => {
+                if (error) {
+                    console.error("Email verification error:", error);
+                } else {
+                    setEmailConfirm(true);
+                }
+            });
         }
         await GetAllImage()
             .then(data => setImages(data))

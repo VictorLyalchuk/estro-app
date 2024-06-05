@@ -27,13 +27,14 @@ import AuthPage from "./components/header/headerPages/auth/AuthPage";
 import UserPanelPage from "./components/user/userPanel/UserPanelPage";
 import UserLayout from "./components/layout/UserLayout";
 import useAuthTokenEffect from "./useAuthTokenEffect";
+import GuestLayout from "./components/layout/GuestLayout";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
   }, []);
-  
+
   useAuthTokenEffect();
 
   return loading ? (
@@ -70,7 +71,9 @@ function App() {
           })}
         </Route> */}
 
-        <Route path='/auth' element={<AuthPage />} />
+        <Route element={<GuestLayout />}>
+          <Route path='/auth' element={<AuthPage />} />
+        </Route>
         <Route path="/auth/:email/:token" element={<AuthPage />} />
 
         <Route path="/" element={<HomePage />}></Route>
@@ -85,8 +88,6 @@ function App() {
           <Route path='account/settings' element={<UserPanelPage />} />
           <Route path='account/bonuses' element={<UserPanelPage />} />
         </Route>
-
-
 
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="add-product" element={<AddProduct />} />
@@ -104,7 +105,6 @@ function App() {
 
       </Routes>
       <Footer />
-
     </>
   );
 }
