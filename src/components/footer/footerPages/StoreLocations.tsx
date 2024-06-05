@@ -11,10 +11,10 @@ const StoreLocations = () => {
 
   useEffect(() => {
     try {
-      axios.get<IStore[]>(`${baseUrl}/api/StoreControllers/StoreAll`)        
-      .then(resp => {
-      setStoreOptions(resp.data);
-      })
+      axios.get<IStore[]>(`${baseUrl}/api/StoreControllers/StoreAll`)
+        .then(resp => {
+          setStoreOptions(resp.data);
+        })
     } catch (error) {
       console.error('Error fetching stores', error);
     }
@@ -50,11 +50,13 @@ const StoreLocations = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 text-gray-700 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6 ">
               {filteredStores.map((store, index) => (
-                <div key={index} className="bg-white p-6 hover:bg-indigo-400 hover:text-white">
-                  <h3 className="text-xl font-semibold mb-2">{store.name}</h3>
-                  <p className="text-sm mb-2">{store.address}</p>
-                  <p className="text-sm mb-2">{store.workingHours}</p>
-                </div>
+                <div key={index} className="bg-white rounded-md p-6 shadow-md mb-8 mt-8 hover:bg-indigo-400 hover:text-white">
+                  <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-7xl lg:px-8 hover:bg-indigo-400">
+                      <h3 className="text-xl font-semibold mb-2">{store.name}</h3>
+                      <p className="text-sm mb-2">{store.address}</p>
+                      <p className="text-sm mb-2">{store.workingHours}</p>
+                    </div>
+                  </div>
               ))}
             </div>
           </div>
