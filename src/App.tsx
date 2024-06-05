@@ -7,10 +7,10 @@ import Catalog from "./components/user/catalog/Catalog";
 import Header from "./components/header/HeaderPage";
 import { Suspense, useEffect, useState } from "react";
 import Loader from "./components/Dashboard/common/Loader";
-import DefaultLayout from "./components/Dashboard/layout/DefaultLayout";
-import MainDashboard from "./components/Dashboard/pages/MainDashboard";
+// import DefaultLayout from "./components/Dashboard/layout/DefaultLayout";
+// import MainDashboard from "./components/Dashboard/pages/MainDashboard";
+// import routes from './components/Dashboard/routes';
 import { Toaster } from 'react-hot-toast';
-import routes from './components/Dashboard/routes';
 import AddProduct from "./components/admin/product/AddProduct";
 import EditProduct from "./components/admin/product/EditProduct";
 import AddStorage from "./components/admin/product/AddStorage";
@@ -50,7 +50,7 @@ function App() {
       <Logo />
       <Header />
       <Routes>
-        <Route path='/dashboard' element={<DefaultLayout />}>
+        {/* <Route path='/dashboard' element={<DefaultLayout />}>
           <Route index element={<MainDashboard />} />
           {routes.map((routes, index) => {
             const { path, component: Component } = routes;
@@ -68,12 +68,13 @@ function App() {
               />
             );
           })}
-        </Route>
+        </Route> */}
 
         <Route path='/auth' element={<AuthPage />} />
         <Route path="/auth/:email/:token" element={<AuthPage />} />
 
         <Route path="/" element={<HomePage />}></Route>
+        <Route path="/:email/:token" element={<HomePage />}></Route>
         <Route path="catalog/:subName/:urlName" element={<Catalog />} />
         <Route path="product/:Id" element={<Product />} />
         <Route path='/bag' element={<Bag />} />
@@ -81,7 +82,6 @@ function App() {
         <Route element={<UserLayout />}>
           <Route path="account/orders" element={<UserPanelPage />} />
           <Route path='account/profile' element={<UserPanelPage />} />
-          <Route path='account/profile/:email/:token' element={<UserPanelPage />} />
           <Route path='account/settings' element={<UserPanelPage />} />
           <Route path='account/bonuses' element={<UserPanelPage />} />
         </Route>

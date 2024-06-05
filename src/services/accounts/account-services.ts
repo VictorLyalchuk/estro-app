@@ -85,6 +85,26 @@ export async function refreshToken() {
     }
 }
 
+export async function getProfileOrders(userEmail: string | null, page: number) {
+    try {
+        const response = await instance.get<IOrderUser[]>(`${baseUrl}/api/OrderControllers/GetOrderByEmail/${userEmail}`, { params: { page } });
+        return response.data;
+    } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        throw error;
+    }
+}
+
+export async function getUserOrders(userEmail: string | null) {
+    try {
+        const response = await instance.get<number>(`${baseUrl}/api/OrderControllers/GetCountOrderByEmail/${userEmail}`);
+        return response.data;
+    } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        throw error;
+    }
+}
+
 export async function getUserData(userEmail: string | null) {
     try {
         const response = await instance.get<IUserProfile>(`${baseUrl}/api/AccountControllers/${userEmail}`);
@@ -136,5 +156,18 @@ export async function refreshRedux(dispatch: any) {
     } catch (error) {
         console.error('Failed to refresh redux:', error);
         throw error;
+    }
+}
+
+export async function ConfirmEmail(email: string | null, token: string | null) {
+    try {
+        await instance.post(`${baseUrl}/api/AccountControllers/ConfirmEmail`, { email, token });
+        await refreshToken();
+        // if (user) {
+        //     const data = await getUserData(user.Email);
+        //     setUserProfile(data);
+        // }
+    } catch (error) {
+        console.error('Error confirming email:', error);
     }
 }

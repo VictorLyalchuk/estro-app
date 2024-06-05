@@ -71,3 +71,12 @@ export async function editUserImage(userImageEdit: IIUserImageEdit ) {
         throw error;
     }
 }
+
+export async function GetAllImage() {
+    try {
+        const resp = await instance.get(`${baseUrl}/api/ImageForHomeService/GetAllImageAsync`);
+        return resp.data;
+    } catch (error) {
+        console.error('Error gett all images:', error);
+    }
+}

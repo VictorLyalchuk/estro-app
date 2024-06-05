@@ -1,8 +1,8 @@
 import { ChangeEventHandler, useEffect, useState } from 'react';
+import { useDispatch } from "react-redux";
 import { IUserEdit } from '../../../../interfaces/Auth/IUserEdit';
 import moment from 'moment/moment';
 import { IIUserImageEdit } from '../../../../interfaces/Auth/IIUserImageEdit';
-import { useDispatch } from "react-redux";
 import { FormControl, IconButton, Input, InputAdornment, TextField, ThemeProvider, createTheme } from '@material-ui/core';
 import { beforeUpload, createUserImage, deleteUserImage, editUserImage } from '../../../../services/images/images-services';
 import { APP_ENV } from '../../../../env/config';
@@ -154,7 +154,6 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
   const onSubmit = async () => {
     const { isValid, newErrors } = validateForm(formData, values.textmask, userProfile);
     setErrors(newErrors);
-
     if (isValid) {
       const model: IUserEdit = {
         id: formData.id,
@@ -268,11 +267,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                                 className="inline-block h-12 w-12 flex-shrink-0 overflow-hidden rounded-full"
                                 aria-hidden="true"
                               >
-                                {userImage ? (
-                                  <img src={`${baseUrl}/uploads/${userImage}`} alt="User" className="h-12 w-12 rounded-full" />
-                                ) : (
-                                  <img src={`${userImage}`} alt="User" className="h-14 w-14 rounded-full" />
-                                )}
+                                <img src={userImage ? `${baseUrl}/uploads/${userImage}` : `${baseUrl}/uploads/user404.webp`} alt="User" className="h-12 w-12 rounded-full" />
                               </div>
                               <div className="relative ml-5">
                                 <input
@@ -294,11 +289,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                           </div>
 
                           <div className="relative hidden overflow-hidden rounded-full lg:block">
-                            {userImage ? (
-                              <img src={`${baseUrl}/uploads/${userImage}`} alt="User" className="h-40 w-40 rounded-full" />
-                            ) : (
-                              <img src={`${userImage}`} alt="User" className="h-14 w-14 rounded-full" />
-                            )}
+                            <img src={userImage ? `${baseUrl}/uploads/${userImage}` : `${baseUrl}/uploads/user404.webp`} alt="User" className="h-40 w-40 rounded-full" />
                             <label
                               htmlFor="desktop-user-photo"
                               className="absolute inset-0 flex h-full w-full items-center justify-center bg-black bg-opacity-75 text-sm font-medium text-white opacity-0 focus-within:opacity-0 hover:opacity-100"
@@ -424,7 +415,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                       <div className="px-4 sm:px-6">
                         <div>
                           <h2 className="text-lg font-medium leading-6 text-gray-900">Change Password</h2>
-                          <button onClick={() => {setUpdatePassword((prevState) => !prevState);}} type="button" className="text-sm font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+                          <button onClick={() => { setUpdatePassword((prevState) => !prevState); }} type="button" className="text-sm font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
                             Click here to change your password
                           </button>
 

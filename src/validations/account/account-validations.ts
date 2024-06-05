@@ -71,17 +71,19 @@ export const validateForm = (formData: FormData, textmask: string, userProfile: 
   if (formData.newPassword !== formData.confirmNewPassword) {
     newErrors.confirmNewPassword = 'Passwords do not match';
     isValid = false;
-}
- else if (formData.newPassword.length < 7) {
-  newErrors.newPassword = 'Password must be at least 7 characters long';
-  isValid = false;
-} else if (!/[a-zA-Z]/.test(formData.newPassword)) {
-  newErrors.newPassword = 'Password must contain at least one letter';
-  isValid = false;
-} else if (!/[^a-zA-Z0-9]/.test(formData.newPassword)) {
-  newErrors.newPassword = 'Password must contain at least one symbol';
-  isValid = false;
-}
+  }
+  if (formData.newPassword !== '') {
+    if (formData.newPassword.length < 7) {
+      newErrors.newPassword = 'Password must be at least 7 characters long';
+      isValid = false;
+    } else if (!/[a-zA-Z]/.test(formData.newPassword)) {
+      newErrors.newPassword = 'Password must contain at least one letter';
+      isValid = false;
+    } else if (!/[^a-zA-Z0-9]/.test(formData.newPassword)) {
+      newErrors.newPassword = 'Password must contain at least one symbol';
+      isValid = false;
+    }
+  }
 
 
 

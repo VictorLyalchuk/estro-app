@@ -1,8 +1,11 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { IHomeImage } from '../../interfaces/Site/IHomeImage';
 import { APP_ENV } from "../../env/config";
 import { makeStyles } from '@material-ui/core/styles';
+import { useParams } from 'react-router-dom';
+import { ConfirmEmail } from '../../services/accounts/account-services';
+import { GetAllImage } from '../../services/images/images-services';
+import { Alert, AlertTitle } from '@material-ui/lab';
 
 const useStyles = makeStyles(() => ({
     imageContainer: {
@@ -47,18 +50,24 @@ const useStyles = makeStyles(() => ({
 
 const HomePage = () => {
     const baseUrl = APP_ENV.BASE_URL;
+    const { email, token } = useParams<{ email: string, token: string }>();
     const [images, setImages] = useState<IHomeImage[]>([]);
     const classes = useStyles();
+    const [emailConfirm, setEmailConfirm] = useState(false);
 
     useEffect(() => {
-        axios.get(`${baseUrl}/api/ImageForHomeService/GetAllImageAsync`)
-            .then(response => {
-                setImages(response.data);
-            })
-            .catch(error => {
-                console.error('Error fetching images:', error);
-            });
-    }, []);
+        homePage(email, token);
+    }, [email, token]);
+
+    const homePage = async (email: string | null | undefined, token: string | null | undefined) => {
+        if (email && token) {
+            await ConfirmEmail(email, token);
+            setEmailConfirm(true);
+        }
+        await GetAllImage()
+            .then(data => setImages(data))
+            .catch(error => console.error('Error fetching images data:', error));
+    }
 
     return (
         <div className="bg-gray-100">
@@ -190,6 +199,14 @@ const HomePage = () => {
                                     className={`${classes.image} ${classes.imageContainer} ${classes.hover08}`}
                                 />
                             </div>
+                        </div>
+                    )}
+                    {emailConfirm && (
+                        <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-96">
+                            <Alert onClose={() => { setEmailConfirm(false) }} severity="success">
+                                <AlertTitle>Success</AlertTitle>
+                                <strong>Your emeil has been successfully verified.</strong>
+                            </Alert>
                         </div>
                     )}
                 </div>

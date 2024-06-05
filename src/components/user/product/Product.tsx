@@ -1,18 +1,19 @@
 import { useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import axios from 'axios';
+import { Image, message } from 'antd';
 import { StarIcon } from '@heroicons/react/20/solid'
 import { RadioGroup } from '@headlessui/react'
-import { Link, useNavigate, useParams } from "react-router-dom";
 import { IProduct, IStorages } from '../../../interfaces/Site/IProduct';
-import axios from 'axios';
-import {Image, message} from 'antd';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import { useDispatch, useSelector } from 'react-redux';
 import { BagReducerActionType } from '../../../store/bag/BagReducer';
-import { IBag } from '../../../interfaces/Bag/IBag';
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer';
-import {APP_ENV} from "../../../env/config";
+import { IBag } from '../../../interfaces/Bag/IBag';
+import { APP_ENV } from "../../../env/config";
+import { getProductById } from '../../../services/products/product-services';
 
 const reviews = { href: '#', average: 4, totalCount: 117 }
 
@@ -29,12 +30,13 @@ export default function Product() {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(2);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+
   useEffect(() => {
-    axios.get<IProduct>(`${baseUrl}/api/Product/ProductByID/${Id}`)
-      .then(resp => {
-        setProduct(resp.data);
-      });
+    if (Id) {
+      getProductById(Id)
+        .then(data => setProduct(data))
+        .catch(error => console.error('Error fetching product data:', error));
+    }
   }, [Id]);
 
   if (!product) {
@@ -80,7 +82,6 @@ export default function Product() {
             pluscount: 1
           }
         });
-        // navigate("/bag");
       }
       catch (ex) {
         message.error('Error adding to bag!');
@@ -94,8 +95,6 @@ export default function Product() {
       <div className="pt-6">
         <nav aria-label="Breadcrumb" >
           <ol role="list" className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-            {/* {product .breadcrumbs.map((breadcrumb) => ( */}
-
             <li key={`${product.id}-mainCategory`}>
               <div className="flex items-center">
                 <a
@@ -156,11 +155,7 @@ export default function Product() {
               </div>
 
             </li>
-            {/* ))} */}
             <li className="text-sm">
-              {/* <a href={product.urlCategoryName} aria-current="page" className="font-medium text-gray-500 hover:text-gray-600">
-                {product.categoryName}
-              </a> */}
             </li>
           </ol>
         </nav>
@@ -183,7 +178,6 @@ export default function Product() {
               </div>
             ))}
           </Slider >
-         
 
           <div className="mt-4 lg:row-span-3 lg:mt-0 lg:col-start-3">
             {/* Options */}
@@ -332,7 +326,7 @@ export default function Product() {
                 <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
                   {product.highlights.map((highlight, index) => (
                     <li
-                      key={index} 
+                      key={index}
                       className="text-gray-400">
                       <span className="text-sm text-gray-600">{highlight}</span>
                     </li>

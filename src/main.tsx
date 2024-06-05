@@ -12,22 +12,6 @@ import './index.css'
 import './satoshi.css';
 // import { GoogleOAuthProvider } from '@react-oauth/google';
 
-// if (localStorage.token) {
-//   const user = jwtDecode(localStorage.token) as IUser;
-//   store.dispatch({
-//     type: AuthReducerActionType.LOGIN_USER,
-//     payload: {
-//       Id: user.Id,
-//       Email: user.Email,
-//       FirstName: user.FirstName,
-//       LastName: user.LastName,
-//       Role: user.Role,
-//       ImagePath: user.ImagePath,
-//       PhoneNumber: user.PhoneNumber
-//     } as IUser
-//   });
-// }
-
 ReactDOM.createRoot(document.getElementById('root')!).render(
   // <GoogleOAuthProvider clientId="840790221401-5im429egocjlphps0jaonapq1j7jo1j8.apps.googleusercontent.com">
     <ThemeProvider theme={theme}>

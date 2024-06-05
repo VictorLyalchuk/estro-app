@@ -1,7 +1,7 @@
-import { ProfileUserProps } from "../../../../interfaces/Custom/Phone/ProfileUser/ProfileUserProps";
+import { SettingsUserProps } from "../../../../interfaces/Custom/Phone/ProfileUser/ProfileUserProps";
 
 
-const Bonuses: React.FC<ProfileUserProps> = () => {
+const Bonuses: React.FC<SettingsUserProps> = () => {
   return (
     <>
       <div className="bg-white rounded-md shadow-md mb-8 mt-8">
