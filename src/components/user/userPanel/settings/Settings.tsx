@@ -3,14 +3,17 @@ import { IUserEdit } from '../../../../interfaces/Auth/IUserEdit';
 import moment from 'moment/moment';
 import { IIUserImageEdit } from '../../../../interfaces/Auth/IIUserImageEdit';
 import { useDispatch } from "react-redux";
-import { FormControl, TextField, ThemeProvider, createTheme } from '@material-ui/core';
+import { FormControl, IconButton, Input, InputAdornment, TextField, ThemeProvider, createTheme } from '@material-ui/core';
 import { beforeUpload, createUserImage, deleteUserImage, editUserImage } from '../../../../services/images/images-services';
 import { APP_ENV } from '../../../../env/config';
-import { refreshRedux, refreshToken } from '../../../../services/accounts/account-services';
-
-interface SettingsUserProps {
-  userProfile?: IUserEdit;
-}
+import { editUserData, refreshRedux, refreshToken } from '../../../../services/accounts/account-services';
+import { Alert, AlertTitle } from '@material-ui/lab';
+import { State } from '../../../../interfaces/Custom/Phone/State';
+import TextMaskCustom from '../../../../services/custom/phone-services';
+import { validateForm } from '../../../../validations/account/account-validations';
+import { validatePhoneNumber } from '../../../../validations/custom/phone-validations';
+import { SettingsUserProps } from '../../../../interfaces/Custom/Phone/ProfileUser/ProfileUserProps';
+import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 const theme = createTheme({
   typography: {
@@ -21,7 +24,17 @@ const theme = createTheme({
 const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
   const baseUrl = APP_ENV.BASE_URL;
   const dispatch = useDispatch();
+  const [profileUpdated, setProfileUpdated] = useState(false);
+  const [updatePassword, setUpdatePassword] = useState(false);
   const [userImage, setUserImage] = useState<string>('');
+  const [showCurrentPassword, setShowCurrentPassword] = useState(false);
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
+
+  const [values, setValues] = useState<State>({
+    textmask: '(   )    -  -  ',
+  });
+
   const [formData, setFormData] = useState({
     id: '',
     firstName: '',
@@ -30,6 +43,8 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
     phoneNumber: '',
     birthday: '',
     password: '',
+    newPassword: '',
+    confirmNewPassword: '',
   });
 
   const [errors, setErrors] = useState({
@@ -39,21 +54,28 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
     phoneNumber: '',
     birthday: '',
     password: '',
+    newPassword: '',
+    confirmNewPassword: '',
   });
 
   useEffect(() => {
     if (userProfile) {
       const birthdayDate = moment(userProfile.birthday, 'YYYY-MM-DD').format('YYYY-MM-DD');
-      console.log(birthdayDate);
       setFormData({
         id: userProfile.id,
         firstName: userProfile.firstName || '',
         lastName: userProfile.lastName || '',
         email: userProfile.email || '',
-        phoneNumber: '+38' + (userProfile.phoneNumber || ''),
+        phoneNumber: userProfile.phoneNumber || '',
         birthday: birthdayDate,
         password: '',
+        newPassword: '',
+        confirmNewPassword: '',
       });
+      setValues((prevValues) => ({
+        ...prevValues,
+        textmask: userProfile.phoneNumber,
+      }));
       setUserImage(userProfile.imagePath);
     }
   }, [userProfile]);
@@ -61,56 +83,15 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
 
+    setValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+
     setFormData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
-  };
-
-  const validateForm = () => {
-    let isValid = true;
-    const newErrors: {
-      firstName: string;
-      lastName: string;
-      email: string;
-      phoneNumber: string;
-      birthday: string;
-      password: string;
-      confirmPassword: string;
-    } = {
-      firstName: "",
-      lastName: "",
-      email: "",
-      phoneNumber: "",
-      birthday: "",
-      password: "",
-      confirmPassword: "",
-    };
-
-    if (formData.firstName.trim() === '') {
-      newErrors.firstName = 'First Name is required';
-      isValid = false;
-    }
-
-    if (formData.lastName.trim() === '') {
-      newErrors.lastName = 'Last Name is required';
-      isValid = false;
-    }
-
-    if (formData.email.trim() === '' || !/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Invalid email address';
-      isValid = false;
-    }
-    if (formData.password.trim() === '') {
-      newErrors.password = 'Password is required';
-      isValid = false;
-    }
-    else if (formData.password.trim() !== userProfile?.password) {
-      newErrors.password = 'Password is not correct';
-      isValid = false;
-    }
-    setErrors(newErrors);
-    return isValid;
   };
 
   const changeImage: ChangeEventHandler<HTMLInputElement> = async (e) => {
@@ -145,10 +126,38 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
     }
   };
 
+  const changePhoneNumber = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+
+    const cleanedValue = value.replace(/\D/g, '');
+    setFormData((prevData) => ({
+      ...prevData,
+      phoneNumber: cleanedValue,
+    }));
+
+    validatePhoneNumber(cleanedValue, errors, setErrors);
+  };
+
+  const currentPasswordToggle = () => {
+    setShowCurrentPassword((prevShowPassword) => !prevShowPassword);
+  };
+  const newPasswordToggle = () => {
+    setShowNewPassword((prevShowPassword) => !prevShowPassword);
+  };
+  const confirmNewPasswordToggle = () => {
+    setShowConfirmNewPassword((prevShowPassword) => !prevShowPassword);
+  };
   const onSubmit = async () => {
-    if (validateForm()) {
+    const { isValid, newErrors } = validateForm(formData, values.textmask, userProfile);
+    setErrors(newErrors);
+
+    if (isValid) {
       const model: IUserEdit = {
-        id: "formData.id",
+        id: formData.id,
         firstName: formData.firstName,
         lastName: formData.lastName,
         email: formData.email,
@@ -156,20 +165,13 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
         phoneNumber: formData.phoneNumber,
         birthday: new Date(formData.birthday),
         password: formData.password,
+        newPassword: formData.newPassword || '',
+        confirmNewPassword: formData.confirmNewPassword || '',
       };
-      console.log(model);
-
-      try {
-        // await axios.post(`${baseUrl}/api/AccountControllers/Edit`, model, {
-        //     headers: {
-        //         "Content-Type": "application/json"
-        //     }
-        // });
-        // navigate('/');
-      }
-      catch (ex) {
-        // message.error('Error editing user!');
-      }
+      await editUserData(model);
+      await refreshToken();
+      await refreshRedux(dispatch);
+      setProfileUpdated(true);
     }
   };
 
@@ -232,19 +234,20 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                           </div>
 
                           <div>
-                            <label htmlFor="phoneNumber" className="block text-sm font-medium leading-6 text-gray-900">
+                            <label htmlFor="textmask" className="block text-sm font-medium leading-6 text-gray-900">
                               Phone
                             </label>
                             <div className="mt-2">
                               <FormControl fullWidth variant="outlined">
-                                <TextField
-                                  name="phoneNumber"
-                                  id="phoneNumber"
-                                  value={formData.phoneNumber}
-                                  onChange={handleChange}
+                                <Input
+                                  name="textmask"
+                                  id="textmask"
+                                  value={values.textmask}
+                                  onChange={changePhoneNumber}
+                                  inputComponent={TextMaskCustom as any}
                                   error={!!errors.phoneNumber}
                                   className="mt-1"
-                                  size="small"
+                                  placeholder='(099) 00-00-000'
                                 />
                                 {errors.phoneNumber ? (
                                   <div className="h-6 text-xs text-red-500">Error: {errors.phoneNumber}</div>
@@ -396,6 +399,16 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                                 error={!!errors.password}
                                 className="mt-1"
                                 size="small"
+                                type={showCurrentPassword ? 'text' : 'password'}
+                                InputProps={{
+                                  endAdornment: (
+                                    <InputAdornment position="end">
+                                      <IconButton onClick={currentPasswordToggle} edge="end">
+                                        {showCurrentPassword ? <Visibility /> : <VisibilityOff />}
+                                      </IconButton>
+                                    </InputAdornment>
+                                  ),
+                                }}
                               />
                               {errors.password ? (
                                 <div className="h-6 text-xs text-red-500">Error: {errors.password}</div>
@@ -411,62 +424,81 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                       <div className="px-4 sm:px-6">
                         <div>
                           <h2 className="text-lg font-medium leading-6 text-gray-900">Change Password</h2>
-                          <button type="button" className="text-sm font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+                          <button onClick={() => {setUpdatePassword((prevState) => !prevState);}} type="button" className="text-sm font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
                             Click here to change your password
                           </button>
 
-
-
-                        </div>
-                      </div>
-                      <div className="px-4 py-6 sm:p-6 lg:pb-8">
-
-                        <div className="mt-6 grid grid-cols-12 gap-6">
-                          <div className="col-span-12 sm:col-span-6">
-                            <label htmlFor="new-password" className="block text-sm font-medium leading-6 text-gray-900">
-                              New Password
-                            </label>
-                            <div className="mt-2 flex rounded-md shadow-sm">
-                              <FormControl fullWidth variant="outlined">
-                                <TextField
-                                  name="new-password"
-                                  id="new-password"
-                                  // value={formData.firstName}
-                                  onChange={handleChange}
-                                  // error={!!errors.firstName}
-                                  className="mt-1"
-                                  size="small"
-                                />
-                                {/* {errors.firstName ? (
-                            <div className="h-6 text-xs text-red-500">Error: {errors.firstName}</div>
-                          ) : (<div className="h-6 text-xs "> </div>)} */}
-                              </FormControl>
-                            </div>
-                          </div>
-                          <div className="col-span-12 sm:col-span-6">
-                            <label htmlFor="confirm-new-password" className="block text-sm font-medium leading-6 text-gray-900">
-                              Confirm New Password
-                            </label>
-                            <div className="mt-2 flex rounded-md shadow-sm">
-                              <FormControl fullWidth variant="outlined">
-                                <TextField
-                                  name="confirm-new-password"
-                                  id="confirm-new-password"
-                                  // value={formData.firstName}
-                                  onChange={handleChange}
-                                  // error={!!errors.firstName}
-                                  className="mt-1"
-                                  size="small"
-                                />
-                                {/* {errors.firstName ? (
-                            <div className="h-6 text-xs text-red-500">Error: {errors.firstName}</div>
-                          ) : (<div className="h-6 text-xs "> </div>)} */}
-                              </FormControl>
-                            </div>
-                          </div>
                         </div>
                       </div>
 
+                      {updatePassword && (
+                        <div className="px-4 py-6 sm:p-6 lg:pb-8"  >
+                          <div className="mt-6 grid grid-cols-12 gap-6">
+                            <div className="col-span-12 sm:col-span-6">
+                              <label htmlFor="newPassword" className="block text-sm font-medium leading-6 text-gray-900">
+                                New Password
+                              </label>
+                              <div className="mt-2 flex rounded-md shadow-sm">
+                                <FormControl fullWidth variant="outlined">
+                                  <TextField
+                                    name="newPassword"
+                                    id="newPassword"
+                                    value={formData.newPassword}
+                                    onChange={handleChange}
+                                    error={!!errors.confirmNewPassword}
+                                    className="mt-1"
+                                    size="small"
+                                    type={showNewPassword ? 'text' : 'password'}
+                                    InputProps={{
+                                      endAdornment: (
+                                        <InputAdornment position="end">
+                                          <IconButton onClick={newPasswordToggle} edge="end">
+                                            {showCurrentPassword ? <Visibility /> : <VisibilityOff />}
+                                          </IconButton>
+                                        </InputAdornment>
+                                      ),
+                                    }}
+                                  />
+                                  {errors.confirmNewPassword ? (
+                                    <div className="h-6 text-xs text-red-500">Error: {errors.confirmNewPassword}</div>
+                                  ) : (<div className="h-6 text-xs "> </div>)}
+                                </FormControl>
+                              </div>
+                            </div>
+                            <div className="col-span-12 sm:col-span-6">
+                              <label htmlFor="confirmNewPassword" className="block text-sm font-medium leading-6 text-gray-900">
+                                Confirm New Password
+                              </label>
+                              <div className="mt-2 flex rounded-md shadow-sm">
+                                <FormControl fullWidth variant="outlined">
+                                  <TextField
+                                    name="confirmNewPassword"
+                                    id="confirmNewPassword"
+                                    value={formData.confirmNewPassword}
+                                    onChange={handleChange}
+                                    error={!!errors.confirmNewPassword}
+                                    className="mt-1"
+                                    size="small"
+                                    type={showConfirmNewPassword ? 'text' : 'password'}
+                                    InputProps={{
+                                      endAdornment: (
+                                        <InputAdornment position="end">
+                                          <IconButton onClick={confirmNewPasswordToggle} edge="end">
+                                            {showCurrentPassword ? <Visibility /> : <VisibilityOff />}
+                                          </IconButton>
+                                        </InputAdornment>
+                                      ),
+                                    }}
+                                  />
+                                  {errors.confirmNewPassword ? (
+                                    <div className="h-6 text-xs text-red-500">Error: {errors.confirmNewPassword}</div>
+                                  ) : (<div className="h-6 text-xs "> </div>)}
+                                </FormControl>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      )}
 
                       <div className="mt-4 flex justify-end gap-x-3 px-4 py-4 sm:px-6">
                         <div className="flex justify-end w-64">
@@ -480,6 +512,14 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                             >
                               Save
                             </button>
+                            {profileUpdated && (
+                              <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-96">
+                                <Alert onClose={() => { setProfileUpdated(false) }} severity="success">
+                                  <AlertTitle>Success</AlertTitle>
+                                  <strong>Profile updated successfully.</strong>
+                                </Alert>
+                              </div>
+                            )}
                           </FormControl>
                         </div>
                       </div>

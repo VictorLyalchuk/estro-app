@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import GoodsNotFound from "../../../../assets/goods-not-found.png";
 import { APP_ENV } from "../../../../env/config";
 import { ArrowLongLeftIcon, ArrowLongRightIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
+import { CompactOrdersProps } from "../../../../interfaces/Custom/Phone/ProfileUser/ProfileUserProps";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -14,14 +15,6 @@ const formatDate = (dateString: string) => {
     year: 'numeric'
   });
 };
-
-interface CompactOrdersProps {
-  orders: IOrderUser[];
-  onViewModeChange: () => void;
-  page: number;
-  countPage: number;
-  onPageChange: (newPage: number) => void;
-}
 
 const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange, page, countPage, onPageChange }) => {
   const baseUrl = APP_ENV.BASE_URL;
@@ -70,9 +63,9 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
                   </h2>
 
                   <div className="space-y-8">
-                    {order.orderItems.map((product) => (
+                    {order.orderItems.map((product, index) => (
                       <div
-                        key={product.productId}
+                        key={index}
                         className="border-b border-t border-gray-200 bg-white shadow-sm sm:rounded-lg sm:border"
                       >
                         <div className="px-4 py-6 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">

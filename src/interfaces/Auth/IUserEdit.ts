@@ -7,4 +7,6 @@ export interface IUserEdit {
     phoneNumber: string,
     imagePath: string,
     password: string,
+    newPassword: string,
+    confirmNewPassword: string,
 }

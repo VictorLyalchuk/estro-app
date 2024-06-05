@@ -133,8 +133,6 @@ const UserPanelPage = () => {
         }
     }
 
-
-
     return (
         <>
             <div className="bg-gray-100">

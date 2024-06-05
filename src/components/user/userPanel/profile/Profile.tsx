@@ -1,10 +1,6 @@
-import { IUserProfile } from "../../../../interfaces/Auth/IUserProfile";
+import { ProfileUserProps } from "../../../../interfaces/Custom/Phone/ProfileUser/ProfileUserProps";
 import { emailConfirm } from "../../../../services/accounts/account-services";
 
-interface ProfileUserProps {
-  userProfile?: IUserProfile;
-  countPage: number;
-}
 
 const formatDate = (date?: Date | string) => {
   if (!date) return 'N/A';

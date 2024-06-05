@@ -3,6 +3,7 @@ import GoodsNotFound from "../../../../assets/goods-not-found.png";
 import { APP_ENV } from "../../../../env/config";
 import React from 'react';
 import { ArrowLongLeftIcon, ArrowLongRightIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
+import { OrdersProps } from "../../../../interfaces/Custom/Phone/ProfileUser/ProfileUserProps";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -16,14 +17,6 @@ const formatDate = (dateString: string) => {
     year: 'numeric'
   });
 };
-
-interface OrdersProps {
-  orders: IOrderUser[];
-  onViewModeChange: () => void;
-  page: number;
-  countPage: number;
-  onPageChange: (newPage: number) => void;
-}
 
 const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPage, onPageChange }) => {
   const baseUrl = APP_ENV.BASE_URL;
@@ -78,9 +71,9 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                   </h2>
 
                   <div className="space-y-24">
-                    {order.orderItems.map((product) => (
+                    {order.orderItems.map((product, index) => (
                       <div
-                        key={product.productId}
+                        key={index}
                         className="grid grid-cols-1 text-sm sm:grid-cols-12 sm:grid-rows-1 sm:gap-x-6 md:gap-x-8 lg:gap-x-8"
                       >
                         <div className="px-4 py-6 sm:col-span-4 md:col-span-5 md:row-span-2 md:row-end-2">

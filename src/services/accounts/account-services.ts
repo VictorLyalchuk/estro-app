@@ -4,6 +4,7 @@ import { IUserProfile } from "../../interfaces/Auth/IUserProfile";
 import { jwtDecode } from "jwt-decode";
 import { IUser } from "../../interfaces/Auth/IUser";
 import { AuthReducerActionType } from "../../store/accounts/AuthReducer";
+import { IUserEdit } from "../../interfaces/Auth/IUserEdit";
 
 
 const baseUrl = APP_ENV.BASE_URL;
@@ -90,6 +91,15 @@ export async function getUserData(userEmail: string | null) {
         return response.data;
     } catch (error) {
         console.error('Failed to fetch user data:', error);
+        throw error;
+    }
+}
+
+export async function editUserData(user: IUserEdit) {
+    try {
+        await instance.post(`${baseUrl}/api/AccountControllers/Edit`, user)
+    } catch (error) {
+        console.error('Failed to edit user data:', error);
         throw error;
     }
 }
