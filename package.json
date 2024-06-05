@@ -18,12 +18,11 @@
     "@heroicons/react": "^2.1.1",
     "@material-ui/core": "^4.12.4",
     "@material-ui/icons": "^4.11.3",
-
     "@material-ui/lab": "^4.0.0-alpha.61",
-
     "@react-oauth/google": "^0.12.1",
     "@reduxjs/toolkit": "^1.9.7",
     "@tailwindcss/aspect-ratio": "^0.4.2",
+    "@tailwindcss/line-clamp": "^0.4.4",
     "@types/react-swipeable-views": "^0.13.5",
     "antd": "^5.13.1",
     "autoprefixer": "^10.4.16",

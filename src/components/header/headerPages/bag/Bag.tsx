@@ -401,7 +401,7 @@ const Bag = () => {
                     </dl>
                   </div>
               </div>
-              {bagItems.map((item, index) => (
+              {bagItems.map((item: BagItems, index: number) => (
                 <div key={index} className="border-b bg-white pt-4 p-6 rounded-md shadow-md mb-8">
                   <div className="flex justify-between">
                     <div className="flex justify-between">
@@ -421,7 +421,7 @@ const Bag = () => {
                       className="w-24 h-36 object-cover rounded-md mr-4"
                     />
                     <div className="w-1/2 ml-4 mx-auto">
-                      <h3 className="text-lg font-semibold mb-2 mr-auto " style={{ whiteSpace: 'nowrap' }}>Total product price: {initialIndividualItemPrice[item.id].toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</h3>
+                      <h3 className="text-lg font-semibold mb-2 mr-auto whitespace-nowrap">Total product price: {initialIndividualItemPrice[item.id].toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</h3>
                       <p className="text-gray-600 mb-2">Size: {item.size}</p>
                       <p className="text-gray-600 mb-2">Article: {item.article}</p>
                       <p className="text-gray-600 mb-2">Price: {item.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>

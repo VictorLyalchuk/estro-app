@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
-import { XMarkIcon } from '@heroicons/react/24/outline'
+import { ArrowLongLeftIcon, ArrowLongRightIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
 import axios from "axios";
 import { IProduct } from '../../../interfaces/Site/IProduct.ts';
@@ -8,9 +8,6 @@ import { Link, useParams, useNavigate } from "react-router-dom";
 import qs, { ParsedQs } from 'qs';
 import { ICategory } from '../../../interfaces/Site/IMainCategory.ts';
 import { IInfo } from '../../../interfaces/Info/IInfo.ts';
-import PaginationCatalog from './PaginationCatalog.tsx';
-import { useDispatch, useSelector } from 'react-redux';
-import { PaginationReducerCatalogActionType } from './CatalogPaginationReducer.tsx';
 import { APP_ENV } from "../../../env/config.ts";
 
 const sortOptions = [
@@ -34,8 +31,31 @@ export default function CategoryFilters() {
   const [filterOptionsList, setFilterOptionsList] = useState<IInfo[]>([]);
   const [filters, setFilters] = useState<{ name: string; values: string[] }[]>([]);
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const page = useSelector((state: { paginationProduct: { currentPage: number | null } }) => state.paginationProduct.currentPage);
+  const [page, setPage] = useState(1);
+  const [countPage, setCountPage] = useState(0);
+  const itemsPerPage = 6;
+  const indexOfLastItem = page * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const totalPages = Math.ceil(countPage / itemsPerPage);
+  const visiblePages = 5;
+  let startPage = Math.max(1, page - Math.floor(visiblePages / 2));
+  let endPage = Math.min(totalPages, startPage + visiblePages - 1);
+
+  if (endPage - startPage + 1 < visiblePages) {
+    startPage = Math.max(1, endPage - visiblePages + 1);
+  }
+  const onPageChange = (newPage: number) => {
+    setPage(newPage);
+    const queryParams: { [key: string]: string | string[] } = {};
+    filters.forEach((filter) => {
+      if (filter.values.length > 0) {
+        queryParams[filter.name] = filter.values.join('_');
+      }
+    });
+    queryParams['Page'] = newPage.toString();
+    const newQueryString = qs.stringify(queryParams, { encodeValuesOnly: true, delimiter: ';' });
+    navigate({ search: newQueryString });
+  };
 
   const createFilters = async (name: string, value: string) => {
     const newFilters = [...filters];
@@ -55,14 +75,8 @@ export default function CategoryFilters() {
         newFilters.splice(index, 1);
       }
     }
-    await setFilters(newFilters);
-
-
-
-    dispatch({
-      type: PaginationReducerCatalogActionType.CURRENT_CATALOG_PAGE,
-      payload: { currentPage: 1 },
-    });
+    setFilters(newFilters);
+    setPage(1);
 
     // Формування url link in browse
     const queryParams: { [key: string]: string | string[] } = {};
@@ -71,6 +85,7 @@ export default function CategoryFilters() {
         queryParams[filter.name] = filter.values.join('_');
       }
     });
+    queryParams['Page'] = '1';
     const newQueryString = qs.stringify(queryParams, { encodeValuesOnly: true, delimiter: ';' });
     navigate({ search: newQueryString });
   };
@@ -79,12 +94,10 @@ export default function CategoryFilters() {
     const newQueryString = ""
     navigate({ search: newQueryString });
     setFilters([]);
+    setPage(1);
   }
   useEffect(() => {
-    dispatch({
-      type: PaginationReducerCatalogActionType.CURRENT_CATALOG_PAGE,
-      payload: { currentPage: 1 },
-    });
+    setPage(1);
   }, [subName, urlName]);
 
   useEffect(() => {
@@ -102,7 +115,9 @@ export default function CategoryFilters() {
       // завантаження даних з url, їх перетворення та присвоєння у filters із затримкою
       try {
         const queryParams: ParsedQs = qs.parse(location.search, { ignoreQueryPrefix: true, delimiter: ';' });
-
+        if (queryParams['Page']) {
+          setPage(parseInt(queryParams['Page'] as string) || 1);
+        }
         const newFilters = Object.keys(queryParams).map((name) => {
           let values: string[] = [];
           if (Array.isArray(queryParams[name])) {
@@ -116,12 +131,7 @@ export default function CategoryFilters() {
             values,
           };
         });
-        await setFilters(newFilters);
-
-        dispatch({
-          type: PaginationReducerCatalogActionType.UPDATE_FILTERS,
-          payload: { filters: newFilters },
-        });
+        setFilters(newFilters);
 
         // створення і відправка даних на сервер
 
@@ -141,13 +151,8 @@ export default function CategoryFilters() {
         });
 
         const quantity = (await quantityResponse).data;
-        dispatch({
-          type: PaginationReducerCatalogActionType.TOTAL_CATALOG_PRODUCTS,
-          payload: {
-            totalProducts: quantity
-          }
-        });
 
+        setCountPage(quantity);
 
         const resp = await axios.get<IProduct[]>(`${baseUrl}/api/Product/FilterProducts/${subName}/${urlName}`, {
           params: filterDTO,
@@ -336,7 +341,6 @@ export default function CategoryFilters() {
             </div>
           </div>
 
-          {/* <section aria-labelledby="products-heading" className="pb-24 pt-6"> */}
           <h2 id="products-heading" className="sr-only">
             Products
           </h2>
@@ -419,10 +423,7 @@ export default function CategoryFilters() {
 
             {/* Product grid */}
             <div className="lg:col-span-3">
-              {/* <Catalog></Catalog> */}
               <div className="min-h-[950px] overflow-hidden rounded-sm dark:border-strokedark dark:bg-boxdark bg-gray-100">
-                {/* <CategoryFilters></CategoryFilters> */}
-                {/* <PaginationCatalog></PaginationCatalog> */}
                 <div className="mx-auto max-w-2xl px-2 py-8  lg:max-w-7xl lg:px-2 bg-gray-100">
                   {/* <h2 className="text-2xl font-bold tracking-tight text-gray-900">Customers also purchased</h2> */}
                   <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8 pb-8">
@@ -438,20 +439,81 @@ export default function CategoryFilters() {
                           </div>
                           <div className="mt-4 flex justify-between">
                             <div>
-                              <h3 className="text-xs text-gray-700 meta-5 font-bold">
+                              <h3 className="text-xs text-gray-700 meta-5 font-bold line-clamp-2 break-words w-30">
                                 {product.name}
                               </h3>
                               <p className="mt-1 text-xs text-gray-500">{product.article}</p>
                               <p className="mt-1 text-xs text-gray-500">{product.purpose}</p>
                             </div>
-                            <p className="text-sm font-bold text-red-800">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
+                            <p className="text-sm font-bold text-red-800 whitespace-nowrap" >{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
                           </div>
                         </Link>
                       </div>
                     ))}
-
                   </div>
-                    <PaginationCatalog></PaginationCatalog>
+
+                  <div className="container mx-auto p-4 flex relative max-w-7xl lg:flex-row justify-between">
+                    <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between ">
+                      <div>
+                        <p className="text-sm text-gray-700">
+                          Showing <span className="font-medium">{indexOfFirstItem + 1}</span> to{' '}
+                          <span className="font-medium">{Math.min(indexOfLastItem, countPage)}</span> of{' '}
+                          <span className="font-medium">{countPage}</span> results
+                        </p>
+                      </div>
+                    </div>
+                    <div>
+                      <nav className="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0">
+                        <div className="flex flex-1 justify-between sm:justify-end">
+                          <button
+                            onClick={() => onPageChange(page - 1)}
+                            disabled={page === 1}
+                            className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
+                    ${page === 1
+                                ? 'text-gray-300'
+                                : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                              }`}
+                          >
+                            <ArrowLongLeftIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                            Previous
+                          </button>
+                        </div>
+
+                        {[...Array(endPage - startPage + 1)].map((_, index) => {
+                          const pageNumber = startPage + index;
+                          return (
+                            <button
+                              key={pageNumber}
+                              onClick={() => onPageChange(pageNumber)}
+                              className={`inline-flex items-center border-t px-4 pt-4 text-sm font-medium text-gray-500 ${page === pageNumber
+                                ? 'border-t-2 border-indigo-500 text-indigo-600 font-semibold'
+                                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                                }`}
+                            >
+                              {pageNumber}
+                            </button>
+                          );
+                        })}
+
+                        <div className="flex flex-1 justify-between sm:justify-end">
+                          <button
+                            onClick={() => onPageChange(page + 1)}
+                            disabled={indexOfLastItem >= countPage}
+                            className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
+                    ${indexOfLastItem >= countPage
+                                ? 'text-gray-300'
+                                : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                              }`}
+                          >
+                            Next
+                            <ArrowLongRightIcon className="ml-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                          </button>
+                        </div>
+
+                      </nav>
+                    </div>
+                  </div>
+
                 </div>
               </div>
             </div>

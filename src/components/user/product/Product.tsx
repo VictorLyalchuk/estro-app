@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import axios from 'axios';
 import { Image, message } from 'antd';
 import { StarIcon } from '@heroicons/react/20/solid'
 import { RadioGroup } from '@headlessui/react'
@@ -14,6 +13,7 @@ import { IAuthReducerState } from '../../../store/accounts/AuthReducer';
 import { IBag } from '../../../interfaces/Bag/IBag';
 import { APP_ENV } from "../../../env/config";
 import { getProductById } from '../../../services/products/product-services';
+import { createBag } from '../../../services/bag/bag-services';
 
 const reviews = { href: '#', average: 4, totalCount: 117 }
 
@@ -70,11 +70,7 @@ export default function Product() {
       };
 
       try {
-        await axios.post(`${baseUrl}/api/Bag/CreateBag`, model, {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        });
+        await createBag(model);
         setSelectedSize(null);
         dispatch({
           type: BagReducerActionType.PRODUCT_BAG_COUNT,

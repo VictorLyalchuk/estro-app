@@ -26,7 +26,7 @@ const StoreLocations = () => {
 
   return (
     <>
-      <div className="bg-gray-100" style={{ minHeight: '900px' }}>
+      <div className="bg-gray-100 min-h-[900px]">
         <div className="text-gray-700 mx-auto max-w-8xl px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold mb-4 text-center">Estro Store</h2>
           {/* Sidebar для кнопок */}
