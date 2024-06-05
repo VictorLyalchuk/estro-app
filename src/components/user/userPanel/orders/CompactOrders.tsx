@@ -41,11 +41,11 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
     <>
       {orders && orders.length > 0 ? (
         <>
-          {orders.map((order) => (
-            <div key={order.id} className="bg-white rounded-md shadow-md mb-8 mt-8">
+          {orders.map((order, index) => (
+            <div key={index} className="bg-white rounded-md shadow-md mb-8 mt-8">
               <div className="mx-auto max-w-2xl pb-8 pt-8 sm:px-6 sm:pt-8 lg:max-w-7xl lg:px-8">
                 <div className="flex justify-between space-y-2 px-4 sm:flex sm:items-baseline sm:justify-between sm:space-y-0 sm:px-0">
-                  <div className="sm:items-baseline">
+                  <div className="sm:items-baseline px-4 py-6 sm:p-6 lg:pb-8">
                     <h1 className="text-2xl font-bold tracking-tight text-gray-900 sm:text-3xl">Order #{order.id}</h1>
                     <p className="text-sm text-gray-600 mt-2">
                       Order placed{' '}
@@ -55,7 +55,7 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
                     </p>
                   </div>
 
-                  <div className="flex sm:items-start sm:space-x-4 mb-4 mt-4">
+                  <div className="flex sm:items-start sm:space-x-4 px-4 py-6 sm:p-6 lg:pb-8">
                     <button onClick={onViewModeChange} className="text-gray-400 hover:text-indigo-600">
                       <span className="sr-only">View grid</span>
                       <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />

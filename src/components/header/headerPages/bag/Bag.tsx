@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { BagItems, IBagUser } from "../../../../interfaces/Bag/IBagUser";
 import axios from "axios";
 import moment from "moment";
-import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
+import { BanknotesIcon, BuildingStorefrontIcon, CreditCardIcon, EnvelopeIcon, MinusIcon, PlusIcon, Squares2X2Icon, TrashIcon } from "@heroicons/react/24/outline";
 import { BagReducerActionType, IBagReducerState } from "../../../../store/bag/BagReducer";
 import { CardReducerActionType, ICardReducerState } from "../../../../store/bag/CardReducer";
 import { message } from "antd";
@@ -28,35 +28,15 @@ const theme = createTheme({
   },
 });
 
-const money = (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-10 hover:text-indigo-700" style={{ transition: "color 0.3s" }}>
-  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 18.75a60.07 60.07 0 0 1 15.797 2.101c.727.198 1.453-.342 1.453-1.096V18.75M3.75 4.5v.75A.75.75 0 0 1 3 6h-.75m0 0v-.375c0-.621.504-1.125 1.125-1.125H20.25M2.25 6v9m18-10.5v.75c0 .414.336.75.75.75h.75m-1.5-1.5h.375c.621 0 1.125.504 1.125 1.125v9.75c0 .621-.504 1.125-1.125 1.125h-.375m1.5-1.5H21a.75.75 0 0 0-.75.75v.75m0 0H3.75m0 0h-.375a1.125 1.125 0 0 1-1.125-1.125V15m1.5 1.5v-.75A.75.75 0 0 0 3 15h-.75M15 10.5a3 3 0 1 1-6 0 3 3 0 0 1 6 0Zm3 0h.008v.008H18V10.5Zm-12 0h.008v.008H6V10.5Z" />
-</svg>);
-
-const card = (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-10 hover:text-indigo-700" style={{ transition: "color 0.3s" }}>
-  <path strokeLinecap="round" strokeLinejoin="round" d="M2.25 8.25h19.5M2.25 9h19.5m-16.5 5.25h6m-6 2.25h3m-3.75 3h15a2.25 2.25 0 0 0 2.25-2.25V6.75A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25v10.5A2.25 2.25 0 0 0 4.5 19.5Z" />
-</svg>);
-
-const branch = (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-7 hover:text-indigo-700" style={{ transition: "color 0.3s" }}>
-  <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6A2.25 2.25 0 0 1 6 3.75h2.25A2.25 2.25 0 0 1 10.5 6v2.25a2.25 2.25 0 0 1-2.25 2.25H6a2.25 2.25 0 0 1-2.25-2.25V6ZM3.75 15.75A2.25 2.25 0 0 1 6 13.5h2.25a2.25 2.25 0 0 1 2.25 2.25V18a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-2.25ZM13.5 6a2.25 2.25 0 0 1 2.25-2.25H18A2.25 2.25 0 0 1 20.25 6v2.25A2.25 2.25 0 0 1 18 10.5h-2.25a2.25 2.25 0 0 1-2.25-2.25V6ZM13.5 15.75a2.25 2.25 0 0 1 2.25-2.25H18a2.25 2.25 0 0 1 2.25 2.25V18A2.25 2.25 0 0 1 18 20.25h-2.25A2.25 2.25 0 0 1 13.5 18v-2.25Z" />
-</svg>);
-
-const postomat = (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-7 hover:text-indigo-700" style={{ transition: "color 0.3s" }}>
-  <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
-</svg>);
-
-const store = (<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-7 hover:text-indigo-700" style={{ transition: "color 0.3s" }}>
-  <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349M3.75 21V9.349m0 0a3.001 3.001 0 0 0 3.75-.615A2.993 2.993 0 0 0 9.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 0 0 2.25 1.016c.896 0 1.7-.393 2.25-1.015a3.001 3.001 0 0 0 3.75.614m-16.5 0a3.004 3.004 0 0 1-.621-4.72l1.189-1.19A1.5 1.5 0 0 1 5.378 3h13.243a1.5 1.5 0 0 1 1.06.44l1.19 1.189a3 3 0 0 1-.621 4.72M6.75 18h3.75a.75.75 0 0 0 .75-.75V13.5a.75.75 0 0 0-.75-.75H6.75a.75.75 0 0 0-.75.75v3.75c0 .414.336.75.75.75Z" />
-</svg>);
-
 const deliveryList = [
-  { id: 'Branch', title: 'Sending to the Branch', logo: branch, subtitle: 'Money Transfer Fees' },
-  { id: 'Postomat', title: 'Sending to the Postomat', logo: postomat, subtitle: 'Full payment required' },
-  { id: 'Store', title: 'Sending to the Store', logo: store, subtitle: 'Free shipping' },
+  { id: 'Branch', title: 'Sending to the Branch', logo: <Squares2X2Icon className="size-7 hover:text-indigo-700" style={{ transition: "color 0.3s" }}/>, subtitle: 'Money Transfer Fees' },
+  { id: 'Postomat', title: 'Sending to the Postomat', logo: <EnvelopeIcon className="size-7 hover:text-indigo-700" style={{ transition: "color 0.3s" }}/>, subtitle: 'Full payment required' },
+  { id: 'Store', title: 'Sending to the Store', logo: <BuildingStorefrontIcon className="size-7 hover:text-indigo-700" style={{ transition: "color 0.3s" }}/>, subtitle: 'Free shipping' },
 ];
 
 const paymentList = [
-  { id: 'PaymentAfter', title: 'Payment upon receipt', logo: money, subtitle: 'Delivery payment at the carriers rates, including cash on delivery services. The service is available for goods worth 1,000 hryvnias or more. WARNING! All ordered goods are sent by separate parcels.' },
-  { id: 'PaymentBefore', title: 'Payment on the website', logo: card, subtitle: 'If the cost of a product unit is over 1,000 hryvnias - delivery is free. WARNING! All goods are sent by separate parcels' },
+  { id: 'PaymentAfter', title: 'Payment upon receipt', logo: <BanknotesIcon className="size-10 hover:text-indigo-700" style={{ transition: "color 0.3s" }}/>, subtitle: 'Delivery payment at the carriers rates, including cash on delivery services. The service is available for goods worth 1,000 hryvnias or more. WARNING! All ordered goods are sent by separate parcels.' },
+  { id: 'PaymentBefore', title: 'Payment on the website', logo: <CreditCardIcon className="size-10 hover:text-indigo-700" style={{ transition: "color 0.3s" }}/>, subtitle: 'If the cost of a product unit is over 1,000 hryvnias - delivery is free. WARNING! All goods are sent by separate parcels' },
 ];
 const Bag = () => {
   const baseUrl = APP_ENV.BASE_URL;
@@ -422,7 +402,7 @@ const Bag = () => {
                   </div>
               </div>
               {bagItems.map((item, index) => (
-                <div key={item.id} className="border-b bg-white pt-4 p-6 rounded-md shadow-md mb-8">
+                <div key={index} className="border-b bg-white pt-4 p-6 rounded-md shadow-md mb-8">
                   <div className="flex justify-between">
                     <div className="flex justify-between">
                       <h3 className="font-semibold mb-4 mr-14">Product {index + 1}</h3>
@@ -484,7 +464,6 @@ const Bag = () => {
                             value={formData.firstName}
                             onChange={handleChange}
                             error={!!errors.firstName}
-                            variant="outlined"
                             className="mt-1"
                             size="small"
                           />
@@ -502,7 +481,6 @@ const Bag = () => {
                             value={formData.lastName}
                             onChange={handleChange}
                             error={!!errors.lastName}
-                            variant="outlined"
                             size="small"
                           />
                           {errors.lastName ? (
@@ -520,7 +498,6 @@ const Bag = () => {
                             value={formData.email}
                             onChange={handleChange}
                             error={!!errors.email}
-                            variant="outlined"
                             size="small"
                             autoComplete="email"
 
@@ -538,7 +515,6 @@ const Bag = () => {
                             name="formatted-text-mask-input"
                             id="formatted-text-mask-input"
                             value={formData.phoneNumber}
-                            variant="outlined"
                             size="small"
                             disabled
                             InputProps={{
@@ -610,7 +586,6 @@ const Bag = () => {
                                 renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
                                   <TextField
                                     {...params}
-                                    variant="outlined"
                                     fullWidth
                                     size="small"
                                     error={!!errors.city}
@@ -637,7 +612,6 @@ const Bag = () => {
                                 renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
                                   <TextField
                                     {...params}
-                                    variant="outlined"
                                     fullWidth
                                     size="small"
                                     error={!!errors.warehouse}
@@ -666,7 +640,6 @@ const Bag = () => {
                                 renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
                                   <TextField
                                     {...params}
-                                    variant="outlined"
                                     fullWidth
                                     size="small"
                                     error={!!errors.city}
@@ -693,7 +666,6 @@ const Bag = () => {
                                 renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
                                   <TextField
                                     {...params}
-                                    variant="outlined"
                                     fullWidth
                                     size="small"
                                     error={!!errors.warehouse}
@@ -721,7 +693,6 @@ const Bag = () => {
                                 renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
                                   <TextField
                                     {...params}
-                                    variant="outlined"
                                     fullWidth
                                     size="small"
                                     error={!!errors.city}
@@ -748,7 +719,6 @@ const Bag = () => {
                                 renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
                                   <TextField
                                     {...params}
-                                    variant="outlined"
                                     fullWidth
                                     size="small"
                                     error={!!errors.warehouse}

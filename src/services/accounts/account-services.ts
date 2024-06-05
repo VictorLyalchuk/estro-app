@@ -1,6 +1,10 @@
 import axios from "axios";
 import { APP_ENV } from "../../env/config";
-import { IUserEdit } from "../../interfaces/Auth/IUserEdit";
+import { IUserProfile } from "../../interfaces/Auth/IUserProfile";
+import { jwtDecode } from "jwt-decode";
+import { IUser } from "../../interfaces/Auth/IUser";
+import { AuthReducerActionType } from "../../store/accounts/AuthReducer";
+
 
 const baseUrl = APP_ENV.BASE_URL;
 
@@ -68,25 +72,59 @@ export function removeTokens() {
 
 export async function refreshToken() {
     try {
-      const response = await instance.put("/refresh-token", {
-        token: getToken(),
-      });
-      const token = response.data;
-      setToken(response.data);
-      console.log("Token refreshed");
-      return token;
+        const response = await instance.put("/refresh-token", {
+            token: getToken(),
+        });
+        const token = response.data;
+        setToken(response.data);
+        return token;
     } catch (error) {
-      console.error("Failed to refresh token:", error);
-      throw error;
+        console.error("Failed to refresh token:", error);
+        throw error;
     }
-  }
+}
 
-  export async function getUserData(userEmail: string | null) {
+export async function getUserData(userEmail: string | null) {
     try {
-        const response = await instance.get<IUserEdit>(`${baseUrl}/api/AccountControllers/${userEmail}`);
+        const response = await instance.get<IUserProfile>(`${baseUrl}/api/AccountControllers/${userEmail}`);
         return response.data;
     } catch (error) {
         console.error('Failed to fetch user data:', error);
+        throw error;
+    }
+}
+
+export async function emailConfirm(userEmail: string | null) {
+    try {
+        await instance.post(`${baseUrl}/api/AccountControllers/ConfirmMyEmail`, userEmail);
+    } catch (error) {
+        console.error('Failed to confirm user:', error);
+        throw error;
+    }
+}
+
+export async function refreshRedux(dispatch: any) {
+    try {
+        const token = localStorage.getItem('token');
+        if (token) {
+            const user = jwtDecode<IUser>(token);
+            dispatch({
+                type: AuthReducerActionType.LOGIN_USER,
+                payload: {
+                    Id: user.Id,
+                    Email: user.Email,
+                    FirstName: user.FirstName,
+                    LastName: user.LastName,
+                    Role: user.Role,
+                    ImagePath: user.ImagePath,
+                    PhoneNumber: user.PhoneNumber
+                }
+            });
+        } else {
+            dispatch({ type: AuthReducerActionType.LOGOUT_USER });
+        }
+    } catch (error) {
+        console.error('Failed to refresh redux:', error);
         throw error;
     }
 }

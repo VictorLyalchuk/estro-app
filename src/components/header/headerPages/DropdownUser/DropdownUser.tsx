@@ -69,16 +69,16 @@ const DropdownUser = () => {
 
         <span className="h-12 w-12 " >
 
-          {user?.AuthType == 'standard' ?
-            (
-              <img src={`${baseUrl}/uploads/${user?.ImagePath || "user404.webp"}`}
-                className='rounded-full'
-                alt="User" />
-            ) : (
+          {/* {user?.AuthType == 'standard' ?
+            ( */}
+          <img src={`${baseUrl}/uploads/${user?.ImagePath || "user404.webp"}`}
+            className='rounded-full'
+            alt="User" />
+          {/* ) : (
               <img src={`${user?.ImagePath || "user404.webp"}`}
                 className='rounded-full'
                 alt="User" />
-            )}
+            )} */}
 
         </span>
       </Link>
@@ -98,7 +98,7 @@ const DropdownUser = () => {
               onClick={() => setDropdownOpen(false)}
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500 "
             >
-              <DocumentChartBarIcon className="h-5 w-5" aria-hidden="true"/>
+              <DocumentChartBarIcon className="h-5 w-5" aria-hidden="true" />
               My Orders
             </Link>
           </li>
@@ -108,7 +108,7 @@ const DropdownUser = () => {
               onClick={() => setDropdownOpen(false)}
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500 "
             >
-              <UserIcon className="h-5 w-5" aria-hidden="true"/>
+              <UserIcon className="h-5 w-5" aria-hidden="true" />
               Profile
             </Link>
           </li>
@@ -119,13 +119,13 @@ const DropdownUser = () => {
               onClick={() => setDropdownOpen(false)}
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500"
             >
-              <Cog6ToothIcon className="h-5 w-5" aria-hidden="true"/>
+              <Cog6ToothIcon className="h-5 w-5" aria-hidden="true" />
               Account Settings
             </Link>
           </li>
         </ul>
         <Link className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500" to={"/"} onClick={handleLogout}>
-          <ArrowLeftOnRectangleIcon className="h-5 w-5" aria-hidden="true"/>
+          <ArrowLeftOnRectangleIcon className="h-5 w-5" aria-hidden="true" />
           Log Out
         </Link>
       </div>

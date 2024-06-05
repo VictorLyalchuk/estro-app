@@ -1,9 +1,8 @@
-import axios from "axios";
-import { IUserEdit } from "../../../../interfaces/Auth/IUserEdit";
-import { APP_ENV } from "../../../../env/config";
+import { IUserProfile } from "../../../../interfaces/Auth/IUserProfile";
+import { emailConfirm } from "../../../../services/accounts/account-services";
 
-interface UserProps {
-  userEdit?: IUserEdit;
+interface ProfileUserProps {
+  userProfile?: IUserProfile;
   countPage: number;
 }
 
@@ -18,21 +17,11 @@ const formatDate = (date?: Date | string) => {
   });
 };
 
-const Profile: React.FC<UserProps> = ({ userEdit, countPage }) => {
-  const baseUrl = APP_ENV.BASE_URL;
+const Profile: React.FC<ProfileUserProps> = ({ userProfile, countPage }) => {
 
-  const emailConfirm = async () => {
-    try {
-      await axios.post(`${baseUrl}/api/AccountControllers/ConfirmMyEmail`, userEdit?.email, {
-        headers: {
-          "Content-Type": "application/json"
-        }
-      }).catch(error => {
-        console.error('Error user data:', error);
-      });
-    }
-    catch (error) {
-      console.error("Email error:", error);
+  const confirm = async () => {
+    if (userProfile) {
+      emailConfirm(userProfile?.email);
     }
   }
 
@@ -41,25 +30,25 @@ const Profile: React.FC<UserProps> = ({ userEdit, countPage }) => {
       <div className="bg-white rounded-md shadow-md mb-8 mt-8">
         <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-7xl lg:px-8">
           <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
-            <div>
+            <div className="px-4 pt-6 sm:p-6 lg:pb-8">
               <h2 className="text-base font-semibold leading-7 text-gray-900">Profile</h2>
-              <dl className="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
+              <dl className="mt-6 space-y-6 divide-y divide-gray-200 border-t border-gray-200 text-sm leading-6">
                 <div className="pt-6 sm:flex">
                   <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">First name</dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900">{userEdit?.firstName}</div>
+                    <div className="text-gray-900">{userProfile?.firstName}</div>
                   </dd>
                 </div>
                 <div className="pt-6 sm:flex">
                   <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Last name</dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900">{userEdit?.lastName}</div>
+                    <div className="text-gray-900">{userProfile?.lastName}</div>
                   </dd>
                 </div>
                 <div className="pt-6 sm:flex">
                   <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Birthday</dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900">{formatDate(userEdit?.birthday)}</div>
+                    <div className="text-gray-900">{formatDate(userProfile?.birthday)}</div>
                   </dd>
                 </div>
                 <div className="pt-6 sm:flex">
@@ -71,39 +60,47 @@ const Profile: React.FC<UserProps> = ({ userEdit, countPage }) => {
 
               </dl>
             </div>
-
-            <div>
+            <div className="px-4">
               <h2 className="text-base font-semibold leading-7 text-gray-900">Contact Information</h2>
-              <dl className="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
+              <dl className="mt-6 space-y-6 divide-y divide-gray-200 border-t border-gray-200 text-sm leading-6">
                 <div className="pt-6 sm:flex">
                   <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Email address</dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900">{userEdit?.email}</div>
+                    <div className="text-gray-900">{userProfile?.email}</div>
                   </dd>
                 </div>
                 <div className="pt-6 sm:flex">
                   <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Phone</dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900">{userEdit?.phoneNumber}</div>
+                    <div className="text-gray-900">{userProfile?.phoneNumber}</div>
                   </dd>
                 </div>
               </dl>
             </div>
 
-            <div>
+            <div className="px-4">
               <h2 className="text-base font-semibold leading-7 text-gray-900">Security Information</h2>
-              <dl className="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
-                <div className="pt-6 sm:flex">
-                  <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Email confirmed</dt>
+              <dl className="mt-6 space-y-6 divide-y divide-gray-200 border-t border-gray-200 text-sm leading-6">
+              <div className="pt-6 sm:flex">
+                  <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Account status</dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div style={{ color: userEdit?.emailConfirmed ? '#10b981' : '#ef4444' }}>
-                      {userEdit?.emailConfirmed ? 'true' : 'false'}
+                    <div className="text-gray-900">
+                      {userProfile?.role}
                     </div>
                   </dd>
                 </div>
-                {!userEdit?.emailConfirmed &&
+                
+                <div className="pt-6 sm:flex">
+                  <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Email confirmed</dt>
+                  <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
+                    <div style={{ color: userProfile?.emailConfirmed ? '#10b981' : '#ef4444' }}>
+                      {userProfile?.emailConfirmed ? 'true' : 'false'}
+                    </div>
+                  </dd>
+                </div>
+                {!userProfile?.emailConfirmed &&
                   <div className="flex border-t border-gray-100 pt-6">
-                    <button onClick={emailConfirm} type="button" className="text-sm font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+                    <button onClick={confirm} type="button" className="text-sm font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
                       Confirm your email
                     </button>
                   </div>
@@ -111,24 +108,24 @@ const Profile: React.FC<UserProps> = ({ userEdit, countPage }) => {
                 <div className="pt-6 sm:flex">
                   <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Phone confirmed</dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div style={{ color: userEdit?.phoneNumberConfirmed ? '#10b981' : '#ef4444' }}>
-                      {userEdit?.phoneNumberConfirmed ? 'true' : 'false'}
+                    <div style={{ color: userProfile?.phoneNumberConfirmed ? '#10b981' : '#ef4444' }}>
+                      {userProfile?.phoneNumberConfirmed ? 'true' : 'false'}
                     </div>
                   </dd>
                 </div>
-              {!userEdit?.phoneNumberConfirmed &&
-                <div className="flex border-t border-gray-100 pt-6">
-                  <button type="button" className="text-sm font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-                    Confirm your phone
-                  </button>
-                </div>
-              }
+                {!userProfile?.phoneNumberConfirmed &&
+                  <div className="flex border-t border-gray-100 pt-6">
+                    <button type="button" className="text-sm font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+                      Confirm your phone
+                    </button>
+                  </div>
+                }
               </dl>
             </div>
 
-            <div>
+            <div className="px-4">
               <h2 className="text-base font-semibold leading-7 text-gray-900">Language and dates</h2>
-              <dl className="mt-6 space-y-6 divide-y divide-gray-100 border-t border-gray-200 text-sm leading-6">
+              <dl className="mt-6 space-y-6 divide-y divide-gray-200 border-t border-gray-200 text-sm leading-6">
                 <div className="pt-6 sm:flex">
                   <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">Language</dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">

@@ -43,11 +43,11 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
     <>
       {orders && orders.length > 0 ? (
         <>
-          {orders.map((order) => (
-            <div key={order.id} className="bg-white rounded-md shadow-md mb-8 mt-8">
-              <div className="mx-auto max-w-2xl pb-8 pt-8 sm:px-6 sm:pt-8 lg:max-w-7xl lg:px-8">
+          {orders.map((order, index) => (
+            <div key={index} className="bg-white rounded-md shadow-md mb-8 mt-8">
+              <div className="mx-auto max-w-2xl pb-8 pt-8 sm:px-6 sm:pt-8 lg:max-w-7xl lg:px-8 ">
                 <div className="flex justify-between space-y-2 px-4 border-b border-gray-200 pb-5 sm:flex sm:items-baseline sm:justify-between sm:space-y-0 sm:px-0">
-                  <div className="grid grid-rows-1">
+                  <div className="grid grid-rows-1 px-4 py-6 sm:p-6 lg:pb-8">
                     <h1 className="text-3xl font-bold tracking-tight text-gray-900 ">Order Details</h1>
                     <dl className="flex mt-2">
                       <dt className="text-gray-500">Order #&nbsp;</dt>
@@ -64,7 +64,7 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                     </dl>
                   </div>
 
-                  <div className="flex sm:items-start sm:space-x-4 mb-4 mt-4">
+                  <div className="flex sm:items-start sm:space-x-4 px-4 py-6 sm:p-6 lg:pb-8">
                     <button onClick={onViewModeChange} className="text-gray-400 hover:text-indigo-600">
                       <span className="sr-only">View grid</span>
                       <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
@@ -72,7 +72,7 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                   </div>
                 </div>
 
-                <section aria-labelledby="products-heading" className="mt-8">
+                <section aria-labelledby="products-heading" className="mt-4">
                   <h2 id="products-heading" className="sr-only">
                     Products purchased
                   </h2>

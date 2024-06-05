@@ -13,8 +13,9 @@ import { IAuthReducerState } from '../../../store/accounts/AuthReducer';
 import TabsOrdersComponent from './TabsOrdersComponent';
 import { useLocation } from 'react-router-dom';
 import Profile from './profile/Profile';
-import { IUserEdit } from '../../../interfaces/Auth/IUserEdit';
+import { IUserProfile } from '../../../interfaces/Auth/IUserProfile';
 import { getUserData, refreshToken } from '../../../services/accounts/account-services'; 
+import Bonuses from './bonuses/Bonuses';
 
 const UserPanelPage = () => {
     const baseUrl = APP_ENV.BASE_URL;
@@ -27,11 +28,8 @@ const UserPanelPage = () => {
     const [activeTab, setActiveTab] = useState(0);
     const [page, setPage] = useState(1); 
     const [countPage, setCountPage] = useState(0);
-    const [userEdit, setUserEdit] = useState<IUserEdit>();
-    const [formData] = useState({
-        email: email || '',
-        token: token || '',
-    });
+    const [userProfile, setUserProfile] = useState<IUserProfile>();
+
     const handleViewModeChange = () => {
         setViewMode(prevMode => (prevMode === 'detailed' ? 'compact' : 'detailed'));
     };
@@ -49,19 +47,24 @@ const UserPanelPage = () => {
         {
             name: 'Profile',
             current: activeTab === 1,
-            component: <Profile userEdit={userEdit} countPage={countPage}/>,
+            component: <Profile userProfile={userProfile} countPage={countPage}/>,
         },
         {
             name: 'Settings',
             current: activeTab === 2,
-            component: <Settings />,
+            component: <Settings userProfile={userProfile}/>,
         },
         {
             name: 'My Bonuses',
             current: activeTab === 3,
-            component: <Settings />,
+            component: <Bonuses />,
         },
     ];
+    const handleTabChange = (index: number) => {
+        setActiveTab(index);
+        const routes = ['/account/orders', '/account/profile', '/account/settings', '/account/bonuses'];
+        navigate(routes[index]);
+    };
       
     useEffect(() => {
         if (location.pathname.startsWith('/account/orders')) {
@@ -73,17 +76,9 @@ const UserPanelPage = () => {
         else if (location.pathname.startsWith('/account/settings')) {
             setActiveTab(2);
         } 
-
-
-        // if (location.pathname === '/account/orders') {
-        //     setActiveTab(0);
-        // }
-        // if (location.pathname === '/account/profile' || location.pathname === 'account/settings/:email/:token') {
-        //     setActiveTab(1);
-        // } 
-        // if (location.pathname === '/account/settings') {
-        //     setActiveTab(2);
-        // } 
+        else if (location.pathname.startsWith('/account/bonuses')) {
+            setActiveTab(3);
+        } 
     }, [location.pathname]);
 
     useEffect(() => {
@@ -93,61 +88,52 @@ const UserPanelPage = () => {
     }, [email, token]);
 
     useEffect(() => {
-        getCountOrders();
-        getOrders();
+        if (user) {
+            getCountOrders();
+            getOrders();
+            getUserData(user.Email)
+                .then(data => setUserProfile(data))
+                .catch(error => console.error('Error fetching user data:', error));
+        }
     }, [user, page]);
 
-    useEffect(() => {
-        getUserData(user?.Email ?? 'null')
-        .then(data => {
-            setUserEdit(data);
-        })
-        .catch(error => {
-            console.error('Error fetching user data:', error);
-        });
-      }, [user?.Email]);
-
     const ConfirmEmail = async () => {
-        await axios.post(`${baseUrl}/api/AccountControllers/ConfirmEmail`, formData, {
-            headers: {
-                'Content-Type': 'application/json'
+        try {
+            await axios.post(`${baseUrl}/api/AccountControllers/ConfirmEmail`, { email, token }, {
+                headers: { 'Content-Type': 'application/json' }
+            });
+            await refreshToken();
+            if (user) {
+                const data = await getUserData(user.Email);
+                setUserProfile(data);
             }
-        });
-        await refreshToken();
-        await getUserData(user?.Email ?? 'null')
-        .then(data => {
-            setUserEdit(data);
-        })
+        } catch (error) {
+            console.error('Error confirming email:', error);
+        }
     }
 
     const getOrders = async () => {
         if (user) {
-            const resp = await axios.get<IOrderUser[]>(`${baseUrl}/api/OrderControllers/GetOrderByEmail/${user?.Email}`, {
-                params: {page},
-              });
-            setOrdersUser(resp.data)
+            try {
+                const resp = await axios.get<IOrderUser[]>(`${baseUrl}/api/OrderControllers/GetOrderByEmail/${user.Email}`, { params: { page } });
+                setOrdersUser(resp.data);
+            } catch (error) {
+                console.error('Error fetching orders:', error);
+            }
         }
     }
     const getCountOrders = async () => {
         if (user) {
-            const resp = await axios.get<number>(`${baseUrl}/api/OrderControllers/GetCountOrderByEmail/${user?.Email}`)
-            setCountPage(resp.data)
+            try {
+                const resp = await axios.get<number>(`${baseUrl}/api/OrderControllers/GetCountOrderByEmail/${user.Email}`);
+                setCountPage(resp.data);
+            } catch (error) {
+                console.error('Error fetching order count:', error);
+            }
         }
     }
-    const handleTabChange = (index: number) => {
-        setActiveTab(index);
-        if (index === 0) {
-            setViewMode('detailed');
-            navigate('/account/orders');
-        }
-        if (index === 1) {
-            navigate('/account/profile');
-        }
-        if (index === 2) {
-            navigate('/account/settings');
-        }
-    };
-    
+
+
 
     return (
         <>
