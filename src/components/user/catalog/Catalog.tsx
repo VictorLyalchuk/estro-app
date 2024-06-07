@@ -2,13 +2,15 @@ import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { ArrowLongLeftIcon, ArrowLongRightIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
-import axios from "axios";
 import { IProduct } from '../../../interfaces/Site/IProduct.ts';
 import { Link, useParams, useNavigate } from "react-router-dom";
 import qs, { ParsedQs } from 'qs';
 import { ICategory } from '../../../interfaces/Site/IMainCategory.ts';
 import { IInfo } from '../../../interfaces/Info/IInfo.ts';
 import { APP_ENV } from "../../../env/config.ts";
+import { getCategoryList, getInfoList, getProductsist, getQuantityProducts } from '../../../services/catalog/catalog-services.ts';
+import { updateFilters, createQueryParams, onPageChangeQueryParams } from '../../../utils/catalog/filterUtils.ts';
+import ProductQuickview from './ProductQuickview.tsx';
 
 const sortOptions = [
   { name: 'Most Popular', href: '#', current: true },
@@ -40,132 +42,108 @@ export default function CategoryFilters() {
   const visiblePages = 5;
   let startPage = Math.max(1, page - Math.floor(visiblePages / 2));
   let endPage = Math.min(totalPages, startPage + visiblePages - 1);
+  const [focusedProduct, setFocusedProduct] = useState<IProduct | null>(null);
+  const [isQuickviewOpen, setQuickviewOpen] = useState(false);
 
   if (endPage - startPage + 1 < visiblePages) {
     startPage = Math.max(1, endPage - visiblePages + 1);
-  }
+  };
+
   const onPageChange = (newPage: number) => {
     setPage(newPage);
-    const queryParams: { [key: string]: string | string[] } = {};
-    filters.forEach((filter) => {
-      if (filter.values.length > 0) {
-        queryParams[filter.name] = filter.values.join('_');
-      }
-    });
-    queryParams['Page'] = newPage.toString();
+    const queryParams = onPageChangeQueryParams(newPage, filters);
     const newQueryString = qs.stringify(queryParams, { encodeValuesOnly: true, delimiter: ';' });
     navigate({ search: newQueryString });
   };
 
   const createFilters = async (name: string, value: string) => {
-    const newFilters = [...filters];
-    const index = newFilters.findIndex((item) => item.name === name);
-
-    if (index === -1) {
-      newFilters.push({ name: name, values: [value] });
-    } else {
-      const valueIndex = newFilters[index].values.indexOf(value);
-      if (valueIndex === -1) {
-        newFilters[index].values.push(value);
-      } else {
-        newFilters[index].values.splice(valueIndex, 1);
-      }
-
-      if (newFilters[index].values.length === 0) {
-        newFilters.splice(index, 1);
-      }
-    }
+    const newFilters = updateFilters(filters, name, value);
     setFilters(newFilters);
     setPage(1);
 
-    // Формування url link in browse
-    const queryParams: { [key: string]: string | string[] } = {};
-    newFilters.forEach((filter) => {
-      if (filter.values.length > 0) {
-        queryParams[filter.name] = filter.values.join('_');
-      }
-    });
-    queryParams['Page'] = '1';
+    const queryParams = createQueryParams(newFilters);
     const newQueryString = qs.stringify(queryParams, { encodeValuesOnly: true, delimiter: ';' });
     navigate({ search: newQueryString });
   };
 
-  const ResetFilters = () => {
+  const resetFilters = () => {
     const newQueryString = ""
     navigate({ search: newQueryString });
     setFilters([]);
     setPage(1);
-  }
+  };
+
+  const parseUrlQuery = (): { name: string; values: string[] }[] => {
+    // завантаження даних з url, їх перетворення та присвоєння у filters 
+    const queryParams: ParsedQs = qs.parse(location.search, { ignoreQueryPrefix: true, delimiter: ';' });
+
+    if (queryParams['Page']) {
+      setPage(parseInt(queryParams['Page'] as string) || 1);
+    }
+    const newFilters = Object.keys(queryParams).map((name) => {
+      let values: string[] = [];
+      if (Array.isArray(queryParams[name])) {
+        values = queryParams[name] as string[];
+      } else if (typeof queryParams[name] === 'string') {
+        values = [(queryParams[name] as string)];
+      }
+      values = values.flatMap((value) => value.split('_'));
+      return {
+        name,
+        values,
+      };
+    });
+    return newFilters;
+  };
+
+  const loadFromURL = async () => {
+    try {
+      // створення і відправка даних на сервер
+      const newFilters = parseUrlQuery();
+      setFilters(newFilters);
+
+      const filterDTO: IFilterDTO = {
+        Size: newFilters.find(f => f.name === 'Size')?.values || undefined,
+        Material: newFilters.find(f => f.name === 'Material')?.values || undefined,
+        Color: newFilters.find(f => f.name === 'Color')?.values || undefined,
+        Purpose: newFilters.find(f => f.name === 'Purpose')?.values || undefined,
+        Page: newFilters.find(f => f.name === 'Page')?.values || page
+      };
+
+      if (subName && urlName) {
+        const responseQuantity = await getQuantityProducts(subName, urlName, filterDTO);
+        const quantity = responseQuantity;
+        setCountPage(quantity);
+
+        const responseProduct = await getProductsist(subName, urlName, filterDTO);
+        setProduct(responseProduct);
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  };
+
+  const handleQuickviewOpen = (product: IProduct) => {
+    console.log(product);
+    setFocusedProduct(product);
+    setQuickviewOpen(true);
+  };
+
   useEffect(() => {
     setPage(1);
+    // Витягування категорій і фільтрів з бази даних
+    if (subName) {
+      getCategoryList(subName)
+        .then(data => setCategoryList(data))
+        .catch(error => console.error('Error fetching categories data:', error));
+      getInfoList(subName)
+        .then(data => setFilterOptionsList(data))
+        .catch(error => console.error('Error fetching infos data:', error));
+    }
   }, [subName, urlName]);
 
   useEffect(() => {
-
-    // Витягування категорій і фільтрів з бази даних
-    const Load = async () => {
-      const resp = await axios.get<ICategory[]>(`${baseUrl}/api/CategoryControllers/CategoryGetWithSub`, {
-        params: { subName }
-      });
-      setCategoryList(resp.data);
-
-      const respFilterOptions = await axios.get<IInfo[]>(`${baseUrl}/api/Info/GetInfo/${subName}`,);
-      setFilterOptionsList(respFilterOptions.data);
-
-      // завантаження даних з url, їх перетворення та присвоєння у filters із затримкою
-      try {
-        const queryParams: ParsedQs = qs.parse(location.search, { ignoreQueryPrefix: true, delimiter: ';' });
-        if (queryParams['Page']) {
-          setPage(parseInt(queryParams['Page'] as string) || 1);
-        }
-        const newFilters = Object.keys(queryParams).map((name) => {
-          let values: string[] = [];
-          if (Array.isArray(queryParams[name])) {
-            values = queryParams[name] as string[];
-          } else if (typeof queryParams[name] === 'string') {
-            values = [(queryParams[name] as string)];
-          }
-          values = values.flatMap((value) => value.split('_'));
-          return {
-            name,
-            values,
-          };
-        });
-        setFilters(newFilters);
-
-        // створення і відправка даних на сервер
-
-        const filterDTO = {
-          Size: newFilters.find(f => f.name === 'Size')?.values || undefined,
-          Material: newFilters.find(f => f.name === 'Material')?.values || undefined,
-          Color: newFilters.find(f => f.name === 'Color')?.values || undefined,
-          Purpose: newFilters.find(f => f.name === 'Purpose')?.values || undefined,
-          Page: newFilters.find(f => f.name === 'Page')?.values || page
-
-        };
-        const quantityResponse = axios.get<number>(`${baseUrl}/api/Product/ProductQuantityByFilters/${subName}/${urlName}`, {
-          params: filterDTO,
-          paramsSerializer: (params) => {
-            return qs.stringify(params, { arrayFormat: 'repeat' });
-          }
-        });
-
-        const quantity = (await quantityResponse).data;
-
-        setCountPage(quantity);
-
-        const resp = await axios.get<IProduct[]>(`${baseUrl}/api/Product/FilterProducts/${subName}/${urlName}`, {
-          params: filterDTO,
-          paramsSerializer: (params) => {
-            return qs.stringify(params, { arrayFormat: 'repeat' });
-          }
-        });
-        setProduct(resp.data);
-      } catch (error) {
-        console.error('Error:', error);
-      }
-    };
-    Load();
+    loadFromURL();
   }, [subName, urlName, location.search, page]);
 
   return (
@@ -365,7 +343,7 @@ export default function CategoryFilters() {
 
                 <div className="pt-6 space-y-4 border-b border-gray-200 pb-6">
                   <Link to={{}} className='rounded border-gray-300 hover:text-indigo-500 focus:ring-indigo-500'
-                    onClick={ResetFilters}>
+                    onClick={resetFilters}>
                     Reset filters
                   </Link>
                 </div>
@@ -422,11 +400,11 @@ export default function CategoryFilters() {
             </form>
 
             {/* Product grid */}
-            <div className="lg:col-span-3">
-              <div className="min-h-[950px] overflow-hidden rounded-sm dark:border-strokedark dark:bg-boxdark bg-gray-100">
+            <div className="lg:col-span-3  ">
+              <div className="overflow-hidden rounded-sm dark:border-strokedark dark:bg-boxdark bg-gray-100">
                 <div className="mx-auto max-w-2xl px-2 py-8  lg:max-w-7xl lg:px-2 bg-gray-100">
                   {/* <h2 className="text-2xl font-bold tracking-tight text-gray-900">Customers also purchased</h2> */}
-                  <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8 pb-8">
+                  <div className="min-h-[1070px] mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8 pb-8">
                     {productList.map((product) => (
                       <div key={product.id} className="group relative">
                         <Link to={`/product/${product.id}`}>
@@ -448,10 +426,54 @@ export default function CategoryFilters() {
                             <p className="text-sm font-bold text-red-800 whitespace-nowrap" >{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
                           </div>
                         </Link>
+
+                        <div className="flex items-end opacity-0 group-hover:opacity-100" aria-hidden="true">
+                          <ul className="mt-4 grid grid-cols-12 gap-2">
+                            <li className="text-xs border-transparent pointer-events-none -inset-px rounded-md">
+                              Size:
+                            </li>
+                            {product.storages?.map((size) => (
+                              size.inStock && (
+                                <li key={size.size} className=" text-xs border-transparent pointer-events-none -inset-px rounded-md ml-2">
+                                  {size.size}
+                                </li>
+                              )
+                            ))}
+                          </ul>
+                        </div>
+
+                        <div className="flex items-end pt-2 opacity-0 group-hover:opacity-100" aria-hidden="true">
+                          <button
+                            type="button"
+                            onClick={() => handleQuickviewOpen(product)}
+                            className="mt-1 flex w-full items-center justify-center rounded-md border bg-gray-200 
+                               relative rounded-md border border-transparent bg-gray-100 px-8 py-2 text-sm font-medium text-gray-900 hover:bg-gray-300">
+                            Quickview
+                          </button>
+                        </div>
+                        {isQuickviewOpen && focusedProduct && (
+ <ProductQuickview
+ product={focusedProduct}
+ isOpen={isQuickviewOpen}
+ setOpen={setQuickviewOpen}
+/>
+                        )}
+
+
+                        {/* <div className="opacity-0 group-hover:opacity-100 absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 transition-opacity">
+            </div>
+            <div className="absolute inset-0 flex items-center justify-center">
+            <span className="opacity-0 group-hover:opacity-100 bg-gray-800 text-white text-xs rounded-md py-1 px-2 transition-opacity">
+            {focusedProduct && (
+        <ProductQuickview product={product}  />
+      )}
+              Product Quickview
+            </span>
+          </div> */}
+
                       </div>
                     ))}
                   </div>
-
                   <div className="container mx-auto p-4 flex relative max-w-7xl lg:flex-row justify-between">
                     <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between ">
                       <div>

@@ -1,4 +1,4 @@
-import { ChangeEventHandler, useEffect, useState } from 'react';
+import { ChangeEventHandler, useEffect, useState, Fragment } from 'react';
 import { useDispatch } from "react-redux";
 import { IUserEdit } from '../../../../interfaces/Auth/IUserEdit';
 import moment from 'moment/moment';
@@ -7,13 +7,14 @@ import { FormControl, IconButton, Input, InputAdornment, TextField, ThemeProvide
 import { beforeUpload, createUserImage, deleteUserImage, editUserImage } from '../../../../services/images/images-services';
 import { APP_ENV } from '../../../../env/config';
 import { editUserData, refreshRedux, refreshToken } from '../../../../services/accounts/account-services';
-import { Alert, AlertTitle } from '@material-ui/lab';
 import { State } from '../../../../interfaces/Custom/Phone/State';
 import TextMaskCustom from '../../../../services/custom/phone-services';
 import { validateForm } from '../../../../validations/account/account-validations';
 import { validatePhoneNumber } from '../../../../validations/custom/phone-validations';
 import { SettingsUserProps } from '../../../../interfaces/Custom/Phone/ProfileUser/ProfileUserProps';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { Dialog, Transition } from '@headlessui/react'
+import { CheckIcon } from '@heroicons/react/24/outline'
 
 const theme = createTheme({
   typography: {
@@ -30,7 +31,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
-
+  const [open, setOpen] = useState(true)
   const [values, setValues] = useState<State>({
     textmask: '(   )    -  -  ',
   });
@@ -496,7 +497,6 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
 
                           <FormControl fullWidth variant="outlined">
                             <button
-                              // type="submit"
                               onClick={onSubmit}
                               className='inline-flex items-center justify-center rounded-md border bg-indigo-600 hover:bg-indigo-700
                   px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
@@ -505,10 +505,62 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                             </button>
                             {profileUpdated && (
                               <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-96">
-                                <Alert onClose={() => { setProfileUpdated(false) }} severity="success">
-                                  <AlertTitle>Success</AlertTitle>
-                                  <strong>Profile updated successfully.</strong>
-                                </Alert>
+                                <Transition.Root show={open} as={Fragment}>
+                                  <Dialog as="div" className="relative z-10" onClose={() => { setProfileUpdated(false) }}>
+                                    <Transition.Child
+                                      as={Fragment}
+                                      enter="ease-out duration-300"
+                                      enterFrom="opacity-0"
+                                      enterTo="opacity-100"
+                                      leave="ease-in duration-200"
+                                      leaveFrom="opacity-100"
+                                      leaveTo="opacity-0"
+                                    >
+                                      <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" />
+                                    </Transition.Child>
+
+                                    <div className="fixed inset-0 z-10 overflow-y-auto">
+                                      <div className="flex min-h-full items-end justify-center p-4 text-center sm:items-center sm:p-0">
+                                        <Transition.Child
+                                          as={Fragment}
+                                          enter="ease-out duration-300"
+                                          enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                          enterTo="opacity-100 translate-y-0 sm:scale-100"
+                                          leave="ease-in duration-200"
+                                          leaveFrom="opacity-100 translate-y-0 sm:scale-100"
+                                          leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+                                        >
+                                          <Dialog.Panel className="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-sm sm:p-6">
+                                            <div>
+                                              <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-green-100">
+                                                <CheckIcon className="h-6 w-6 text-green-600" aria-hidden="true" />
+                                              </div>
+                                              <div className="mt-3 text-center sm:mt-5">
+                                                <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
+                                                  Success
+                                                </Dialog.Title>
+                                                <div className="mt-2">
+                                                  <p className="text-sm text-gray-500">
+                                                    Profile updated successfully
+                                                  </p>
+                                                </div>
+                                              </div>
+                                            </div>
+                                            <div className="mt-5 sm:mt-6">
+                                              <button
+                                                type="button"
+                                                className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                                onClick={() => setOpen(false)}
+                                              >
+                                                Go back to profile
+                                              </button>
+                                            </div>
+                                          </Dialog.Panel>
+                                        </Transition.Child>
+                                      </div>
+                                    </div>
+                                  </Dialog>
+                                </Transition.Root>
                               </div>
                             )}
                           </FormControl>

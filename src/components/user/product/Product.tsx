@@ -281,7 +281,7 @@ export default function Product() {
                 className={`mt-10 flex w-full items-center justify-center rounded-md border ${!selectedSize ? 'bg-gray-300' : 'bg-indigo-600 hover:bg-indigo-700'
                   } px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
               >
-                Add to bag
+                {selectedSize ? 'Add to bag' : 'Select a size'}
               </button>
             </form>
 

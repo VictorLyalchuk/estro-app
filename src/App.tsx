@@ -1,15 +1,12 @@
 import { Route, Routes } from "react-router-dom";
-import NotFound from "./components/notFound/NotFound";
+import Page404 from "./components/notFound/Page404";
 import Logo from "./components/logo/Logo";
 import Bag from "./components/header/headerPages/bag/Bag";
 import Product from "./components/user/product/Product";
 import Catalog from "./components/user/catalog/Catalog";
 import Header from "./components/header/HeaderPage";
-import { Suspense, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import Loader from "./components/Dashboard/common/Loader";
-// import DefaultLayout from "./components/Dashboard/layout/DefaultLayout";
-// import MainDashboard from "./components/Dashboard/pages/MainDashboard";
-// import routes from './components/Dashboard/routes';
 import { Toaster } from 'react-hot-toast';
 import AddProduct from "./components/admin/product/AddProduct";
 import EditProduct from "./components/admin/product/EditProduct";
@@ -28,6 +25,7 @@ import UserPanelPage from "./components/user/userPanel/UserPanelPage";
 import UserLayout from "./components/layout/UserLayout";
 import useAuthTokenEffect from "./useAuthTokenEffect";
 import GuestLayout from "./components/layout/GuestLayout";
+// import HomePageReserve from "./components/homePage/HomePageReserve";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -51,31 +49,12 @@ function App() {
       <Logo />
       <Header />
       <Routes>
-        {/* <Route path='/dashboard' element={<DefaultLayout />}>
-          <Route index element={<MainDashboard />} />
-          {routes.map((routes, index) => {
-            const { path, component: Component } = routes;
-            return (
-              <Route
-                key={index}
-                path={path}
-                element={
-                  <Suspense fallback={<Loader />}>
-                    <Component orders={[]} onViewModeChange={function (): void { }} page={0} countPage={0} onPageChange={function (): void {
-                      ;
-                    }} />
-                  </Suspense>
-                }
-              />
-            );
-          })}
-        </Route> */}
-
         <Route element={<GuestLayout />}>
           <Route path='/auth' element={<AuthPage />} />
         </Route>
         <Route path="/auth/:email/:token" element={<AuthPage />} />
 
+        {/* <Route path="/" element={<HomePageReserve />}></Route> */}
         <Route path="/" element={<HomePage />}></Route>
         <Route path="/:email/:token" element={<HomePage />}></Route>
         <Route path="catalog/:subName/:urlName" element={<Catalog />} />
@@ -95,7 +74,7 @@ function App() {
           <Route path="add-storage/:Id" element={<AddStorage />} />
         </Route>
 
-        <Route path='*' element={<NotFound />} />
+        <Route path='*' element={<Page404 />} />
         <Route path="/delivery-and-payment" element={<DeliveryandPayment />} />
         <Route path="/return-exchange" element={<ReturnExchange />} />
         <Route path="/warranty-product-care" element={<WarrantyProductCare />} />
