@@ -229,12 +229,13 @@ export default function Product() {
                         key={size.size}
                         value={size}
                         disabled={!size.inStock}
-                        className={({ active }) =>
+                        className={({ active, checked }) =>
                           classNames(
                             size.inStock
                               ? 'cursor-pointer bg-gray-100 text-gray-900 shadow-sm '
                               : 'cursor-not-allowed bg-gray-50 text-gray-200',
                             active ? 'bg-indigo-600 text-white ' : '',
+                            checked ? 'bg-indigo-600 text-white' : '',
                             'group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-indigo-600 hover:text-white focus:outline-none sm:flex-1 sm:py-6'
                           )
                         }

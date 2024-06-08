@@ -4,4 +4,5 @@ interface IFilterDTO {
     Color?: string[];
     Purpose?: string[];
     Page?: number | string[];
+    ItemsPerPage?: number | string[];
 }

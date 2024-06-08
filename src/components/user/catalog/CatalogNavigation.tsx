@@ -2,7 +2,7 @@ import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { ArrowLongLeftIcon, ArrowLongRightIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
-import { IProduct } from '../../../interfaces/Site/IProduct.ts';
+import { IProduct, IStorages } from '../../../interfaces/Site/IProduct.ts';
 import { Link, useParams, useNavigate } from "react-router-dom";
 import qs, { ParsedQs } from 'qs';
 import { ICategory } from '../../../interfaces/Site/IMainCategory.ts';
@@ -24,7 +24,7 @@ function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-export default function CategoryFilters() {
+export default function CatalogNavigation() {
   const baseUrl = APP_ENV.BASE_URL;
   const { subName, urlName } = useParams();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
@@ -32,10 +32,13 @@ export default function CategoryFilters() {
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [filterOptionsList, setFilterOptionsList] = useState<IInfo[]>([]);
   const [filters, setFilters] = useState<{ name: string; values: string[] }[]>([]);
+  const [gridView, setGridView] = useState<string>("3");
+  const [itemsPerPage, setItemsPerPage] = useState<number>(6);
+  // const itemsPerPage = 6;
+
   const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [countPage, setCountPage] = useState(0);
-  const itemsPerPage = 6;
   const indexOfLastItem = page * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const totalPages = Math.ceil(countPage / itemsPerPage);
@@ -44,10 +47,19 @@ export default function CategoryFilters() {
   let endPage = Math.min(totalPages, startPage + visiblePages - 1);
   const [focusedProduct, setFocusedProduct] = useState<IProduct | null>(null);
   const [isQuickviewOpen, setQuickviewOpen] = useState(false);
+  const [selectedSize, setSelectedSize] = useState<IStorages | null>(null);
 
   if (endPage - startPage + 1 < visiblePages) {
     startPage = Math.max(1, endPage - visiblePages + 1);
   };
+
+  const onViewModeChange = () => {
+    const newGridView = gridView === "3" ? "4" : "3";
+    const newItemsPerPage = gridView === "3" ? 8 : 6;
+  
+    setGridView(newGridView);
+    setItemsPerPage(newItemsPerPage);
+  }
 
   const onPageChange = (newPage: number) => {
     setPage(newPage);
@@ -107,7 +119,8 @@ export default function CategoryFilters() {
         Material: newFilters.find(f => f.name === 'Material')?.values || undefined,
         Color: newFilters.find(f => f.name === 'Color')?.values || undefined,
         Purpose: newFilters.find(f => f.name === 'Purpose')?.values || undefined,
-        Page: newFilters.find(f => f.name === 'Page')?.values || page
+        Page: newFilters.find(f => f.name === 'Page')?.values || page,
+        ItemsPerPage: newFilters.find(f => f.name === 'ItemsPerPage')?.values || itemsPerPage
       };
 
       if (subName && urlName) {
@@ -123,10 +136,10 @@ export default function CategoryFilters() {
     }
   };
 
-  const handleQuickviewOpen = (product: IProduct) => {
-    console.log(product);
+  const handleQuickviewOpen = (product: IProduct, size: IStorages) => {
     setFocusedProduct(product);
     setQuickviewOpen(true);
+    setSelectedSize(size);
   };
 
   useEffect(() => {
@@ -144,7 +157,7 @@ export default function CategoryFilters() {
 
   useEffect(() => {
     loadFromURL();
-  }, [subName, urlName, location.search, page]);
+  }, [subName, urlName, location.search, page, itemsPerPage]);
 
   return (
     <div className="bg-gray-100 ">
@@ -304,7 +317,7 @@ export default function CategoryFilters() {
                 </Transition>
               </Menu>
 
-              <button type="button" className="-m-2 ml-5 p-2 text-gray-400 hover:text-gray-500 sm:ml-7">
+              <button type="button" onClick={onViewModeChange} className="-m-2 ml-5 p-2 text-gray-400 hover:text-indigo-600 sm:ml-7">
                 <span className="sr-only">View grid</span>
                 <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
               </button>
@@ -404,7 +417,7 @@ export default function CategoryFilters() {
               <div className="overflow-hidden rounded-sm dark:border-strokedark dark:bg-boxdark bg-gray-100">
                 <div className="mx-auto max-w-2xl px-2 py-8  lg:max-w-7xl lg:px-2 bg-gray-100">
                   {/* <h2 className="text-2xl font-bold tracking-tight text-gray-900">Customers also purchased</h2> */}
-                  <div className="min-h-[1070px] mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:gap-x-8 pb-8">
+                  <div className={`min-h-[970px] mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-${gridView} xl:gap-x-8 pb-8`}>
                     {productList.map((product) => (
                       <div key={product.id} className="group relative">
                         <Link to={`/product/${product.id}`}>
@@ -434,7 +447,10 @@ export default function CategoryFilters() {
                             </li>
                             {product.storages?.map((size) => (
                               size.inStock && (
-                                <li key={size.size} className=" text-xs border-transparent pointer-events-none -inset-px rounded-md ml-2">
+                                <li key={size.size} 
+                                onClick={() => handleQuickviewOpen(product, size)} 
+
+                                className="cursor-pointer text-xs border-transparent -inset-px rounded-md ml-2">
                                   {size.size}
                                 </li>
                               )
@@ -443,34 +459,15 @@ export default function CategoryFilters() {
                         </div>
 
                         <div className="flex items-end pt-2 opacity-0 group-hover:opacity-100" aria-hidden="true">
-                          <button
-                            type="button"
-                            onClick={() => handleQuickviewOpen(product)}
-                            className="mt-1 flex w-full items-center justify-center rounded-md border bg-gray-200 
-                               relative rounded-md border border-transparent bg-gray-100 px-8 py-2 text-sm font-medium text-gray-900 hover:bg-gray-300">
-                            Quickview
-                          </button>
                         </div>
                         {isQuickviewOpen && focusedProduct && (
- <ProductQuickview
- product={focusedProduct}
- isOpen={isQuickviewOpen}
- setOpen={setQuickviewOpen}
-/>
-                        )}
-
-
-                        {/* <div className="opacity-0 group-hover:opacity-100 absolute inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 transition-opacity">
-            </div>
-            <div className="absolute inset-0 flex items-center justify-center">
-            <span className="opacity-0 group-hover:opacity-100 bg-gray-800 text-white text-xs rounded-md py-1 px-2 transition-opacity">
-            {focusedProduct && (
-        <ProductQuickview product={product}  />
-      )}
-              Product Quickview
-            </span>
-          </div> */}
-
+                          <ProductQuickview
+                            product={focusedProduct}
+                            isOpen={isQuickviewOpen}
+                            setOpen={setQuickviewOpen}
+                            size={selectedSize}
+                          />
+                        )}                    
                       </div>
                     ))}
                   </div>

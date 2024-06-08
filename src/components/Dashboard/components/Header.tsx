@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import Logo from '../images/logo/logo-icon.svg';
 import DropdownMessage from './DropdownMessage';
 import DropdownNotification from './DropdownNotification';
-import DropdownUser from '../../header/headerPages/DropdownUser/DropdownUser';
+import DropdownUser from '../../navbars/navbarsPages/DropdownUser/DropdownUser';
 
 const Header = (props: {
   sidebarOpen: string | boolean | undefined;

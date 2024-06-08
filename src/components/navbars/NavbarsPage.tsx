@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { AuthReducerActionType, IAuthReducerState } from "../../store/accounts/AuthReducer.ts";
 import { IMainCategory, ISubCategory, ICategory } from '../../interfaces/Site/IMainCategory.ts';
 import axios from 'axios';
-import DropdownUser from './headerPages/DropdownUser/DropdownUser.tsx';
+import DropdownUser from './navbarsPages/DropdownUser/DropdownUser.tsx';
 import { BagReducerActionType, IBagReducerState } from '../../store/bag/BagReducer.tsx';
 import { APP_ENV } from "../../env/config.ts";
 
@@ -35,7 +35,7 @@ function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
-const HeaderPage = () => {
+const NavbarsPage = () => {
     const baseUrl = APP_ENV.BASE_URL;
     const { isAuth, user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
     const { count } = useSelector((redux: any) => redux.bagReducer as IBagReducerState);
@@ -419,4 +419,4 @@ const HeaderPage = () => {
         </div >
     )
 }
-export default HeaderPage;
+export default NavbarsPage;

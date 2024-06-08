@@ -1,10 +1,10 @@
 import { Route, Routes } from "react-router-dom";
 import Page404 from "./components/notFound/Page404";
 import Logo from "./components/logo/Logo";
-import Bag from "./components/header/headerPages/bag/Bag";
+import Bag from "./components/navbars/navbarsPages/bag/Bag";
 import Product from "./components/user/product/Product";
-import Catalog from "./components/user/catalog/Catalog";
-import Header from "./components/header/HeaderPage";
+import CatalogNavigation from "./components/user/catalog/CatalogNavigation";
+import NavbarsPage from "./components/navbars/NavbarsPage";
 import { useEffect, useState } from "react";
 import Loader from "./components/Dashboard/common/Loader";
 import { Toaster } from 'react-hot-toast';
@@ -20,7 +20,7 @@ import PrivacyPolicy from "./components/footer/footerPages/PrivacyPolicy";
 import About from "./components/footer/footerPages/About";
 import StoreLocations from "./components/footer/footerPages/StoreLocations";
 import AdminLayout from "./components/layout/AdminLayout";
-import AuthPage from "./components/header/headerPages/auth/AuthPage";
+import AuthPage from "./components/navbars/navbarsPages/auth/AuthPage";
 import UserPanelPage from "./components/user/userPanel/UserPanelPage";
 import UserLayout from "./components/layout/UserLayout";
 import useAuthTokenEffect from "./useAuthTokenEffect";
@@ -47,7 +47,7 @@ function App() {
         containerClassName="overflow-auto"
       />
       <Logo />
-      <Header />
+      <NavbarsPage />
       <Routes>
         <Route element={<GuestLayout />}>
           <Route path='/auth' element={<AuthPage />} />
@@ -57,7 +57,7 @@ function App() {
         {/* <Route path="/" element={<HomePageReserve />}></Route> */}
         <Route path="/" element={<HomePage />}></Route>
         <Route path="/:email/:token" element={<HomePage />}></Route>
-        <Route path="catalog/:subName/:urlName" element={<Catalog />} />
+        <Route path="catalog/:subName/:urlName" element={<CatalogNavigation />} />
         <Route path="product/:Id" element={<Product />} />
         <Route path='/bag' element={<Bag />} />
 

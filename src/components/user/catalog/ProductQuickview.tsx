@@ -17,10 +17,11 @@ interface IProductQuickviewProps {
     product: IProduct;
     isOpen: boolean;
     setOpen: (value: boolean) => void;
+    size: IStorages | null;
 }
-const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, setOpen }) => {
+const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, setOpen, size }) => {
     const baseUrl = APP_ENV.BASE_URL;
-    const [selectedSize, setSelectedSize] = useState<IStorages | null>(null);
+    const [selectedSize, setSelectedSize] = useState<IStorages | null>(size);
     const { isAuth, user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
     const dispatch = useDispatch();
     const navigate = useNavigate();
@@ -32,7 +33,7 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
         if (!isAuth) {
             navigate("/auth");
         }
-        else {
+        else if (selectedSize) {
             const model: IBag = {
                 UserId: user?.Id || "",
                 UserEmail: user?.Email || "",
@@ -159,15 +160,15 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                                                             key={size.size}
                                                                             value={size}
                                                                             disabled={!size.inStock}
-                                                                            className={({ active }) =>
+                                                                            className={({ checked }) =>
                                                                                 classNames(
-                                                                                    size.inStock
-                                                                                        ? 'cursor-pointer bg-white text-gray-900 shadow-sm'
-                                                                                        : 'cursor-not-allowed bg-gray-50 text-gray-200',
-                                                                                    active ? 'ring-2 ring-indigo-500' : '',
-                                                                                    'group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-gray-50 focus:outline-none sm:flex-1'
+                                                                                  size.inStock
+                                                                                    ? 'cursor-pointer bg-gray-100 text-gray-900 shadow-sm '
+                                                                                    : 'cursor-not-allowed bg-gray-50 text-gray-200',
+                                                                                  checked ? 'bg-indigo-600 text-white' : '',
+                                                                                  'group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-indigo-600 hover:text-white focus:outline-none sm:flex-1 sm:py-6'
                                                                                 )
-                                                                            }
+                                                                              }
                                                                         >
                                                                             {({ active, checked }) => (
                                                                                 <>
