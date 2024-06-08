@@ -40,3 +40,14 @@ export const onPageChangeQueryParams = (newPage: number, filters: any[],) => {
     queryParams['Page'] = newPage.toString();
     return queryParams;
 };
+
+export const onSortChangeQueryParams = (sort: string, filters: any[],) => {
+    const queryParams: { [key: string]: string | string[] } = {};
+    filters.forEach((filter) => {
+        if (filter.values.length > 0) {
+            queryParams[filter.name] = filter.values.join('_');
+        }
+    });
+    queryParams['Sort'] = sort.toString();
+    return queryParams;
+};

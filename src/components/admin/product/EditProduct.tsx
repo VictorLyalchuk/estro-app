@@ -3,9 +3,9 @@ import { ChangeEventHandler, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Form, Input, Select, message } from 'antd';
 import TextArea from "antd/es/input/TextArea";
-import { IImageItem } from "../../../interfaces/Site/IProduct";
-import { ICategory, IMainCategory, ISubCategory } from "../../../interfaces/Site/IMainCategory";
-import { IProductEdit } from "../../../interfaces/Site/IProductEdit";
+import { IImageItem } from "../../../interfaces/Catalog/IProduct";
+import { ICategory, IMainCategory, ISubCategory } from "../../../interfaces/Catalog/IMainCategory";
+import { IProductEdit } from "../../../interfaces/Catalog/IProductEdit";
 import {APP_ENV} from "../../../env/config";
 
 const EditProduct = () => {

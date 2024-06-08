@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Image, message } from 'antd';
 import { StarIcon } from '@heroicons/react/20/solid'
 import { RadioGroup } from '@headlessui/react'
-import { IProduct, IStorages } from '../../../interfaces/Site/IProduct';
+import { IProduct, IStorages } from '../../../interfaces/Catalog/IProduct';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -12,7 +12,7 @@ import { BagReducerActionType } from '../../../store/bag/BagReducer';
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer';
 import { IBag } from '../../../interfaces/Bag/IBag';
 import { APP_ENV } from "../../../env/config";
-import { getProductById } from '../../../services/products/product-services';
+import { getProductById } from '../../../services/product/product-services';
 import { createBag } from '../../../services/bag/bag-services';
 
 const reviews = { href: '#', average: 4, totalCount: 117 }

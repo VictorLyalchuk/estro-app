@@ -70,7 +70,6 @@ export function removeTokens() {
     window.localStorage.removeItem("token");
 }
 
-
 export async function refreshToken() {
     try {
         const response = await instance.put("/refresh-token", {
@@ -85,29 +84,9 @@ export async function refreshToken() {
     }
 }
 
-export async function getProfileOrders(userEmail: string | null, page: number) {
-    try {
-        const response = await instance.get<IOrderUser[]>(`${baseUrl}/api/OrderControllers/GetOrderByEmail/${userEmail}`, { params: { page } });
-        return response.data;
-    } catch (error) {
-        console.error('Failed to fetch user data:', error);
-        throw error;
-    }
-}
-
-export async function getUserOrders(userEmail: string | null) {
-    try {
-        const response = await instance.get<number>(`${baseUrl}/api/OrderControllers/GetCountOrderByEmail/${userEmail}`);
-        return response.data;
-    } catch (error) {
-        console.error('Failed to fetch user data:', error);
-        throw error;
-    }
-}
-
 export async function getUserData(userEmail: string | null) {
     try {
-        const response = await instance.get<IUserProfile>(`${baseUrl}/api/AccountControllers/${userEmail}`);
+        const response = await instance.get<IUserProfile>(`${userEmail}`);
         return response.data;
     } catch (error) {
         console.error('Failed to fetch user data:', error);
@@ -117,7 +96,7 @@ export async function getUserData(userEmail: string | null) {
 
 export async function editUserData(user: IUserEdit) {
     try {
-        await instance.post(`${baseUrl}/api/AccountControllers/Edit`, user)
+        await instance.post(`Edit`, user)
     } catch (error) {
         console.error('Failed to edit user data:', error);
         throw error;
@@ -126,7 +105,7 @@ export async function editUserData(user: IUserEdit) {
 
 export async function emailConfirm(userEmail: string | null) {
     try {
-        await instance.post(`${baseUrl}/api/AccountControllers/ConfirmMyEmail`, userEmail);
+        await instance.post(`ConfirmMyEmail`, userEmail);
     } catch (error) {
         console.error('Failed to confirm user:', error);
         throw error;
@@ -161,7 +140,7 @@ export async function refreshRedux(dispatch: any) {
 
 export async function ConfirmEmail(email: string | null, token: string | null, callback: (error: any, result?: any) => void) {
     try {
-        await instance.post(`${baseUrl}/api/AccountControllers/ConfirmEmail`, { email, token });
+        await instance.post(`ConfirmEmail`, { email, token });
         await refreshToken();
         callback(null, "Success"); 
     } catch (error) {

@@ -1,5 +1,5 @@
 import { useState, useEffect, Fragment } from 'react';
-import { IHomeImage } from '../../interfaces/Site/IHomeImage';
+import { IHomeImage } from '../../interfaces/Catalog/IHomeImage';
 import { APP_ENV } from "../../env/config";
 import { makeStyles } from '@material-ui/core/styles';
 import { useParams } from 'react-router-dom';

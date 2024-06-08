@@ -19,7 +19,7 @@ import { JSX } from "react/jsx-runtime";
 import { ICity } from "../../../../interfaces/Bag/ICity";
 import { IWarehouse } from "../../../../interfaces/Bag/IWarehouse";
 import { RadioGroup } from '@headlessui/react';
-import { IStore } from "../../../../interfaces/Site/IStore";
+import { IStore } from "../../../../interfaces/Catalog/IStore";
 import { CheckCircleIcon } from '@heroicons/react/20/solid'
 
 const theme = createTheme({

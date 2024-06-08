@@ -5,4 +5,5 @@ interface IFilterDTO {
     Purpose?: string[];
     Page?: number | string[];
     ItemsPerPage?: number | string[];
+    Sort?: string | string[];
 }

@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from "react-router-dom";
-import { IProduct, IStorages } from '../../../interfaces/Site/IProduct';
+import { IProduct, IStorages } from '../../../interfaces/Catalog/IProduct';
 import { Form, Input, message } from 'antd';
 import axios from 'axios';
 import {APP_ENV} from "../../../env/config";

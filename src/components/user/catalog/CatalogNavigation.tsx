@@ -2,22 +2,25 @@ import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
 import { ArrowLongLeftIcon, ArrowLongRightIcon, XMarkIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
-import { IProduct, IStorages } from '../../../interfaces/Site/IProduct.ts';
+import { IProduct, IStorages } from '../../../interfaces/Catalog/IProduct.ts';
 import { Link, useParams, useNavigate } from "react-router-dom";
 import qs, { ParsedQs } from 'qs';
-import { ICategory } from '../../../interfaces/Site/IMainCategory.ts';
+import { ICategory } from '../../../interfaces/Catalog/IMainCategory.ts';
 import { IInfo } from '../../../interfaces/Info/IInfo.ts';
 import { APP_ENV } from "../../../env/config.ts";
-import { getCategoryList, getInfoList, getProductsist, getQuantityProducts } from '../../../services/catalog/catalog-services.ts';
-import { updateFilters, createQueryParams, onPageChangeQueryParams } from '../../../utils/catalog/filterUtils.ts';
+import { getProductsist, getQuantityProducts } from '../../../services/product/product-services.ts';
+import { updateFilters, createQueryParams, onPageChangeQueryParams, onSortChangeQueryParams } from '../../../utils/catalog/filterUtils.ts';
 import ProductQuickview from './ProductQuickview.tsx';
+import { ISortOptions } from '../../../interfaces/Catalog/ISortOptions.ts';
+import { getCategoryList } from '../../../services/category/category-services.ts';
+import { getInfoList } from '../../../services/info/info-services.ts';
 
-const sortOptions = [
-  { name: 'Most Popular', href: '#', current: true },
-  { name: 'Best Rating', href: '#', current: false },
-  { name: 'Newest', href: '#', current: false },
-  { name: 'Price: Low to High', href: '#', current: false },
-  { name: 'Price: High to Low', href: '#', current: false },
+let sortOptions: ISortOptions[] = [
+  { name: 'Newest', url: 'newest', current: false },
+  { name: 'Most Popular', url: 'most_popular', current: false },
+  { name: 'Best Rating', url: 'best_rating', current: false },
+  { name: 'Price: Low to High', url: 'price_low_to_high', current: false },
+  { name: 'Price: High to Low', url: 'price_high_to_low', current: false },
 ]
 
 function classNames(...classes: string[]) {
@@ -26,6 +29,7 @@ function classNames(...classes: string[]) {
 
 export default function CatalogNavigation() {
   const baseUrl = APP_ENV.BASE_URL;
+  const navigate = useNavigate();
   const { subName, urlName } = useParams();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [productList, setProduct] = useState<IProduct[]>([]);
@@ -34,9 +38,6 @@ export default function CatalogNavigation() {
   const [filters, setFilters] = useState<{ name: string; values: string[] }[]>([]);
   const [gridView, setGridView] = useState<string>("3");
   const [itemsPerPage, setItemsPerPage] = useState<number>(6);
-  // const itemsPerPage = 6;
-
-  const navigate = useNavigate();
   const [page, setPage] = useState(1);
   const [countPage, setCountPage] = useState(0);
   const indexOfLastItem = page * itemsPerPage;
@@ -48,6 +49,7 @@ export default function CatalogNavigation() {
   const [focusedProduct, setFocusedProduct] = useState<IProduct | null>(null);
   const [isQuickviewOpen, setQuickviewOpen] = useState(false);
   const [selectedSize, setSelectedSize] = useState<IStorages | null>(null);
+  const [activeSortOption, setActiveSortOption] = useState<ISortOptions | null>(null);
 
   if (endPage - startPage + 1 < visiblePages) {
     startPage = Math.max(1, endPage - visiblePages + 1);
@@ -56,10 +58,34 @@ export default function CatalogNavigation() {
   const onViewModeChange = () => {
     const newGridView = gridView === "3" ? "4" : "3";
     const newItemsPerPage = gridView === "3" ? 8 : 6;
-  
+
     setGridView(newGridView);
     setItemsPerPage(newItemsPerPage);
   }
+
+  const onSortModeChange = (selectedOption: ISortOptions) => {
+    setActiveSortOption(selectedOption);
+    const updatedSortOptions = sortOptions.map(option =>
+      option.name === selectedOption.name
+        ? { ...option, current: true }
+        : { ...option, current: false }
+    );
+    sortOptions = updatedSortOptions;
+
+    const queryParams = onSortChangeQueryParams(selectedOption.url, filters);
+    const newQueryString = qs.stringify(queryParams, { encodeValuesOnly: true, delimiter: ';' });
+    navigate({ search: newQueryString });
+  };
+
+  const onSortModeLoad = (selectedOption: string | null) => {
+    const updatedSortOptions = sortOptions.map(option =>
+      option.url === selectedOption
+        ? { ...option, current: true }
+        : { ...option, current: false }
+    );
+    sortOptions = updatedSortOptions;
+    setActiveSortOption(updatedSortOptions.find(option => option.current) || null);
+  };
 
   const onPageChange = (newPage: number) => {
     setPage(newPage);
@@ -83,6 +109,7 @@ export default function CatalogNavigation() {
     navigate({ search: newQueryString });
     setFilters([]);
     setPage(1);
+    setActiveSortOption(null);
   };
 
   const parseUrlQuery = (): { name: string; values: string[] }[] => {
@@ -120,8 +147,11 @@ export default function CatalogNavigation() {
         Color: newFilters.find(f => f.name === 'Color')?.values || undefined,
         Purpose: newFilters.find(f => f.name === 'Purpose')?.values || undefined,
         Page: newFilters.find(f => f.name === 'Page')?.values || page,
-        ItemsPerPage: newFilters.find(f => f.name === 'ItemsPerPage')?.values || itemsPerPage
+        ItemsPerPage: newFilters.find(f => f.name === 'ItemsPerPage')?.values || itemsPerPage,
+        Sort: newFilters.find(f => f.name === 'Sort')?.values?.join('_') || undefined
       };
+
+      onSortModeLoad(newFilters.find(f => f.name === 'Sort')?.values?.join('_') || null);
 
       if (subName && urlName) {
         const responseQuantity = await getQuantityProducts(subName, urlName, filterDTO);
@@ -294,15 +324,18 @@ export default function CatalogNavigation() {
                   leaveFrom="transform opacity-100 scale-100"
                   leaveTo="transform opacity-0 scale-95"
                 >
-                  <Menu.Items className="absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-gray-100 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
+                  <Menu.Items className="cursor-pointer absolute right-0 z-10 mt-2 w-40 origin-top-right rounded-md bg-gray-100 shadow-2xl ring-1 ring-black ring-opacity-5 focus:outline-none">
                     <div className="py-1">
                       {sortOptions.map((option) => (
                         <Menu.Item key={option.name}>
                           {({ active }) => (
                             <a
-                              href={option.href}
+                              // href={option.href}
+                              onClick={() => onSortModeChange(option)}
+
                               className={classNames(
-                                option.current ? 'font-medium text-gray-900' : 'text-gray-500',
+                                option.current || (active && activeSortOption && activeSortOption.name === option.name)
+                                  ? 'font-medium text-gray-900' : 'text-gray-500 hover:text-indigo-500',
                                 active ? 'bg-gray-100' : '',
                                 'block px-4 py-2 text-sm'
                               )}
@@ -417,8 +450,8 @@ export default function CatalogNavigation() {
               <div className="overflow-hidden rounded-sm dark:border-strokedark dark:bg-boxdark bg-gray-100">
                 <div className="mx-auto max-w-2xl px-2 py-8  lg:max-w-7xl lg:px-2 bg-gray-100">
                   {/* <h2 className="text-2xl font-bold tracking-tight text-gray-900">Customers also purchased</h2> */}
-                  <div className={`min-h-[970px] mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-${gridView} xl:gap-x-8 pb-8`}>
-                    {productList.map((product) => (
+                  <div className={`min-h-[970px] mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-${gridView} xl:gap-x-8 pb-8 transition-all duration-500`}>
+                    {productList.slice(0, itemsPerPage).map((product) => (
                       <div key={product.id} className="group relative">
                         <Link to={`/product/${product.id}`}>
                           <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none lg:h-80 hover14 hover13">
@@ -447,10 +480,9 @@ export default function CatalogNavigation() {
                             </li>
                             {product.storages?.map((size) => (
                               size.inStock && (
-                                <li key={size.size} 
-                                onClick={() => handleQuickviewOpen(product, size)} 
-
-                                className="cursor-pointer text-xs border-transparent -inset-px rounded-md ml-2">
+                                <li key={size.size}
+                                  onClick={() => handleQuickviewOpen(product, size)}
+                                  className="cursor-pointer text-xs border-transparent -inset-px rounded-md ml-2 hover:text-indigo-500">
                                   {size.size}
                                 </li>
                               )
@@ -467,7 +499,7 @@ export default function CatalogNavigation() {
                             setOpen={setQuickviewOpen}
                             size={selectedSize}
                           />
-                        )}                    
+                        )}
                       </div>
                     ))}
                   </div>
@@ -488,7 +520,7 @@ export default function CatalogNavigation() {
                             onClick={() => onPageChange(page - 1)}
                             disabled={page === 1}
                             className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
-                    ${page === 1
+                            ${page === 1
                                 ? 'text-gray-300'
                                 : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
                               }`}

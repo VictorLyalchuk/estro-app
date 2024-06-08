@@ -1,21 +1,21 @@
 import axios from "axios";
 import { APP_ENV } from "../../env/config";
-import { IProduct } from "../../interfaces/Site/IProduct";
+import { IInfo } from "../../interfaces/Info/IInfo";
 
 const baseUrl = APP_ENV.BASE_URL;
 
 // Створюємо екземпляр axios
 const instance = axios.create({
-    baseURL: `${baseUrl}/api/AccountControllers`,
+    baseURL: `${baseUrl}/api/Info`,
     headers: {
         "Content-Type": "application/json"
     }
 });
 
-export async function getProductById(id: string) {
+export async function getInfoList(subName: string) {
     try {
-        const response = await instance.get<IProduct>(`${baseUrl}/api/Product/ProductByID/${id}`)
-        return response.data;
+        const resp = await instance.get<IInfo[]>(`GetInfo/${subName}`,);
+        return resp.data;
     } catch (error) {
         console.error('Failed to fetch product data:', error);
         throw error;

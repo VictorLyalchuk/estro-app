@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { IStore } from '../../../interfaces/Site/IStore';
+import { IStore } from '../../../interfaces/Catalog/IStore';
 import axios from 'axios';
 import { APP_ENV } from '../../../env/config';
 

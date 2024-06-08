@@ -6,7 +6,7 @@ const baseUrl = APP_ENV.BASE_URL;
 
 // Створюємо екземпляр axios
 const instance = axios.create({
-    baseURL: `${baseUrl}/api/AccountControllers`,
+    baseURL: `${baseUrl}/api/Image`,
     headers: {
         "Content-Type": "application/json"
     }
@@ -35,7 +35,7 @@ export async function beforeUpload(file: File) {
 export async function deleteUserImage(userImage: string ) {
     try {
         if (userImage != "") {
-            await instance.post(`${baseUrl}/api/Image/DeleteUserImage`, { image: userImage }, {
+            await instance.post(`DeleteUserImage`, { image: userImage }, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 }
@@ -50,7 +50,7 @@ export async function deleteUserImage(userImage: string ) {
 //2
 export async function createUserImage(file: File) {
     try {
-        const response = await instance.post(`${baseUrl}/api/Image/CreateUserImage`, { ImageFile: file }, {
+        const response = await instance.post(`CreateUserImage`, { ImageFile: file }, {
             headers: {
               "Content-Type": "multipart/form-data"
             }

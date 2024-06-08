@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { IProduct } from '../../../interfaces/Site/IProduct';
+import { IProduct } from '../../../interfaces/Catalog/IProduct';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { ProductReducerActionType } from '../../../store/product/productReducer';

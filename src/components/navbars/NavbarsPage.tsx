@@ -4,11 +4,11 @@ import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, UserIcon } 
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { AuthReducerActionType, IAuthReducerState } from "../../store/accounts/AuthReducer.ts";
-import { IMainCategory, ISubCategory, ICategory } from '../../interfaces/Site/IMainCategory.ts';
-import axios from 'axios';
+import { IMainCategory } from '../../interfaces/Catalog/IMainCategory.ts';
 import DropdownUser from './navbarsPages/DropdownUser/DropdownUser.tsx';
 import { BagReducerActionType, IBagReducerState } from '../../store/bag/BagReducer.tsx';
-import { APP_ENV } from "../../env/config.ts";
+import { getMainCategories } from '../../services/category/category-services.ts';
+import { getCountBagByEmail } from '../../services/bag/bag-services.ts';
 
 const navigation = {
     featured: [
@@ -24,11 +24,6 @@ const navigation = {
             imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg',
             imageAlt: 'Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.',
         },],
-
-    pages: [
-        { name: 'Company', href: '#' },
-        { name: 'Stores', href: '/store-locations' },
-    ],
 }
 
 function classNames(...classes: string[]) {
@@ -36,7 +31,6 @@ function classNames(...classes: string[]) {
 }
 
 const NavbarsPage = () => {
-    const baseUrl = APP_ENV.BASE_URL;
     const { isAuth, user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
     const { count } = useSelector((redux: any) => redux.bagReducer as IBagReducerState);
     const [categoryList, setCategoryList] = useState<IMainCategory[]>([]);
@@ -44,45 +38,21 @@ const NavbarsPage = () => {
     const dispatch = useDispatch();
 
     useEffect(() => {
-        axios.get<number>(`${baseUrl}/api/Bag/GetCountBagByEmail/${user?.Email}`)
-            .then(resp => {
-                dispatch({
-                    type: BagReducerActionType.GET_PRODUCT_BAG_COUNT,
-                    payload: {
-                        count: resp.data
-                    }
-                });
-            });
-    }, [dispatch, count, user]);
-
+        if (user?.Email) {
+            getCountBagByEmail(user?.Email, dispatch);
+        }
+    }, [count, user]);
 
     useEffect(() => {
-        axios.get<IMainCategory[]>(`${baseUrl}/api/CategoryControllers/MainCategoryGetAsync`)
-            .then((resp) => {
-                const formattedData = resp.data.map((mainCategory: IMainCategory) => ({
-                    id: mainCategory.id,
-                    name: mainCategory.name,
-                    description: mainCategory.description,
-                    imagePath: mainCategory.imagePath,
-                    subCategories: mainCategory.subCategories?.map((subCategory: ISubCategory) => ({
-                        id: subCategory.id,
-                        name: subCategory.name,
-                        description: subCategory.description,
-                        imagePath: subCategory.imagePath,
-                        mainCategoryId: subCategory.mainCategoryId,
-                        urlName: subCategory.urlName,
-                        categories: subCategory.categories?.map((category: ICategory) => ({
-                            id: category.id,
-                            name: category.name,
-                            description: category.description,
-                            imagePath: category.imagePath,
-                            subCategoryId: category.subCategoryId,
-                            urlName: category.urlName,
-                        })) || [],
-                    })) || [],
-                }));
-                setCategoryList(formattedData);
-            });
+        const loadCategories = async () => {
+            try {
+                const categories = await getMainCategories();
+                setCategoryList(categories);
+            } catch (error) {
+                console.error('Failed to load categories:', error);
+            }
+        };
+        loadCategories();
     }, []);
 
     const handleLogout = () => {
@@ -198,13 +168,11 @@ const NavbarsPage = () => {
                                     </Tab.Group>
 
                                     <div className="space-y-6 border-t border-gray-200 px-4 py-6">
-                                        {navigation.pages.map((page) => (
-                                            <div key={page.name} className="flow-root">
-                                                <a href={page.href} className="-m-2 block p-2 font-medium text-gray-900">
-                                                    {page.name}
-                                                </a>
-                                            </div>
-                                        ))}
+                                        <Link to={"/store-locations"}
+                                            className="flex items-center -mb-px text-sm font-medium text-gray-700 hover:text-indigo-500"
+                                        >
+                                            Store
+                                        </Link>
                                     </div>
                                     {isAuth ? (
                                         <div className="space-y-6 border-t border-gray-200 px-4 py-6">
@@ -385,9 +353,9 @@ const NavbarsPage = () => {
                                         ) : (
 
                                             <div className="ml-4 flow-root lg:ml-6">
-                                                    <Link className="group -m-2 p-2 text-gray-400 hover:text-gray-500" to={"/auth"} >
-                                                        <UserIcon className="h-6 w-6" aria-hidden="true" />
-                                                    </Link>
+                                                <Link className="group -m-2 p-2 text-gray-400 hover:text-gray-500" to={"/auth"} >
+                                                    <UserIcon className="h-6 w-6" aria-hidden="true" />
+                                                </Link>
                                             </div>
                                         )}
 
@@ -401,13 +369,13 @@ const NavbarsPage = () => {
 
                                         {/* Cart */}
                                         <div className="ml-4 flow-root lg:ml-6">
-                                                <Link to={"/bag"} className="group -m-2 ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-20 flex items-center hover:text-gray-500">
-                                                    <ShoppingBagIcon
-                                                        className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-3"
-                                                        aria-hidden="true"
-                                                    />
-                                                    {count}</Link>
-                                                <div className="sr-only">items in cart, view bag</div>
+                                            <Link to={"/bag"} className="group -m-2 ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-20 flex items-center hover:text-gray-500">
+                                                <ShoppingBagIcon
+                                                    className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-3"
+                                                    aria-hidden="true"
+                                                />
+                                                {count}</Link>
+                                            <div className="sr-only">items in cart, view bag</div>
                                         </div>
                                     </div>
                                 </div>

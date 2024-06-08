@@ -5,13 +5,14 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useSelector } from "react-redux";
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer';
 import { IUserProfile } from '../../../interfaces/Auth/IUserProfile';
-import { getProfileOrders, getUserData, getUserOrders } from '../../../services/accounts/account-services';
+import { getUserData } from '../../../services/accounts/account-services';
 import TabsOrdersComponent from './TabsOrdersComponent';
 import Profile from './profile/Profile';
 import Settings from './settings/Settings';
 import Bonuses from './bonuses/Bonuses';
 import CompactOrders from './orders/CompactOrders';
 import Orders from './orders/Orders';
+import { getProfileOrders, getUserOrders } from '../../../services/order/order-services';
 
 const UserPanelPage = () => {
     const location = useLocation();

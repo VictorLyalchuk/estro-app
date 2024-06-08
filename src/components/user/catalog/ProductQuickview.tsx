@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react'
 import { Dialog, RadioGroup, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { IProduct, IStorages } from '../../../interfaces/Site/IProduct'
+import { IProduct, IStorages } from '../../../interfaces/Catalog/IProduct'
 import { APP_ENV } from '../../../env/config'
 import { useDispatch, useSelector } from 'react-redux';
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer';
