@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, SetStateAction, useEffect, useState } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, UserIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom';
@@ -44,15 +44,9 @@ const NavbarsPage = () => {
     }, [count, user]);
 
     useEffect(() => {
-        const loadCategories = async () => {
-            try {
-                const categories = await getMainCategories();
-                setCategoryList(categories);
-            } catch (error) {
-                console.error('Failed to load categories:', error);
-            }
-        };
-        loadCategories();
+        getMainCategories()
+            .then((data: SetStateAction<IMainCategory[]>) => setCategoryList(data))
+            .catch(error => console.error('Error fetching categories data:', error));
     }, []);
 
     const handleLogout = () => {
@@ -301,7 +295,6 @@ const NavbarsPage = () => {
                                                                                                     <li key={item.name} className="flex hover:text-indigo-500">
                                                                                                         <Popover.Panel>
                                                                                                             {({ close }) => (
-                                                                                                                // <Link to={`/catalog/${item.urlName}`} onClick={() => close()}>
                                                                                                                 <Link to={`/catalog/${section.urlName}/${item.urlName}`} onClick={() => close()}>
                                                                                                                     {item.name}
                                                                                                                 </Link>

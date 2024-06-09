@@ -5,23 +5,16 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { IProduct, IStorages } from '../../../interfaces/Catalog/IProduct'
 import { APP_ENV } from '../../../env/config'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { IInfo } from '../../../interfaces/Info/IInfo'
+import { IInfo, IOptions } from '../../../interfaces/Info/IInfo'
 import { createQueryParams, onPageChangeQueryParams, onSortChangeQueryParams, updateFilters } from '../../../utils/catalog/filterUtils'
 import { ISortOptions } from '../../../interfaces/Catalog/ISortOptions'
 import qs, { ParsedQs } from 'qs'
 import { getProductsist, getQuantityProducts } from '../../../services/product/product-services'
-import { getCategoryList } from '../../../services/category/category-services'
 import { getInfoList } from '../../../services/info/info-services'
-import { ICategory } from '../../../interfaces/Catalog/IMainCategory'
+import { IMainCategory } from '../../../interfaces/Catalog/IMainCategory'
 import ProductQuickview from './ProductQuickview'
-
-let sortOptions = [
-    { name: 'Newest', url: 'newest', current: false },
-    { name: 'Most Popular', url: 'most_popular', current: false },
-    { name: 'Best Rating', url: 'best_rating', current: false },
-    { name: 'Price: Low to High', url: 'price_low_to_high', current: false },
-    { name: 'Price: High to Low', url: 'price_high_to_low', current: false },
-]
+import { initialSortOptions } from '../../../data/initialSortOptions'
+import { getMainCategories } from '../../../services/category/category-services'
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -31,9 +24,9 @@ export default function CatalogHome() {
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
     const baseUrl = APP_ENV.BASE_URL;
     const navigate = useNavigate();
-    // const { subName, urlName } = useParams();
+    const { main } = useParams();
     const [productList, setProduct] = useState<IProduct[]>([]);
-    const [categoryList, setCategoryList] = useState<ICategory[]>([]);
+    const [categoryList, setCategoryList] = useState<IMainCategory[]>([]);
     const [filterOptionsList, setFilterOptionsList] = useState<IInfo[]>([]);
     const [filters, setFilters] = useState<{ name: string; values: string[] }[]>([]);
     const [itemsPerPage] = useState<number>(10);
@@ -49,8 +42,7 @@ export default function CatalogHome() {
     const [isQuickviewOpen, setQuickviewOpen] = useState(false);
     const [selectedSize, setSelectedSize] = useState<IStorages | null>(null);
     const [activeSortOption, setActiveSortOption] = useState<ISortOptions | null>(null);
-    let subName = "woman_shoes";
-    // let urlName = "boots_and_high_boots";
+    const [sortOptions, setSortOptions] = useState<ISortOptions[]>(initialSortOptions);
 
     const filterValueCounts = filterOptionsList.map((section) =>
         filters.reduce((count, filter) => {
@@ -72,12 +64,22 @@ export default function CatalogHome() {
                 ? { ...option, current: true }
                 : { ...option, current: false }
         );
-        sortOptions = updatedSortOptions;
+        setSortOptions(updatedSortOptions);
 
         const queryParams = onSortChangeQueryParams(selectedOption.url, filters);
         const newQueryString = qs.stringify(queryParams, { encodeValuesOnly: true, delimiter: ';' });
         navigate({ search: newQueryString });
     };
+
+    const onSortModeLoad = (selectedOption: string | null) => {
+        const updatedSortOptions = sortOptions.map(option =>
+          option.url === selectedOption
+            ? { ...option, current: true }
+            : { ...option, current: false }
+        );
+        setSortOptions(updatedSortOptions);
+        setActiveSortOption(updatedSortOptions.find(option => option.current) || null);
+      };
 
     const onPageChange = (newPage: number) => {
         setPage(newPage);
@@ -141,20 +143,19 @@ export default function CatalogHome() {
                 ItemsPerPage: newFilters.find(f => f.name === 'ItemsPerPage')?.values || itemsPerPage,
                 Sort: newFilters.find(f => f.name === 'Sort')?.values?.join('_') || undefined,
                 Page: newFilters.find(f => f.name === 'Page')?.values || page,
-                SubName: "",
-                UrlName: "",
+                MainCategory: main,
+                SubName: newFilters.find(f => f.name === 'SubCategory')?.values || undefined,
+                UrlName: newFilters.find(f => f.name === 'Category')?.values || undefined
             };
+            
+            onSortModeLoad(newFilters.find(f => f.name === 'Sort')?.values?.join('_') || null);
 
-            // onSortModeLoad(newFilters.find(f => f.name === 'Sort')?.values?.join('_') || null);
-
-            // if (subName && urlName) {
             const responseQuantity = await getQuantityProducts(filterDTO);
             const quantity = responseQuantity;
             setCountPage(quantity);
 
             const responseProduct = await getProductsist(filterDTO);
             setProduct(responseProduct);
-            // }
         } catch (error) {
             console.error('Error:', error);
         }
@@ -166,17 +167,50 @@ export default function CatalogHome() {
         setSelectedSize(size);
     };
 
+    const getInfo = async () => {
+        try {
+            // Витягування категорій і фільтрів з бази даних
+            const mainCategories = await getMainCategories();
+            setCategoryList(mainCategories);
+            setFilterOptionsList(prevFilters => {
+                const mainCategory = mainCategories.find(mainCategory => mainCategory.urlName === main);
+                const subCategories: IOptions[] = [];
+                const categories: IOptions[] = [];
+
+                if (mainCategory) {
+                    mainCategory.subCategories.forEach(subCategory => {
+                        subCategories.push({
+                            id: subCategory.id.toString(),
+                            label: subCategory.name,
+                            value: subCategory.urlName
+                        });
+
+                        subCategory.categories.forEach(category => {
+                            categories.push({
+                                id: category.id.toString(),
+                                label: category.name,
+                                value: category.urlName
+                            });
+                        });
+                    });
+                }
+
+                return [
+                    ...prevFilters,
+                    { id: 'subCategory', name: 'SubCategory', options: subCategories },
+                    { id: 'category', name: 'Category', options: categories }
+                ];
+            });
+
+            const infos = await getInfoList();
+            setFilterOptionsList(prevFilters => [...prevFilters, ...infos]);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
     useEffect(() => {
-        setPage(1);
-        // Витягування категорій і фільтрів з бази даних
-        // if (subName) {
-        getCategoryList(subName)
-            .then(data => setCategoryList(data))
-            .catch(error => console.error('Error fetching categories data:', error));
-        getInfoList(subName)
-            .then(data => setFilterOptionsList(data))
-            .catch(error => console.error('Error fetching infos data:', error));
-        // }
+        setPage(1);  
+        getInfo();
     }, []);
 
     useEffect(() => {
@@ -366,7 +400,6 @@ export default function CatalogHome() {
                                                             className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                                                             aria-hidden="true"
                                                         />
-                                                        {/* </span> */}
                                                     </Popover.Button>
 
                                                     <Transition
@@ -433,8 +466,7 @@ export default function CatalogHome() {
                                                             key={optionIdx}
                                                             className="m-1 inline-flex items-center rounded-full border border-gray-200 bg-gray-100 py-1.5 pl-3 pr-2 text-sm font-medium text-gray-900">
                                                             <span>{option.label}</span>
-                                                            <button
-                                                                type="button"
+                                                            <div
                                                                 className="ml-1 inline-flex h-4 w-4 flex-shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-500">
                                                                 <span className="sr-only">Remove filter for {option.label}</span>
                                                                 <button onClick={() => { createFilters(section.name, option.value); }}>
@@ -442,7 +474,7 @@ export default function CatalogHome() {
                                                                         <path strokeLinecap="round" strokeWidth="1.5" d="M1 1l6 6m0-6L1 7" />
                                                                     </svg>
                                                                 </button>
-                                                            </button>
+                                                            </div>
                                                         </span>
                                                     );
                                                 }
@@ -475,11 +507,11 @@ export default function CatalogHome() {
                                                 className="h-full w-full object-cover object-center group-hover:opacity-75"
                                             />
                                         </div>
-                                        <h3 className="mt-4 text-sm text-gray-700 line-clamp-2 break-words w-45">{product.name.split(' ').slice(0, 3).join(' ')}</h3>
-                                        <p className="mt-1 text-xs text-gray-500">{product.article}</p>
-                                        <p className="mt-1 text-xs text-gray-500">{product.purpose}</p>
-                                        <p className="mt-1 text-lg font-medium text-red-900">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
                                     </Link>
+                                    <h3 className="mt-4 text-sm text-gray-700 line-clamp-2 break-words w-45">{product.name.split(' ').slice(0, 3).join(' ')}</h3>
+                                    <p className="mt-1 text-xs text-gray-500">{product.article}</p>
+                                    <p className="mt-1 text-xs text-gray-500">{product.purpose}</p>
+                                    <p className="mt-1 text-lg font-medium text-red-900">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
                                     <div className="flex items-end opacity-0 group-hover:opacity-100" aria-hidden="true">
                                         <ul className="mt-4 grid grid-cols-12 gap-2">
                                             <li className="text-xs border-transparent pointer-events-none -inset-px rounded-md">
@@ -574,9 +606,7 @@ export default function CatalogHome() {
                             </div>
                         </div>
                     </section>
-
                 </main>
-
             </div>
         </div>
     )

@@ -21,6 +21,7 @@ export async function getMainCategories() {
             name: mainCategory.name,
             description: mainCategory.description,
             imagePath: mainCategory.imagePath,
+            urlName: mainCategory.urlName,
             subCategories: mainCategory.subCategories?.map((subCategory: ISubCategory) => ({
                 id: subCategory.id,
                 name: subCategory.name,

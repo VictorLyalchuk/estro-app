@@ -60,6 +60,7 @@ function App() {
         <Route path="/:email/:token" element={<HomeStore />}></Route>
         <Route path="catalog/:subName/:urlName" element={<CatalogNavigation />} />
         <Route path="catalog-home" element={<CatalogHome />} />
+        <Route path="catalog-home/:main" element={<CatalogHome />} />
         <Route path="product/:Id" element={<Product />} />
         <Route path='/bag' element={<Bag />} />
 

@@ -4,6 +4,7 @@ export interface IMainCategory {
     description: string | null; 
     imagePath: string | null;   
     subCategories: ISubCategory[];
+    urlName: string;
 }
   
 export interface ISubCategory {

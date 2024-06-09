@@ -14,6 +14,11 @@ const DropdownUser = () => {
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
 
+  const handleDropdownClick = (event: { preventDefault: () => void; }) => {
+    event.preventDefault(); 
+    setDropdownOpen(!dropdownOpen);
+  };
+  
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch({
@@ -54,7 +59,8 @@ const DropdownUser = () => {
     <div className="relative">
       <Link
         ref={trigger}
-        onClick={() => setDropdownOpen(!dropdownOpen)}
+        // onClick={() => setDropdownOpen(!dropdownOpen)}
+        onClick={handleDropdownClick}
 
         className="flex items-center gap-4"
         to="#"

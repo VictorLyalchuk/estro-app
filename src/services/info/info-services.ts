@@ -12,9 +12,9 @@ const instance = axios.create({
     }
 });
 
-export async function getInfoList(subName: string) {
+export async function getInfoList() {
     try {
-        const resp = await instance.get<IInfo[]>(`GetInfo/${subName}`,);
+        const resp = await instance.get<IInfo[]>(`GetInfo`,);
         return resp.data;
     } catch (error) {
         console.error('Failed to fetch product data:', error);

@@ -6,6 +6,7 @@ interface IFilterDTO {
     Page?: number | string[];
     ItemsPerPage?: number | string[];
     Sort?: string | string[];
+    MainCategory?: string | string[];    
     SubName?: string | string[];    
     UrlName?: string | string[];
 }

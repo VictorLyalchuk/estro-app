@@ -14,14 +14,7 @@ import ProductQuickview from './ProductQuickview.tsx';
 import { ISortOptions } from '../../../interfaces/Catalog/ISortOptions.ts';
 import { getCategoryList } from '../../../services/category/category-services.ts';
 import { getInfoList } from '../../../services/info/info-services.ts';
-
-let sortOptions: ISortOptions[] = [
-  { name: 'Newest', url: 'newest', current: false },
-  { name: 'Most Popular', url: 'most_popular', current: false },
-  { name: 'Best Rating', url: 'best_rating', current: false },
-  { name: 'Price: Low to High', url: 'price_low_to_high', current: false },
-  { name: 'Price: High to Low', url: 'price_high_to_low', current: false },
-]
+import { initialSortOptions } from '../../../data/initialSortOptions'
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -50,6 +43,7 @@ export default function CatalogNavigation() {
   const [isQuickviewOpen, setQuickviewOpen] = useState(false);
   const [selectedSize, setSelectedSize] = useState<IStorages | null>(null);
   const [activeSortOption, setActiveSortOption] = useState<ISortOptions | null>(null);
+  const [sortOptions, setSortOptions] = useState<ISortOptions[]>(initialSortOptions);
 
   if (endPage - startPage + 1 < visiblePages) {
     startPage = Math.max(1, endPage - visiblePages + 1);
@@ -70,7 +64,7 @@ export default function CatalogNavigation() {
         ? { ...option, current: true }
         : { ...option, current: false }
     );
-    sortOptions = updatedSortOptions;
+    setSortOptions(updatedSortOptions);
 
     const queryParams = onSortChangeQueryParams(selectedOption.url, filters);
     const newQueryString = qs.stringify(queryParams, { encodeValuesOnly: true, delimiter: ';' });
@@ -83,7 +77,7 @@ export default function CatalogNavigation() {
         ? { ...option, current: true }
         : { ...option, current: false }
     );
-    sortOptions = updatedSortOptions;
+    setSortOptions(updatedSortOptions);
     setActiveSortOption(updatedSortOptions.find(option => option.current) || null);
   };
 
@@ -149,20 +143,18 @@ export default function CatalogNavigation() {
         Page: newFilters.find(f => f.name === 'Page')?.values || page,
         ItemsPerPage: newFilters.find(f => f.name === 'ItemsPerPage')?.values || itemsPerPage,
         Sort: newFilters.find(f => f.name === 'Sort')?.values?.join('_') || undefined,
-        SubName :subName,
+        SubName: subName,
         UrlName: urlName,
       };
 
       onSortModeLoad(newFilters.find(f => f.name === 'Sort')?.values?.join('_') || null);
 
-      if (subName && urlName) {
-        const responseQuantity = await getQuantityProducts(filterDTO);
-        const quantity = responseQuantity;
-        setCountPage(quantity);
+      const responseQuantity = await getQuantityProducts(filterDTO);
+      const quantity = responseQuantity;
+      setCountPage(quantity);
 
-        const responseProduct = await getProductsist(filterDTO);
-        setProduct(responseProduct);
-      }
+      const responseProduct = await getProductsist(filterDTO);
+      setProduct(responseProduct);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -181,7 +173,7 @@ export default function CatalogNavigation() {
       getCategoryList(subName)
         .then(data => setCategoryList(data))
         .catch(error => console.error('Error fetching categories data:', error));
-      getInfoList(subName)
+      getInfoList()
         .then(data => setFilterOptionsList(data))
         .catch(error => console.error('Error fetching infos data:', error));
     }
@@ -503,7 +495,7 @@ export default function CatalogNavigation() {
                       </div>
                     ))}
                   </div>
-                    {/* Pagination */}
+                  {/* Pagination */}
                   <div className="container mx-auto p-4 flex relative max-w-7xl lg:flex-row justify-between">
                     <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between ">
                       <div>
