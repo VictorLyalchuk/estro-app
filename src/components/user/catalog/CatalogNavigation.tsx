@@ -5,14 +5,14 @@ import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from
 import { IProduct, IStorages } from '../../../interfaces/Catalog/IProduct.ts';
 import { Link, useParams, useNavigate } from "react-router-dom";
 import qs, { ParsedQs } from 'qs';
-import { ICategory } from '../../../interfaces/Catalog/IMainCategory.ts';
+import { IMainCategory } from '../../../interfaces/Catalog/IMainCategory.ts';
 import { IInfo } from '../../../interfaces/Info/IInfo.ts';
 import { APP_ENV } from "../../../env/config.ts";
 import { getProductsist, getQuantityProducts } from '../../../services/product/product-services.ts';
 import { updateFilters, createQueryParams, onPageChangeQueryParams, onSortChangeQueryParams } from '../../../utils/catalog/filterUtils.ts';
 import ProductQuickview from './ProductQuickview.tsx';
 import { ISortOptions } from '../../../interfaces/Catalog/ISortOptions.ts';
-import { getCategoryList } from '../../../services/category/category-services.ts';
+import { getMainCategories } from '../../../services/category/category-services.ts';
 import { getInfoList } from '../../../services/info/info-services.ts';
 import { initialSortOptions } from '../../../data/initialSortOptions'
 
@@ -26,7 +26,7 @@ export default function CatalogNavigation() {
   const { subName, urlName } = useParams();
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [productList, setProduct] = useState<IProduct[]>([]);
-  const [categoryList, setCategoryList] = useState<ICategory[]>([]);
+  const [mainCategoryList, setMainCategoryList] = useState<IMainCategory[]>([]);
   const [filterOptionsList, setFilterOptionsList] = useState<IInfo[]>([]);
   const [filters, setFilters] = useState<{ name: string; values: string[] }[]>([]);
   const [gridView, setGridView] = useState<string>("3");
@@ -166,18 +166,23 @@ export default function CatalogNavigation() {
     setSelectedSize(size);
   };
 
+  const getMainCategory = async () => {
+    try {
+      const mainCategories = await getMainCategories();
+      setMainCategoryList(mainCategories);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
   useEffect(() => {
     setPage(1);
+    getMainCategory();
     // Витягування категорій і фільтрів з бази даних
-    if (subName) {
-      getCategoryList(subName)
-        .then(data => setCategoryList(data))
-        .catch(error => console.error('Error fetching categories data:', error));
-      getInfoList()
-        .then(data => setFilterOptionsList(data))
-        .catch(error => console.error('Error fetching infos data:', error));
-    }
-  }, [subName, urlName]);
+    getInfoList()
+      .then(data => setFilterOptionsList(data))
+      .catch(error => console.error('Error fetching infos data:', error));
+  }, []);
 
   useEffect(() => {
     loadFromURL();
@@ -227,20 +232,45 @@ export default function CatalogNavigation() {
                   {/* Filters */}
                   <form className="mt-4 border-t border-gray-200">
                     <h3 className="sr-only">Categories</h3>
-                    <ul role="list" className="px-2 py-3 font-medium text-gray-900">
-                      {categoryList.map((category) => (
-                        <li key={category.name}>
-
-                          <Link
-                            to={category.urlName === urlName ? "#" : `/catalog/${subName}/${category.urlName}`}
-                            className={`block px-2 py-3 ${category.urlName === urlName ? "font-bold text-gray-700 " : "text-gray-400 hover:text-indigo-500"}`}
-                          >
-                            {category.name}
-                          </Link>
-                        </li>
-                      ))}
+                    {/* <ul role="list" className="px-2 py-3 font-medium text-gray-900"> */}
+                    <ul role="list" className="space-y-4 px-3 py-4 pb-6 text-sm font-medium text-gray-500">
+                      {mainCategoryList.map((mainCategory) =>
+                        mainCategory.subCategories.map((subCategory) => (
+                          <div key={subCategory.id}>
+                            <div className={`block text-xl ${subCategory.urlName === subName ? "font-bold py-3 text-gray-700" : "text-gray-400 hover:text-indigo-500"}`}>
+                              <Link
+                                to={`/catalog/${subCategory.urlName}`}
+                                className={`block ${subCategory.urlName === subName ? "font-bold text-gray-700 " : "text-gray-500 hover:text-indigo-500"}`}
+                              >
+                                {subCategory.name}
+                              </Link>
+                            </div>
+                            <div className="space-y-4 mb-5 border-b border-gray-200 pb-6 text-sm font-medium text-gray-500">
+                              {subCategory.urlName === subName && (
+                                <ul role="list" className="space-y-4 pb-6 text-sm font-medium text-gray-500">
+                                  {subCategory.categories.map((category) => (
+                                    <li key={category.id}>
+                                      <Link
+                                        to={`/catalog/${subCategory.urlName}/${category.urlName}`}
+                                        className={`block ${category.urlName === urlName ? "font-bold text-gray-700" : "text-gray-400 hover:text-indigo-500"}`}
+                                      >
+                                        {category.name}
+                                      </Link>
+                                    </li>
+                                  ))}
+                                </ul>
+                              )}
+                            </div>
+                          </div>
+                        ))
+                      )}
                     </ul>
-
+                    <div className="space-y-6 px-3 py-4 pt-6 space-y-4 border-b border-gray-200 pb-6 text-lg font-medium">
+                      <button type="button" className='rounded border-gray-300 hover:text-indigo-500 focus:ring-indigo-500'
+                        onClick={resetFilters}>
+                        Reset filters
+                      </button>
+                    </div>
                     {filterOptionsList.map((section) => (
                       <Disclosure as="div" key={section.id} className="border-t border-gray-200 px-4 py-6">
                         {({ open }) => (
@@ -366,19 +396,38 @@ export default function CatalogNavigation() {
             <form className="hidden lg:block">
               <div className=' px-2 py-8 ' style={{ minWidth: '280px' }}>
                 <h3 className="sr-only">Categories</h3>
-                <ul role="list" className="space-y-4 border-b border-gray-200 pb-6 text-sm font-medium text-gray-500">
-                  {categoryList.map((category) => (
-                    <li key={category.name}>
-                      <Link
-                        to={category.urlName === urlName ? "#" : `/catalog/${subName}/${category.urlName}`}
-                        className={`block ${category.urlName === urlName ? "font-bold text-gray-700 " : "text-gray-400 hover:text-indigo-500"}`}
-                      >
-                        {category.name}
-                      </Link>
-                    </li>
-                  ))}
+                <ul role="list" className="space-y-4 pb-6 text-sm font-medium text-gray-500">
+                  {mainCategoryList.map((mainCategory) =>
+                    mainCategory.subCategories.map((subCategory) => (
+                      <div key={subCategory.id}>
+                        <div className={`block text-xl ${subCategory.urlName === subName ? "font-bold py-3 text-gray-700 " : "text-gray-400 hover:text-indigo-500"}`}>
+                          <Link
+                            to={`/catalog/${subCategory.urlName}`}
+                            className={`block ${subCategory.urlName === subName ? "font-bold text-gray-700" : "text-gray-500 hover:text-indigo-500"}`}
+                          >
+                            {subCategory.name}
+                          </Link>
+                        </div>
+                        <div className="space-y-4 mb-5 border-b border-gray-200 pb-6 text-sm font-medium text-gray-500">
+                          {subCategory.urlName === subName && (
+                            <ul role="list" className="space-y-4 pb-6 text-sm font-medium text-gray-500">
+                              {subCategory.categories.map((category) => (
+                                <li key={category.id}>
+                                  <Link
+                                    to={`/catalog/${subCategory.urlName}/${category.urlName}`}
+                                    className={`block ${category.urlName === urlName ? "font-bold text-gray-700" : "text-gray-400 hover:text-indigo-500"}`}
+                                  >
+                                    {category.name}
+                                  </Link>
+                                </li>
+                              ))}
+                            </ul>
+                          )}
+                        </div>
+                      </div>
+                    ))
+                  )}
                 </ul>
-
                 <div className="pt-6 space-y-4 border-b border-gray-200 pb-6">
                   <button type="button" className='rounded border-gray-300 hover:text-indigo-500 focus:ring-indigo-500'
                     onClick={resetFilters}>

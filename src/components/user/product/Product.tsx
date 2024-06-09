@@ -93,11 +93,9 @@ export default function Product() {
           <ol role="list" className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
             <li key={`${product.id}-mainCategory`}>
               <div className="flex items-center">
-                <a
-                  // href={`/catalog/${product.urlMainCategoryName}`} 
-                  className="mr-2 text-sm font-medium text-gray-900">
+                <Link to={`/catalog-home/${product.urlMainCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
                   {product.mainCategoryName}
-                </a>
+                </Link>
                 <svg
                   width={16}
                   height={20}
@@ -114,11 +112,9 @@ export default function Product() {
             <li key={`${product.id}-subCategory`}>
 
               <div className="flex items-center">
-                <a
-                  // href={`/catalog/${product.urlSubCategoryName}`} 
-                  className="mr-2 text-sm font-medium text-gray-900">
+                <Link to={`/catalog/${product.urlSubCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
                   {product.subCategoryName}
-                </a>
+                </Link>
                 <svg
                   width={16}
                   height={20}
