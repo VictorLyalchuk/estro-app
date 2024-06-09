@@ -22,7 +22,6 @@ let sortOptions = [
     { name: 'Price: Low to High', url: 'price_low_to_high', current: false },
     { name: 'Price: High to Low', url: 'price_high_to_low', current: false },
 ]
-const activeFilters = [{ value: 'objects', label: 'Objects' }]
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -52,6 +51,15 @@ export default function CatalogHome() {
     const [activeSortOption, setActiveSortOption] = useState<ISortOptions | null>(null);
     let subName = "woman_shoes";
     // let urlName = "boots_and_high_boots";
+
+    const filterValueCounts = filterOptionsList.map((section) =>
+        filters.reduce((count, filter) => {
+            if (filter.name === section.name) {
+                count += filter.values.length;
+            }
+            return count;
+        }, 0)
+    );
 
     if (endPage - startPage + 1 < visiblePages) {
         startPage = Math.max(1, endPage - visiblePages + 1);
@@ -343,19 +351,22 @@ export default function CatalogHome() {
                                 <div className="hidden sm:block">
                                     <div className="flow-root">
                                         <Popover.Group className="-mx-4 flex items-center divide-x divide-gray-200">
-                                            {filterOptionsList.map((section, sectionIdx) => (
+                                            {filterOptionsList.map((section, index) => (
+
                                                 <Popover key={section.name} className="relative inline-block px-4 text-left">
                                                     <Popover.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
                                                         <span>{section.name}</span>
-                                                        {sectionIdx === 0 ? (
+                                                        {filterValueCounts[index] > 0 && (
                                                             <span className="ml-1.5 rounded bg-gray-200 px-1.5 py-0.5 text-xs font-semibold tabular-nums text-gray-700">
-                                                                5
+                                                                {filterValueCounts[index]}
                                                             </span>
-                                                        ) : null}
+                                                        )}
+
                                                         <ChevronDownIcon
                                                             className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                                                             aria-hidden="true"
                                                         />
+                                                        {/* </span> */}
                                                     </Popover.Button>
 
                                                     <Transition
@@ -380,7 +391,7 @@ export default function CatalogHome() {
                                                                             onChange={() => {
                                                                                 createFilters(section.name, option.value);
                                                                             }}
-                                                                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 "
+                                                                            className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                                                         />
                                                                         <label
                                                                             htmlFor={`filter-${section.id}-${optionIdx}`}
@@ -394,7 +405,9 @@ export default function CatalogHome() {
                                                         </Popover.Panel>
                                                     </Transition>
                                                 </Popover>
+
                                             ))}
+
                                         </Popover.Group>
                                     </div>
                                 </div>
@@ -418,15 +431,13 @@ export default function CatalogHome() {
                                                     return (
                                                         <span
                                                             key={optionIdx}
-                                                            className="m-1 inline-flex items-center rounded-full border border-gray-200 bg-gray-100 py-1.5 pl-3 pr-2 text-sm font-medium text-gray-900"
-                                                        >
+                                                            className="m-1 inline-flex items-center rounded-full border border-gray-200 bg-gray-100 py-1.5 pl-3 pr-2 text-sm font-medium text-gray-900">
                                                             <span>{option.label}</span>
                                                             <button
                                                                 type="button"
-                                                                className="ml-1 inline-flex h-4 w-4 flex-shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-500"
-                                                            >
+                                                                className="ml-1 inline-flex h-4 w-4 flex-shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-500">
                                                                 <span className="sr-only">Remove filter for {option.label}</span>
-                                                                <button onClick={() => {createFilters(section.name, option.value);}}>
+                                                                <button onClick={() => { createFilters(section.name, option.value); }}>
                                                                     <svg className="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
                                                                         <path strokeLinecap="round" strokeWidth="1.5" d="M1 1l6 6m0-6L1 7" />
                                                                     </svg>
