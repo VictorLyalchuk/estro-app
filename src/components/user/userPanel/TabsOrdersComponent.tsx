@@ -17,7 +17,7 @@ const TabsOrdersComponent: React.FC<TabsComponentProps> = ({ tabs, onTabChange }
   const currentTab = tabs.find((tab) => tab.current);
 
   return (
-      <div className="bg-white rounded-md shadow-md mb-8">
+    <div className="bg-white rounded-md shadow-md mb-8">
       <div className="sm:hidden p-8 pt-0">
         <label htmlFor="tabs" className="sr-only">
           Select a tab

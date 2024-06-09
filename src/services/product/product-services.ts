@@ -13,9 +13,9 @@ const instance = axios.create({
     }
 });
 
-export async function getQuantityProducts(subName: string, urlName: string, filterDTO: IFilterDTO) {
+export async function getQuantityProducts(filterDTO: IFilterDTO) {
     try {
-        const resp = await instance.get<number>(`ProductQuantityByFilters/${subName}/${urlName}`, {
+        const resp = await instance.get<number>(`ProductQuantityByFilters`, {
             params: filterDTO,
             paramsSerializer: (params) => {
               return qs.stringify(params, { arrayFormat: 'repeat' });
@@ -28,9 +28,9 @@ export async function getQuantityProducts(subName: string, urlName: string, filt
     }
 }
 
-export async function getProductsist(subName: string, urlName: string, filterDTO: IFilterDTO) {
+export async function getProductsist(filterDTO: IFilterDTO) {
     try {
-        const resp = await instance.get<IProduct[]>(`/FilterProducts/${subName}/${urlName}`, {
+        const resp = await instance.get<IProduct[]>(`/FilterProducts`, {
             params: filterDTO, paramsSerializer: (params) => {
               return qs.stringify(params, { arrayFormat: 'repeat' });
             }

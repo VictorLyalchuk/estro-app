@@ -148,17 +148,19 @@ export default function CatalogNavigation() {
         Purpose: newFilters.find(f => f.name === 'Purpose')?.values || undefined,
         Page: newFilters.find(f => f.name === 'Page')?.values || page,
         ItemsPerPage: newFilters.find(f => f.name === 'ItemsPerPage')?.values || itemsPerPage,
-        Sort: newFilters.find(f => f.name === 'Sort')?.values?.join('_') || undefined
+        Sort: newFilters.find(f => f.name === 'Sort')?.values?.join('_') || undefined,
+        SubName :subName,
+        UrlName: urlName,
       };
 
       onSortModeLoad(newFilters.find(f => f.name === 'Sort')?.values?.join('_') || null);
 
       if (subName && urlName) {
-        const responseQuantity = await getQuantityProducts(subName, urlName, filterDTO);
+        const responseQuantity = await getQuantityProducts(filterDTO);
         const quantity = responseQuantity;
         setCountPage(quantity);
 
-        const responseProduct = await getProductsist(subName, urlName, filterDTO);
+        const responseProduct = await getProductsist(filterDTO);
         setProduct(responseProduct);
       }
     } catch (error) {
@@ -330,9 +332,7 @@ export default function CatalogNavigation() {
                         <Menu.Item key={option.name}>
                           {({ active }) => (
                             <a
-                              // href={option.href}
                               onClick={() => onSortModeChange(option)}
-
                               className={classNames(
                                 option.current || (active && activeSortOption && activeSortOption.name === option.name)
                                   ? 'font-medium text-gray-900' : 'text-gray-500 hover:text-indigo-500',
@@ -388,10 +388,10 @@ export default function CatalogNavigation() {
                 </ul>
 
                 <div className="pt-6 space-y-4 border-b border-gray-200 pb-6">
-                  <Link to={{}} className='rounded border-gray-300 hover:text-indigo-500 focus:ring-indigo-500'
+                  <button type="button" className='rounded border-gray-300 hover:text-indigo-500 focus:ring-indigo-500'
                     onClick={resetFilters}>
                     Reset filters
-                  </Link>
+                  </button>
                 </div>
                 {filterOptionsList.map((section) => (
                   <Disclosure as="div" key={section.id} className="border-b border-gray-200 py-6"
@@ -503,6 +503,7 @@ export default function CatalogNavigation() {
                       </div>
                     ))}
                   </div>
+                    {/* Pagination */}
                   <div className="container mx-auto p-4 flex relative max-w-7xl lg:flex-row justify-between">
                     <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between ">
                       <div>
@@ -513,6 +514,7 @@ export default function CatalogNavigation() {
                         </p>
                       </div>
                     </div>
+
                     <div>
                       <nav className="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0">
                         <div className="flex flex-1 justify-between sm:justify-end">

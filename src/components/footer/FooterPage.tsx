@@ -16,6 +16,9 @@ const FooterPage = () => {
                                 <Link to="/about">About</Link>
                             </li>
                             <li className="mb-1 hover:text-indigo-500 text-center">
+                                <Link to="/our-brand">Our Brand</Link>
+                            </li>
+                            <li className="mb-1 hover:text-indigo-500 text-center">
                                 <Link to="/privacy-policy">Privacy Policy</Link>
                             </li>
                             <li className="mb-1 hover:text-indigo-500 text-center">

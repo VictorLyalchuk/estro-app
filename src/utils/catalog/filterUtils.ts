@@ -16,6 +16,7 @@ export const updateFilters = (filters: any[], name: string, value: string): any[
             newFilters.splice(index, 1);
         }
     }
+    
     return newFilters;
 };
 
@@ -27,6 +28,7 @@ export const createQueryParams = (filters: any[]): { [key: string]: string | str
         }
     });
     queryParams['Page'] = '1';
+
     return queryParams;
 };
 

@@ -1,7 +1,7 @@
 const DeliveryAndPayment = () => {
     return (
         <div className="bg-gray-100 min-h-[900px]">
-            <div className="text-gray-700 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+            <div className="max-w-2xl px-2 py-8 text-gray-700 mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
                 <h2 className="text-4xl font-bold mb-4  text-center">Delivery and Payment</h2>
                 <p className="text-lg mb-6">Thank you for choosing Estro.</p>
 

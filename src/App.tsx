@@ -11,7 +11,7 @@ import { Toaster } from 'react-hot-toast';
 import AddProduct from "./components/admin/product/AddProduct";
 import EditProduct from "./components/admin/product/EditProduct";
 import AddStorage from "./components/admin/product/AddStorage";
-import HomePage from "./components/homePage/HomePage";
+import OurBrand from "./components/footer/footerPages/OurBrand";
 import Footer from "./components/footer/FooterPage";
 import DeliveryandPayment from "./components/footer/footerPages/DeliveryAndPayment";
 import ReturnExchange from "./components/footer/footerPages/ReturnExchange";
@@ -25,6 +25,8 @@ import UserPanelPage from "./components/user/userPanel/UserPanelPage";
 import UserLayout from "./components/layout/UserLayout";
 import useAuthTokenEffect from "./useAuthTokenEffect";
 import GuestLayout from "./components/layout/GuestLayout";
+import HomeStore from "./components/homePage/HomeStore";
+import CatalogHome from "./components/user/catalog/CatalogHome";
 // import HomePageReserve from "./components/homePage/HomePageReserve";
 
 function App() {
@@ -54,10 +56,10 @@ function App() {
         </Route>
         <Route path="/auth/:email/:token" element={<AuthPage />} />
 
-        {/* <Route path="/" element={<HomePageReserve />}></Route> */}
-        <Route path="/" element={<HomePage />}></Route>
-        <Route path="/:email/:token" element={<HomePage />}></Route>
+        <Route path="/" element={<HomeStore />}></Route>
+        <Route path="/:email/:token" element={<HomeStore />}></Route>
         <Route path="catalog/:subName/:urlName" element={<CatalogNavigation />} />
+        <Route path="catalog-home" element={<CatalogHome />} />
         <Route path="product/:Id" element={<Product />} />
         <Route path='/bag' element={<Bag />} />
 
@@ -79,6 +81,7 @@ function App() {
         <Route path="/return-exchange" element={<ReturnExchange />} />
         <Route path="/warranty-product-care" element={<WarrantyProductCare />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/our-brand" element={<OurBrand />}></Route>
         <Route path="/about" element={<About />} />
         <Route path="/store-locations" element={<StoreLocations />} />
 
