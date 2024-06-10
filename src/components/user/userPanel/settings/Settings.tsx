@@ -172,6 +172,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
       await refreshToken();
       await refreshRedux(dispatch);
       setProfileUpdated(true);
+      setOpen(true);
     }
   };
 

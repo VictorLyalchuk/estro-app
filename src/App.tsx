@@ -27,7 +27,6 @@ import useAuthTokenEffect from "./useAuthTokenEffect";
 import GuestLayout from "./components/layout/GuestLayout";
 import HomeStore from "./components/homePage/HomeStore";
 import CatalogHome from "./components/user/catalog/CatalogHome";
-// import HomePageReserve from "./components/homePage/HomePageReserve";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);

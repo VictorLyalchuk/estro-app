@@ -1,6 +1,6 @@
-import { ISortOption } from "../interfaces/Info/ISortOption";
+import { ISortOptions } from "../interfaces/Catalog/ISortOptions";
 
-export const initialSortOptions: ISortOption[] = [
+export const initialSortOptions: ISortOptions[] = [
     { name: 'Newest', url: 'newest', current: false },
     { name: 'Most Popular', url: 'most_popular', current: false },
     { name: 'Best Rating', url: 'best_rating', current: false },

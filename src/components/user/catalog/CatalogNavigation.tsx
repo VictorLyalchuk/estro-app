@@ -232,8 +232,7 @@ export default function CatalogNavigation() {
                   {/* Filters */}
                   <form className="mt-4 border-t border-gray-200">
                     <h3 className="sr-only">Categories</h3>
-                    {/* <ul role="list" className="px-2 py-3 font-medium text-gray-900"> */}
-                    <ul role="list" className="space-y-4 px-3 py-4 pb-6 text-sm font-medium text-gray-500">
+                    <ul role="list" className="space-y-4 px-3 py-4 text-sm font-medium text-gray-500">
                       {mainCategoryList.map((mainCategory) =>
                         mainCategory.subCategories.map((subCategory) => (
                           <div key={subCategory.id}>
@@ -396,7 +395,7 @@ export default function CatalogNavigation() {
             <form className="hidden lg:block">
               <div className=' px-2 py-8 ' style={{ minWidth: '280px' }}>
                 <h3 className="sr-only">Categories</h3>
-                <ul role="list" className="space-y-4 pb-6 text-sm font-medium text-gray-500">
+                <ul role="list" className="space-y-4  text-sm font-medium text-gray-500">
                   {mainCategoryList.map((mainCategory) =>
                     mainCategory.subCategories.map((subCategory) => (
                       <div key={subCategory.id}>
