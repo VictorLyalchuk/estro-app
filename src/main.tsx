@@ -29,7 +29,6 @@ if (localStorage.token) {
 
 import { ThemeProvider } from '@material-ui/core/styles';
 import theme from './theme';
-import { GoogleOAuthProvider } from '@react-oauth/google';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <GoogleOAuthProvider clientId="840790221401-5im429egocjlphps0jaonapq1j7jo1j8.apps.googleusercontent.com">
