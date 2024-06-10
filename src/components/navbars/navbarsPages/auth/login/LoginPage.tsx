@@ -1,12 +1,11 @@
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import {useEffect, useState} from 'react';
+import { SetStateAction, useEffect, useState } from 'react';
 import 'tailwindcss/tailwind.css';
 import '../../../../../index.css';
 import { APP_ENV } from "../../../../../env/config";
-import {Button, FormControl, IconButton, Input, InputAdornment, InputLabel, TextField} from '@material-ui/core';
+import { Button, FormControl, IconButton, Input, InputAdornment, InputLabel, TextField } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { makeStyles } from '@material-ui/core/styles';
 import { GiftIcon } from '@heroicons/react/24/outline';
 import { ILogin } from '../../../../../interfaces/Auth/ILogin';
@@ -16,8 +15,8 @@ import { useDispatch } from 'react-redux';
 import { AuthReducerActionType } from '../../../../../store/accounts/AuthReducer';
 import { BanknotesIcon } from '@heroicons/react/24/outline';
 import { TrophyIcon } from '@heroicons/react/24/outline';
-import {Divider} from "antd";
-import {useGoogleLogin} from '@react-oauth/google';
+import { Divider } from "antd";
+import { useGoogleLogin } from '@react-oauth/google';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import '../../../../../satoshi.css';
 import MaskedInput from "react-text-mask";
@@ -26,7 +25,10 @@ import ReactCodeInput from "react-code-input";
 interface TextMaskCustomProps {
     inputRef: (ref: HTMLInputElement | null) => void;
 }
+interface GoogleOAuthResponse {
+    access_token: string;
 
+}
 function TextMaskCustom(props: TextMaskCustomProps) {
     const { inputRef, ...other } = props;
 
@@ -101,7 +103,7 @@ const LoginPage = () => {
     const [countdown, setCountdown] = useState(30);
 
     useEffect(() => {
-        let timer;
+        let timer: string | number | NodeJS.Timeout | undefined;
         if (isDisabled && countdown > 0) {
             timer = setInterval(() => {
                 setCountdown((prevCountdown) => prevCountdown - 1);
@@ -111,10 +113,6 @@ const LoginPage = () => {
         }
         return () => clearInterval(timer);
     }, [isDisabled, countdown]);
-
-
-
-
 
 
     const [values, setValues] = useState<State>({
@@ -147,8 +145,6 @@ const LoginPage = () => {
     const handleSubmitEmail = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (validateForm()) {
-        console.log(formData);
-
             try {
                 const response = await axios.post(`${baseUrl}/api/AccountControllers/Login`, formData);
                 const { token } = response.data;
@@ -165,7 +161,7 @@ const LoginPage = () => {
                         AuthType: user.AuthType
                     } as IUser,
                 });
-                
+
                 localStorage.setItem("token", token);
                 navigate("/");
             } catch (error) {
@@ -176,26 +172,27 @@ const LoginPage = () => {
                 }, 1000);
             }
 
-    };
+        };
+    }
     const handleSubmitPhone = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-            try {
-                const response = await axios.post(`${baseUrl}/api/AccountControllers/LoginByPhone?phone=${formData.phoneNumber}`, {});
+        try {
+            const response = await axios.post(`${baseUrl}/api/AccountControllers/LoginByPhone?phone=${formData.phoneNumber}`, {});
 
-                if (response.status === 200) {
-                    setIsPhoneExists(true);
-                    console.log(response.data);
-                    setVerifySid(response.data.token.sid);
-                    setMyToken(response.data.token.token);
-                }
-
-            } catch (error) {
-                console.error("Login error:", error);
-                setErrorMessage("Invalid email or password");
-                setTimeout(() => {
-                    setErrorMessage("");
-                }, 1000);
+            if (response.status === 200) {
+                setIsPhoneExists(true);
+                console.log(response.data);
+                setVerifySid(response.data.token.sid);
+                setMyToken(response.data.token.token);
             }
+
+        } catch (error) {
+            console.error("Login error:", error);
+            setErrorMessage("Invalid email or password");
+            setTimeout(() => {
+                setErrorMessage("");
+            }, 1000);
+        }
     }
 
     const handleCodeConfirm = async () => {
@@ -269,7 +266,7 @@ const LoginPage = () => {
 
     };
 
-    const googleSuccess = async (response) => {
+    const googleSuccess = async (response: GoogleOAuthResponse) => {
         console.log(response);
 
         if (response) {
@@ -324,7 +321,7 @@ const LoginPage = () => {
 
 
 
-    const googleErrorMessage = (error) => {
+    const googleErrorMessage = (error: any) => {
         console.log(error);
     };
 
@@ -334,24 +331,30 @@ const LoginPage = () => {
             email: string;
             password: string;
             phoneNumber: string;
+            authType: string;
         } = {
             email: "",
             password: "",
             phoneNumber: "",
+            authType: "",
         };
 
         if (formData.email.trim() === '' || !/\S+@\S+\.\S+/.test(formData.email)) {
             newErrors.email = 'Invalid email address';
             isValid = false;
         }
-        const cleanedPhoneNumber = values.textmask.replace(/\D/g, '');
-        if (cleanedPhoneNumber.trim() === '') {
-            newErrors.phoneNumber = 'Phone Number is required';
-            isValid = false;
-        }
-        else if (!/^(067|095|099|066|063|098|097|096|093)\d{7}$/.test(cleanedPhoneNumber)) {
-            newErrors.phoneNumber = 'Invalid phone number format';
-            isValid = false;
+
+        if (formData.authType === "phone") {
+
+            const cleanedPhoneNumber = values.textmask.replace(/\D/g, '');
+            if (cleanedPhoneNumber.trim() === '') {
+                newErrors.phoneNumber = 'Phone Number is required';
+                isValid = false;
+            }
+            else if (!/^(067|095|099|066|063|098|097|096|093)\d{7}$/.test(cleanedPhoneNumber)) {
+                newErrors.phoneNumber = 'Invalid phone number format';
+                isValid = false;
+            }
         }
         if (formData.password.trim() === '') {
             newErrors.password = 'Password is required';
@@ -407,11 +410,11 @@ const LoginPage = () => {
         validatePhoneNumber(cleanedValue);
     };
     const [pinCode, setPinCode] = useState("");
-    const [btnIsPressed, setBtnIsPressed] = useState(false);
+    // const [btnIsPressed, setBtnIsPressed] = useState(false);
 
-    const handlePinChange = pinCode => {
+    const handlePinChange = (pinCode: SetStateAction<string>) => {
         setPinCode(pinCode);
-        setBtnIsPressed(false);
+        // setBtnIsPressed(false);
     };
 
 
@@ -505,27 +508,23 @@ const LoginPage = () => {
                                         </ThemeProvider>
                                         <FormControl fullWidth className={classes.margin} variant="outlined">
 
-                                        {isPhoneExists ? (
+                                            {isPhoneExists ? (
                                                 <div className={"justify-center text-center flex-col"}>
                                                     <div className={"mb-3"}>
                                                         <ReactCodeInput
                                                             inputMode={"numeric"}
-                                                            id="pinCode"
+                                                            name="pinCode"
                                                             fields={6}
                                                             onChange={handlePinChange}
                                                             value={pinCode}
                                                         />
 
                                                     </div>
-
                                                 </div>
-
-
-
-                                        ) : null}
+                                            ) : null}
 
                                             {!isPhoneExists ? (
-                                                <Button className={classes.button}  disabled={isDisabled} type="submit" variant="contained" size="large" color="primary" disableElevation>
+                                                <Button className={classes.button} disabled={isDisabled} type="submit" variant="contained" size="large" color="primary" disableElevation>
                                                     {isDisabled ? `Send code (${countdown}s)` : 'Send code'}
                                                 </Button>
                                             ) : (
@@ -544,7 +543,7 @@ const LoginPage = () => {
 
                                     <Button className={"bg-gray-400"} onClick={() => loginGoogle()}>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
-                                            <path fill="currentColor" d="M881 442.4H519.7v148.5h206.4c-8.9 48-35.9 88.6-76.6 115.8c-34.4 23-78.3 36.6-129.9 36.6c-99.9 0-184.4-67.5-214.6-158.2c-7.6-23-12-47.6-12-72.9s4.4-49.9 12-72.9c30.3-90.6 114.8-158.1 214.7-158.1c56.3 0 106.8 19.4 146.6 57.4l110-110.1c-66.5-62-153.2-100-256.6-100c-149.9 0-279.6 86-342.7 211.4c-26 51.8-40.8 110.4-40.8 172.4S151 632.8 177 684.6C240.1 810 369.8 896 519.7 896c103.6 0 190.4-34.4 253.8-93c72.5-66.8 114.4-165.2 114.4-282.1c0-27.2-2.4-53.3-6.9-78.5"/>
+                                            <path fill="currentColor" d="M881 442.4H519.7v148.5h206.4c-8.9 48-35.9 88.6-76.6 115.8c-34.4 23-78.3 36.6-129.9 36.6c-99.9 0-184.4-67.5-214.6-158.2c-7.6-23-12-47.6-12-72.9s4.4-49.9 12-72.9c30.3-90.6 114.8-158.1 214.7-158.1c56.3 0 106.8 19.4 146.6 57.4l110-110.1c-66.5-62-153.2-100-256.6-100c-149.9 0-279.6 86-342.7 211.4c-26 51.8-40.8 110.4-40.8 172.4S151 632.8 177 684.6C240.1 810 369.8 896 519.7 896c103.6 0 190.4-34.4 253.8-93c72.5-66.8 114.4-165.2 114.4-282.1c0-27.2-2.4-53.3-6.9-78.5" />
                                         </svg>
                                     </Button>
 
@@ -553,7 +552,7 @@ const LoginPage = () => {
                                     {!isPhoneLogin ?
                                         (
                                             <p onClick={togglePhone} className="cursor-pointer hover:scale-110 transition-transform duration-300">Use phone</p>
-                                    ) :
+                                        ) :
                                         (
                                             <p onClick={toggleEmail} className="cursor-pointer hover:scale-110 transition-transform duration-300">Use email</p>
                                         )}

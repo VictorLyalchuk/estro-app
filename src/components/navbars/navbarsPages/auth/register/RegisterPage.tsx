@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {ChangeEvent, useEffect, useState} from 'react';
+import {ChangeEvent, SetStateAction, useEffect, useState} from 'react';
 import { IRegister } from '../../../../../interfaces/Auth/IRegister';
 import 'tailwindcss/tailwind.css';
 import '../../../../../index.css';
@@ -15,8 +15,6 @@ import { TrophyIcon } from '@heroicons/react/24/outline';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import '../../../../../satoshi.css';
 import { useGoogleLogin} from "@react-oauth/google";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
 import ReactCodeInput from "react-code-input";
 
 const theme = createTheme({
@@ -81,7 +79,7 @@ const RegisterPage = () => {
     const [countdown, setCountdown] = useState(30);
 
     useEffect(() => {
-        let timer;
+        let timer: string | number | NodeJS.Timeout | undefined;
         if (isDisabled && countdown > 0) {
             timer = setInterval(() => {
                 setCountdown((prevCountdown) => prevCountdown - 1);
@@ -117,8 +115,8 @@ const RegisterPage = () => {
     });
     const [pinCode, setPinCode] = useState("");
 
-    const handlePinChange = pinCode => {
-        setPinCode(pinCode);
+    const handlePinChange = (value: SetStateAction<string>) => {
+        setPinCode(value);
     };
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -161,11 +159,12 @@ const RegisterPage = () => {
         event.preventDefault();
 
         try {
-            const response = await axios.post(
+            await axios.post(
                 `https://verify.twilio.com/v2/Services/${twilio_service_sid}/VerificationCheck`,
                 new URLSearchParams({
                     Code: pinCode,
-                    VerificationSid: verifySid.verificationSid
+                    VerificationSid: verifySid
+                    // VerificationSid: verifySid.verificationSid
                 }),
                 {
                     auth: {
@@ -212,7 +211,7 @@ const RegisterPage = () => {
     };
 
 
-    const googleSuccess = async (response) => {
+    const googleSuccess = async (response: { access_token: any; }) => {
         if (response) {
             try {
                 const res = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${response.access_token}`, {
@@ -248,9 +247,9 @@ const RegisterPage = () => {
         }
     };
 
-    // const googleErrorMessage = (error) => {
-    //     console.log(error);
-    // };
+    const googleErrorMessage = (error: any) => {
+        console.log(error);
+    };
 
     const validateForm = () => {
         let isValid = true;
@@ -261,13 +260,15 @@ const RegisterPage = () => {
             phoneNumber: string;
             email: string;
             password: string;
+            authType: string;
         } = {
             firstName: "",
             lastName: "",
             confirmPassword: "",
             phoneNumber: "",
             email: "",
-            password: ""
+            password: "",
+            authType: ""
         };
 
         if (formData.firstName.trim() === '') {
@@ -487,7 +488,7 @@ const RegisterPage = () => {
 
                                             <form onSubmit={handleSubmit}>
                                                 <ThemeProvider theme={theme}>
-                                                    <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                    <FormControl fullWidth variant="outlined">
                                                         <TextField
                                                             label="First Name"
                                                             name="firstName"
@@ -502,7 +503,7 @@ const RegisterPage = () => {
                                                         )}
                                                     </FormControl>
 
-                                                    <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                    <FormControl fullWidth variant="outlined">
                                                         <TextField
                                                             label="Last Name"
                                                             name="lastName"
@@ -517,7 +518,7 @@ const RegisterPage = () => {
                                                         )}
                                                     </FormControl>
 
-                                                    <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                    <FormControl fullWidth variant="outlined">
                                                         <TextField
                                                             label="Email"
                                                             name="email"
@@ -533,7 +534,7 @@ const RegisterPage = () => {
                                                     </FormControl>
                                                 </ThemeProvider>
 
-                                                <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                <FormControl fullWidth variant="outlined">
                                                     <div className="mb-5 mt-2 flex justify-center items-center gap-x-3 relative">
                                                         {selectedImage ? (
                                                             <img
@@ -562,7 +563,7 @@ const RegisterPage = () => {
                                                     </div>
                                                 </FormControl>
                                                 <ThemeProvider theme={theme}>
-                                                    <FormControl fullWidth className={classes.margin}>
+                                                    <FormControl fullWidth>
                                                         <InputLabel>Phone Number</InputLabel>
                                                         <Input
                                                             name="textmask"
@@ -580,7 +581,7 @@ const RegisterPage = () => {
                                                         )}
                                                     </FormControl>
 
-                                                    <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                    <FormControl fullWidth variant="outlined">
                                                         <TextField
                                                             label="Password"
                                                             type={showPassword ? 'text' : 'password'}
@@ -605,7 +606,7 @@ const RegisterPage = () => {
                                                         )}
                                                     </FormControl>
 
-                                                    <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                    <FormControl fullWidth variant="outlined">
                                                         <TextField
                                                             label="Confirm Password"
                                                             type={showConfirmPassword ? 'text' : 'password'}
@@ -632,7 +633,7 @@ const RegisterPage = () => {
                                                     </FormControl>
                                                 </ThemeProvider>
 
-                                                <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                <FormControl fullWidth variant="outlined">
                                                     <Button
                                                         className={classes.button}
                                                         type="submit"
@@ -666,7 +667,7 @@ const RegisterPage = () => {
 
                                             <form onSubmit={handlePhoneSubmit}>
                                                 <ThemeProvider theme={theme}>
-                                                    <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                    <FormControl fullWidth variant="outlined">
                                                         <TextField
                                                             label="First Name"
                                                             name="firstName"
@@ -681,7 +682,7 @@ const RegisterPage = () => {
                                                         )}
                                                     </FormControl>
 
-                                                    <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                    <FormControl fullWidth  variant="outlined">
                                                         <TextField
                                                             label="Last Name"
                                                             name="lastName"
@@ -699,7 +700,7 @@ const RegisterPage = () => {
 
                                                 </ThemeProvider>
 
-                                                <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                <FormControl fullWidth variant="outlined">
                                                     <div className="mb-5 mt-2 flex justify-center items-center gap-x-3 relative">
                                                         {selectedImage ? (
                                                             <img
@@ -728,7 +729,7 @@ const RegisterPage = () => {
                                                     </div>
                                                 </FormControl>
                                                 <ThemeProvider theme={theme}>
-                                                    <FormControl fullWidth className={classes.margin}>
+                                                    <FormControl fullWidth>
                                                         <InputLabel>Phone Number</InputLabel>
                                                         <Input
                                                             name="textmask"
@@ -749,7 +750,7 @@ const RegisterPage = () => {
                                                         <div className={"mb-3 flex justify-center"}>
                                                             <ReactCodeInput
                                                                 inputMode={"numeric"}
-                                                                id="pinCode"
+                                                                name="pinCode"
                                                                 fields={6}
                                                                 onChange={handlePinChange}
                                                                 value={pinCode}
@@ -761,7 +762,7 @@ const RegisterPage = () => {
 
                                                 </ThemeProvider>
 
-                                                <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                <FormControl fullWidth variant="outlined">
                                                     {!isTryToCode ? (
                                                         <Button
                                                             className={classes.button}
