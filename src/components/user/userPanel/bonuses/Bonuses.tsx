@@ -9,7 +9,6 @@ const Bonuses: React.FC<SettingsUserProps> = () => {
   
 
 
-
           </div>
         </div>
       </div>

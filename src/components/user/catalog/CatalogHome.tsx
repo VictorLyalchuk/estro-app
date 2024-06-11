@@ -5,13 +5,12 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { IProduct, IStorages } from '../../../interfaces/Catalog/IProduct'
 import { APP_ENV } from '../../../env/config'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { IInfo, IOptions } from '../../../interfaces/Info/IInfo'
+import { IInfo } from '../../../interfaces/Info/IInfo'
 import { createQueryParams, onPageChangeQueryParams, onSortChangeQueryParams, updateFilters } from '../../../utils/catalog/filterUtils'
 import { ISortOptions } from '../../../interfaces/Catalog/ISortOptions'
 import qs, { ParsedQs } from 'qs'
 import { getProductsist, getQuantityProducts } from '../../../services/product/product-services'
 import { getInfoList } from '../../../services/info/info-services'
-import { IMainCategory } from '../../../interfaces/Catalog/IMainCategory'
 import ProductQuickview from './ProductQuickview'
 import { initialSortOptions } from '../../../data/initialSortOptions'
 import { getMainCategories } from '../../../services/category/category-services'
@@ -26,7 +25,6 @@ export default function CatalogHome() {
     const navigate = useNavigate();
     const { main } = useParams();
     const [productList, setProduct] = useState<IProduct[]>([]);
-    const [categoryList, setCategoryList] = useState<IMainCategory[]>([]);
     const [filterOptionsList, setFilterOptionsList] = useState<IInfo[]>([]);
     const [filters, setFilters] = useState<{ name: string; values: string[] }[]>([]);
     const [itemsPerPage] = useState<number>(10);
@@ -43,10 +41,12 @@ export default function CatalogHome() {
     const [selectedSize, setSelectedSize] = useState<IStorages | null>(null);
     const [activeSortOption, setActiveSortOption] = useState<ISortOptions | null>(null);
     const [sortOptions, setSortOptions] = useState<ISortOptions[]>(initialSortOptions);
+    const [subCategoryIndex, setSubCategoryIndex] = useState(0);
+    const [categoriesLoaded, setCategoriesLoaded] = useState(false);
 
     const filterValueCounts = filterOptionsList.map((section) =>
         filters.reduce((count, filter) => {
-            if (filter.name === section.name) {
+            if (filter.name === section.value) {
                 count += filter.values.length;
             }
             return count;
@@ -73,13 +73,13 @@ export default function CatalogHome() {
 
     const onSortModeLoad = (selectedOption: string | null) => {
         const updatedSortOptions = sortOptions.map(option =>
-          option.url === selectedOption
-            ? { ...option, current: true }
-            : { ...option, current: false }
+            option.url === selectedOption
+                ? { ...option, current: true }
+                : { ...option, current: false }
         );
         setSortOptions(updatedSortOptions);
         setActiveSortOption(updatedSortOptions.find(option => option.current) || null);
-      };
+    };
 
     const onPageChange = (newPage: number) => {
         setPage(newPage);
@@ -129,6 +129,57 @@ export default function CatalogHome() {
         return newFilters;
     };
 
+    const getFilterCategory = async (): Promise<any[]> => {
+        const urls: any[] = [];
+        const newFilters = parseUrlQuery();
+        for (let i = 0; i < subCategoryIndex; i++) {
+            const categoryKey = `category-${i + 1}`;
+            const urlValue = newFilters.find(f => f.name === categoryKey)?.values;
+            if (urlValue) {
+                urls.push(urlValue);
+            }
+        }
+        return urls;
+    };
+
+    const getInfo = async () => {
+        try {
+            // Витягування категорій і фільтрів з бази даних
+            const mainCategories = await getMainCategories();
+            setFilterOptionsList(prevFilters => {
+                const mainCategory = mainCategories.find(mainCategory => mainCategory.urlName === main);
+                const subCategoryWithOptions: IInfo[] = [];
+
+                if (mainCategory) {
+                    mainCategory.subCategories.forEach((subCategory, index) => {
+                        const options = subCategory.categories.map(category => ({
+                            id: category.id.toString(),
+                            label: category.name,
+                            value: category.urlName
+                        }));
+
+                        subCategoryWithOptions.push({
+                            id: subCategory.id.toString(),
+                            name: subCategory.name,
+                            value: `category-${index + 1}`,
+                            options: options
+                        });
+                    });
+
+                    setSubCategoryIndex(mainCategory.subCategories.length);
+                    setCategoriesLoaded(true);
+                    return [...prevFilters, ...subCategoryWithOptions];
+                }
+                return prevFilters;
+            });
+
+            const infos = await getInfoList();
+            setFilterOptionsList(prevFilters => [...prevFilters, ...infos]);
+        } catch (error) {
+            console.error('Error fetching data:', error);
+        }
+    };
+
     const loadFromURL = async () => {
         try {
             // створення і відправка даних на сервер
@@ -136,18 +187,18 @@ export default function CatalogHome() {
             setFilters(newFilters);
 
             const filterDTO: IFilterDTO = {
-                Size: newFilters.find(f => f.name === 'Size')?.values || undefined,
-                Material: newFilters.find(f => f.name === 'Material')?.values || undefined,
-                Color: newFilters.find(f => f.name === 'Color')?.values || undefined,
-                Purpose: newFilters.find(f => f.name === 'Purpose')?.values || undefined,
+                Size: newFilters.find(f => f.name === 'size')?.values || undefined,
+                Material: newFilters.find(f => f.name === 'material')?.values || undefined,
+                Color: newFilters.find(f => f.name === 'color')?.values || undefined,
+                Purpose: newFilters.find(f => f.name === 'purpose')?.values || undefined,
                 ItemsPerPage: newFilters.find(f => f.name === 'ItemsPerPage')?.values || itemsPerPage,
                 Sort: newFilters.find(f => f.name === 'Sort')?.values?.join('_') || undefined,
                 Page: newFilters.find(f => f.name === 'Page')?.values || page,
                 MainCategory: main,
-                SubName: newFilters.find(f => f.name === 'SubCategory')?.values || undefined,
-                UrlName: newFilters.find(f => f.name === 'Category')?.values || undefined
+                SubName: newFilters.find(f => f.name === 'SubName')?.values || undefined,
+                UrlName: await getFilterCategory(),
             };
-            
+
             onSortModeLoad(newFilters.find(f => f.name === 'Sort')?.values?.join('_') || null);
 
             const responseQuantity = await getQuantityProducts(filterDTO);
@@ -167,56 +218,16 @@ export default function CatalogHome() {
         setSelectedSize(size);
     };
 
-    const getInfo = async () => {
-        try {
-            // Витягування категорій і фільтрів з бази даних
-            const mainCategories = await getMainCategories();
-            setCategoryList(mainCategories);
-            setFilterOptionsList(prevFilters => {
-                const mainCategory = mainCategories.find(mainCategory => mainCategory.urlName === main);
-                const subCategories: IOptions[] = [];
-                const categories: IOptions[] = [];
-
-                if (mainCategory) {
-                    mainCategory.subCategories.forEach(subCategory => {
-                        subCategories.push({
-                            id: subCategory.id.toString(),
-                            label: subCategory.name,
-                            value: subCategory.urlName
-                        });
-
-                        subCategory.categories.forEach(category => {
-                            categories.push({
-                                id: category.id.toString(),
-                                label: category.name,
-                                value: category.urlName
-                            });
-                        });
-                    });
-                }
-
-                return [
-                    ...prevFilters,
-                    { id: 'subCategory', name: 'SubCategory', value: '', options: subCategories },
-                    { id: 'category', name: 'Category', value: '', options: categories }
-                ];
-            });
-
-            const infos = await getInfoList();
-            setFilterOptionsList(prevFilters => [...prevFilters, ...infos]);
-            console.log("filters:",infos)
-        } catch (error) {
-            console.error('Error fetching data:', error);
-        }
-    };
     useEffect(() => {
-        setPage(1);  
+        setPage(1);
         getInfo();
     }, []);
 
     useEffect(() => {
-        loadFromURL();
-    }, [location.search, page, itemsPerPage]);
+        if (categoriesLoaded) {
+            loadFromURL();
+        }
+    }, [categoriesLoaded, location.search, page, itemsPerPage]);
 
     return (
         <div className="bg-gray-100">
@@ -285,9 +296,9 @@ export default function CatalogHome() {
                                                                             name={`${section.id}[]`}
                                                                             defaultValue={option.value}
                                                                             type="checkbox"
-                                                                            checked={filters.some((filter) => filter.name === section.name && filter.values.includes(option.value))}
+                                                                            checked={filters.some((filter) => filter.name === section.value && filter.values.includes(option.value))}
                                                                             onChange={() => {
-                                                                                createFilters(section.name, option.value);
+                                                                                createFilters(section.value, option.value);
                                                                             }}
                                                                             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                                                         />
@@ -421,9 +432,9 @@ export default function CatalogHome() {
                                                                             name={`${section.id}[]`}
                                                                             defaultValue={option.value}
                                                                             type="checkbox"
-                                                                            checked={filters.some((filter) => filter.name === section.name && filter.values.includes(option.value))}
+                                                                            checked={filters.some((filter) => filter.name === section.value && filter.values.includes(option.value))}
                                                                             onChange={() => {
-                                                                                createFilters(section.name, option.value);
+                                                                                createFilters(section.value, option.value);
                                                                             }}
                                                                             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                                                         />
@@ -460,7 +471,7 @@ export default function CatalogHome() {
                                     <div className="-m-1 flex flex-wrap items-center">
                                         {filterOptionsList.map((section) =>
                                             section.options?.map((option, optionIdx) => {
-                                                const isFilterApplied = filters.some(filter => filter.name === section.name && filter.values.includes(option.value));
+                                                const isFilterApplied = filters.some(filter => filter.name === section.value && filter.values.includes(option.value));
                                                 if (isFilterApplied) {
                                                     return (
                                                         <span
@@ -470,7 +481,7 @@ export default function CatalogHome() {
                                                             <div
                                                                 className="ml-1 inline-flex h-4 w-4 flex-shrink-0 rounded-full p-1 text-gray-400 hover:bg-gray-200 hover:text-gray-500">
                                                                 <span className="sr-only">Remove filter for {option.label}</span>
-                                                                <button onClick={() => { createFilters(section.name, option.value); }}>
+                                                                <button onClick={() => { createFilters(section.value, option.value); }}>
                                                                     <svg className="h-2 w-2" stroke="currentColor" fill="none" viewBox="0 0 8 8">
                                                                         <path strokeLinecap="round" strokeWidth="1.5" d="M1 1l6 6m0-6L1 7" />
                                                                     </svg>

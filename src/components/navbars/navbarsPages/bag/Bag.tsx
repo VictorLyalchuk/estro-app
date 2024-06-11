@@ -21,6 +21,8 @@ import { IWarehouse } from "../../../../interfaces/Bag/IWarehouse";
 import { RadioGroup } from '@headlessui/react';
 import { IStore } from "../../../../interfaces/Catalog/IStore";
 import { CheckCircleIcon } from '@heroicons/react/20/solid'
+// import ButtonLeft from "./ButtonLeft";
+// import ButtonRight from "./ButtonRight";
 
 const theme = createTheme({
   typography: {
@@ -432,8 +434,17 @@ const Bag = () => {
                         <span className="mx-2 w-3">{item.quantity}</span>
                         <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-md ml-2 hover:bg-gray-300" onClick={() => increase(item)} >
                           <PlusIcon className="h-5 w-3 " />
-
                         </button>
+
+
+                        {/* <button className="group rounded-l-xl px-5 py-[10px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:bg-gray-50 hover:border-gray-300 hover:shadow-gray-300 focus-within:outline-gray-300" onClick={() => decrease(item)}>
+                          <ButtonLeft  />
+                        </button>
+                        <span className="border-y border-gray-200 outline-none text-gray-900 font-semibold text-lg w-full max-w-[73px] min-w-[60px] placeholder:text-gray-900 py-[7px]  text-center bg-transparent">{item.quantity}</span>
+                        <button className="group rounded-r-xl px-5 py-[10px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:border-indigo-50 hover:bg-indigo-600 hover:text-white hover:shadow-gray-300 focus-within:outline-gray-300" onClick={() => increase(item)} >
+                          <ButtonRight  />
+
+                        </button> */}
                       </div>
                     </div>
                   </div>
