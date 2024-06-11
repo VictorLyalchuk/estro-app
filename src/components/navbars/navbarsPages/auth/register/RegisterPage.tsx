@@ -8,7 +8,6 @@ import { Button, FormControl, IconButton, Input, InputAdornment, InputLabel, Tex
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
-import MaskedInput from 'react-text-mask';
 import { GiftIcon } from '@heroicons/react/24/outline';
 import { BanknotesIcon } from '@heroicons/react/24/outline';
 import { TrophyIcon } from '@heroicons/react/24/outline';
@@ -16,6 +15,12 @@ import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import '../../../../../satoshi.css';
 import { useGoogleLogin} from "@react-oauth/google";
 import ReactCodeInput from "react-code-input";
+import Modal from '../../../../cropImage/Modal';
+import { validateForm } from '../../../../../validations/account/register-validations';
+import TextMaskCustom from '../../../../../services/custom/phone-services';
+import { State } from '../../../../../interfaces/Custom/Phone/State';
+import { validatePhoneNumber } from '../../../../../validations/custom/register-phone-validations';
+import { register } from '../../../../../services/accounts/account-services';
 
 const theme = createTheme({
     typography: {
@@ -31,29 +36,6 @@ const useStyles = makeStyles(() =>
         },
     }),
 );
-
-interface TextMaskCustomProps {
-    inputRef: (ref: HTMLInputElement | null) => void;
-}
-
-function TextMaskCustom(props: TextMaskCustomProps) {
-    const { inputRef, ...other } = props;
-
-    return (
-        <MaskedInput
-            {...other}
-            ref={(ref: any) => {
-                inputRef(ref ? ref.inputElement : null);
-            }}
-            mask={['(', /[0-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
-            placeholderChar={'\u2000'}
-        />
-    );
-}
-
-interface State {
-    textmask: string;
-}
 
 const RegisterPage = () => {
     const baseUrl = APP_ENV.BASE_URL;
@@ -77,6 +59,10 @@ const RegisterPage = () => {
     const [verifySid, setVerifySid] = useState("");
     const [isDisabled, setIsDisabled] = useState(false);
     const [countdown, setCountdown] = useState(30);
+    const [pinCode, setPinCode] = useState("");
+
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+    const [modalOpen, setModalOpen] = useState(false);
 
     useEffect(() => {
         let timer: string | number | NodeJS.Timeout | undefined;
@@ -89,8 +75,6 @@ const RegisterPage = () => {
         }
         return () => clearInterval(timer);
     }, [isDisabled, countdown]);
-
-
 
     const [formData, setFormData] = useState<IRegister>({
         firstName: '',
@@ -113,7 +97,6 @@ const RegisterPage = () => {
         confirmPassword: '',
         authType: "standard"
     });
-    const [pinCode, setPinCode] = useState("");
 
     const handlePinChange = (value: SetStateAction<string>) => {
         setPinCode(value);
@@ -132,15 +115,12 @@ const RegisterPage = () => {
         }));
     };
 
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if (validateForm()) {
+    const handleSubmit = async () => {
+        const { isValid, newErrors } = validateForm(formData, values.textmask);
+        setErrors(newErrors);
+        if (isValid) {
             try {
-                await axios.post(`${baseUrl}/api/AccountControllers/Registration`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
+                await register(formData);
                 setIsRegistered(true);
                 setIsEmail(false);
             } catch (error) {
@@ -179,11 +159,7 @@ const RegisterPage = () => {
 
             formData.authType = "phone";
             try {
-                await axios.post(`${baseUrl}/api/AccountControllers/Registration`, formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                });
+                await register(formData);
                 setIsRegistered(true);
                 setIsPhone(false);
             } catch (error) {
@@ -210,7 +186,6 @@ const RegisterPage = () => {
     }
     };
 
-
     const googleSuccess = async (response: { access_token: any; }) => {
         if (response) {
             try {
@@ -232,7 +207,6 @@ const RegisterPage = () => {
                 formData.append('ImagePath', googleUser?.picture);
                 formData.append('ClientId', googleUser?.id);
 
-
                     await axios.post(`${baseUrl}/api/AccountControllers/Registration`, formData);
                     setIsChosen(true);
                     setIsRegistered(true);
@@ -249,73 +223,6 @@ const RegisterPage = () => {
 
     const googleErrorMessage = (error: any) => {
         console.log(error);
-    };
-
-    const validateForm = () => {
-        let isValid = true;
-        const newErrors: {
-            firstName: string;
-            lastName: string;
-            confirmPassword: string;
-            phoneNumber: string;
-            email: string;
-            password: string;
-            authType: string;
-        } = {
-            firstName: "",
-            lastName: "",
-            confirmPassword: "",
-            phoneNumber: "",
-            email: "",
-            password: "",
-            authType: ""
-        };
-
-        if (formData.firstName.trim() === '') {
-            newErrors.firstName = 'First Name is required';
-            isValid = false;
-        }
-
-        if (formData.lastName.trim() === '') {
-            newErrors.lastName = 'Last Name is required';
-            isValid = false;
-        }
-        const cleanedPhoneNumber = values.textmask.replace(/\D/g, '');
-        if (cleanedPhoneNumber.trim() === '') {
-            newErrors.phoneNumber = 'Phone Number is required';
-            isValid = false;
-        }
-        else if (!/^(067|095|099|066|063|098|097|096|093)\d{7}$/.test(cleanedPhoneNumber)) {
-            newErrors.phoneNumber = 'Invalid phone number format';
-            isValid = false;
-        }
-
-        if (formData.confirmPassword !== formData.password) {
-            newErrors.confirmPassword = 'Passwords do not match';
-            isValid = false;
-        }
-
-        if (formData.email.trim() === '' || !/\S+@\S+\.\S+/.test(formData.email)) {
-            newErrors.email = 'Invalid email address';
-            isValid = false;
-        }
-
-        if (formData.password.trim() === '') {
-            newErrors.password = 'Password is required';
-            isValid = false;
-        } else if (formData.password.length < 7) {
-            newErrors.password = 'Password must be at least 7 characters long';
-            isValid = false;
-        } else if (!/[a-zA-Z]/.test(formData.password)) {
-            newErrors.password = 'Password must contain at least one letter';
-            isValid = false;
-        } else if (!/[^a-zA-Z0-9]/.test(formData.password)) {
-            newErrors.password = 'Password must contain at least one symbol';
-            isValid = false;
-        }
-
-        setErrors(newErrors);
-        return isValid;
     };
 
     const handlePasswordToggle = () => {
@@ -339,24 +246,18 @@ const RegisterPage = () => {
             phoneNumber: cleanedValue,
         }));
 
-        validatePhoneNumber(cleanedValue);
+        validatePhoneNumber(cleanedValue, errors, setErrors);
     };
 
-    const validatePhoneNumber = (value: string) => {
-        const isValidPrefix = /^(067|095|099|066|063|098|097|096|093)/.test(value.substr(0, 3));
+    const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (file) {
+          setSelectedFile(file);
+          setModalOpen(true);
+        }
+      };
 
-        const isValidDigits = /^\d{7}$/.test(value.substr(3));
-
-        const isValid = isValidPrefix && isValidDigits;
-
-        setErrors((prevErrors) => ({
-            ...prevErrors,
-            phoneNumber: isValid ? '' : 'Invalid phone number format',
-        }));
-    };
-
-    const handleImageSelect = (event: ChangeEvent<HTMLInputElement>) => {
-        const file = event.target.files?.[0];
+    const handleImageSelect = (file: File) => {
         if (file) {
             const reader = new FileReader();
             reader.onloadend = () => {
@@ -409,8 +310,8 @@ const RegisterPage = () => {
                         <div className="w-full lg:w-2/4 p-5 lg:mb-0">
 
                             <div className="bg-white-container-register flex flex-col justify-center items-center h-full">
-                                <h1 className="text-white text-7xl hover:text-indigo-300">estro</h1>
-                                <p className="text-white text-sx mb-10 hover:text-indigo-300">SHOES & ACCESSORIES</p>
+                                <h1 className="text-white text-9xl hover:text-indigo-300">estro</h1>
+                                <p className="text-white text-sx mb-10 hover:text-indigo-300">SHOES, CLOTHING & ACCESSORIES</p>
 
                                 <br />
 
@@ -455,7 +356,7 @@ const RegisterPage = () => {
                                         </div>
                                         <div className={"flex-col bg-gray-100 p-10 rounded-2xl gap-2 w-59 flex"}>
                                             <Button onClick={() => {setIsEmail(true); setIsChosen(true);}} className={"h-20"} size="large">
-                                                <svg className={"h-20 -ml-2"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><g fill="none" stroke="#383843" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"><path d="M1.75 3.75h12.5v9.5H1.75z"/><path d="m2.25 4.25l5.75 5l5.75-5"/></g></svg>
+                                                <svg className={"h-20 -ml-2"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><g fill="none" stroke="#383843" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"><path d="M1.75 3.75h12.5v9.5H1.75z"/><path d="m2.25 4.25l5.75 5l5.75-5"/></g></svg>
                                                 <p className={"ml-2 lowercase"}>Email</p>
                                             </Button>
                                             <Button onClick={() => {setIsPhone(true); setIsChosen(true);}} className={"h-20"} size="large">
@@ -486,7 +387,7 @@ const RegisterPage = () => {
                                                 </h2>
                                             </div>
 
-                                            <form onSubmit={handleSubmit}>
+                                            {/* <form onClick={handleSubmit}> */}
                                                 <ThemeProvider theme={theme}>
                                                     <FormControl fullWidth variant="outlined">
                                                         <TextField
@@ -548,7 +449,8 @@ const RegisterPage = () => {
                                                         <input
                                                             type="file"
                                                             accept="image/*"
-                                                            onChange={handleImageSelect}
+                                                            // onChange={handleImageSelect}
+                                                            onChange={handleFileChange}
                                                             style={{ display: 'none' }}
                                                         />
                                                         <Button
@@ -562,6 +464,15 @@ const RegisterPage = () => {
                                                         </Button>
                                                     </div>
                                                 </FormControl>
+
+                                                {modalOpen && selectedFile && (
+                            <Modal
+                              changeImage={handleImageSelect}
+                              closeModal={() => setModalOpen(false)}
+                              file={selectedFile}
+                            />
+                          )}
+
                                                 <ThemeProvider theme={theme}>
                                                     <FormControl fullWidth>
                                                         <InputLabel>Phone Number</InputLabel>
@@ -637,6 +548,7 @@ const RegisterPage = () => {
                                                     <Button
                                                         className={classes.button}
                                                         type="submit"
+                                                        onClick={handleSubmit}
                                                         variant="contained"
                                                         size="large"
                                                         color="primary"
@@ -655,7 +567,7 @@ const RegisterPage = () => {
                                                         Cancel
                                                     </Button>
                                                 </FormControl>
-                                            </form>
+                                            {/* </form> */}
                                         </div>
                                     ) : (
                                         <div className="mb-4">
@@ -714,7 +626,8 @@ const RegisterPage = () => {
                                                         <input
                                                             type="file"
                                                             accept="image/*"
-                                                            onChange={handleImageSelect}
+                                                            onChange={handleFileChange}
+                                                            // onChange={handleImageSelect}
                                                             style={{ display: 'none' }}
                                                         />
                                                         <Button
@@ -780,6 +693,7 @@ const RegisterPage = () => {
                                                         <Button
                                                             className={classes.button}
                                                             type="submit"
+                                                            onClick={handleSubmit}
                                                             variant="contained"
                                                             size="large"
                                                             color="primary"
@@ -787,6 +701,7 @@ const RegisterPage = () => {
                                                         >
                                                             Register
                                                         </Button>
+
                                                     )}
 
                                                     <Button
@@ -806,8 +721,6 @@ const RegisterPage = () => {
 
                                 )
                             )}
-
-
 
                         </div >
 

@@ -27,6 +27,7 @@ import useAuthTokenEffect from "./useAuthTokenEffect";
 import GuestLayout from "./components/layout/GuestLayout";
 import HomeStore from "./components/homePage/HomeStore";
 import CatalogHome from "./components/user/catalog/CatalogHome";
+import Tables from "./components/Dashboard/pages/Tables";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -72,6 +73,7 @@ function App() {
         </Route>
 
         <Route path="/admin" element={<AdminLayout />}>
+          <Route path="tables" element={<Tables />} />
           <Route path="add-product" element={<AddProduct />} />
           <Route path="edit-product/:Id" element={<EditProduct />} />
           <Route path="add-storage/:Id" element={<AddStorage />} />

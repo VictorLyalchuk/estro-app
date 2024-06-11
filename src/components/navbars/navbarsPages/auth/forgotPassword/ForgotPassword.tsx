@@ -136,8 +136,8 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
                         <div className="w-full lg:w-2/4 p-5 lg:mb-0">
 
                             <div className="bg-white-container-login flex flex-col justify-center items-center h-full">
-                                <h1 className="text-white text-7xl hover:text-indigo-300">estro</h1>
-                                <p className="text-white text-sx mb-10 hover:text-indigo-300">SHOES & ACCESSORIES</p>
+                                <h1 className="text-white text-9xl hover:text-indigo-300">estro</h1>
+                                <p className="text-white text-sx mb-10 hover:text-indigo-300">SHOES, CLOTHING & ACCESSORIES</p>
 
                                 <br />
 

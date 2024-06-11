@@ -14,7 +14,7 @@ const AdminLayout = () => {
     if (!isAuth) navigate("/login");
     if (isAuth) {
       if (user?.Role != "Administrator") {
-        navigate("/pages/403")
+        navigate("/404")
       }
     }
   }, [isAuth, user]);

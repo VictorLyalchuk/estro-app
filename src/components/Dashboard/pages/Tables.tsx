@@ -8,7 +8,7 @@ const Tables = () => {
       <Breadcrumb pageName="Products list" />
 
       <div className="flex flex-col gap-10">
-        <Pagination/>
+        {/* <Pagination/> */}
         <TableProducts/>
       </div>
     </>

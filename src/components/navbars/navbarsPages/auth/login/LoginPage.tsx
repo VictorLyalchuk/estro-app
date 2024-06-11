@@ -21,6 +21,9 @@ import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import '../../../../../satoshi.css';
 import MaskedInput from "react-text-mask";
 import ReactCodeInput from "react-code-input";
+import { validateForm } from '../../../../../validations/account/login-validations';
+import { validatePhoneNumber } from '../../../../../validations/custom/login-phone-validations';
+import { login } from '../../../../../services/accounts/account-services';
 
 interface TextMaskCustomProps {
     inputRef: (ref: HTMLInputElement | null) => void;
@@ -126,7 +129,6 @@ const LoginPage = () => {
         authType: 'standard'
     });
 
-
     const [errors, setErrors] = useState({
         email: '',
         password: '',
@@ -142,27 +144,12 @@ const LoginPage = () => {
         }));
     };
 
-    const handleSubmitEmail = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if (validateForm()) {
+    const handleSubmitEmail = async () => {
+        const { isValid, newErrors } = validateForm(formData, values.textmask);
+        setErrors(newErrors);
+        if (isValid) {
             try {
-                const response = await axios.post(`${baseUrl}/api/AccountControllers/Login`, formData);
-                const { token } = response.data;
-                const user = jwtDecode(token) as IUser;
-                dispatch({
-                    type: AuthReducerActionType.LOGIN_USER,
-                    payload: {
-                        Email: user.Email,
-                        FirstName: user.FirstName,
-                        LastName: user.LastName,
-                        Role: user.Role,
-                        ImagePath: user.ImagePath,
-                        PhoneNumber: user.PhoneNumber,
-                        AuthType: user.AuthType
-                    } as IUser,
-                });
-
-                localStorage.setItem("token", token);
+                await login(formData, dispatch);
                 navigate("/");
             } catch (error) {
                 console.error("Login error:", error);
@@ -171,9 +158,9 @@ const LoginPage = () => {
                     setErrorMessage("");
                 }, 1000);
             }
-
         };
     }
+
     const handleSubmitPhone = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         try {
@@ -319,55 +306,14 @@ const LoginPage = () => {
         }
     };
 
-
-
     const googleErrorMessage = (error: any) => {
         console.log(error);
-    };
-
-    const validateForm = () => {
-        let isValid = true;
-        const newErrors: {
-            email: string;
-            password: string;
-            phoneNumber: string;
-            authType: string;
-        } = {
-            email: "",
-            password: "",
-            phoneNumber: "",
-            authType: "",
-        };
-
-        if (formData.email.trim() === '' || !/\S+@\S+\.\S+/.test(formData.email)) {
-            newErrors.email = 'Invalid email address';
-            isValid = false;
-        }
-
-        if (formData.authType === "phone") {
-
-            const cleanedPhoneNumber = values.textmask.replace(/\D/g, '');
-            if (cleanedPhoneNumber.trim() === '') {
-                newErrors.phoneNumber = 'Phone Number is required';
-                isValid = false;
-            }
-            else if (!/^(067|095|099|066|063|098|097|096|093)\d{7}$/.test(cleanedPhoneNumber)) {
-                newErrors.phoneNumber = 'Invalid phone number format';
-                isValid = false;
-            }
-        }
-        if (formData.password.trim() === '') {
-            newErrors.password = 'Password is required';
-            isValid = false;
-        }
-
-        setErrors(newErrors);
-        return isValid;
     };
 
     const handlePasswordToggle = () => {
         setShowPassword((prevShowPassword) => !prevShowPassword);
     };
+
     const loginGoogle = useGoogleLogin({
         onSuccess: googleSuccess,
         onError: googleErrorMessage
@@ -381,18 +327,6 @@ const LoginPage = () => {
         setIsPhoneLogin(false);
 
     }
-    const validatePhoneNumber = (value: string) => {
-        const isValidPrefix = /^(067|095|099|066|063|098|097|096|093)/.test(value.substr(0, 3));
-
-        const isValidDigits = /^\d{7}$/.test(value.substr(3));
-
-        const isValid = isValidPrefix && isValidDigits;
-
-        setErrors((prevErrors) => ({
-            ...prevErrors,
-            phoneNumber: isValid ? '' : 'Invalid phone number format',
-        }));
-    };
 
     const handleChangePhoneNumber = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -407,7 +341,7 @@ const LoginPage = () => {
             phoneNumber: cleanedValue,
         }));
 
-        validatePhoneNumber(cleanedValue);
+        validatePhoneNumber(cleanedValue, errors, setErrors );
     };
     const [pinCode, setPinCode] = useState("");
     // const [btnIsPressed, setBtnIsPressed] = useState(false);
@@ -416,8 +350,6 @@ const LoginPage = () => {
         setPinCode(pinCode);
         // setBtnIsPressed(false);
     };
-
-
 
     return (
         <>
@@ -434,9 +366,8 @@ const LoginPage = () => {
                                 </div>
 
                                 {!isPhoneLogin ? (
-                                    <form onSubmit={handleSubmitEmail}>
+                                    <>
                                         <ThemeProvider theme={theme}>
-
                                             <FormControl fullWidth className={classes.margin} variant="outlined">
                                                 <TextField
                                                     label="Email"
@@ -475,12 +406,13 @@ const LoginPage = () => {
                                         </ThemeProvider>
 
                                         <FormControl fullWidth className={classes.margin} variant="outlined">
-                                            <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
+                                            <Button className={classes.button} onClick={handleSubmitEmail} type="submit" variant="contained" size="large" color="primary" disableElevation>
                                                 Sign in
                                             </Button>
                                         </FormControl>
+                                    </>
 
-                                    </form>
+
                                 ) : (
                                     <form onSubmit={handleSubmitPhone}>
                                         <ThemeProvider theme={theme}>
@@ -532,9 +464,7 @@ const LoginPage = () => {
                                                     Sign in
                                                 </Button>
                                             )}
-
                                         </FormControl>
-
                                     </form>
                                 )}
 
@@ -563,8 +493,8 @@ const LoginPage = () => {
                         <div className="w-full lg:w-2/4 p-5 lg:mb-0">
 
                             <div className="bg-white-container-login flex flex-col justify-center items-center h-full">
-                                <h1 className="text-white text-7xl hover:text-indigo-300">estro</h1>
-                                <p className="text-white text-sx mb-10 hover:text-indigo-300">SHOES & ACCESSORIES</p>
+                                <h1 className="text-white text-9xl hover:text-indigo-300">estro</h1>
+                                <p className="text-white text-sx mb-10 hover:text-indigo-300">SHOES, CLOTHING & ACCESSORIES</p>
 
                                 <br />
 

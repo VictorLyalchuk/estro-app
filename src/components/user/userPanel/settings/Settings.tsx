@@ -1,4 +1,4 @@
-import { ChangeEventHandler, useEffect, useState, Fragment } from 'react';
+import { useEffect, useState, Fragment, ChangeEvent } from 'react';
 import { useDispatch } from "react-redux";
 import { IUserEdit } from '../../../../interfaces/Auth/IUserEdit';
 import moment from 'moment/moment';
@@ -15,6 +15,7 @@ import { SettingsUserProps } from '../../../../interfaces/Custom/Phone/ProfileUs
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
+import Modal from '../../../cropImage/Modal';
 
 const theme = createTheme({
   typography: {
@@ -32,6 +33,8 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmNewPassword, setShowConfirmNewPassword] = useState(false);
   const [open, setOpen] = useState(true)
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [modalOpen, setModalOpen] = useState(false);
   const [values, setValues] = useState<State>({
     textmask: '(   )    -  -  ',
   });
@@ -95,14 +98,15 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
     }));
   };
 
-  const changeImage: ChangeEventHandler<HTMLInputElement> = async (e) => {
-    const files = e.target.files;
-
-    if (!files || files.length === 0) {
-      return;
+  const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setSelectedFile(file);
+      setModalOpen(true);
     }
-    const file = files[0];
-
+  };
+  
+  const changeImage = async (file: File) => {
     try {
       const isValid = await beforeUpload(file);
 
@@ -113,6 +117,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
       if (userImage) {
         await deleteUserImage(userImage);
       }
+
       const resp = await createUserImage(file);
       const editDTO: IIUserImageEdit = {
         email: userProfile?.email || "",
@@ -146,12 +151,15 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
   const currentPasswordToggle = () => {
     setShowCurrentPassword((prevShowPassword) => !prevShowPassword);
   };
+
   const newPasswordToggle = () => {
     setShowNewPassword((prevShowPassword) => !prevShowPassword);
   };
+
   const confirmNewPasswordToggle = () => {
     setShowConfirmNewPassword((prevShowPassword) => !prevShowPassword);
   };
+
   const onSubmit = async () => {
     const { isValid, newErrors } = validateForm(formData, values.textmask, userProfile);
     setErrors(newErrors);
@@ -274,9 +282,11 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                               <div className="relative ml-5">
                                 <input
                                   id="mobile-user-photo"
-                                  onChange={changeImage}
+                                  // onChange={changeImage}
                                   name="user-photo"
                                   type="file"
+                                  accept="image/*"
+                                  onChange={handleFileChange}
                                   className="peer absolute h-full w-full rounded-md opacity-0"
                                 />
                                 <label
@@ -300,16 +310,26 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                               <span className="sr-only"> user photo</span>
                               <input
                                 type="file"
-                                onChange={changeImage}
+                                accept="image/*"
+                                // onChange={changeImage}
+                                onChange={handleFileChange}
                                 id="desktop-user-photo"
                                 name="user-photo"
                                 className="absolute inset-0 h-full w-full cursor-pointer rounded-md border-gray-300 opacity-0"
                               />
                             </label>
                           </div>
+
+                          {modalOpen && selectedFile && (
+                            <Modal
+                              changeImage={changeImage}
+                              closeModal={() => setModalOpen(false)}
+                              file={selectedFile}
+                            />
+                          )}
+
                         </div>
                       </div>
-
                       <div className="mt-6 grid grid-cols-12 gap-6">
                         <div className="col-span-12 sm:col-span-6">
                           <label htmlFor="firstName" className="block text-sm font-medium leading-6 text-gray-900">

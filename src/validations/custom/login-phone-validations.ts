@@ -1,12 +1,8 @@
 interface Errors {
-    firstName: string;
-    lastName: string;
     email: string;
-    phoneNumber: string;
-    birthday: string;
     password: string;
-    newPassword: string,
-    confirmNewPassword: string,
+    phoneNumber: string;
+    authType: string;
   }
   
   export const validatePhoneNumber = (

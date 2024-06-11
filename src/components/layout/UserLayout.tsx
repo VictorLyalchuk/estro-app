@@ -14,7 +14,7 @@ const UserLayout = () => {
     if (!isAuth) navigate("/login");
     if (isAuth) {
       if (!isUser) {
-        navigate("/pages/403")
+        navigate("/404")
       }
     }
   }, [isAuth, user]);

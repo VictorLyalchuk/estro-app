@@ -197,13 +197,14 @@ export default function CatalogHome() {
 
                 return [
                     ...prevFilters,
-                    { id: 'subCategory', name: 'SubCategory', options: subCategories },
-                    { id: 'category', name: 'Category', options: categories }
+                    { id: 'subCategory', name: 'SubCategory', value: '', options: subCategories },
+                    { id: 'category', name: 'Category', value: '', options: categories }
                 ];
             });
 
             const infos = await getInfoList();
             setFilterOptionsList(prevFilters => [...prevFilters, ...infos]);
+            console.log("filters:",infos)
         } catch (error) {
             console.error('Error fetching data:', error);
         }

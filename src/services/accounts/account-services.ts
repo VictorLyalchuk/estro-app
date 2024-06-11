@@ -5,6 +5,8 @@ import { jwtDecode } from "jwt-decode";
 import { IUser } from "../../interfaces/Auth/IUser";
 import { AuthReducerActionType } from "../../store/accounts/AuthReducer";
 import { IUserEdit } from "../../interfaces/Auth/IUserEdit";
+import { IRegister } from "../../interfaces/Auth/IRegister";
+import { ILogin } from "../../interfaces/Auth/ILogin";
 
 
 const baseUrl = APP_ENV.BASE_URL;
@@ -146,5 +148,42 @@ export async function ConfirmEmail(email: string | null, token: string | null, c
     } catch (error) {
         console.error('Error confirming email:', error);
         callback(error); 
+    }
+}
+
+export async function register(user: IRegister) {
+    try {
+        await instance.post(`Registration`, user, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+    } catch (error) {
+        console.error('Failed to edit user data:', error);
+        throw error;
+    }
+}
+
+export async function login(_user: ILogin, dispatch: any) {
+    try {
+        const response = await instance.post(`Login`, _user)
+        const { token } = response.data;
+        const user = jwtDecode(token) as IUser;
+        dispatch({
+            type: AuthReducerActionType.LOGIN_USER,
+            payload: {
+                Email: user.Email,
+                FirstName: user.FirstName,
+                LastName: user.LastName,
+                Role: user.Role,
+                ImagePath: user.ImagePath,
+                PhoneNumber: user.PhoneNumber,
+                AuthType: user.AuthType
+            } as IUser,
+        });
+        await setToken(token);
+    } catch (error) {
+        console.error('Failed to edit user data:', error);
+        throw error;
     }
 }

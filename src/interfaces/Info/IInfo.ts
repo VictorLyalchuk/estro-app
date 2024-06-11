@@ -1,6 +1,7 @@
 export interface IInfo {
     id: string;
     name: string; 
+    value: string;
     options: IOptions [] | null;
 
 }
