@@ -187,3 +187,21 @@ export async function login(_user: ILogin, dispatch: any) {
         throw error;
     }
 }
+
+export async function forgotPassword(user: any) {
+    try {
+        await instance.post(`ForgotPassword`, user );
+    } catch (error) {
+        console.error('Failed to edit user data:', error);
+        throw error;
+    }
+}
+
+export async function resetPassword(user: any) {
+    try {
+        await instance.post(`ResetPassword`, user );
+    } catch (error) {
+        console.error('Failed to edit user data:', error);
+        throw error;
+    }
+}

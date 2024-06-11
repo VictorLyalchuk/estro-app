@@ -1,6 +1,4 @@
 import { useState } from 'react';
-import axios from 'axios';
-import { APP_ENV } from "../../../../../env/config";
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Button, FormControl, IconButton, InputAdornment, TextField } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
@@ -8,6 +6,8 @@ import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import 'tailwindcss/tailwind.css';
 import '../../../../../index.css';
 import '../../../../../satoshi.css';
+import { validateForm } from '../../../../../validations/account/reset-validations';
+import { resetPassword } from '../../../../../services/accounts/account-services';
 
 const theme = createTheme({
     typography: {
@@ -24,7 +24,6 @@ const useStyles = makeStyles(() =>
 );
 
 const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
-    const baseUrl = APP_ENV.BASE_URL;
     const classes = useStyles();
     const [isResetPassword, setResetPassword] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
@@ -51,49 +50,12 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
         }));
     };
 
-    const validateForm = () => {
-        let isValid = true;
-        const newErrors: {
-            confirmPassword: string;
-            newPassword: string;
-        } = {
-            confirmPassword: "",
-            newPassword: "",
-        };
-
-        if (formData.confirmPassword !== formData.newPassword) {
-            newErrors.confirmPassword = 'Passwords do not match';
-            isValid = false;
-        }
-
-        if (formData.newPassword.trim() === '') {
-            newErrors.newPassword = 'Password is required';
-            isValid = false;
-        } else if (formData.newPassword.length < 7) {
-            newErrors.newPassword = 'Password must be at least 7 characters long';
-            isValid = false;
-        } else if (!/[a-zA-Z]/.test(formData.newPassword)) {
-            newErrors.newPassword = 'Password must contain at least one letter';
-            isValid = false;
-        } else if (!/[^a-zA-Z0-9]/.test(formData.newPassword)) {
-            newErrors.newPassword = 'Password must contain at least one symbol';
-            isValid = false;
-        }
-
+    const handleSubmit = async () => {
+        const { isValid, newErrors } = validateForm(formData);
         setErrors(newErrors);
-        return isValid;
-    };
-
-    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        if (validateForm()) {
-
+        if (isValid) {
             try {
-                await axios.post(`${baseUrl}/api/AccountControllers/ResetPassword`, formData, {
-                    headers: {
-                        'Content-Type': 'application/json'
-                    }
-                });
+                await resetPassword(formData);
                 setResetPassword(true);
             } catch (error) {
                 console.error("Reset password error:", error);
@@ -137,7 +99,7 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
                                         </h2>
                                     </div>
 
-                                    <form onSubmit={handleSubmit}>
+                                    {/* <form onSubmit={handleSubmit}> */}
                                         <ThemeProvider theme={theme}>
                                             <FormControl fullWidth variant="outlined">
                                                 <TextField
@@ -188,12 +150,12 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
                                         </ThemeProvider>
 
                                         <FormControl fullWidth variant="outlined">
-                                            <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
+                                            <Button className={classes.button} onClick={handleSubmit} type="submit" variant="contained" size="large" color="primary" disableElevation>
                                                 Reset Password
                                             </Button>
                                         </FormControl>
 
-                                    </form>
+                                    {/* </form> */}
 
                                 </div >
                             )}

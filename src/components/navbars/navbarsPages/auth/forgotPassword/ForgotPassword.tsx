@@ -1,12 +1,12 @@
 import { useState } from 'react';
-import axios from 'axios';
-import { APP_ENV } from "../../../../../env/config";
 import { Button, FormControl, TextField } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 import '../../../../../satoshi.css';
 import '../../../../../index.css';
 import 'tailwindcss/tailwind.css';
+import { forgotPassword } from '../../../../../services/accounts/account-services';
+import { validateForm } from '../../../../../validations/account/forgot-validations';
 
 const theme = createTheme({
     typography: {
@@ -22,7 +22,6 @@ const useStyles = makeStyles(() =>
     }),
 );
 const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfirmation: () => void }) => {
-    const baseUrl = APP_ENV.BASE_URL;
     const classes = useStyles();
     const [isSendEmail, setSendEmail] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -42,15 +41,12 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
         }));
     };
 
-    const handleSubmit = async (event: { preventDefault: () => void; }) => {
-        event.preventDefault();
-        if (validateForm()) {
+    const handleSubmit = async () => {
+        const { isValid, newErrors } = validateForm(formData);
+        setErrors(newErrors);
+        if (isValid) {
             try {
-                await axios.post(`${baseUrl}/api/AccountControllers/ForgotPassword`, formData.email, {
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
+                await forgotPassword(formData.email);
                 setSendEmail(true);
                 onPasswordResetConfirmation();
             }
@@ -64,23 +60,6 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
         } else {
             console.log(formData);
         }
-    };
-
-    const validateForm = () => {
-        let isValid = true;
-        const newErrors: {
-            email: string;
-        } = {
-            email: "",
-        };
-
-        if (formData.email.trim() === '' || !/\S+@\S+\.\S+/.test(formData.email)) {
-            newErrors.email = 'Invalid email address';
-            isValid = false;
-        }
-
-        setErrors(newErrors);
-        return isValid;
     };
 
     return (
@@ -105,7 +84,7 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
                                         </h2>
                                     </div>
 
-                                    <form onSubmit={handleSubmit}>
+                                    {/* <form onSubmit={handleSubmit}> */}
                                         <ThemeProvider theme={theme}>
                                             <FormControl fullWidth variant="outlined">
                                                 <TextField
@@ -122,12 +101,12 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
                                         </ThemeProvider>
 
                                             <FormControl fullWidth variant="outlined">
-                                                <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
+                                                <Button className={classes.button} onClick={handleSubmit} type="submit" variant="contained" size="large" color="primary" disableElevation>
                                                     Reset Password
                                                 </Button>
                                             </FormControl>
 
-                                    </form>
+                                    {/* </form> */}
 
                                 </div >
                             )}
