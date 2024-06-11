@@ -35,8 +35,8 @@ const UserPanelPage = () => {
         {
             name: 'Orders',
             current: activeTab === 0,
-            component: viewMode === 'detailed' ? <Orders orders={orders} onViewModeChange={handleViewModeChange} page={page} countPage={countPage} onPageChange={handlePageChange} />
-                : <CompactOrders orders={orders} onViewModeChange={handleViewModeChange} page={page} countPage={countPage} onPageChange={handlePageChange} />,
+            component: viewMode === 'detailed' ? <CompactOrders orders={orders} onViewModeChange={handleViewModeChange} page={page} countPage={countPage} onPageChange={handlePageChange} />
+            : <Orders orders={orders} onViewModeChange={handleViewModeChange} page={page} countPage={countPage} onPageChange={handlePageChange} />,
             count: countPage.toString(),
         },
         {
