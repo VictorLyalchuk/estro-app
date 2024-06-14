@@ -1,4 +1,4 @@
-import { IFavoriteProductsID } from '../../interfaces/FavoriteProducts/IFavoriteProductsID';
+import { IFavoriteProducts } from '../../interfaces/FavoriteProducts/IFavoriteProducts';
 
 export enum FavouritesReducerActionType {
   SET = "SET_FAVORITE_PRODUCTS",
@@ -8,28 +8,28 @@ export enum FavouritesReducerActionType {
 }
 
 export interface IFavoriteProductsState {
-  favoriteProducts: IFavoriteProductsID[];
+  favoriteProducts: IFavoriteProducts[];
   count: number,
 }
 
 interface SetFavoritesAction {
   type: FavouritesReducerActionType.SET;
-  payload: IFavoriteProductsID[];
+  payload: IFavoriteProducts[];
 }
 
 interface AddFavoriteAction {
   type: FavouritesReducerActionType.ADD;
-  payload: IFavoriteProductsID;
+  payload: IFavoriteProducts;
 }
 
 interface RemoveFavoriteAction {
   type: FavouritesReducerActionType.REMOVE;
-  payload: IFavoriteProductsID;
+  payload: IFavoriteProducts;
 }
 
 interface DeleteAllFavoriteAction {
   type: FavouritesReducerActionType.DELETE_ALL;
-  payload: IFavoriteProductsID;
+  payload: IFavoriteProducts;
 }
 type FavouritesReducerAction = SetFavoritesAction | AddFavoriteAction | RemoveFavoriteAction | DeleteAllFavoriteAction;
 
@@ -37,21 +37,21 @@ const initState: IFavoriteProductsState = {
   favoriteProducts: [],
   count: 0,
 };
-export const setFavoriteProducts = (products: IFavoriteProductsID[]) => ({
+export const setFavoriteProducts = (products: IFavoriteProducts[]) => ({
   type: FavouritesReducerActionType.SET,
   payload: products,
 });
 
-export const addToFavorite = (product: IFavoriteProductsID) => ({
+export const addToFavorite = (product: IFavoriteProducts) => ({
   type: FavouritesReducerActionType.ADD,
   payload: product,
 });
 
-export const removeFromFavorite = (product: IFavoriteProductsID) => ({
+export const removeFromFavorite = (product: IFavoriteProducts) => ({
   type: FavouritesReducerActionType.REMOVE,
   payload: product,
 });
-export const deleteAllFromFavorite = (product: IFavoriteProductsID) => ({
+export const deleteAllFromFavorite = (product: IFavoriteProducts) => ({
   type: FavouritesReducerActionType.DELETE_ALL,
   payload: product,
 });

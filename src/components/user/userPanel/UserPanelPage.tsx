@@ -14,10 +14,12 @@ import CompactOrders from './orders/CompactOrders';
 import Orders from './orders/Orders';
 import { getProfileOrders, getUserOrders } from '../../../services/order/order-services';
 import Favourites from './favourites/Favourites';
+import { RootState } from '../../../store/store';
 
 const UserPanelPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
+    const favoriteProducts = useSelector((state: RootState) => state.favourites.favoriteProducts);
     const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
     const [orders, setOrdersUser] = useState<IOrderUser[]>([]);
     const [viewMode, setViewMode] = useState('detailed');
@@ -54,6 +56,7 @@ const UserPanelPage = () => {
             name: 'Favourites',
             current: activeTab === 3,
             component: <Favourites userProfile={userProfile} />,
+            count: favoriteProducts.length.toString(),
         },
         {
             name: 'My Bonuses',

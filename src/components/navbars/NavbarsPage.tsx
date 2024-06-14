@@ -54,15 +54,9 @@ const NavbarsPage = () => {
 
     const handleLogout = () => {
         localStorage.removeItem("token");
-        dispatch({
-            type: AuthReducerActionType.LOGOUT_USER,
-        });
-        dispatch({
-            type: BagReducerActionType.DELETE_ALL,
-        });
-        dispatch({
-            type: FavouritesReducerActionType.DELETE_ALL,
-        })
+        dispatch({ type: AuthReducerActionType.LOGOUT_USER });
+        dispatch({ type: BagReducerActionType.DELETE_ALL });
+        dispatch({ type: FavouritesReducerActionType.DELETE_ALL })
     };
 
     return (

@@ -16,10 +16,9 @@ import Slider from 'react-slick';
 import { HeartIcon } from '@heroicons/react/24/solid';
 import { HeartIcon as OutlineHeartIcon } from '@heroicons/react/24/outline'
 import { RootState } from '../../../store/store';
-import { ICreateFavoriteProductDTO } from '../../../interfaces/FavoriteProducts/ICreateFavoriteProductDTO';
-import { IRemoveFavoriteProduct } from '../../../interfaces/FavoriteProducts/IRemoveFavoriteProduct';
 import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavouritesReducer';
 import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/favoriteProducts/favorite-products-services';
+import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts';
 
 const reviews = { href: '#', average: 4, totalCount: 117 }
 
@@ -78,34 +77,22 @@ export default function Product() {
     }
   }
 
-  const addToFavoriteToggle = async (productId: number, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+  const favoriteToggle = async (product: IProduct, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     e.preventDefault();
     if (user) {
-      if (!isFavorite(productId)) {
-        const favoriteProduct: ICreateFavoriteProductDTO = {
-          userId: user?.Id,
-          productId: productId,
-        };
+      const favoriteProduct: IFavoriteProducts = {
+        userId: user?.Id,
+        productId: product.id,
+        productName: product.name,
+        productPrice: product.price,
+        productImage: product.imagesPath?.[0] ?? '',
+      };
+      if (!isFavorite(product.id)) {
         dispatch(addToFavorite(favoriteProduct));
         await addFavoriteProduct(favoriteProduct);
       } else {
-        console.log('Product is already in favorites');
-      }
-    }
-  };
-
-  const removeFromFavoriteToggle = async (productId: number, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-    e.preventDefault();
-    if (user) {
-      if (isFavorite(productId)) {
-        const favoriteProduct: IRemoveFavoriteProduct = {
-          userId: user?.Id,
-          productId: productId,
-        };
         dispatch(removeFromFavorite(favoriteProduct));
         await removeFavoriteProduct(favoriteProduct);
-      } else {
-        console.log('Product is not in favorites');
       }
     }
   };
@@ -152,9 +139,7 @@ export default function Product() {
                 </svg>
               </div>
             </li>
-
             <li key={`${product.id}-category`}>
-
               <div className="flex items-center">
                 <Link to={`/catalog/${product.urlSubCategoryName}/${product.urlCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
                   {product.categoryName}
@@ -176,7 +161,6 @@ export default function Product() {
             </li>
           </ol>
         </nav>
-
         {/* Image gallery */}
         <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-1 lg:gap-x-8 lg:px-8">
           <Slider>
@@ -196,27 +180,21 @@ export default function Product() {
               ))}
             </Carousel>
           </Slider >
-
-
-
           <div className="mt-4 lg:row-span-3 lg:mt-0 lg:col-start-3">
             {/* Options */}
             <div className="mt-9 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
               <p className="text-3xl font-medium  text-gray-900">{product.name}</p>
             </div>
-
-
-
             <div className="lg:row-span-3 lg:mt-0">
               <div className="mt-4 flex items-center justify-between">
                 <h2 className="sr-only">Product information</h2>
                 <p className="text-3xl tracking-tight text-red-800">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
                 <div className="cursor-pointer">
                   {isFavorite(product.id) ? (
-                    <HeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => removeFromFavoriteToggle(product.id, e)} />
+                    <HeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
                   ) : (
-                    <OutlineHeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => addToFavoriteToggle(product.id, e)} />
+                    <OutlineHeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
                   )}
                 </div>
 

@@ -14,11 +14,9 @@ import { Image } from 'antd';
 import { HeartIcon } from '@heroicons/react/24/solid';
 import { HeartIcon as OutlineHeartIcon } from '@heroicons/react/24/outline'
 import { RootState } from '../../../store/store';
-import { ICreateFavoriteProductDTO } from '../../../interfaces/FavoriteProducts/ICreateFavoriteProductDTO';
-import { IRemoveFavoriteProduct } from '../../../interfaces/FavoriteProducts/IRemoveFavoriteProduct';
 import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavouritesReducer';
 import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/favoriteProducts/favorite-products-services';
-
+import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts'
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -68,34 +66,22 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
             }
         }
     }
-    const addToFavoriteToggle = async (productId: number, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    const favoriteToggle = async (product: IProduct, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
         e.preventDefault();
         if (user) {
-            if (!isFavorite(productId)) {
-                const favoriteProduct: ICreateFavoriteProductDTO = {
-                    userId: user?.Id,
-                    productId: productId,
-                };
+            const favoriteProduct: IFavoriteProducts = {
+                userId: user?.Id,
+                productId: product.id,
+                productName: product.name,
+                productPrice: product.price,
+                productImage: product.imagesPath?.[0] ?? '',
+            };
+            if (!isFavorite(product.id)) {
                 dispatch(addToFavorite(favoriteProduct));
                 await addFavoriteProduct(favoriteProduct);
             } else {
-                console.log('Product is already in favorites');
-            }
-        }
-    };
-
-    const removeFromFavoriteToggle = async (productId: number, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-        e.preventDefault();
-        if (user) {
-            if (isFavorite(productId)) {
-                const favoriteProduct: IRemoveFavoriteProduct = {
-                    userId: user?.Id,
-                    productId: productId,
-                };
                 dispatch(removeFromFavorite(favoriteProduct));
                 await removeFavoriteProduct(favoriteProduct);
-            } else {
-                console.log('Product is not in favorites');
             }
         }
     };
@@ -164,9 +150,9 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                                         <p className="text-2xl tracking-tight text-red-800">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
                                                         <div className="cursor-pointer">
                                                             {isFavorite(product.id) ? (
-                                                                <HeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => removeFromFavoriteToggle(product.id, e)} />
+                                                                <HeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
                                                             ) : (
-                                                                <OutlineHeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => addToFavoriteToggle(product.id, e)} />
+                                                                <OutlineHeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
                                                             )}
                                                         </div>
                                                     </div>

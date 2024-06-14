@@ -18,10 +18,9 @@ import { getMainCategories } from '../../../services/category/category-services'
 import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/favoriteProducts/favorite-products-services'
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer'
 import { useDispatch, useSelector } from 'react-redux'
-import { ICreateFavoriteProductDTO } from '../../../interfaces/FavoriteProducts/ICreateFavoriteProductDTO'
-import { IRemoveFavoriteProduct } from '../../../interfaces/FavoriteProducts/IRemoveFavoriteProduct'
 import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavouritesReducer'
 import { RootState } from '../../../store/store'
+import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts'
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -240,34 +239,22 @@ export default function CatalogHome() {
         }
     }, [categoriesLoaded, location.search, page, itemsPerPage]);
 
-    const addToFavoriteToggle = async (productId: number, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    const favoriteToggle = async (product: IProduct, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
         e.preventDefault();
         if (user) {
-            if (!isFavorite(productId)) {
-                const favoriteProduct: ICreateFavoriteProductDTO = {
-                    userId: user?.Id,
-                    productId: productId,
-                };
+            const favoriteProduct: IFavoriteProducts = {
+                userId: user?.Id,
+                productId: product.id,
+                productName: product.name,
+                productPrice: product.price,
+                productImage: product.imagesPath?.[0] ?? '',
+            };
+            if (!isFavorite(product.id)) {
                 dispatch(addToFavorite(favoriteProduct));
                 await addFavoriteProduct(favoriteProduct);
             } else {
-                console.log('Product is already in favorites');
-            }
-        }
-    };
-
-    const removeFromFavoriteToggle = async (productId: number, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
-        e.preventDefault();
-        if (user) {
-            if (isFavorite(productId)) {
-                const favoriteProduct: IRemoveFavoriteProduct = {
-                    userId: user?.Id,
-                    productId: productId,
-                };
                 dispatch(removeFromFavorite(favoriteProduct));
                 await removeFavoriteProduct(favoriteProduct);
-            } else {
-                console.log('Product is not in favorites');
             }
         }
     };
@@ -556,14 +543,14 @@ export default function CatalogHome() {
                             {productList.map((product) => (
                                 <div key={product.id} className="group relative">
                                     <Link to={`/product/${product.id}`} className="group">
-                                        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
+                                        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7  hover13">
                                             <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`}
-                                                className="h-full w-full object-cover object-center group-hover:opacity-75"/>
+                                                className="h-full w-full object-cover object-center "/>
                                             <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
                                                 {isFavorite(product.id) ? (
-                                                    <HeartIcon className="w-8 h-8 hover:text-indigo-800 stroke-1" onClick={(e) => removeFromFavoriteToggle(product.id, e)} />
+                                                    <HeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
                                                 ) : (
-                                                    <OutlineHeartIcon className="w-8 h-8 hover:text-indigo-800 stroke-1" onClick={(e) => addToFavoriteToggle(product.id, e)} />
+                                                    <OutlineHeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
                                                 )}
                                             </div>
                                         </div>

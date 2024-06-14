@@ -3,6 +3,8 @@ import { useDispatch } from 'react-redux';
 import { IUser } from './interfaces/Auth/IUser';
 import { AuthReducerActionType } from './store/accounts/AuthReducer';
 import { jwtDecode } from 'jwt-decode'
+import { BagReducerActionType } from './store/bag/BagReducer';
+import { FavouritesReducerActionType } from './store/favourites/FavouritesReducer';
 
 const useAuthTokenEffect = () => {
   const dispatch = useDispatch();
@@ -25,16 +27,49 @@ const useAuthTokenEffect = () => {
             AuthType: user.AuthType
           } as IUser
         });
+
+
+        const tokenExpiration = new Date().getTime() + 60 * 60 * 1000; // 60 хвилин
+        localStorage.setItem('tokenExpiration', tokenExpiration.toString());
+        const logoutTimer = setTimeout(() => {
+          // Виклик функції логауту
+          dispatch({ type: AuthReducerActionType.LOGOUT_USER });
+          dispatch({ type: BagReducerActionType.DELETE_ALL });
+          dispatch({ type: FavouritesReducerActionType.DELETE_ALL });
+        }, 60 * 60 * 1000); // 60 хвилин
+        localStorage.setItem('logoutTimer', logoutTimer.toString());
+
       } else {
         dispatch({ type: AuthReducerActionType.LOGOUT_USER });
       }
     };
+
+
+
+    const checkTokenExpiration = () => {
+      const tokenExpiration = localStorage.getItem('tokenExpiration');
+      if (tokenExpiration && new Date().getTime() > parseInt(tokenExpiration)) {
+        // Виклик функції логауту
+        dispatch({ type: AuthReducerActionType.LOGOUT_USER });
+        dispatch({ type: BagReducerActionType.DELETE_ALL });
+        dispatch({ type: FavouritesReducerActionType.DELETE_ALL });
+      }
+    };
+
+    // Перевірка часу токену кожні 5 секунд
+    const tokenCheckInterval = setInterval(checkTokenExpiration, 5000);
+
+
+
+
 
     window.addEventListener('storage', handleTokenChange);
 
     handleTokenChange();
 
     return () => {
+      clearInterval(tokenCheckInterval);
+
       window.removeEventListener('storage', handleTokenChange);
     };
   }, [dispatch]);

@@ -1,8 +1,8 @@
-import { IProduct } from "../Product/IProduct";
-
-export interface IFavoriteProducts{
-    id: number;
+export interface IFavoriteProducts {
+    // id: number;
     userId: string;
     productId: number;
-    products: IProduct[];
+    productName: string;
+    productPrice: number;
+    productImage: string;
 }
