@@ -25,8 +25,8 @@ const Favourites: React.FC<SettingsUserProps> = () => {
                 <h2 className="text-2xl font-bold tracking-tight text-gray-900">My Favorites</h2>
                 {displayedProducts.length > 4 && (
                   <button onClick={handleLoadAllProducts} className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">
-                    {showAllProducts ? 'Show less' : 'Browse all favorites'}
-                    <span aria-hidden="true"> &rarr;</span>
+                    {showAllProducts ? 'Show less' : 'Browse all favorites' } 
+                    {showAllProducts ? (<span aria-hidden="true"> &larr;</span>) : (<span aria-hidden="true"> &rarr;</span>) }
                   </button>
                 )}
               </div>
@@ -53,7 +53,7 @@ const Favourites: React.FC<SettingsUserProps> = () => {
                 <div className="mt-6 sm:hidden">
                   <button onClick={handleLoadAllProducts} className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">
                     {showAllProducts ? 'Show less' : 'Browse all favorites'}
-                    <span aria-hidden="true"> &rarr;</span>
+                    {showAllProducts ? (<span aria-hidden="true"> &larr;</span>) : (<span aria-hidden="true"> &rarr;</span>) }
                   </button>
                 </div>
               )}
