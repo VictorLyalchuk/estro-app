@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AuthReducerActionType, IAuthReducerState } from '../../../../store/accounts/AuthReducer';
 import { APP_ENV } from "../../../../env/config";
 import { BagReducerActionType } from '../../../../store/bag/BagReducer';
-import { ArrowLeftOnRectangleIcon, Cog6ToothIcon, DocumentChartBarIcon, UserIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftOnRectangleIcon, Cog6ToothIcon, DocumentChartBarIcon, HeartIcon, UserIcon } from '@heroicons/react/24/outline';
 import { FavouritesReducerActionType } from '../../../../store/favourites/FavouritesReducer';
 
 const DropdownUser = () => {
@@ -121,6 +121,18 @@ const DropdownUser = () => {
               Account Settings
             </Link>
           </li>
+
+          <li>
+            <Link
+              to="/account/favorites"
+              onClick={() => setDropdownOpen(false)}
+              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500"
+            >
+              <HeartIcon className="h-5 w-5" aria-hidden="true" />
+              Favorites
+            </Link>
+          </li>
+
         </ul>
         <Link className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500" to={"/"} onClick={handleLogout}>
           <ArrowLeftOnRectangleIcon className="h-5 w-5" aria-hidden="true" />

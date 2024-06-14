@@ -53,7 +53,7 @@ const UserPanelPage = () => {
             component: <Settings userProfile={userProfile} />,
         },
         {
-            name: 'Favourites',
+            name: 'Favorites',
             current: activeTab === 3,
             component: <Favourites userProfile={userProfile} />,
             count: favoriteProducts.length.toString(),
@@ -66,7 +66,7 @@ const UserPanelPage = () => {
     ];
     const handleTabChange = (index: number) => {
         setActiveTab(index);
-        const routes = ['/account/orders', '/account/profile', '/account/settings', '/account/favourites', '/account/bonuses'];
+        const routes = ['/account/orders', '/account/profile', '/account/settings', '/account/favorites', '/account/bonuses'];
         navigate(routes[index]);
     };
 
@@ -80,7 +80,7 @@ const UserPanelPage = () => {
         else if (location.pathname.startsWith('/account/settings')) {
             setActiveTab(2);
         }
-        else if (location.pathname.startsWith('/account/favourites')) {
+        else if (location.pathname.startsWith('/account/favorites')) {
             setActiveTab(3);
         }
         else if (location.pathname.startsWith('/account/bonuses')) {

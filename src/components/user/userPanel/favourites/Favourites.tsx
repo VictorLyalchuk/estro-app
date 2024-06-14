@@ -23,10 +23,12 @@ const Favourites: React.FC<SettingsUserProps> = () => {
             <div className="px-4 py-6 sm:p-6 lg:pb-8">
               <div className="sm:flex sm:items-baseline sm:justify-between">
                 <h2 className="text-2xl font-bold tracking-tight text-gray-900">My Favorites</h2>
-                <button onClick={handleLoadAllProducts} className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">
-                  {showAllProducts ? 'Show less' : 'Browse all favorites'}
-                  <span aria-hidden="true"> &rarr;</span>
-                </button>
+                {displayedProducts.length > 4 && (
+                  <button onClick={handleLoadAllProducts} className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">
+                    {showAllProducts ? 'Show less' : 'Browse all favorites'}
+                    <span aria-hidden="true"> &rarr;</span>
+                  </button>
+                )}
               </div>
               <div className="mt-6 grid grid-cols-1 gap-y-10 sm:grid-cols-3 sm:gap-x-6 sm:gap-y-0 lg:gap-x-8">
                 {displayedProducts.map((product, index) => (
@@ -47,12 +49,14 @@ const Favourites: React.FC<SettingsUserProps> = () => {
                   </div>
                 ))}
               </div>
-              <div className="mt-6 sm:hidden">
-                <button onClick={handleLoadAllProducts} className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">
-                  {showAllProducts ? 'Show less' : 'Browse all favorites'}
-                  <span aria-hidden="true"> &rarr;</span>
-                </button>
-              </div>
+              {displayedProducts.length > 4 && (
+                <div className="mt-6 sm:hidden">
+                  <button onClick={handleLoadAllProducts} className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">
+                    {showAllProducts ? 'Show less' : 'Browse all favorites'}
+                    <span aria-hidden="true"> &rarr;</span>
+                  </button>
+                </div>
+              )}
               <div className="container mx-auto flex relative max-w-7xl lg:flex-row justify-between m-0">
                 <div className="sm:flex sm:flex-1 sm:items-center sm:justify-between ">
                   <div>

@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import GoodsNotFound from "../../../../assets/goods-not-found.png";
 import { APP_ENV } from "../../../../env/config";
-import { ArrowLongLeftIcon, ArrowLongRightIcon, Squares2X2Icon } from '@heroicons/react/20/solid';
+import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/react/20/solid';
 import { CompactOrdersProps } from "../../../../interfaces/Custom/Phone/ProfileUser/ProfileUserProps";
+import { ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -51,7 +52,7 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
                   <div className="flex sm:items-start sm:space-x-4 px-4 py-6 sm:p-6 lg:pb-8">
                     <button onClick={onViewModeChange} className="text-gray-400 hover:text-indigo-600">
                       <span className="sr-only">View grid</span>
-                      <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
+                      <ArrowsPointingOutIcon className="h-7 w-7" aria-hidden="true" />
                     </button>
                   </div>
                 </div>

@@ -73,7 +73,7 @@ function App() {
           <Route path="account/orders" element={<UserPanelPage />} />
           <Route path='account/profile' element={<UserPanelPage />} />
           <Route path='account/settings' element={<UserPanelPage />} />
-          <Route path='account/favourites' element={<UserPanelPage />} />
+          <Route path='account/favorites' element={<UserPanelPage />} />
           <Route path='account/bonuses' element={<UserPanelPage />} />
         </Route>
 

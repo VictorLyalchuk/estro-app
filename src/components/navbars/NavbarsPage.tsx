@@ -362,7 +362,7 @@ const NavbarsPage = () => {
 
                                         {/* Favorites */}
                                         <div className="ml-4 flow-root lg:ml-6">
-                                            <Link to={"/account/favourites"} className="group -m-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-10 flex items-center hover:text-gray-500">
+                                            <Link to={"/account/favorites"} className="group -m-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-10 flex items-center hover:text-gray-500">
                                                 <HeartIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-3" aria-hidden="true" />
                                                 {favoriteCount}</Link>
                                         </div>
