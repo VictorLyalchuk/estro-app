@@ -525,9 +525,7 @@ export default function CatalogNavigation() {
                     {productList.slice(0, itemsPerPage).map((product) => (
                       <div key={product.id} className="group relative">
                         <Link to={`/product/${product.id}`}>
-                          <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none lg:h-80 
-                          hover13">
-                            {/* hover14  */}
+                          <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none lg:h-80 hover13">
                             <img
                               src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`}
                               alt={product.name}
@@ -535,9 +533,9 @@ export default function CatalogNavigation() {
                             />
                             <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
                               {isFavorite(product.id) ? (
-                                <HeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                <HeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
                               ) : (
-                                <OutlineHeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                <OutlineHeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
                               )}
                             </div>
                           </div>

@@ -162,15 +162,12 @@ export default function Product() {
           </ol>
         </nav>
         {/* Image gallery */}
-        <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-1 lg:gap-x-8 lg:px-8">
+        <div className="mx-auto mt-6 max-w-2xl px-6 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-1 lg:gap-x-8 lg:px-8">
           <Slider>
             {/* <Carousel arrows  autoplay={false}> */}
             <Carousel swipe animation="fade" duration={1500} autoPlay={true} indicators={true} className="h-full w-full">
               {product.images?.map((image, index) => (
-                <div
-                  key={index}
-                  className={`aspect-h-4 aspect-w-3 rounded min-h-[1000px]`}
-                >
+                <div key={index} className="aspect-h-4 aspect-w-3 rounded" >
                   <Image
                     src={`${baseUrl}/uploads/1200_${image?.imagePath || '/uploads/default.jpg'}`}
                     alt={product.name}
@@ -190,13 +187,6 @@ export default function Product() {
               <div className="mt-4 flex items-center justify-between">
                 <h2 className="sr-only">Product information</h2>
                 <p className="text-3xl tracking-tight text-red-800">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
-                <div className="cursor-pointer">
-                  {isFavorite(product.id) ? (
-                    <HeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                  ) : (
-                    <OutlineHeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                  )}
-                </div>
 
               </div>
             </div>
@@ -222,8 +212,6 @@ export default function Product() {
                 </a>
               </div>
             </div>
-
-
 
             <form className="mt-10">
               {/* Sizes */}
@@ -290,16 +278,30 @@ export default function Product() {
                   </div>
                 </RadioGroup>
               </div>
+              <div className="mt-8 flex items-center justify-between">
+                <button
+                  type="button"
+                  disabled={!selectedSize}
+                  onClick={addToBag}
+                  className={`p-2 mr-3 flex w-full items-center justify-center rounded-md border ${!selectedSize ? 'bg-gray-300' : 'bg-indigo-600 hover:bg-indigo-700'
+                    } px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+                >
+                  {selectedSize ? 'Add to bag' : 'Select a size'}
+                </button>
 
-              <button
-                type="button"
-                disabled={!selectedSize}
-                onClick={addToBag}
-                className={`mt-10 flex w-full items-center justify-center rounded-md border ${!selectedSize ? 'bg-gray-300' : 'bg-indigo-600 hover:bg-indigo-700'
-                  } px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
-              >
-                {selectedSize ? 'Add to bag' : 'Select a size'}
-              </button>
+                <div className="cursor-pointer">
+                  {isFavorite(product.id) ? (
+                    <button className="shrink-0 hover:bg-gray-200 p-2 rounded-xl">
+                      <HeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                    </button>
+
+                  ) : (
+                    <button className="shrink-0 hover:bg-gray-200 p-2 rounded-xl">
+                      <OutlineHeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                    </button>
+                  )}
+                </div>
+              </div>
             </form>
 
             <div className="mt-8">

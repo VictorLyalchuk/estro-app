@@ -148,13 +148,6 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                                     <div className="mt-4 flex items-center justify-between">
 
                                                         <p className="text-2xl tracking-tight text-red-800">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
-                                                        <div className="cursor-pointer">
-                                                            {isFavorite(product.id) ? (
-                                                                <HeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                                                            ) : (
-                                                                <OutlineHeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                                                            )}
-                                                        </div>
                                                     </div>
 
                                                     {/* Reviews */}
@@ -249,16 +242,30 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                                                 </div>
                                                             </RadioGroup>
                                                         </div>
-                                                        <button
-                                                            type="button"
-                                                            disabled={!selectedSize}
-                                                            onClick={addToBag}
-                                                            tabIndex={0}
-                                                            className={`mt-6 flex w-full items-center justify-center rounded-md border ${!selectedSize ? 'bg-gray-300' : 'bg-indigo-600 hover:bg-indigo-700'
-                                                                } px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
-                                                        >
-                                                            {selectedSize ? 'Add to bag' : 'Select a size'}
-                                                        </button>
+                                                        <div className="mt-8 flex items-center justify-between">
+                                                            <button
+                                                                type="button"
+                                                                disabled={!selectedSize}
+                                                                onClick={addToBag}
+                                                                className={`p-2 mr-3 flex w-full items-center justify-center rounded-md border ${!selectedSize ? 'bg-gray-300' : 'bg-indigo-600 hover:bg-indigo-700'
+                                                                    } px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+                                                            >
+                                                                {selectedSize ? 'Add to bag' : 'Select a size'}
+                                                            </button>
+
+                                                            <div className="cursor-pointer">
+                                                                {isFavorite(product.id) ? (
+                                                                    <button className="shrink-0 hover:bg-gray-200 p-2 rounded-xl">
+                                                                        <HeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                                                    </button>
+
+                                                                ) : (
+                                                                    <button className="shrink-0 hover:bg-gray-200 p-2 rounded-xl">
+                                                                        <OutlineHeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                                                    </button>
+                                                                )}
+                                                            </div>
+                                                        </div>
                                                     </form>
                                                 </section>
                                             </div>

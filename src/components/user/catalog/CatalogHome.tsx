@@ -542,19 +542,19 @@ export default function CatalogHome() {
                         <div className="min-h-[990px] grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-x-8">
                             {productList.map((product) => (
                                 <div key={product.id} className="group relative">
-                                    <Link to={`/product/${product.id}`} className="group">
-                                        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7  hover13">
+                                    <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7  hover13">
+                                        <Link to={`/product/${product.id}`} className="group">
                                             <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`}
-                                                className="h-full w-full object-cover object-center "/>
-                                            <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
-                                                {isFavorite(product.id) ? (
-                                                    <HeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                                                ) : (
-                                                    <OutlineHeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                                                )}
-                                            </div>
+                                                className="h-full w-full object-cover object-center " />
+                                        </Link>
+                                        <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
+                                            {isFavorite(product.id) ? (
+                                                <HeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                            ) : (
+                                                <OutlineHeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                            )}
                                         </div>
-                                    </Link>
+                                    </div>
                                     <h3 className="mt-4 text-sm text-gray-700 line-clamp-2 break-words w-45">{product.name.split(' ').slice(0, 3).join(' ')}</h3>
                                     <p className="mt-1 text-xs text-gray-500">{product.article}</p>
                                     <p className="mt-1 text-xs text-gray-500">{product.purpose}</p>
