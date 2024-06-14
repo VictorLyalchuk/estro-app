@@ -8,7 +8,6 @@ import { IUserEdit } from "../../interfaces/Auth/IUserEdit";
 import { IRegister } from "../../interfaces/Auth/IRegister";
 import { ILogin } from "../../interfaces/Auth/ILogin";
 
-
 const baseUrl = APP_ENV.BASE_URL;
 
 // Створюємо екземпляр axios
@@ -172,6 +171,7 @@ export async function login(_user: ILogin, dispatch: any) {
         dispatch({
             type: AuthReducerActionType.LOGIN_USER,
             payload: {
+                Id: user.Id,
                 Email: user.Email,
                 FirstName: user.FirstName,
                 LastName: user.LastName,

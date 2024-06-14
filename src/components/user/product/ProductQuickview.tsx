@@ -1,7 +1,7 @@
 import { Fragment, useState } from 'react'
 import { Dialog, RadioGroup, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
-import { IProduct, IStorages } from '../../../interfaces/Catalog/IProduct'
+import { IProduct, IStorages } from '../../../interfaces/Product/IProduct'
 import { APP_ENV } from '../../../env/config'
 import { useDispatch, useSelector } from 'react-redux';
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer';
@@ -9,6 +9,16 @@ import { BagReducerActionType } from '../../../store/bag/BagReducer';
 import { IBag } from '../../../interfaces/Bag/IBag';
 import { useNavigate } from 'react-router-dom'
 import { createBag } from '../../../services/bag/bag-services'
+import Carousel from 'react-material-ui-carousel';
+import { Image } from 'antd';
+import { HeartIcon } from '@heroicons/react/24/solid';
+import { HeartIcon as OutlineHeartIcon } from '@heroicons/react/24/outline'
+import { RootState } from '../../../store/store';
+import { ICreateFavoriteProductDTO } from '../../../interfaces/FavoriteProducts/ICreateFavoriteProductDTO';
+import { IRemoveFavoriteProduct } from '../../../interfaces/FavoriteProducts/IRemoveFavoriteProduct';
+import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavouritesReducer';
+import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/favoriteProducts/favorite-products-services';
+
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -25,6 +35,8 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
     const { isAuth, user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
     const dispatch = useDispatch();
     const navigate = useNavigate();
+    const favoriteProducts = useSelector((state: RootState) => state.favourites.favoriteProducts);
+    const isFavorite = (productId: number) => favoriteProducts.some((product: { productId: number }) => product.productId === productId);
 
     const handleClose = () => {
         setOpen(true);
@@ -56,6 +68,37 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
             }
         }
     }
+    const addToFavoriteToggle = async (productId: number, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+        e.preventDefault();
+        if (user) {
+            if (!isFavorite(productId)) {
+                const favoriteProduct: ICreateFavoriteProductDTO = {
+                    userId: user?.Id,
+                    productId: productId,
+                };
+                dispatch(addToFavorite(favoriteProduct));
+                await addFavoriteProduct(favoriteProduct);
+            } else {
+                console.log('Product is already in favorites');
+            }
+        }
+    };
+
+    const removeFromFavoriteToggle = async (productId: number, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+        e.preventDefault();
+        if (user) {
+            if (isFavorite(productId)) {
+                const favoriteProduct: IRemoveFavoriteProduct = {
+                    userId: user?.Id,
+                    productId: productId,
+                };
+                dispatch(removeFromFavorite(favoriteProduct));
+                await removeFavoriteProduct(favoriteProduct);
+            } else {
+                console.log('Product is not in favorites');
+            }
+        }
+    };
 
     return (
         <>
@@ -95,10 +138,19 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                             <span className="sr-only">Close</span>
                                             <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                                         </button>
-
                                         <div className="grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:gap-x-8">
                                             <div className="aspect-h-3 aspect-w-2 overflow-hidden rounded-lg bg-gray-100 sm:col-span-4 lg:col-span-5">
-                                                <img tabIndex={0} src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`} className="object-cover object-center" />
+                                                <Carousel swipe animation="fade" duration={1500} autoPlay={true} indicators={false} className="absolute ">
+                                                    {product.images?.map((image, index) => (
+                                                        <div key={index} className="">
+                                                            <Image
+                                                                src={`${baseUrl}/uploads/1200_${image.imagePath || '/uploads/default.jpg'}`}
+                                                                className="h-full w-full object-cover object-center"
+                                                                alt={product.name}
+                                                            />
+                                                        </div>
+                                                    ))}
+                                                </Carousel>
                                             </div>
                                             <div className="sm:col-span-8 lg:col-span-7">
                                                 <h2 className="text-2xl font-bold text-gray-900 sm:pr-12">{product.name}</h2>
@@ -107,8 +159,17 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                                     <h3 id="information-heading" className="sr-only">
                                                         Product information
                                                     </h3>
+                                                    <div className="mt-4 flex items-center justify-between">
 
-                                                    <p className="text-2xl text-gray-900">{product.price}</p>
+                                                        <p className="text-2xl tracking-tight text-red-800">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
+                                                        <div className="cursor-pointer">
+                                                            {isFavorite(product.id) ? (
+                                                                <HeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => removeFromFavoriteToggle(product.id, e)} />
+                                                            ) : (
+                                                                <OutlineHeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => addToFavoriteToggle(product.id, e)} />
+                                                            )}
+                                                        </div>
+                                                    </div>
 
                                                     {/* Reviews */}
                                                     {/* <div className="mt-6">
@@ -138,7 +199,6 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                                     <h3 id="options-heading" className="sr-only">
                                                         Product options
                                                     </h3>
-
                                                     <form>
                                                         {/* Sizes */}
                                                         <div className="mt-10">
@@ -148,7 +208,6 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                                                     Size guide
                                                                 </a>
                                                             </div>
-
                                                             <RadioGroup
                                                                 value={selectedSize}
                                                                 onChange={setSelectedSize}
@@ -162,13 +221,13 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                                                             disabled={!size.inStock}
                                                                             className={({ checked }) =>
                                                                                 classNames(
-                                                                                  size.inStock
-                                                                                    ? 'cursor-pointer bg-gray-100 text-gray-900 shadow-sm '
-                                                                                    : 'cursor-not-allowed bg-gray-50 text-gray-200',
-                                                                                  checked ? 'bg-indigo-600 text-white' : '',
-                                                                                  'group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-indigo-600 hover:text-white focus:outline-none sm:flex-1 sm:py-6'
+                                                                                    size.inStock
+                                                                                        ? 'cursor-pointer bg-gray-100 text-gray-900 shadow-sm '
+                                                                                        : 'cursor-not-allowed bg-gray-50 text-gray-200',
+                                                                                    checked ? 'bg-indigo-600 text-white' : '',
+                                                                                    'group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-indigo-600 hover:text-white focus:outline-none sm:flex-1 sm:py-6'
                                                                                 )
-                                                                              }
+                                                                            }
                                                                         >
                                                                             {({ active, checked }) => (
                                                                                 <>
@@ -225,9 +284,7 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                     </div>
                 </Dialog>
             </Transition.Root>
-
         </>
     )
 }
-
 export default ProductQuickview;

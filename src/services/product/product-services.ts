@@ -1,7 +1,7 @@
 import axios from "axios";
 import { APP_ENV } from "../../env/config";
 import qs from "qs";
-import { IProduct } from "../../interfaces/Catalog/IProduct";
+import { IProduct } from "../../interfaces/Product/IProduct";
 
 const baseUrl = APP_ENV.BASE_URL;
 

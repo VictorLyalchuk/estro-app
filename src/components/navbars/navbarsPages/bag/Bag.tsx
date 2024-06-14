@@ -45,12 +45,12 @@ const Bag = () => {
   const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
   const [bagUser, setBagUser] = useState<IBagUser>();
   const dispatch = useDispatch();
-  const { count } = useSelector((redux: any) => redux.bagReducer as IBagReducerState);
-  const { total } = useSelector((redux: any) => redux.cardReducer as ICardReducerState);
-  const { taxes } = useSelector((redux: any) => redux.cardReducer as ICardReducerState);
-  const { totalWithOutTax } = useSelector((redux: any) => redux.cardReducer as ICardReducerState);
-  const { initialIndividualItemPrice } = useSelector((redux: any) => redux.cardReducer as ICardReducerState);
-  const bagItems = useSelector((state: { cardReducer: ICardReducerState }) => state.cardReducer.items) || [];
+  const { count } = useSelector((redux: any) => redux.bag as IBagReducerState);
+  const { total } = useSelector((redux: any) => redux.card as ICardReducerState);
+  const { taxes } = useSelector((redux: any) => redux.card as ICardReducerState);
+  const { totalWithOutTax } = useSelector((redux: any) => redux.card as ICardReducerState);
+  const { initialIndividualItemPrice } = useSelector((redux: any) => redux.card as ICardReducerState);
+  const bagItems = useSelector((state: { card: ICardReducerState }) => state.card.items) || [];
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
   const [selectedShipping, setSelectedShipping] = useState<string | null>(null);
   const [warehouseSelected, setSelectedWarehouse] = useState(false);
@@ -97,8 +97,8 @@ const Bag = () => {
     }
     getCity();
     getStore();
-    setSelectedShipping('Branch');
-    setSelectedPayment('PaymentAfter');
+    // setSelectedShipping('Branch');
+    // setSelectedPayment('PaymentAfter');
   }, [user, count]);
 
   useEffect(() => {

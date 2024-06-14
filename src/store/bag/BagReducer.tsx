@@ -37,13 +37,16 @@ const bagReducer = (state = initState, action: IBagReducerAction): IBagReducerSt
             return {
                 ...state,
                 count: newCount || 0,
-                // count: state.count - action.payload?.count || 0,
             };
         case BagReducerActionType.GET_PRODUCT_BAG_COUNT:
             return {
                 ...state,
                 count: action.payload?.count,
             };
+        case BagReducerActionType.DELETE_ALL:
+                return {
+                    count: 0,
+                };
         default:
             return state;
     }

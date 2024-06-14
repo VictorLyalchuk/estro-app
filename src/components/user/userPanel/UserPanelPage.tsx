@@ -13,6 +13,7 @@ import Bonuses from './bonuses/Bonuses';
 import CompactOrders from './orders/CompactOrders';
 import Orders from './orders/Orders';
 import { getProfileOrders, getUserOrders } from '../../../services/order/order-services';
+import Favourites from './favourites/Favourites';
 
 const UserPanelPage = () => {
     const location = useLocation();
@@ -50,14 +51,19 @@ const UserPanelPage = () => {
             component: <Settings userProfile={userProfile} />,
         },
         {
-            name: 'My Bonuses',
+            name: 'Favourites',
             current: activeTab === 3,
+            component: <Favourites userProfile={userProfile} />,
+        },
+        {
+            name: 'My Bonuses',
+            current: activeTab === 4,
             component: <Bonuses userProfile={userProfile} />,
         },
     ];
     const handleTabChange = (index: number) => {
         setActiveTab(index);
-        const routes = ['/account/orders', '/account/profile', '/account/settings', '/account/bonuses'];
+        const routes = ['/account/orders', '/account/profile', '/account/settings', '/account/favourites', '/account/bonuses'];
         navigate(routes[index]);
     };
 
@@ -71,8 +77,11 @@ const UserPanelPage = () => {
         else if (location.pathname.startsWith('/account/settings')) {
             setActiveTab(2);
         }
-        else if (location.pathname.startsWith('/account/bonuses')) {
+        else if (location.pathname.startsWith('/account/favourites')) {
             setActiveTab(3);
+        }
+        else if (location.pathname.startsWith('/account/bonuses')) {
+            setActiveTab(4);
         }
     }, [location.pathname]);
 

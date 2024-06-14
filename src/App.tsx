@@ -23,19 +23,23 @@ import AdminLayout from "./components/layout/AdminLayout";
 import AuthPage from "./components/navbars/navbarsPages/auth/AuthPage";
 import UserPanelPage from "./components/user/userPanel/UserPanelPage";
 import UserLayout from "./components/layout/UserLayout";
-import useAuthTokenEffect from "./useAuthTokenEffect";
 import GuestLayout from "./components/layout/GuestLayout";
 import HomeStore from "./components/homePage/HomeStore";
 import CatalogHome from "./components/user/catalog/CatalogHome";
 import Tables from "./components/Dashboard/pages/Tables";
 
+import useAuthTokenEffect from "./useAuthTokenEffect";
+import useGetFavoritesEffect from "./useGetFavoritesEffect";
+
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
+
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
-  }, []);
-
-  useAuthTokenEffect();
+    }, []);
+    
+    useAuthTokenEffect()
+    useGetFavoritesEffect();
 
   return loading ? (
     <>
@@ -69,6 +73,7 @@ function App() {
           <Route path="account/orders" element={<UserPanelPage />} />
           <Route path='account/profile' element={<UserPanelPage />} />
           <Route path='account/settings' element={<UserPanelPage />} />
+          <Route path='account/favourites' element={<UserPanelPage />} />
           <Route path='account/bonuses' element={<UserPanelPage />} />
         </Route>
 

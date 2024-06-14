@@ -5,6 +5,7 @@ import { AuthReducerActionType, IAuthReducerState } from '../../../../store/acco
 import { APP_ENV } from "../../../../env/config";
 import { BagReducerActionType } from '../../../../store/bag/BagReducer';
 import { ArrowLeftOnRectangleIcon, Cog6ToothIcon, DocumentChartBarIcon, UserIcon } from '@heroicons/react/24/outline';
+import { FavouritesReducerActionType } from '../../../../store/favourites/FavouritesReducer';
 
 const DropdownUser = () => {
   const baseUrl = APP_ENV.BASE_URL;
@@ -27,6 +28,9 @@ const DropdownUser = () => {
     dispatch({
       type: BagReducerActionType.DELETE_ALL,
     });
+    dispatch({
+      type: FavouritesReducerActionType.DELETE_ALL,
+  })
   };
 
   // close on click outside
@@ -68,24 +72,12 @@ const DropdownUser = () => {
         <div className=" text-right lg:block hover:text-indigo-500">
           <div className={`block text-sm font-medium ${isAuth ? 'text-gray-900 hover:text-indigo-500' : 'text-gray-700 hover:text-indigo-500'}`}>
             {user?.FirstName} {' '} {user?.LastName}
-            {/* <br /> {user?.Role} */}
           </div>
-
         </div>
-
         <span className="h-12 w-12 " >
-
-          {/* {user?.AuthType == 'standard' ?
-            ( */}
           <img src={`${baseUrl}/uploads/${user?.ImagePath || "user404.webp"}`}
             className='rounded-full'
             alt="User" />
-          {/* ) : (
-              <img src={`${user?.ImagePath || "user404.webp"}`}
-                className='rounded-full'
-                alt="User" />
-            )} */}
-
         </span>
       </Link>
 

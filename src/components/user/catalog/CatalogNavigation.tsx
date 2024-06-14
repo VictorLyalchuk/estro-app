@@ -1,8 +1,8 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Disclosure, Menu, Transition } from '@headlessui/react'
-import { ArrowLongLeftIcon, ArrowLongRightIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { ArrowLongLeftIcon, ArrowLongRightIcon, XMarkIcon, HeartIcon as OutlineHeartIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from '@heroicons/react/20/solid'
-import { IProduct, IStorages } from '../../../interfaces/Catalog/IProduct.ts';
+import { IProduct, IStorages } from '../../../interfaces/Product/IProduct.ts';
 import { Link, useParams, useNavigate } from "react-router-dom";
 import qs, { ParsedQs } from 'qs';
 import { IMainCategory } from '../../../interfaces/Catalog/IMainCategory.ts';
@@ -10,11 +10,19 @@ import { IInfo } from '../../../interfaces/Info/IInfo.ts';
 import { APP_ENV } from "../../../env/config.ts";
 import { getProductsist, getQuantityProducts } from '../../../services/product/product-services.ts';
 import { updateFilters, createQueryParams, onPageChangeQueryParams, onSortChangeQueryParams } from '../../../utils/catalog/filterUtils.ts';
-import ProductQuickview from './ProductQuickview.tsx';
+import ProductQuickview from '../product/ProductQuickview.tsx';
 import { ISortOptions } from '../../../interfaces/Catalog/ISortOptions.ts';
 import { getMainCategories } from '../../../services/category/category-services.ts';
 import { getInfoList } from '../../../services/info/info-services.ts';
 import { initialSortOptions } from '../../../data/initialSortOptions'
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../../../store/store.ts';
+import { ICreateFavoriteProductDTO } from '../../../interfaces/FavoriteProducts/ICreateFavoriteProductDTO.ts';
+import { IAuthReducerState } from '../../../store/accounts/AuthReducer.ts';
+import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavouritesReducer.ts';
+import { IRemoveFavoriteProduct } from '../../../interfaces/FavoriteProducts/IRemoveFavoriteProduct.tsx';
+import { HeartIcon } from '@heroicons/react/24/solid';
+import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/favoriteProducts/favorite-products-services.ts';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -23,7 +31,11 @@ function classNames(...classes: string[]) {
 export default function CatalogNavigation() {
   const baseUrl = APP_ENV.BASE_URL;
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const { subName, urlName } = useParams();
+  const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
+  const favoriteProducts = useSelector((state: RootState) => state.favourites.favoriteProducts);
+  const isFavorite = (productId: number) => favoriteProducts.some((product: { productId: number }) => product.productId === productId);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [productList, setProduct] = useState<IProduct[]>([]);
   const [mainCategoryList, setMainCategoryList] = useState<IMainCategory[]>([]);
@@ -175,6 +187,38 @@ export default function CatalogNavigation() {
     }
   };
 
+  const addToFavoriteToggle = async (productId: number, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    e.preventDefault();
+    if (user) {
+      if (!isFavorite(productId)) {
+        const favoriteProduct: ICreateFavoriteProductDTO = {
+          userId: user?.Id,
+          productId: productId,
+        };
+        dispatch(addToFavorite(favoriteProduct));
+        await addFavoriteProduct(favoriteProduct);
+      } else {
+        console.log('Product is already in favorites');
+      }
+    }
+  };
+
+  const removeFromFavoriteToggle = async (productId: number, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    e.preventDefault();
+    if (user) {
+      if (isFavorite(productId)) {
+        const favoriteProduct: IRemoveFavoriteProduct = {
+          userId: user?.Id,
+          productId: productId,
+        };
+        dispatch(removeFromFavorite(favoriteProduct));
+        await removeFavoriteProduct(favoriteProduct);
+      } else {
+        console.log('Product is not in favorites');
+      }
+    }
+  };
+
   useEffect(() => {
     setPage(1);
     getMainCategory();
@@ -276,7 +320,7 @@ export default function CatalogNavigation() {
                           <>
                             <h3 className="-mx-2 -my-3 flow-root">
                               <Disclosure.Button className="flex w-full items-center justify-between bg-gray-100 px-2 py-3 text-gray-400 hover:text-gray-500">
-                                <span className="font-medium text-gray-900">{section.name}</span>
+                                <span className="font-medium text-gray-900 hover:text-indigo-500">{section.name}</span>
                                 <span className="ml-6 flex items-center">
                                   {open ? (
                                     <MinusIcon className="h-5 w-5" aria-hidden="true" />
@@ -441,7 +485,7 @@ export default function CatalogNavigation() {
                       <>
                         <h3 className="-my-3 flow-root">
                           <Disclosure.Button className="flex w-full items-center justify-between bg-gray-100 py-3 text-sm text-gray-400 hover:text-gray-500">
-                            <span className="font-medium text-gray-900">{section.name}</span>
+                            <span className="font-medium text-gray-900 hover:text-indigo-500">{section.name}</span>
                             <span className="ml-6 flex items-center">
                               {open ? (
                                 <MinusIcon className="h-5 w-5" aria-hidden="true" />
@@ -500,6 +544,13 @@ export default function CatalogNavigation() {
                               alt={product.name}
                               className="h-full w-full lg:h-full lg:w-full object-cover object-center"
                             />
+                            <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
+                              {isFavorite(product.id) ? (
+                                <HeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => removeFromFavoriteToggle(product.id, e)} />
+                              ) : (
+                                <OutlineHeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => addToFavoriteToggle(product.id, e)} />
+                              )}
+                            </div>
                           </div>
                           <div className="mt-4 flex justify-between">
                             <div>

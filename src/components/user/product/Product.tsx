@@ -4,16 +4,22 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Image, message } from 'antd';
 import { StarIcon } from '@heroicons/react/20/solid'
 import { RadioGroup } from '@headlessui/react'
-import { IProduct, IStorages } from '../../../interfaces/Catalog/IProduct';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
+import { IProduct, IStorages } from '../../../interfaces/Product/IProduct';
 import { BagReducerActionType } from '../../../store/bag/BagReducer';
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer';
 import { IBag } from '../../../interfaces/Bag/IBag';
 import { APP_ENV } from "../../../env/config";
 import { getProductById } from '../../../services/product/product-services';
 import { createBag } from '../../../services/bag/bag-services';
+import Carousel from 'react-material-ui-carousel';
+import Slider from 'react-slick';
+import { HeartIcon } from '@heroicons/react/24/solid';
+import { HeartIcon as OutlineHeartIcon } from '@heroicons/react/24/outline'
+import { RootState } from '../../../store/store';
+import { ICreateFavoriteProductDTO } from '../../../interfaces/FavoriteProducts/ICreateFavoriteProductDTO';
+import { IRemoveFavoriteProduct } from '../../../interfaces/FavoriteProducts/IRemoveFavoriteProduct';
+import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavouritesReducer';
+import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/favoriteProducts/favorite-products-services';
 
 const reviews = { href: '#', average: 4, totalCount: 117 }
 
@@ -27,9 +33,10 @@ export default function Product() {
   const { isAuth, user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
   const [product, setProduct] = useState<IProduct>();
   const [selectedSize, setSelectedSize] = useState<IStorages | null>(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState<number>(2);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const favoriteProducts = useSelector((state: RootState) => state.favourites.favoriteProducts);
+  const isFavorite = (productId: number) => favoriteProducts.some((product: { productId: number }) => product.productId === productId);
 
   useEffect(() => {
     if (Id) {
@@ -42,20 +49,6 @@ export default function Product() {
   if (!product) {
     return <p></p>
   }
-
-  const handleImageChange = (index: number) => {
-    setCurrentImageIndex(index);
-  };
-
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 5000,
-  };
 
   const addToBag = async () => {
     if (!isAuth) {
@@ -84,6 +77,38 @@ export default function Product() {
       }
     }
   }
+
+  const addToFavoriteToggle = async (productId: number, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    e.preventDefault();
+    if (user) {
+      if (!isFavorite(productId)) {
+        const favoriteProduct: ICreateFavoriteProductDTO = {
+          userId: user?.Id,
+          productId: productId,
+        };
+        dispatch(addToFavorite(favoriteProduct));
+        await addFavoriteProduct(favoriteProduct);
+      } else {
+        console.log('Product is already in favorites');
+      }
+    }
+  };
+
+  const removeFromFavoriteToggle = async (productId: number, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    e.preventDefault();
+    if (user) {
+      if (isFavorite(productId)) {
+        const favoriteProduct: IRemoveFavoriteProduct = {
+          userId: user?.Id,
+          productId: productId,
+        };
+        dispatch(removeFromFavorite(favoriteProduct));
+        await removeFavoriteProduct(favoriteProduct);
+      } else {
+        console.log('Product is not in favorites');
+      }
+    }
+  };
 
   return (
     <div className="overflow-hidden rounded-sm border-stroke bg-gray-100 shadow-default dark:border-strokedark dark:bg-boxdark text-body">
@@ -154,22 +179,25 @@ export default function Product() {
 
         {/* Image gallery */}
         <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-1 lg:gap-x-8 lg:px-8">
-          <Slider  {...settings} className='btn-indigo-500 '>
-            {product.images?.map((image, index) => (
-              <div
-                key={image.id}
-                onClick={() => handleImageChange(index)}
-                className={`aspect-h-4 aspect-w-3 overflow-hidden rounded-lg ${index === currentImageIndex ? 'lg:block' : 'hidden lg:grid lg:grid-cols-1 lg:gap-y-8'
-                  }`}
-              >
-                <Image
-                  src={`${baseUrl}/uploads/1200_${image?.imagePath || '/uploads/default.jpg'}`}
-                  alt={product.name}
-                  className="h-full w-full object-cover object-center cursor-pointer"
-                />
-              </div>
-            ))}
+          <Slider>
+            {/* <Carousel arrows  autoplay={false}> */}
+            <Carousel swipe animation="fade" duration={1500} autoPlay={true} indicators={true} className="h-full w-full">
+              {product.images?.map((image, index) => (
+                <div
+                  key={index}
+                  className={`aspect-h-4 aspect-w-3 rounded min-h-[1000px]`}
+                >
+                  <Image
+                    src={`${baseUrl}/uploads/1200_${image?.imagePath || '/uploads/default.jpg'}`}
+                    alt={product.name}
+                    className="h-full w-full object-cover object-center cursor-pointer"
+                  />
+                </div>
+              ))}
+            </Carousel>
           </Slider >
+
+
 
           <div className="mt-4 lg:row-span-3 lg:mt-0 lg:col-start-3">
             {/* Options */}
@@ -178,9 +206,21 @@ export default function Product() {
               <p className="text-3xl font-medium  text-gray-900">{product.name}</p>
             </div>
 
-            <div className="mt-4 lg:row-span-3 lg:mt-0">
-              <h2 className="sr-only">Product information</h2>
-              <p className="text-3xl tracking-tight text-red-800">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
+
+
+            <div className="lg:row-span-3 lg:mt-0">
+              <div className="mt-4 flex items-center justify-between">
+                <h2 className="sr-only">Product information</h2>
+                <p className="text-3xl tracking-tight text-red-800">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
+                <div className="cursor-pointer">
+                  {isFavorite(product.id) ? (
+                    <HeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => removeFromFavoriteToggle(product.id, e)} />
+                  ) : (
+                    <OutlineHeartIcon className="w-9 h-9 hover:text-indigo-800 stroke-1" onClick={(e) => addToFavoriteToggle(product.id, e)} />
+                  )}
+                </div>
+
+              </div>
             </div>
             {/* Reviews */}
             <div className="mt-6">
@@ -204,6 +244,8 @@ export default function Product() {
                 </a>
               </div>
             </div>
+
+
 
             <form className="mt-10">
               {/* Sizes */}

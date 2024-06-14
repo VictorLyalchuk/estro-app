@@ -1,8 +1,9 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Disclosure, Menu, Popover, Transition } from '@headlessui/react'
-import { ArrowLongLeftIcon, ArrowLongRightIcon, XMarkIcon } from '@heroicons/react/24/outline'
+import { ArrowLongLeftIcon, ArrowLongRightIcon, XMarkIcon, HeartIcon as OutlineHeartIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
-import { IProduct, IStorages } from '../../../interfaces/Catalog/IProduct'
+import { HeartIcon } from '@heroicons/react/24/solid'
+import { IProduct, IStorages } from '../../../interfaces/Product/IProduct'
 import { APP_ENV } from '../../../env/config'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { IInfo } from '../../../interfaces/Info/IInfo'
@@ -11,18 +12,29 @@ import { ISortOptions } from '../../../interfaces/Catalog/ISortOptions'
 import qs, { ParsedQs } from 'qs'
 import { getProductsist, getQuantityProducts } from '../../../services/product/product-services'
 import { getInfoList } from '../../../services/info/info-services'
-import ProductQuickview from './ProductQuickview'
+import ProductQuickview from '../product/ProductQuickview'
 import { initialSortOptions } from '../../../data/initialSortOptions'
 import { getMainCategories } from '../../../services/category/category-services'
+import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/favoriteProducts/favorite-products-services'
+import { IAuthReducerState } from '../../../store/accounts/AuthReducer'
+import { useDispatch, useSelector } from 'react-redux'
+import { ICreateFavoriteProductDTO } from '../../../interfaces/FavoriteProducts/ICreateFavoriteProductDTO'
+import { IRemoveFavoriteProduct } from '../../../interfaces/FavoriteProducts/IRemoveFavoriteProduct'
+import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavouritesReducer'
+import { RootState } from '../../../store/store'
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
 export default function CatalogHome() {
+    const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
+    const favoriteProducts = useSelector((state: RootState) => state.favourites.favoriteProducts);
+    const isFavorite = (productId: number) => favoriteProducts.some((product: { productId: number }) => product.productId === productId);
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
     const baseUrl = APP_ENV.BASE_URL;
     const navigate = useNavigate();
+    const dispatch = useDispatch();
     const { main } = useParams();
     const [productList, setProduct] = useState<IProduct[]>([]);
     const [filterOptionsList, setFilterOptionsList] = useState<IInfo[]>([]);
@@ -43,7 +55,6 @@ export default function CatalogHome() {
     const [sortOptions, setSortOptions] = useState<ISortOptions[]>(initialSortOptions);
     const [subCategoryIndex, setSubCategoryIndex] = useState(0);
     const [categoriesLoaded, setCategoriesLoaded] = useState(false);
-
     const filterValueCounts = filterOptionsList.map((section) =>
         filters.reduce((count, filter) => {
             if (filter.name === section.value) {
@@ -229,6 +240,38 @@ export default function CatalogHome() {
         }
     }, [categoriesLoaded, location.search, page, itemsPerPage]);
 
+    const addToFavoriteToggle = async (productId: number, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+        e.preventDefault();
+        if (user) {
+            if (!isFavorite(productId)) {
+                const favoriteProduct: ICreateFavoriteProductDTO = {
+                    userId: user?.Id,
+                    productId: productId,
+                };
+                dispatch(addToFavorite(favoriteProduct));
+                await addFavoriteProduct(favoriteProduct);
+            } else {
+                console.log('Product is already in favorites');
+            }
+        }
+    };
+
+    const removeFromFavoriteToggle = async (productId: number, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+        e.preventDefault();
+        if (user) {
+            if (isFavorite(productId)) {
+                const favoriteProduct: IRemoveFavoriteProduct = {
+                    userId: user?.Id,
+                    productId: productId,
+                };
+                dispatch(removeFromFavorite(favoriteProduct));
+                await removeFavoriteProduct(favoriteProduct);
+            } else {
+                console.log('Product is not in favorites');
+            }
+        }
+    };
+
     return (
         <div className="bg-gray-100">
             <div>
@@ -278,7 +321,7 @@ export default function CatalogHome() {
                                                     <>
                                                         <h3 className="-mx-2 -my-3 flow-root">
                                                             <Disclosure.Button className="flex w-full items-center justify-between bg-gray-100 px-2 py-3 text-sm text-gray-400">
-                                                                <span className="font-medium text-gray-900">{section.name}</span>
+                                                                <span className="font-medium text-gray-900 hover:text-indigo-500">{section.name}</span>
                                                                 <span className="ml-6 flex items-center">
                                                                     <ChevronDownIcon
                                                                         className={classNames(open ? '-rotate-180' : 'rotate-0', 'h-5 w-5 transform')}
@@ -304,7 +347,7 @@ export default function CatalogHome() {
                                                                         />
                                                                         <label
                                                                             htmlFor={`filter-mobile-${section.id}-${optionIdx}`}
-                                                                            className="ml-3 text-sm text-gray-500"
+                                                                            className="ml-3 text-sm text-gray-500 hover:text-indigo-500 cursor-pointer"
                                                                         >
                                                                             {option.label}
                                                                         </label>
@@ -344,7 +387,7 @@ export default function CatalogHome() {
                             <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
                                 <Menu as="div" className="relative inline-block text-left">
                                     <div>
-                                        <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                                        <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-indigo-500">
                                             Sort
                                             <ChevronDownIcon
                                                 className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
@@ -388,7 +431,7 @@ export default function CatalogHome() {
 
                                 <button
                                     type="button"
-                                    className="inline-block text-sm font-medium text-gray-700 hover:text-gray-900 sm:hidden"
+                                    className="inline-block text-sm font-medium text-gray-700 hover:text-gray-900 hover:text-indigo-500 sm:hidden"
                                     onClick={() => setMobileFiltersOpen(true)}
                                 >
                                     Filters
@@ -400,7 +443,7 @@ export default function CatalogHome() {
                                             {filterOptionsList.map((section, index) => (
 
                                                 <Popover key={section.name} className="relative inline-block px-4 text-left">
-                                                    <Popover.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
+                                                    <Popover.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-indigo-500 ">
                                                         <span>{section.name}</span>
                                                         {filterValueCounts[index] > 0 && (
                                                             <span className="ml-1.5 rounded bg-gray-200 px-1.5 py-0.5 text-xs font-semibold tabular-nums text-gray-700">
@@ -514,10 +557,15 @@ export default function CatalogHome() {
                                 <div key={product.id} className="group relative">
                                     <Link to={`/product/${product.id}`} className="group">
                                         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7">
-                                            <img
-                                                src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`}
-                                                className="h-full w-full object-cover object-center group-hover:opacity-75"
-                                            />
+                                            <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`}
+                                                className="h-full w-full object-cover object-center group-hover:opacity-75"/>
+                                            <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
+                                                {isFavorite(product.id) ? (
+                                                    <HeartIcon className="w-8 h-8 hover:text-indigo-800 stroke-1" onClick={(e) => removeFromFavoriteToggle(product.id, e)} />
+                                                ) : (
+                                                    <OutlineHeartIcon className="w-8 h-8 hover:text-indigo-800 stroke-1" onClick={(e) => addToFavoriteToggle(product.id, e)} />
+                                                )}
+                                            </div>
                                         </div>
                                     </Link>
                                     <h3 className="mt-4 text-sm text-gray-700 line-clamp-2 break-words w-45">{product.name.split(' ').slice(0, 3).join(' ')}</h3>

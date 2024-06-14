@@ -1,6 +1,6 @@
 import { Fragment, SetStateAction, useEffect, useState } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
-import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, UserIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, UserIcon, HeartIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { AuthReducerActionType, IAuthReducerState } from "../../store/accounts/AuthReducer.ts";
@@ -9,6 +9,8 @@ import DropdownUser from './navbarsPages/DropdownUser/DropdownUser.tsx';
 import { BagReducerActionType, IBagReducerState } from '../../store/bag/BagReducer.tsx';
 import { getMainCategories } from '../../services/category/category-services.ts';
 import { getCountBagByEmail } from '../../services/bag/bag-services.ts';
+import { RootState } from '../../store/store.ts';
+import { FavouritesReducerActionType } from '../../store/favourites/FavouritesReducer.ts';
 
 const navigation = {
     featured: [
@@ -32,10 +34,11 @@ function classNames(...classes: string[]) {
 
 const NavbarsPage = () => {
     const { isAuth, user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
-    const { count } = useSelector((redux: any) => redux.bagReducer as IBagReducerState);
+    const { count } = useSelector((redux: any) => redux.bag as IBagReducerState);
     const [categoryList, setCategoryList] = useState<IMainCategory[]>([]);
     const [open, setOpen] = useState(false)
     const dispatch = useDispatch();
+    const favoriteCount = useSelector((state: RootState) => state.favourites.count);
 
     useEffect(() => {
         if (user?.Email) {
@@ -57,6 +60,9 @@ const NavbarsPage = () => {
         dispatch({
             type: BagReducerActionType.DELETE_ALL,
         });
+        dispatch({
+            type: FavouritesReducerActionType.DELETE_ALL,
+        })
     };
 
     return (
@@ -358,6 +364,13 @@ const NavbarsPage = () => {
                                                 <div className="sr-only">Search</div>
                                                 <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
                                             </a>
+                                        </div>
+
+                                        {/* Favorites */}
+                                        <div className="ml-4 flow-root lg:ml-6">
+                                            <Link to={"/account/favourites"} className="group -m-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-10 flex items-center hover:text-gray-500">
+                                                <HeartIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-3" aria-hidden="true" />
+                                                {favoriteCount}</Link>
                                         </div>
 
                                         {/* Cart */}

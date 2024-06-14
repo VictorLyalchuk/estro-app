@@ -21,7 +21,8 @@ const useAuthTokenEffect = () => {
             LastName: user.LastName,
             Role: user.Role,
             ImagePath: user.ImagePath,
-            PhoneNumber: user.PhoneNumber
+            PhoneNumber: user.PhoneNumber,
+            AuthType: user.AuthType
           } as IUser
         });
       } else {

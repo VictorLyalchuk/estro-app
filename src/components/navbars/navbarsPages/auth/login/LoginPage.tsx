@@ -24,6 +24,7 @@ import ReactCodeInput from "react-code-input";
 import { validateForm } from '../../../../../validations/account/login-validations';
 import { validatePhoneNumber } from '../../../../../validations/custom/login-phone-validations';
 import { login } from '../../../../../services/accounts/account-services';
+import useGetFavoritesEffect from '../../../../../useGetFavoritesEffect';
 
 interface TextMaskCustomProps {
     inputRef: (ref: HTMLInputElement | null) => void;
@@ -325,7 +326,6 @@ const LoginPage = () => {
 
     function toggleEmail() {
         setIsPhoneLogin(false);
-
     }
 
     const handleChangePhoneNumber = (event: React.ChangeEvent<HTMLInputElement>) => {

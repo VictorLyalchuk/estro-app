@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 import { Form, Input, Select, message } from 'antd';
 import TextArea from "antd/es/input/TextArea";
 import { ICategory, IMainCategory, ISubCategory } from "../../../interfaces/Catalog/IMainCategory";
-import { IImageItem } from "../../../interfaces/Catalog/IProduct";
-import { IProductCreate } from "../../../interfaces/Catalog/IProductCreate";
+import { IImageItem } from "../../../interfaces/Product/IProduct";
+import { IProductCreate } from "../../../interfaces/Product/IProductCreate";
 import { APP_ENV } from "../../../env/config";
 
 const AddProduct = () => {
@@ -462,9 +462,9 @@ const AddProduct = () => {
                                                     className="h-6 w-6"
                                                 >
                                                     <path
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                        stroke-width="2"
+                                                        strokeLinecap="round"
+                                                        strokeLinejoin="round"
+                                                        strokeWidth="2"
                                                         d="M6 18L18 6M6 6l12 12"
                                                     />
                                                 </svg>
