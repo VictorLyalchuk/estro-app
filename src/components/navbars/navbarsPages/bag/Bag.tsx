@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { BagItems, IBagUser } from "../../../../interfaces/Bag/IBagUser";
 import axios from "axios";
 import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
-import { BagReducerActionType, IBagReducerState } from "../../../../store/bag/BagReducer";
-import { CardReducerActionType, ICardReducerState } from "../../../../store/bag/CardReducer";
+import { IBagReducerState } from "../../../../store/bag/BagReducer";
+import { ICardReducerState } from "../../../../store/bag/CardReducer";
 import { IOrderCreate } from "../../../../interfaces/Bag/IOrderCreate";
 import { APP_ENV } from "../../../../env/config";
 import GoodsNotFound from "../../../../assets/goods-not-found.png";
@@ -19,7 +19,7 @@ import { IWarehouse } from "../../../../interfaces/Bag/IWarehouse";
 import { RadioGroup } from '@headlessui/react';
 import { IStore } from "../../../../interfaces/Catalog/IStore";
 import { CheckCircleIcon } from '@heroicons/react/20/solid'
-import { getBagByEmail, getBagItemsByEmail } from "../../../../services/bag/bag-services";
+import { decrease, deleteItems, getBagByEmail, getBagItemsByEmail, increase } from "../../../../services/bag/bag-services";
 import { deliveryList, paymentList } from "../../../../data/deliveryList";
 import { theme } from "../../../../theme/theme";
 import { validateForm } from "../../../../validations/bag/bag-validations";
@@ -91,51 +91,6 @@ const Bag = () => {
   useEffect(() => {
     clearFields();
   }, [selectedShipping]);
-
-  const refreashCount = async () => {
-    axios.get<number>(`${baseUrl}/api/Bag/GetCountBagByEmail/${user?.Email}`)
-      .then(resp => {
-        dispatch({
-          type: BagReducerActionType.GET_PRODUCT_BAG_COUNT,
-          payload: {
-            count: resp.data
-          }
-        });
-      });
-  }
-
-  const deleteItems = async (item: BagItems) => {
-    const itemId = item.id
-    if (itemId) {
-
-      try {
-        await axios.delete(`${baseUrl}/api/Bag/DeleteBagItem/${item.id}`)
-        dispatch({
-          type: CardReducerActionType.DELETE,
-          payload: {
-            itemId: itemId
-          }
-        });
-        await refreashCount();
-      } catch (error) {
-        console.error("Error deleting bag items:", error);
-      }
-
-    }
-  }
-
-  const increase = async (item: BagItems) => {
-    if (item.quantity < 10) {
-      await axios.post(`${baseUrl}/api/Bag/SetIncrease/${item.id}`);
-      await refreashCount();
-    }
-  }
-  const decrease = async (item: BagItems) => {
-    if (item.quantity > 1) {
-      await axios.post(`${baseUrl}/api/Bag/SetDecrease/${item.id}`)
-      await refreashCount();
-    }
-  }
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     const model: IOrderCreate = {
@@ -313,7 +268,7 @@ const Bag = () => {
                     </div>
                     <button className="font-medium text-gray-700 hover:text-indigo-500">
                       <TrashIcon className="w-5 h-5 mb-4"
-                        onClick={() => deleteItems(item)}
+                        onClick={() => deleteItems(item, user?.Email || '', dispatch)}
                       />
                     </button>
                   </div>
@@ -330,7 +285,7 @@ const Bag = () => {
                       <p className="text-gray-600 mb-2">Price: {item.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
                       <div className="flex items-center ml-auto mt-6">
                         <button
-                          onClick={() => decrease(item)}
+                          onClick={() => decrease(item, user?.Email || '', dispatch)}
                           className="mr-3 group rounded-[50px] border border-gray-200 shadow-sm shadow-transparent p-2.5 flex items-center justify-center bg-white transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-100 hover:border-gray-300 focus-within:outline-gray-300">
                           <MinusIcon className="h-5 w-5 stroke-gray-900 transition-all duration-500 group-hover:stroke-black" />
                         </button>
@@ -338,7 +293,7 @@ const Bag = () => {
                           className="border border-gray-200 rounded-full w-10 aspect-square outline-none text-gray-900 font-semibold text-sm py-2 px-3 bg-gray-100  text-center"
                         > {item.quantity}</span>
                         <button
-                          onClick={() => increase(item)}
+                          onClick={() => increase(item, user?.Email || '', dispatch)}
                           className="ml-3  group rounded-[50px] border border-gray-200 shadow-sm shadow-transparent p-2.5 flex items-center justify-center bg-white transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-100 hover:border-gray-300 focus-within:outline-gray-300">
                           <PlusIcon className="h-5 w-5 stroke-gray-900 transition-all duration-500 group-hover:stroke-black" />
                         </button>
