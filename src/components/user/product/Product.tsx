@@ -86,6 +86,7 @@ export default function Product() {
         productName: product.name,
         productPrice: product.price,
         productImage: product.imagesPath?.[0] ?? '',
+        storages: product.storages || null
       };
       if (!isFavorite(product.id)) {
         dispatch(addToFavorite(favoriteProduct));

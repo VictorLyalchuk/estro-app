@@ -1,3 +1,5 @@
+import { IStorages } from "../Product/IProduct";
+
 export interface IFavoriteProducts {
     // id: number;
     userId: string;
@@ -5,4 +7,5 @@ export interface IFavoriteProducts {
     productName: string;
     productPrice: number;
     productImage: string;
+    storages: IStorages[] | null;
 }
