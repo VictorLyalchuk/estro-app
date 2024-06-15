@@ -126,7 +126,7 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                             <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                                         </button>
                                         <div className="grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:gap-x-8">
-                                            <div className="aspect-h-3 aspect-w-2 overflow-hidden rounded-lg bg-gray-100 sm:col-span-4 lg:col-span-5">
+                                            <div className="aspect-h-3 aspect-w-2 overflow-hidden sm:col-span-4 lg:col-span-5">
                                                 <Carousel swipe animation="fade" duration={1500} autoPlay={true} indicators={false} className="absolute ">
                                                     {product.images?.map((image, index) => (
                                                         <div key={index} className="">
