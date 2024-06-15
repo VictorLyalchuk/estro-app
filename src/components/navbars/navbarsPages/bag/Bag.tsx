@@ -6,11 +6,10 @@ import axios from "axios";
 import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { BagReducerActionType, IBagReducerState } from "../../../../store/bag/BagReducer";
 import { CardReducerActionType, ICardReducerState } from "../../../../store/bag/CardReducer";
-import { message } from "antd";
 import { IOrderCreate } from "../../../../interfaces/Bag/IOrderCreate";
 import { APP_ENV } from "../../../../env/config";
 import GoodsNotFound from "../../../../assets/goods-not-found.png";
-import { FormControl, TextField, TextFieldProps } from '@material-ui/core';
+import { FormControl, Input, TextField, TextFieldProps } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 import '../../../../satoshi.css';
 import Autocomplete from '@material-ui/lab/Autocomplete';
@@ -23,6 +22,11 @@ import { CheckCircleIcon } from '@heroicons/react/20/solid'
 import { getBagByEmail, getBagItemsByEmail } from "../../../../services/bag/bag-services";
 import { deliveryList, paymentList } from "../../../../data/deliveryList";
 import { theme } from "../../../../theme/theme";
+import { validateForm } from "../../../../validations/bag/bag-validations";
+import { State } from "../../../../interfaces/Custom/Phone/State";
+import { validatePhoneNumber } from "../../../../validations/custom/bag-phone-validations";
+import TextMaskCustom from "../../../../services/custom/phone-services";
+import { createOrder } from "../../../../services/order/order-services";
 
 const Bag = () => {
   const baseUrl = APP_ENV.BASE_URL;
@@ -33,7 +37,7 @@ const Bag = () => {
   const bagItems = useSelector((state: { card: ICardReducerState }) => state.card.items) || [];
   const [bagUser, setBagUser] = useState<IBagUser>();
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
-  const [selectedShipping, setSelectedShipping] = useState<string | null>(null);
+  const [selectedShipping, setSelectedShipping] = useState<string | ''>('');
   const [warehouseSelected, setSelectedWarehouse] = useState(false);
   const [warehouseOptions, setWarehouseOptions] = useState<IWarehouse[]>([]);
   const [selectedWarehouseOptions, setSelectedWarehouseOptions] = useState<IWarehouse | null>(null);
@@ -45,11 +49,36 @@ const Bag = () => {
   const [storeCities, setStoreCities] = useState<string[]>([]);
   const [selectedStoreCity, setSelectedStoreCity] = useState<string | null>('');
   const [selectedStore, setSelectedStore] = useState<IStore | null>(null);
+  const [values, setValues] = useState<State>({
+    textmask: '(   )    -  -  ',
+  });
+  
+  const [formData, setFormData] = useState({
+    firstName: user?.FirstName || '',
+    lastName: user?.LastName || '',
+    email: user?.Email || '',
+    phoneNumber: user?.PhoneNumber || '',
+    address: '',
+    payment: 'The money has not been paid',
+  });
+
+  const [errors, setErrors] = useState({
+    firstName: '',
+    lastName: '',
+    email: '',
+    phoneNumber: '',
+    city: '',
+    warehouse: '',
+  });
 
   useEffect(() => {
     if (user) {
       getBagByEmail(user?.Email).then(data => setBagUser(data));
       getBagItemsByEmail(user?.Email, dispatch);
+      setValues((prevValues) => ({
+        ...prevValues,
+        textmask: user?.PhoneNumber,
+      }));
     }
     getCity();
     getStore();
@@ -107,8 +136,8 @@ const Bag = () => {
       await refreashCount();
     }
   }
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
 
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     const model: IOrderCreate = {
       firstName: formData.firstName,
       lastName: formData.lastName,
@@ -122,46 +151,12 @@ const Bag = () => {
       street: selectedWarehouseOptions?.Description || (selectedStore ? `${selectedStore.name} ${selectedStore.address}` : ""),
     };
     event.preventDefault();
-    if (validateForm()) {
-      try {
-        await axios.post(`${baseUrl}/api/OrderControllers/CreateOrder`, model, {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        });
-      }
-      catch (ex) {
-        message.error('Error adding product!');
-      }
-      dispatch({
-        type: CardReducerActionType.DELETE_ALL,
-      });
-      dispatch({
-        type: BagReducerActionType.DELETE_PRODUCT_BAG_COUNT,
-        payload: {
-          minuscount: 0
-        }
-      });
+    const { isValid, newErrors } = validateForm(formData, city, warehouse, selectedShipping, values.textmask);
+    setErrors(newErrors);
+    if (isValid) {
+      createOrder(model, dispatch);
     }
   }
-
-  const [formData, setFormData] = useState({
-    firstName: user?.FirstName || '',
-    lastName: user?.LastName || '',
-    email: user?.Email || '',
-    phoneNumber: '+38' + user?.PhoneNumber,
-    address: '',
-    payment: 'The money has not been paid',
-  });
-
-  const [errors, setErrors] = useState({
-    firstName: '',
-    lastName: '',
-    email: '',
-    phoneNumber: '',
-    city: '',
-    warehouse: '',
-  });
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target;
@@ -172,68 +167,20 @@ const Bag = () => {
     }));
   };
 
-  const validateForm = () => {
-    let isValid = true;
-    const newErrors: {
-      firstName: string;
-      lastName: string;
-      confirmPassword: string;
-      phoneNumber: string;
-      email: string;
-      password: string;
-      city: string;
-      warehouse: string;
-    } = {
-      firstName: "",
-      lastName: "",
-      confirmPassword: "",
-      phoneNumber: "",
-      email: "",
-      password: "",
-      city: "",
-      warehouse: "",
-    };
+  const changePhoneNumber = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+    setValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
 
-    if (formData.firstName.trim() === '') {
-      newErrors.firstName = 'First Name is required';
-      isValid = false;
-    }
+    const cleanedValue = value.replace(/\D/g, '');
+    setFormData((prevData) => ({
+      ...prevData,
+      phoneNumber: cleanedValue,
+    }));
 
-    if (formData.lastName.trim() === '') {
-      newErrors.lastName = 'Last Name is required';
-      isValid = false;
-    }
-
-    if (formData.email.trim() === '' || !/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Invalid email address';
-      isValid = false;
-    }
-
-    if (city.trim() === '') {
-      newErrors.city = 'City is required';
-      isValid = false;
-    }
-
-    if (selectedShipping === 'Branch') {
-      if (warehouse.trim() === '') {
-        newErrors.warehouse = 'Warehouse is required';
-        isValid = false;
-      }
-    }
-    if (selectedShipping === 'Postomat') {
-      if (warehouse.trim() === '') {
-        newErrors.warehouse = 'Postomat is required';
-        isValid = false;
-      }
-    }
-    if (selectedShipping === 'Store') {
-      if (warehouse.trim() === '') {
-        newErrors.warehouse = 'Store is required';
-        isValid = false;
-      }
-    }
-    setErrors(newErrors);
-    return isValid;
+    validatePhoneNumber(cleanedValue, errors, setErrors);
   };
 
   const handleChangeCity = (_e: React.ChangeEvent<{}>, value: ICity | null) => {
@@ -468,19 +415,18 @@ const Bag = () => {
                           ) : (<div className="h-6 text-xs "> </div>)}
                         </FormControl>
 
-                        <label htmlFor="formatted-text-mask-input" className="block text-sm font-medium text-gray-700 mb-2">
+                        <label htmlFor="textmask" className="block text-sm font-medium text-gray-700 mb-2">
                           Phone
                         </label>
                         <FormControl fullWidth variant="outlined">
-                          <TextField
-                            name="formatted-text-mask-input"
-                            id="formatted-text-mask-input"
-                            value={formData.phoneNumber}
-                            size="small"
-                            disabled
-                            InputProps={{
-                              style: { fontWeight: 'bold' },
-                            }}
+                          <Input
+                            name="textmask"
+                            id="textmask"
+                            value={values.textmask}
+                            onChange={changePhoneNumber}
+                            inputComponent={TextMaskCustom as any}
+                            error={!!errors.phoneNumber}
+                            placeholder='(099) 00-00-000'
                           />
                           {errors.phoneNumber ? (
                             <div className="h-6 text-xs text-red-500">Error: {errors.phoneNumber}</div>

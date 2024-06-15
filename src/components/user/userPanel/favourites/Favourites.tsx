@@ -6,13 +6,13 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { XMarkIcon } from "@heroicons/react/24/outline";
 import { IFavoriteProducts } from "../../../../interfaces/FavoriteProducts/IFavoriteProducts";
-import { removeFromFavorite } from "../../../../store/favourites/FavouritesReducer";
+import { removeFromFavorite } from "../../../../store/favourites/FavoritesReducer";
 import { removeFavoriteProduct } from "../../../../services/favoriteProducts/favorite-products-services";
 import useGetFavoritesEffect from "../../../../useGetFavoritesEffect";
 
 const Favourites: React.FC<SettingsUserProps> = () => {
   const [showAllProducts, setShowAllProducts] = useState(false);
-  const favoriteProducts = useSelector((state: RootState) => state.favourites.favoriteProducts);
+  const favoriteProducts = useSelector((state: RootState) => state.favorites.favoriteProducts);
   const baseUrl = APP_ENV.BASE_URL;
   const dispatch = useDispatch();
 

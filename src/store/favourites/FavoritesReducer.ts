@@ -1,10 +1,10 @@
 import { IFavoriteProducts } from '../../interfaces/FavoriteProducts/IFavoriteProducts';
 
-export enum FavouritesReducerActionType {
+export enum FavoritesReducerActionType {
   SET = "SET_FAVORITE_PRODUCTS",
   ADD = "ADD_TO_FAVORITE",
   REMOVE = "REMOVE_FROM_FAVORITE",
-  DELETE_ALL = "DELETE_ALL"
+  DELETE_FAVORITES_ALL = "DELETE_FAVORITES_ALL"
 }
 
 export interface IFavoriteProductsState {
@@ -13,70 +13,70 @@ export interface IFavoriteProductsState {
 }
 
 interface SetFavoritesAction {
-  type: FavouritesReducerActionType.SET;
+  type: FavoritesReducerActionType.SET;
   payload: IFavoriteProducts[];
 }
 
 interface AddFavoriteAction {
-  type: FavouritesReducerActionType.ADD;
+  type: FavoritesReducerActionType.ADD;
   payload: IFavoriteProducts;
 }
 
 interface RemoveFavoriteAction {
-  type: FavouritesReducerActionType.REMOVE;
+  type: FavoritesReducerActionType.REMOVE;
   payload: IFavoriteProducts;
 }
 
 interface DeleteAllFavoriteAction {
-  type: FavouritesReducerActionType.DELETE_ALL;
+  type: FavoritesReducerActionType.DELETE_FAVORITES_ALL;
   payload: IFavoriteProducts;
 }
-type FavouritesReducerAction = SetFavoritesAction | AddFavoriteAction | RemoveFavoriteAction | DeleteAllFavoriteAction;
+type FavoritesReducerAction = SetFavoritesAction | AddFavoriteAction | RemoveFavoriteAction | DeleteAllFavoriteAction;
 
 const initState: IFavoriteProductsState = {
   favoriteProducts: [],
   count: 0,
 };
 export const setFavoriteProducts = (products: IFavoriteProducts[]) => ({
-  type: FavouritesReducerActionType.SET,
+  type: FavoritesReducerActionType.SET,
   payload: products,
 });
 
 export const addToFavorite = (product: IFavoriteProducts) => ({
-  type: FavouritesReducerActionType.ADD,
+  type: FavoritesReducerActionType.ADD,
   payload: product,
 });
 
 export const removeFromFavorite = (product: IFavoriteProducts) => ({
-  type: FavouritesReducerActionType.REMOVE,
+  type: FavoritesReducerActionType.REMOVE,
   payload: product,
 });
 export const deleteAllFromFavorite = (product: IFavoriteProducts) => ({
-  type: FavouritesReducerActionType.DELETE_ALL,
+  type: FavoritesReducerActionType.DELETE_FAVORITES_ALL,
   payload: product,
 });
 
-const favouritesReducer = (state = initState, action: FavouritesReducerAction): IFavoriteProductsState => {
+const favoritesReducer = (state = initState, action: FavoritesReducerAction): IFavoriteProductsState => {
   switch (action.type) {
-    case FavouritesReducerActionType.SET:
+    case FavoritesReducerActionType.SET:
       return {
         ...state,
         favoriteProducts: action.payload,
         count: action.payload.length
       };
-    case FavouritesReducerActionType.ADD:
+    case FavoritesReducerActionType.ADD:
       return {
         ...state,
         favoriteProducts: [...state.favoriteProducts, action.payload],
         count: state.count + 1
       };
-    case FavouritesReducerActionType.REMOVE:
+    case FavoritesReducerActionType.REMOVE:
       return {
         ...state,
         favoriteProducts: state.favoriteProducts.filter(product => product.productId !== action.payload.productId),
         count: state.count - 1
       };
-    case FavouritesReducerActionType.DELETE_ALL:
+    case FavoritesReducerActionType.DELETE_FAVORITES_ALL:
       return {
         ...state,
         count: 0,
@@ -87,4 +87,4 @@ const favouritesReducer = (state = initState, action: FavouritesReducerAction): 
   }
 };
 
-export default favouritesReducer;
+export default favoritesReducer;

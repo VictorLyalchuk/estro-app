@@ -20,7 +20,7 @@ export async function createBag(bag: IBag) {
     try {
         await instance.post(`CreateBag`, bag)
     } catch (error) {
-        console.error('Failed to fetch product data:', error);
+        console.error('Failed to create bag product data:', error);
         throw error;
     }
 }
@@ -36,7 +36,7 @@ export async function getCountBagByEmail(email: string, dispatch: any) {
         });
         return response.data;
     } catch (error) {
-        console.error('Failed to fetch product data:', error);
+        console.error('Failed to fetch bag product data:', error);
         throw error;
     }
 }
@@ -52,7 +52,7 @@ export async function getBagItemsByEmail(email: string, dispatch: any) {
           });
         return response.data;
     } catch (error) {
-        console.error('Failed to fetch product data:', error);
+        console.error('Failed to fetch bag product data:', error);
         throw error;
     }
 }
@@ -70,7 +70,7 @@ export async function getBagByEmail(email: string) {
 
         return formattedData;
     } catch (error) {
-        console.error('Failed to fetch product data:', error);
+        console.error('Failed to fetch bag product data:', error);
         throw error;
     }
 }

@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { getFavoriteProductById } from "./services/favoriteProducts/favorite-products-services";
-import { setFavoriteProducts } from "./store/favourites/FavouritesReducer";
+import { setFavoriteProducts } from "./store/favourites/FavoritesReducer";
 import { useDispatch, useSelector } from "react-redux";
 import { IAuthReducerState } from "./store/accounts/AuthReducer";
 

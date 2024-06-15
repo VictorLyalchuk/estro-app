@@ -18,7 +18,7 @@ import { initialSortOptions } from '../../../data/initialSortOptions'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store.ts';
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer.ts';
-import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavouritesReducer.ts';
+import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavoritesReducer.ts';
 import { HeartIcon } from '@heroicons/react/24/solid';
 import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/favoriteProducts/favorite-products-services.ts';
 import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts.ts';
@@ -33,7 +33,7 @@ export default function CatalogNavigation() {
   const dispatch = useDispatch();
   const { subName, urlName } = useParams();
   const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
-  const favoriteProducts = useSelector((state: RootState) => state.favourites.favoriteProducts);
+  const favoriteProducts = useSelector((state: RootState) => state.favorites.favoriteProducts);
   const isFavorite = (productId: number) => favoriteProducts.some((product: { productId: number }) => product.productId === productId);
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
   const [productList, setProduct] = useState<IProduct[]>([]);

@@ -10,7 +10,7 @@ import { BagReducerActionType, IBagReducerState } from '../../store/bag/BagReduc
 import { getMainCategories } from '../../services/category/category-services.ts';
 import { getCountBagByEmail } from '../../services/bag/bag-services.ts';
 import { RootState } from '../../store/store.ts';
-import { FavouritesReducerActionType } from '../../store/favourites/FavouritesReducer.ts';
+import { FavoritesReducerActionType } from '../../store/favourites/FavoritesReducer.ts';
 
 const navigation = {
     featured: [
@@ -38,7 +38,7 @@ const NavbarsPage = () => {
     const [categoryList, setCategoryList] = useState<IMainCategory[]>([]);
     const [open, setOpen] = useState(false)
     const dispatch = useDispatch();
-    const favoriteCount = useSelector((state: RootState) => state.favourites.count);
+    const favoriteCount = useSelector((state: RootState) => state.favorites.count);
 
     useEffect(() => {
         if (user?.Email) {
@@ -55,8 +55,8 @@ const NavbarsPage = () => {
     const handleLogout = () => {
         localStorage.removeItem("token");
         dispatch({ type: AuthReducerActionType.LOGOUT_USER });
-        dispatch({ type: BagReducerActionType.DELETE_ALL });
-        dispatch({ type: FavouritesReducerActionType.DELETE_ALL })
+        dispatch({ type: BagReducerActionType.DELETE_BAG_ALL });
+        dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL })
     };
 
     return (

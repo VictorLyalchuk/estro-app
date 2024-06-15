@@ -16,7 +16,7 @@ import Slider from 'react-slick';
 import { HeartIcon } from '@heroicons/react/24/solid';
 import { HeartIcon as OutlineHeartIcon } from '@heroicons/react/24/outline'
 import { RootState } from '../../../store/store';
-import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavouritesReducer';
+import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavoritesReducer';
 import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/favoriteProducts/favorite-products-services';
 import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts';
 
@@ -34,7 +34,7 @@ export default function Product() {
   const [selectedSize, setSelectedSize] = useState<IStorages | null>(null);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const favoriteProducts = useSelector((state: RootState) => state.favourites.favoriteProducts);
+  const favoriteProducts = useSelector((state: RootState) => state.favorites.favoriteProducts);
   const isFavorite = (productId: number) => favoriteProducts.some((product: { productId: number }) => product.productId === productId);
 
   useEffect(() => {

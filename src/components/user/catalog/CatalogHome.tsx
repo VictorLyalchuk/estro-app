@@ -18,7 +18,7 @@ import { getMainCategories } from '../../../services/category/category-services'
 import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/favoriteProducts/favorite-products-services'
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer'
 import { useDispatch, useSelector } from 'react-redux'
-import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavouritesReducer'
+import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavoritesReducer'
 import { RootState } from '../../../store/store'
 import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts'
 
@@ -28,7 +28,7 @@ function classNames(...classes: string[]) {
 
 export default function CatalogHome() {
     const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
-    const favoriteProducts = useSelector((state: RootState) => state.favourites.favoriteProducts);
+    const favoriteProducts = useSelector((state: RootState) => state.favorites.favoriteProducts);
     const isFavorite = (productId: number) => favoriteProducts.some((product: { productId: number }) => product.productId === productId);
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false)
     const baseUrl = APP_ENV.BASE_URL;

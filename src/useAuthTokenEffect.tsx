@@ -4,7 +4,7 @@ import { IUser } from './interfaces/Auth/IUser';
 import { AuthReducerActionType } from './store/accounts/AuthReducer';
 import { jwtDecode } from 'jwt-decode'
 import { BagReducerActionType } from './store/bag/BagReducer';
-import { FavouritesReducerActionType } from './store/favourites/FavouritesReducer';
+import { FavoritesReducerActionType } from './store/favourites/FavoritesReducer';
 
 const useAuthTokenEffect = () => {
   const dispatch = useDispatch();
@@ -34,8 +34,8 @@ const useAuthTokenEffect = () => {
         const logoutTimer = setTimeout(() => {
           // Виклик функції логауту
           dispatch({ type: AuthReducerActionType.LOGOUT_USER });
-          dispatch({ type: BagReducerActionType.DELETE_ALL });
-          dispatch({ type: FavouritesReducerActionType.DELETE_ALL });
+          dispatch({ type: BagReducerActionType.DELETE_BAG_ALL });
+          dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL });
         }, 60 * 60 * 1000); // 60 хвилин
         localStorage.setItem('logoutTimer', logoutTimer.toString());
 
@@ -51,8 +51,8 @@ const useAuthTokenEffect = () => {
       if (tokenExpiration && new Date().getTime() > parseInt(tokenExpiration)) {
         // Виклик функції логауту
         dispatch({ type: AuthReducerActionType.LOGOUT_USER });
-        dispatch({ type: BagReducerActionType.DELETE_ALL });
-        dispatch({ type: FavouritesReducerActionType.DELETE_ALL });
+        dispatch({ type: BagReducerActionType.DELETE_BAG_ALL });
+        dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL });
       }
     };
 

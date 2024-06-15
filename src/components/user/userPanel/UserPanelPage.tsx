@@ -19,7 +19,7 @@ import { RootState } from '../../../store/store';
 const UserPanelPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
-    const favoriteProducts = useSelector((state: RootState) => state.favourites.favoriteProducts);
+    const favoriteProducts = useSelector((state: RootState) => state.favorites.favoriteProducts);
     const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
     const [orders, setOrdersUser] = useState<IOrderUser[]>([]);
     const [viewMode, setViewMode] = useState('detailed');

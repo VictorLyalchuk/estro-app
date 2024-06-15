@@ -5,7 +5,8 @@ import { AuthReducerActionType, IAuthReducerState } from '../../../../store/acco
 import { APP_ENV } from "../../../../env/config";
 import { BagReducerActionType } from '../../../../store/bag/BagReducer';
 import { ArrowLeftOnRectangleIcon, Cog6ToothIcon, DocumentChartBarIcon, HeartIcon, UserIcon } from '@heroicons/react/24/outline';
-import { FavouritesReducerActionType } from '../../../../store/favourites/FavouritesReducer';
+import { FavoritesReducerActionType } from '../../../../store/favourites/FavoritesReducer';
+
 
 const DropdownUser = () => {
   const baseUrl = APP_ENV.BASE_URL;
@@ -26,10 +27,10 @@ const DropdownUser = () => {
       type: AuthReducerActionType.LOGOUT_USER,
     });
     dispatch({
-      type: BagReducerActionType.DELETE_ALL,
+      type: BagReducerActionType.DELETE_BAG_ALL,
     });
     dispatch({
-      type: FavouritesReducerActionType.DELETE_ALL,
+      type: FavoritesReducerActionType.DELETE_FAVORITES_ALL,
   })
   };
 
