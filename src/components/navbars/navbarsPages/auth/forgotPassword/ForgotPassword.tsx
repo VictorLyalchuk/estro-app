@@ -1,26 +1,14 @@
 import { useState } from 'react';
 import { Button, FormControl, TextField } from '@material-ui/core';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 import '../../../../../satoshi.css';
 import '../../../../../index.css';
 import 'tailwindcss/tailwind.css';
 import { forgotPassword } from '../../../../../services/accounts/account-services';
 import { validateForm } from '../../../../../validations/account/forgot-validations';
+import { theme } from '../../../../../theme/theme';
+import { useStyles } from '../../../../../theme/Styles';
 
-const theme = createTheme({
-    typography: {
-        fontFamily: 'Satoshi, sans-serif',
-    },
-});
-
-const useStyles = makeStyles(() =>
-    createStyles({
-        button: {
-            textTransform: 'none',
-        },
-    }),
-);
 const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfirmation: () => void }) => {
     const classes = useStyles();
     const [isSendEmail, setSendEmail] = useState(false);

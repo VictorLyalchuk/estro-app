@@ -3,8 +3,7 @@ import { IAuthReducerState } from "../../../../store/accounts/AuthReducer";
 import { useEffect, useState } from "react";
 import { BagItems, IBagUser } from "../../../../interfaces/Bag/IBagUser";
 import axios from "axios";
-import moment from "moment";
-import { BanknotesIcon, BuildingStorefrontIcon, CreditCardIcon, EnvelopeIcon, MinusIcon, PlusIcon, Squares2X2Icon, TrashIcon } from "@heroicons/react/24/outline";
+import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { BagReducerActionType, IBagReducerState } from "../../../../store/bag/BagReducer";
 import { CardReducerActionType, ICardReducerState } from "../../../../store/bag/CardReducer";
 import { message } from "antd";
@@ -12,7 +11,7 @@ import { IOrderCreate } from "../../../../interfaces/Bag/IOrderCreate";
 import { APP_ENV } from "../../../../env/config";
 import GoodsNotFound from "../../../../assets/goods-not-found.png";
 import { FormControl, TextField, TextFieldProps } from '@material-ui/core';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 import '../../../../satoshi.css';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { JSX } from "react/jsx-runtime";
@@ -21,36 +20,18 @@ import { IWarehouse } from "../../../../interfaces/Bag/IWarehouse";
 import { RadioGroup } from '@headlessui/react';
 import { IStore } from "../../../../interfaces/Catalog/IStore";
 import { CheckCircleIcon } from '@heroicons/react/20/solid'
-// import ButtonLeft from "./ButtonLeft";
-// import ButtonRight from "./ButtonRight";
+import { getBagByEmail, getBagItemsByEmail } from "../../../../services/bag/bag-services";
+import { deliveryList, paymentList } from "../../../../data/deliveryList";
+import { theme } from "../../../../theme/theme";
 
-const theme = createTheme({
-  typography: {
-    fontFamily: 'Satoshi, sans-serif',
-  },
-});
-
-const deliveryList = [
-  { id: 'Branch', title: 'Sending to the Branch', logo: <Squares2X2Icon className="size-7 hover:text-indigo-700" style={{ transition: "color 0.3s" }}/>, subtitle: 'Money Transfer Fees' },
-  { id: 'Postomat', title: 'Sending to the Postomat', logo: <EnvelopeIcon className="size-7 hover:text-indigo-700" style={{ transition: "color 0.3s" }}/>, subtitle: 'Full payment required' },
-  { id: 'Store', title: 'Sending to the Store', logo: <BuildingStorefrontIcon className="size-7 hover:text-indigo-700" style={{ transition: "color 0.3s" }}/>, subtitle: 'Free shipping' },
-];
-
-const paymentList = [
-  { id: 'PaymentAfter', title: 'Payment upon receipt', logo: <BanknotesIcon className="size-10 hover:text-indigo-700" style={{ transition: "color 0.3s" }}/>, subtitle: 'Delivery payment at the carriers rates, including cash on delivery services. The service is available for goods worth 1,000 hryvnias or more. WARNING! All ordered goods are sent by separate parcels.' },
-  { id: 'PaymentBefore', title: 'Payment on the website', logo: <CreditCardIcon className="size-10 hover:text-indigo-700" style={{ transition: "color 0.3s" }}/>, subtitle: 'If the cost of a product unit is over 1,000 hryvnias - delivery is free. WARNING! All goods are sent by separate parcels' },
-];
 const Bag = () => {
   const baseUrl = APP_ENV.BASE_URL;
-  const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
-  const [bagUser, setBagUser] = useState<IBagUser>();
   const dispatch = useDispatch();
+  const { total, taxes, totalWithOutTax, initialIndividualItemPrice } = useSelector((redux: any) => redux.card as ICardReducerState);
+  const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
   const { count } = useSelector((redux: any) => redux.bag as IBagReducerState);
-  const { total } = useSelector((redux: any) => redux.card as ICardReducerState);
-  const { taxes } = useSelector((redux: any) => redux.card as ICardReducerState);
-  const { totalWithOutTax } = useSelector((redux: any) => redux.card as ICardReducerState);
-  const { initialIndividualItemPrice } = useSelector((redux: any) => redux.card as ICardReducerState);
   const bagItems = useSelector((state: { card: ICardReducerState }) => state.card.items) || [];
+  const [bagUser, setBagUser] = useState<IBagUser>();
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
   const [selectedShipping, setSelectedShipping] = useState<string | null>(null);
   const [warehouseSelected, setSelectedWarehouse] = useState(false);
@@ -67,38 +48,11 @@ const Bag = () => {
 
   useEffect(() => {
     if (user) {
-      axios.get<IBagUser>(`${baseUrl}/api/Bag/GetBagByEmail/${user?.Email}`)
-        .then(resp => {
-          const formattedData: IBagUser = {
-            id: resp.data.id,
-            countProduct: resp.data.countProduct,
-            userEmail: resp.data.userEmail,
-            userId: resp.data.userId,
-            orderDate: moment(resp.data.orderDate, 'YYYY-MM-DD').format('DD MMMM YYYY'),
-          };
-          setBagUser(formattedData);
-        })
-        .catch(itemsError => {
-          console.error("Error fetching bag items:", itemsError);
-        });
-
-      axios.get<BagItems[]>(`${baseUrl}/api/Bag/GetBagItemsByEmail/${user?.Email}`)
-        .then(itemsResp => {
-          dispatch({
-            type: CardReducerActionType.SET,
-            payload: {
-              items: itemsResp.data
-            }
-          });
-        })
-        .catch(error => {
-          console.error("Error fetching bag data:", error);
-        });
+      getBagByEmail(user?.Email).then(data => setBagUser(data));
+      getBagItemsByEmail(user?.Email, dispatch);
     }
     getCity();
     getStore();
-    // setSelectedShipping('Branch');
-    // setSelectedPayment('PaymentAfter');
   }, [user, count]);
 
   useEffect(() => {
@@ -386,22 +340,22 @@ const Bag = () => {
           <>
             <div className="w-full lg:w-2/4 p-5 lg:mb-0">
               <div className="bg-white p-5 rounded-md shadow-md mb-8">
-              <div className="grid grid-rows-1">
-                    <h1 className="text-3xl font-bold tracking-tight text-gray-900 ">Order Summary</h1>
-                    <dl className="flex mt-2">
-                      <dt className="text-gray-500">Order Date&nbsp;</dt>
-                      <dd className="font-medium text-gray-900"></dd>
-                      <dt>
-                        <span className="sr-only">Date</span>
-                        <span className="mx-2 text-gray-400" aria-hidden="true">
-                          &middot;
-                        </span>
-                      </dt>
-                      <dd className="font-medium text-gray-900">
-                        <time dateTime="2021-03-22">{bagUser?.orderDate}</time>
-                      </dd>
-                    </dl>
-                  </div>
+                <div className="grid grid-rows-1">
+                  <h1 className="text-3xl font-bold tracking-tight text-gray-900 ">Order Summary</h1>
+                  <dl className="flex mt-2">
+                    <dt className="text-gray-500">Order Date&nbsp;</dt>
+                    <dd className="font-medium text-gray-900"></dd>
+                    <dt>
+                      <span className="sr-only">Date</span>
+                      <span className="mx-2 text-gray-400" aria-hidden="true">
+                        &middot;
+                      </span>
+                    </dt>
+                    <dd className="font-medium text-gray-900">
+                      <time dateTime="2021-03-22">{bagUser?.orderDate}</time>
+                    </dd>
+                  </dl>
+                </div>
               </div>
               {bagItems.map((item: BagItems, index: number) => (
                 <div key={index} className="border-b bg-white pt-4 p-6 rounded-md shadow-md mb-8">
@@ -428,23 +382,19 @@ const Bag = () => {
                       <p className="text-gray-600 mb-2">Article: {item.article}</p>
                       <p className="text-gray-600 mb-2">Price: {item.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
                       <div className="flex items-center ml-auto mt-6">
-                        <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-md mr-2 hover:bg-gray-300" onClick={() => decrease(item)}>
-                          <MinusIcon className="h-5 w-3" />
+                        <button
+                          onClick={() => decrease(item)}
+                          className="mr-3 group rounded-[50px] border border-gray-200 shadow-sm shadow-transparent p-2.5 flex items-center justify-center bg-white transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-100 hover:border-gray-300 focus-within:outline-gray-300">
+                          <MinusIcon className="h-5 w-5 stroke-gray-900 transition-all duration-500 group-hover:stroke-black" />
                         </button>
-                        <span className="mx-2 w-3">{item.quantity}</span>
-                        <button className="bg-gray-200 text-gray-700 px-3 py-1 rounded-md ml-2 hover:bg-gray-300" onClick={() => increase(item)} >
-                          <PlusIcon className="h-5 w-3 " />
+                        <span
+                          className="border border-gray-200 rounded-full w-10 aspect-square outline-none text-gray-900 font-semibold text-sm py-2 px-3 bg-gray-100  text-center"
+                        > {item.quantity}</span>
+                        <button
+                          onClick={() => increase(item)}
+                          className="ml-3  group rounded-[50px] border border-gray-200 shadow-sm shadow-transparent p-2.5 flex items-center justify-center bg-white transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-100 hover:border-gray-300 focus-within:outline-gray-300">
+                          <PlusIcon className="h-5 w-5 stroke-gray-900 transition-all duration-500 group-hover:stroke-black" />
                         </button>
-
-
-                        {/* <button className="group rounded-l-xl px-5 py-[10px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:bg-gray-50 hover:border-gray-300 hover:shadow-gray-300 focus-within:outline-gray-300" onClick={() => decrease(item)}>
-                          <ButtonLeft  />
-                        </button>
-                        <span className="border-y border-gray-200 outline-none text-gray-900 font-semibold text-lg w-full max-w-[73px] min-w-[60px] placeholder:text-gray-900 py-[7px]  text-center bg-transparent">{item.quantity}</span>
-                        <button className="group rounded-r-xl px-5 py-[10px] border border-gray-200 flex items-center justify-center shadow-sm shadow-transparent transition-all duration-500 hover:border-indigo-50 hover:bg-indigo-600 hover:text-white hover:shadow-gray-300 focus-within:outline-gray-300" onClick={() => increase(item)} >
-                          <ButtonRight  />
-
-                        </button> */}
                       </div>
                     </div>
                   </div>
@@ -570,7 +520,7 @@ const Bag = () => {
                                           {delivery.logo}{delivery.title}
                                         </RadioGroup.Label>
                                         {checked && (
-                                         <CheckCircleIcon className="h-5 w-5 text-indigo-600" aria-hidden="true" />
+                                          <CheckCircleIcon className="h-5 w-5 text-indigo-600" aria-hidden="true" />
                                         )}
                                       </div>
                                       <p className="text-gray-700 text-base">{delivery.subtitle}</p>
@@ -714,11 +664,9 @@ const Bag = () => {
                                 <div className="h-6 text-xs text-red-500">Error: {errors.city}</div>
                               ) : (<div className="h-6 text-xs "> </div>)}
                             </FormControl>
-
                             <label htmlFor="store" className="block text-sm font-medium text-gray-700 mb-2">
                               Store
                             </label>
-
                             <FormControl fullWidth variant="outlined">
                               <Autocomplete
                                 id="store"
@@ -746,7 +694,6 @@ const Bag = () => {
                     </div>
                   </div>
                 </div>
-
                 <div className="bg-white p-5 rounded-md shadow-md mb-4">
                   <div className="flex justify-between items-center">
                     <h3 className="text-2xl font-semibold mb-4">Payment Information</h3>
@@ -755,7 +702,6 @@ const Bag = () => {
                     <div className="mb-5 border-b pb-4">
                       <div className="pb-4">
                         <ThemeProvider theme={theme}>
-
                           {formData.payment === 'The money has not been paid' && (
                             <>
                               <div>
@@ -778,7 +724,7 @@ const Bag = () => {
                                                 {payment.logo} {payment.title}
                                               </RadioGroup.Label>
                                               {checked && (
-                                               <CheckCircleIcon className="h-5 w-5 text-indigo-600" aria-hidden="true" />
+                                                <CheckCircleIcon className="h-5 w-5 text-indigo-600" aria-hidden="true" />
                                                 // <span className="text-blue-700 font-bold">&#10003;</span>
                                               )}
                                             </div>
@@ -804,32 +750,30 @@ const Bag = () => {
                               )}
                             </>
                           )}
-
                         </ThemeProvider>
                       </div>
-
                       <dl className="pt-2 mt-8 divide-y divide-gray-200 text-sm ">
-                      <div className="flex items-center justify-between pb-4">
-                        <dt className="text-gray-600">Subtotal</dt>
-                        <dd className="font-medium text-gray-900">{totalWithOutTax.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</dd>
-                      </div>
-                      <div className="flex items-center justify-between py-4">
-                        <dt className="text-gray-600">Tax</dt>
-                        <dd className="font-medium text-gray-900">{taxes.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</dd>
-                      </div>
-                      <div className="flex items-center justify-between py-4">
-                        <dt className="text-gray-600">Discount</dt>
-                        <dd className="font-medium text-red-600">0 ₴</dd>
-                      </div>
-                      <div className="flex items-center justify-between py-4">
-                        <dt className="text-gray-600">Payment</dt>
-                        <dd className={`font-medium ${formData.payment === 'The money has not been paid' ? 'text-red-500' : 'text-green-500'}`}>{formData.payment}</dd>
-                      </div>
-                      <div className="flex items-center justify-between pt-4">
-                        <dt className="font-medium text-gray-900">Order total</dt>
-                        <dd className="font-medium text-indigo-600">{total.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</dd>
-                      </div>
-                    </dl>                    
+                        <div className="flex items-center justify-between pb-4">
+                          <dt className="text-gray-600">Subtotal</dt>
+                          <dd className="font-medium text-gray-900">{totalWithOutTax.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</dd>
+                        </div>
+                        <div className="flex items-center justify-between py-4">
+                          <dt className="text-gray-600">Tax</dt>
+                          <dd className="font-medium text-gray-900">{taxes.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</dd>
+                        </div>
+                        <div className="flex items-center justify-between py-4">
+                          <dt className="text-gray-600">Discount</dt>
+                          <dd className="font-medium text-red-600">0 ₴</dd>
+                        </div>
+                        <div className="flex items-center justify-between py-4">
+                          <dt className="text-gray-600">Payment</dt>
+                          <dd className={`font-medium ${formData.payment === 'The money has not been paid' ? 'text-red-500' : 'text-green-500'}`}>{formData.payment}</dd>
+                        </div>
+                        <div className="flex items-center justify-between pt-4">
+                          <dt className="font-medium text-gray-900">Order total</dt>
+                          <dd className="font-medium text-indigo-600">{total.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</dd>
+                        </div>
+                      </dl>
 
                     </div>
                   </div>

@@ -1,27 +1,14 @@
 import { useState } from 'react';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { Button, FormControl, IconButton, InputAdornment, TextField } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 import 'tailwindcss/tailwind.css';
 import '../../../../../index.css';
 import '../../../../../satoshi.css';
 import { validateForm } from '../../../../../validations/account/reset-validations';
 import { resetPassword } from '../../../../../services/accounts/account-services';
-
-const theme = createTheme({
-    typography: {
-        fontFamily: 'Satoshi, sans-serif',
-    },
-});
-
-const useStyles = makeStyles(() =>
-    createStyles({
-        button: {
-            textTransform: 'none',
-        },
-    }),
-);
+import { theme } from '../../../../../theme/theme';
+import { useStyles } from '../../../../../theme/Styles';
 
 const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
     const classes = useStyles();

@@ -14,7 +14,6 @@ const formatDate = (date?: Date | string) => {
 };
 
 const Profile: React.FC<ProfileUserProps> = ({ userProfile, countPage }) => {
-
   const confirm = async () => {
     if (userProfile) {
       emailConfirm(userProfile?.email);

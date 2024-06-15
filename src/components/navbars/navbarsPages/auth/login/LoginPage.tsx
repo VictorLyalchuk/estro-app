@@ -6,7 +6,6 @@ import '../../../../../index.css';
 import { APP_ENV } from "../../../../../env/config";
 import { Button, FormControl, IconButton, Input, InputAdornment, InputLabel, TextField } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { makeStyles } from '@material-ui/core/styles';
 import { GiftIcon } from '@heroicons/react/24/outline';
 import { ILogin } from '../../../../../interfaces/Auth/ILogin';
 import { IUser } from '../../../../../interfaces/Auth/IUser';
@@ -17,14 +16,15 @@ import { BanknotesIcon } from '@heroicons/react/24/outline';
 import { TrophyIcon } from '@heroicons/react/24/outline';
 import { Divider } from "antd";
 import { useGoogleLogin } from '@react-oauth/google';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 import '../../../../../satoshi.css';
 import MaskedInput from "react-text-mask";
 import ReactCodeInput from "react-code-input";
 import { validateForm } from '../../../../../validations/account/login-validations';
 import { validatePhoneNumber } from '../../../../../validations/custom/login-phone-validations';
 import { login } from '../../../../../services/accounts/account-services';
-import useGetFavoritesEffect from '../../../../../useGetFavoritesEffect';
+import { theme } from '../../../../../theme/theme';
+import { useStyles } from '../../../../../theme/Styles';
 
 interface TextMaskCustomProps {
     inputRef: (ref: HTMLInputElement | null) => void;
@@ -51,42 +51,6 @@ function TextMaskCustom(props: TextMaskCustomProps) {
 interface State {
     textmask: string;
 }
-const theme = createTheme({
-    typography: {
-        fontFamily: 'Satoshi, sans-serif',
-    },
-});
-
-const useStyles = makeStyles((theme) => ({
-    root: {
-        display: 'flex',
-        flexWrap: 'wrap',
-    },
-    margin: {
-        margin: theme.spacing(0),
-    },
-    input: {},
-    button: {
-        textTransform: 'none',
-    },
-    withoutLabel: {
-        marginTop: theme.spacing(3),
-    },
-    textField: {
-        '& .MuiInputBase-root': {
-            height: '60px',
-        },
-    },
-    googleButton: {
-        textTransform: 'none',
-        backgroundColor: '#4285F4',
-        color: '#fff',
-        '&:hover': {
-            backgroundColor: '#357ae8',
-        },
-        margin: theme.spacing(1, 0),
-    },
-}));
 
 const LoginPage = () => {
     const baseUrl = APP_ENV.BASE_URL;

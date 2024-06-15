@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import { IUserEdit } from '../../../../interfaces/Auth/IUserEdit';
 import moment from 'moment/moment';
 import { IIUserImageEdit } from '../../../../interfaces/Auth/IIUserImageEdit';
-import { FormControl, IconButton, Input, InputAdornment, TextField, ThemeProvider, createTheme } from '@material-ui/core';
+import { FormControl, IconButton, Input, InputAdornment, TextField, ThemeProvider } from '@material-ui/core';
 import { beforeUpload, createUserImage, deleteUserImage, editUserImage } from '../../../../services/images/images-services';
 import { APP_ENV } from '../../../../env/config';
 import { editUserData, refreshRedux, refreshToken } from '../../../../services/accounts/account-services';
@@ -16,12 +16,7 @@ import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
 import Modal from '../../../cropImage/Modal';
-
-const theme = createTheme({
-  typography: {
-    fontFamily: 'Satoshi, sans-serif',
-  },
-});
+import { theme } from '../../../../theme/theme';
 
 const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
   const baseUrl = APP_ENV.BASE_URL;

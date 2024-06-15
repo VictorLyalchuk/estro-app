@@ -1,19 +1,18 @@
 import axios from 'axios';
-import {ChangeEvent, SetStateAction, useEffect, useState} from 'react';
+import { ChangeEvent, SetStateAction, useEffect, useState } from 'react';
 import { IRegister } from '../../../../../interfaces/Auth/IRegister';
 import 'tailwindcss/tailwind.css';
 import '../../../../../index.css';
 import { APP_ENV } from "../../../../../env/config";
 import { Button, FormControl, IconButton, Input, InputAdornment, InputLabel, TextField } from '@material-ui/core';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
 import { GiftIcon } from '@heroicons/react/24/outline';
 import { BanknotesIcon } from '@heroicons/react/24/outline';
 import { TrophyIcon } from '@heroicons/react/24/outline';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider } from '@material-ui/core/styles';
 import '../../../../../satoshi.css';
-import { useGoogleLogin} from "@react-oauth/google";
+import { useGoogleLogin } from "@react-oauth/google";
 import ReactCodeInput from "react-code-input";
 import Modal from '../../../../cropImage/Modal';
 import { validateForm } from '../../../../../validations/account/register-validations';
@@ -21,21 +20,8 @@ import TextMaskCustom from '../../../../../services/custom/phone-services';
 import { State } from '../../../../../interfaces/Custom/Phone/State';
 import { validatePhoneNumber } from '../../../../../validations/custom/register-phone-validations';
 import { register } from '../../../../../services/accounts/account-services';
-
-const theme = createTheme({
-    typography: {
-        fontFamily: 'Satoshi, sans-serif',
-    },
-});
-
-const useStyles = makeStyles(() =>
-    createStyles({
-        button: {
-            textTransform: 'none',
-            marginBottom: "3px"
-        },
-    }),
-);
+import { theme } from '../../../../../theme/theme';
+import { useStyles } from '../../../../../theme/Styles';
 
 const RegisterPage = () => {
     const baseUrl = APP_ENV.BASE_URL;
@@ -170,20 +156,20 @@ const RegisterPage = () => {
                 }, 1000);
             }
         }
-     catch (error) {
-         setPinCode("");
-         setIsDisabled(true);
-         setIsTryToCode(false);
-         setTimeout(() => {
-             setIsDisabled(false);
-         }, 30000); // 30 seconds
+        catch (error) {
+            setPinCode("");
+            setIsDisabled(true);
+            setIsTryToCode(false);
+            setTimeout(() => {
+                setIsDisabled(false);
+            }, 30000); // 30 seconds
 
-        console.error("Verification error:", error);
-        setErrorMessage("Invalid code or verification failed");
-        setTimeout(() => {
-            setErrorMessage("");
-        }, 1000);
-    }
+            console.error("Verification error:", error);
+            setErrorMessage("Invalid code or verification failed");
+            setTimeout(() => {
+                setErrorMessage("");
+            }, 1000);
+        }
     };
 
     const googleSuccess = async (response: { access_token: any; }) => {
@@ -207,17 +193,17 @@ const RegisterPage = () => {
                 formData.append('ImagePath', googleUser?.picture);
                 formData.append('ClientId', googleUser?.id);
 
-                    await axios.post(`${baseUrl}/api/AccountControllers/Registration`, formData);
-                    setIsChosen(true);
-                    setIsRegistered(true);
+                await axios.post(`${baseUrl}/api/AccountControllers/Registration`, formData);
+                setIsChosen(true);
+                setIsRegistered(true);
 
-                } catch (error) {
-                    console.error("Register error:", error);
-                    setErrorMessage("Register error. Try again later");
-                    setTimeout(() => {
-                        setErrorMessage("");
-                    }, 1000);
-                }
+            } catch (error) {
+                console.error("Register error:", error);
+                setErrorMessage("Register error. Try again later");
+                setTimeout(() => {
+                    setErrorMessage("");
+                }, 1000);
+            }
         }
     };
 
@@ -252,10 +238,10 @@ const RegisterPage = () => {
     const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (file) {
-          setSelectedFile(file);
-          setModalOpen(true);
+            setSelectedFile(file);
+            setModalOpen(true);
         }
-      };
+    };
 
     const handleImageSelect = (file: File) => {
         if (file) {
@@ -350,26 +336,26 @@ const RegisterPage = () => {
                         <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0 flex flex-col justify-center items-center">
                             {!isChosen ? (
 
-                                    <div className={"flex-col flex "}>
-                                        <div className={"text-center mb-3"}>
-                                            <h2>Choose your option:</h2>
-                                        </div>
-                                        <div className={"flex-col bg-gray-100 p-10 rounded-2xl gap-2 w-59 flex"}>
-                                            <Button onClick={() => {setIsEmail(true); setIsChosen(true);}} className={"h-20"} size="large">
-                                                <svg className={"h-20 -ml-2"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><g fill="none" stroke="#383843" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"><path d="M1.75 3.75h12.5v9.5H1.75z"/><path d="m2.25 4.25l5.75 5l5.75-5"/></g></svg>
-                                                <p className={"ml-2 lowercase"}>Email</p>
-                                            </Button>
-                                            <Button onClick={() => {setIsPhone(true); setIsChosen(true);}} className={"h-20"} size="large">
-                                                <svg className={"h-20 -ml-4"} xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 20 20"><path fill="#3d3d3d" d="M9 14a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zM7 2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM6 4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1z"/></svg>
-                                                <p className={"lowercase"}>Phone</p>
-                                            </Button>
-                                            <Button onClick={() => registerGoogle()} className={"h-20"} size="large">
-                                                <svg xmlns="http://www.w3.org/2000/svg"  viewBox="0 0 1024 1024"><path fill="#383843" d="M881 442.4H519.7v148.5h206.4c-8.9 48-35.9 88.6-76.6 115.8c-34.4 23-78.3 36.6-129.9 36.6c-99.9 0-184.4-67.5-214.6-158.2c-7.6-23-12-47.6-12-72.9s4.4-49.9 12-72.9c30.3-90.6 114.8-158.1 214.7-158.1c56.3 0 106.8 19.4 146.6 57.4l110-110.1c-66.5-62-153.2-100-256.6-100c-149.9 0-279.6 86-342.7 211.4c-26 51.8-40.8 110.4-40.8 172.4S151 632.8 177 684.6C240.1 810 369.8 896 519.7 896c103.6 0 190.4-34.4 253.8-93c72.5-66.8 114.4-165.2 114.4-282.1c0-27.2-2.4-53.3-6.9-78.5"/></svg>
-                                                <p className={"ml-1.5 lowercase"}>Google</p>
-                                            </Button>
-                                        </div>
-
+                                <div className={"flex-col flex "}>
+                                    <div className={"text-center mb-3"}>
+                                        <h2>Choose your option:</h2>
                                     </div>
+                                    <div className={"flex-col bg-gray-100 p-10 rounded-2xl gap-2 w-59 flex"}>
+                                        <Button onClick={() => { setIsEmail(true); setIsChosen(true); }} className={"h-20"} size="large">
+                                            <svg className={"h-20 -ml-2"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><g fill="none" stroke="#383843" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"><path d="M1.75 3.75h12.5v9.5H1.75z" /><path d="m2.25 4.25l5.75 5l5.75-5" /></g></svg>
+                                            <p className={"ml-2 lowercase"}>Email</p>
+                                        </Button>
+                                        <Button onClick={() => { setIsPhone(true); setIsChosen(true); }} className={"h-20"} size="large">
+                                            <svg className={"h-20 -ml-4"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="#3d3d3d" d="M9 14a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zM7 2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM6 4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1z" /></svg>
+                                            <p className={"lowercase"}>Phone</p>
+                                        </Button>
+                                        <Button onClick={() => registerGoogle()} className={"h-20"} size="large">
+                                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="#383843" d="M881 442.4H519.7v148.5h206.4c-8.9 48-35.9 88.6-76.6 115.8c-34.4 23-78.3 36.6-129.9 36.6c-99.9 0-184.4-67.5-214.6-158.2c-7.6-23-12-47.6-12-72.9s4.4-49.9 12-72.9c30.3-90.6 114.8-158.1 214.7-158.1c56.3 0 106.8 19.4 146.6 57.4l110-110.1c-66.5-62-153.2-100-256.6-100c-149.9 0-279.6 86-342.7 211.4c-26 51.8-40.8 110.4-40.8 172.4S151 632.8 177 684.6C240.1 810 369.8 896 519.7 896c103.6 0 190.4-34.4 253.8-93c72.5-66.8 114.4-165.2 114.4-282.1c0-27.2-2.4-53.3-6.9-78.5" /></svg>
+                                            <p className={"ml-1.5 lowercase"}>Google</p>
+                                        </Button>
+                                    </div>
+
+                                </div>
 
                             ) : (
                                 isRegistered && !isEmail && !isPhone ? (
@@ -388,185 +374,185 @@ const RegisterPage = () => {
                                             </div>
 
                                             {/* <form onClick={handleSubmit}> */}
-                                                <ThemeProvider theme={theme}>
-                                                    <FormControl fullWidth variant="outlined">
-                                                        <TextField
-                                                            label="First Name"
-                                                            name="firstName"
-                                                            value={formData.firstName}
-                                                            onChange={handleChange}
-                                                            error={!!errors.firstName}
-                                                        />
-                                                        {errors.firstName ? (
-                                                            <div className="h-6 text-xs text-red-500">Error: {errors.firstName}</div>
-                                                        ) : (
-                                                            <div className="h-6 text-xs"> </div>
-                                                        )}
-                                                    </FormControl>
-
-                                                    <FormControl fullWidth variant="outlined">
-                                                        <TextField
-                                                            label="Last Name"
-                                                            name="lastName"
-                                                            value={formData.lastName}
-                                                            onChange={handleChange}
-                                                            error={!!errors.lastName}
-                                                        />
-                                                        {errors.lastName ? (
-                                                            <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
-                                                        ) : (
-                                                            <div className="h-6 text-xs"> </div>
-                                                        )}
-                                                    </FormControl>
-
-                                                    <FormControl fullWidth variant="outlined">
-                                                        <TextField
-                                                            label="Email"
-                                                            name="email"
-                                                            value={formData.email}
-                                                            onChange={handleChange}
-                                                            error={!!errors.email}
-                                                        />
-                                                        {errors.email ? (
-                                                            <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
-                                                        ) : (
-                                                            <div className="h-6 text-xs"> </div>
-                                                        )}
-                                                    </FormControl>
-                                                </ThemeProvider>
-
+                                            <ThemeProvider theme={theme}>
                                                 <FormControl fullWidth variant="outlined">
-                                                    <div className="mb-5 mt-2 flex justify-center items-center gap-x-3 relative">
-                                                        {selectedImage ? (
-                                                            <img
-                                                                src={selectedImage}
-                                                                alt="Selected"
-                                                                className="h-12 w-12 rounded-full"
-                                                            />
-                                                        ) : (
-                                                            <UserCircleIcon className="h-12 w-12 text-gray-300" aria-hidden="true" />
-                                                        )}
-                                                        <input
-                                                            type="file"
-                                                            accept="image/*"
-                                                            // onChange={handleImageSelect}
-                                                            onChange={handleFileChange}
-                                                            style={{ display: 'none' }}
-                                                        />
-                                                        <Button
-                                                            variant="contained"
-                                                            size="small"
-                                                            color="primary"
-                                                            className={classes.button}
-                                                            onClick={handleSelectFile}
-                                                        >
-                                                            select
-                                                        </Button>
-                                                    </div>
+                                                    <TextField
+                                                        label="First Name"
+                                                        name="firstName"
+                                                        value={formData.firstName}
+                                                        onChange={handleChange}
+                                                        error={!!errors.firstName}
+                                                    />
+                                                    {errors.firstName ? (
+                                                        <div className="h-6 text-xs text-red-500">Error: {errors.firstName}</div>
+                                                    ) : (
+                                                        <div className="h-6 text-xs"> </div>
+                                                    )}
                                                 </FormControl>
 
-                                                {modalOpen && selectedFile && (
-                            <Modal
-                              changeImage={handleImageSelect}
-                              closeModal={() => setModalOpen(false)}
-                              file={selectedFile}
-                            />
-                          )}
-
-                                                <ThemeProvider theme={theme}>
-                                                    <FormControl fullWidth>
-                                                        <InputLabel>Phone Number</InputLabel>
-                                                        <Input
-                                                            name="textmask"
-                                                            value={values.textmask}
-                                                            onChange={handleChangePhoneNumber}
-                                                            id="formatted-text-mask-input"
-                                                            inputComponent={TextMaskCustom as any}
-                                                            error={!!errors.phoneNumber}
-                                                            placeholder="(099) 00-00-000"
-                                                        />
-                                                        {errors.phoneNumber ? (
-                                                            <div className="h-6 text-xs text-red-500">Error: {errors.phoneNumber}</div>
-                                                        ) : (
-                                                            <div className="h-6 text-xs"> </div>
-                                                        )}
-                                                    </FormControl>
-
-                                                    <FormControl fullWidth variant="outlined">
-                                                        <TextField
-                                                            label="Password"
-                                                            type={showPassword ? 'text' : 'password'}
-                                                            name="password"
-                                                            value={formData.password}
-                                                            onChange={handleChange}
-                                                            error={!!errors.password}
-                                                            InputProps={{
-                                                                endAdornment: (
-                                                                    <InputAdornment position="end">
-                                                                        <IconButton onClick={handlePasswordToggle} edge="end">
-                                                                            {showPassword ? <Visibility /> : <VisibilityOff />}
-                                                                        </IconButton>
-                                                                    </InputAdornment>
-                                                                ),
-                                                            }}
-                                                        />
-                                                        {errors.password ? (
-                                                            <div className="h-6 text-xs text-red-500">Error: {errors.password}</div>
-                                                        ) : (
-                                                            <div className="h-6 text-xs"> </div>
-                                                        )}
-                                                    </FormControl>
-
-                                                    <FormControl fullWidth variant="outlined">
-                                                        <TextField
-                                                            label="Confirm Password"
-                                                            type={showConfirmPassword ? 'text' : 'password'}
-                                                            name="confirmPassword"
-                                                            value={formData.confirmPassword}
-                                                            onChange={handleChange}
-                                                            error={!!errors.confirmPassword}
-                                                            helperText={errors.confirmPassword}
-                                                            InputProps={{
-                                                                endAdornment: (
-                                                                    <InputAdornment position="end">
-                                                                        <IconButton onClick={handleConfirmPasswordToggle} edge="end">
-                                                                            {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
-                                                                        </IconButton>
-                                                                    </InputAdornment>
-                                                                ),
-                                                            }}
-                                                        />
-                                                        {errors.confirmPassword ? (
-                                                            <div className="h-6 text-xs text-red-500">Error: {errors.confirmPassword}</div>
-                                                        ) : (
-                                                            <div className="h-12 text-xs"> </div>
-                                                        )}
-                                                    </FormControl>
-                                                </ThemeProvider>
+                                                <FormControl fullWidth variant="outlined">
+                                                    <TextField
+                                                        label="Last Name"
+                                                        name="lastName"
+                                                        value={formData.lastName}
+                                                        onChange={handleChange}
+                                                        error={!!errors.lastName}
+                                                    />
+                                                    {errors.lastName ? (
+                                                        <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
+                                                    ) : (
+                                                        <div className="h-6 text-xs"> </div>
+                                                    )}
+                                                </FormControl>
 
                                                 <FormControl fullWidth variant="outlined">
-                                                    <Button
-                                                        className={classes.button}
-                                                        type="submit"
-                                                        onClick={handleSubmit}
-                                                        variant="contained"
-                                                        size="large"
-                                                        color="primary"
-                                                        disableElevation
-                                                    >
-                                                        Register
-                                                    </Button>
-                                                    <Button
-                                                        className={classes.button}
-                                                        type="button"
-                                                        variant="contained"
-                                                        size="large"
-                                                        color="primary"
-                                                        onClick={() => {setIsChosen(false); setIsEmail(false);}}
-                                                    >
-                                                        Cancel
-                                                    </Button>
+                                                    <TextField
+                                                        label="Email"
+                                                        name="email"
+                                                        value={formData.email}
+                                                        onChange={handleChange}
+                                                        error={!!errors.email}
+                                                    />
+                                                    {errors.email ? (
+                                                        <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
+                                                    ) : (
+                                                        <div className="h-6 text-xs"> </div>
+                                                    )}
                                                 </FormControl>
+                                            </ThemeProvider>
+
+                                            <FormControl fullWidth variant="outlined">
+                                                <div className="mb-5 mt-2 flex justify-center items-center gap-x-3 relative">
+                                                    {selectedImage ? (
+                                                        <img
+                                                            src={selectedImage}
+                                                            alt="Selected"
+                                                            className="h-12 w-12 rounded-full"
+                                                        />
+                                                    ) : (
+                                                        <UserCircleIcon className="h-12 w-12 text-gray-300" aria-hidden="true" />
+                                                    )}
+                                                    <input
+                                                        type="file"
+                                                        accept="image/*"
+                                                        // onChange={handleImageSelect}
+                                                        onChange={handleFileChange}
+                                                        style={{ display: 'none' }}
+                                                    />
+                                                    <Button
+                                                        variant="contained"
+                                                        size="small"
+                                                        color="primary"
+                                                        className={classes.button}
+                                                        onClick={handleSelectFile}
+                                                    >
+                                                        select
+                                                    </Button>
+                                                </div>
+                                            </FormControl>
+
+                                            {modalOpen && selectedFile && (
+                                                <Modal
+                                                    changeImage={handleImageSelect}
+                                                    closeModal={() => setModalOpen(false)}
+                                                    file={selectedFile}
+                                                />
+                                            )}
+
+                                            <ThemeProvider theme={theme}>
+                                                <FormControl fullWidth>
+                                                    <InputLabel>Phone Number</InputLabel>
+                                                    <Input
+                                                        name="textmask"
+                                                        value={values.textmask}
+                                                        onChange={handleChangePhoneNumber}
+                                                        id="formatted-text-mask-input"
+                                                        inputComponent={TextMaskCustom as any}
+                                                        error={!!errors.phoneNumber}
+                                                        placeholder="(099) 00-00-000"
+                                                    />
+                                                    {errors.phoneNumber ? (
+                                                        <div className="h-6 text-xs text-red-500">Error: {errors.phoneNumber}</div>
+                                                    ) : (
+                                                        <div className="h-6 text-xs"> </div>
+                                                    )}
+                                                </FormControl>
+
+                                                <FormControl fullWidth variant="outlined">
+                                                    <TextField
+                                                        label="Password"
+                                                        type={showPassword ? 'text' : 'password'}
+                                                        name="password"
+                                                        value={formData.password}
+                                                        onChange={handleChange}
+                                                        error={!!errors.password}
+                                                        InputProps={{
+                                                            endAdornment: (
+                                                                <InputAdornment position="end">
+                                                                    <IconButton onClick={handlePasswordToggle} edge="end">
+                                                                        {showPassword ? <Visibility /> : <VisibilityOff />}
+                                                                    </IconButton>
+                                                                </InputAdornment>
+                                                            ),
+                                                        }}
+                                                    />
+                                                    {errors.password ? (
+                                                        <div className="h-6 text-xs text-red-500">Error: {errors.password}</div>
+                                                    ) : (
+                                                        <div className="h-6 text-xs"> </div>
+                                                    )}
+                                                </FormControl>
+
+                                                <FormControl fullWidth variant="outlined">
+                                                    <TextField
+                                                        label="Confirm Password"
+                                                        type={showConfirmPassword ? 'text' : 'password'}
+                                                        name="confirmPassword"
+                                                        value={formData.confirmPassword}
+                                                        onChange={handleChange}
+                                                        error={!!errors.confirmPassword}
+                                                        helperText={errors.confirmPassword}
+                                                        InputProps={{
+                                                            endAdornment: (
+                                                                <InputAdornment position="end">
+                                                                    <IconButton onClick={handleConfirmPasswordToggle} edge="end">
+                                                                        {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
+                                                                    </IconButton>
+                                                                </InputAdornment>
+                                                            ),
+                                                        }}
+                                                    />
+                                                    {errors.confirmPassword ? (
+                                                        <div className="h-6 text-xs text-red-500">Error: {errors.confirmPassword}</div>
+                                                    ) : (
+                                                        <div className="h-12 text-xs"> </div>
+                                                    )}
+                                                </FormControl>
+                                            </ThemeProvider>
+
+                                            <FormControl fullWidth variant="outlined">
+                                                <Button
+                                                    className={classes.button}
+                                                    type="submit"
+                                                    onClick={handleSubmit}
+                                                    variant="contained"
+                                                    size="large"
+                                                    color="primary"
+                                                    disableElevation
+                                                >
+                                                    Register
+                                                </Button>
+                                                <Button
+                                                    className={classes.button}
+                                                    type="button"
+                                                    variant="contained"
+                                                    size="large"
+                                                    color="primary"
+                                                    onClick={() => { setIsChosen(false); setIsEmail(false); }}
+                                                >
+                                                    Cancel
+                                                </Button>
+                                            </FormControl>
                                             {/* </form> */}
                                         </div>
                                     ) : (
@@ -594,7 +580,7 @@ const RegisterPage = () => {
                                                         )}
                                                     </FormControl>
 
-                                                    <FormControl fullWidth  variant="outlined">
+                                                    <FormControl fullWidth variant="outlined">
                                                         <TextField
                                                             label="Last Name"
                                                             name="lastName"
@@ -710,7 +696,7 @@ const RegisterPage = () => {
                                                         variant="contained"
                                                         size="large"
                                                         color="primary"
-                                                        onClick={() => {setIsChosen(false); setIsPhone(false); setIsDisabled(false); setIsTryToCode(false);}}
+                                                        onClick={() => { setIsChosen(false); setIsPhone(false); setIsDisabled(false); setIsTryToCode(false); }}
                                                     >
                                                         Cancel
                                                     </Button>

@@ -170,7 +170,7 @@ export default function Product() {
               {product.images?.map((image, index) => (
                 <div key={index} className="aspect-h-4 aspect-w-3 rounded" >
                   <Image
-                    src={`${baseUrl}/uploads/1200_${image?.imagePath || '/uploads/default.jpg'}`}
+                    src={`${baseUrl}/uploads/1200_${image?.imagePath || '/uploads/imagenot.webp'}`}
                     alt={product.name}
                     className="h-full w-full object-cover object-center cursor-pointer"
                   />
