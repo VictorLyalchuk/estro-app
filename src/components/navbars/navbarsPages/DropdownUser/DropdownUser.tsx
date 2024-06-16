@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AuthReducerActionType, IAuthReducerState } from '../../../../store/accounts/AuthReducer';
 import { APP_ENV } from "../../../../env/config";
 import { BagReducerActionType } from '../../../../store/bag/BagReducer';
-import { ArrowLeftOnRectangleIcon, Cog6ToothIcon, DocumentChartBarIcon, HeartIcon, UserIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftOnRectangleIcon, Cog6ToothIcon, CurrencyDollarIcon, DocumentChartBarIcon, HeartIcon, UserIcon } from '@heroicons/react/24/outline';
 import { FavoritesReducerActionType } from '../../../../store/favourites/FavoritesReducer';
 
 
@@ -131,6 +131,17 @@ const DropdownUser = () => {
             >
               <HeartIcon className="h-5 w-5" aria-hidden="true" />
               Favorites
+            </Link>
+          </li>
+
+          <li>
+            <Link
+              to="/account/bonuses"
+              onClick={() => setDropdownOpen(false)}
+              className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500"
+            >
+              <CurrencyDollarIcon className="h-5 w-5" aria-hidden="true" />
+              Bonuses
             </Link>
           </li>
 
