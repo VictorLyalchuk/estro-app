@@ -155,7 +155,8 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
     setShowConfirmNewPassword((prevShowPassword) => !prevShowPassword);
   };
 
-  const onSubmit = async () => {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
     const { isValid, newErrors } = validateForm(formData, values.textmask, userProfile);
     setErrors(newErrors);
     if (isValid) {
@@ -189,7 +190,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
 
                 <ThemeProvider theme={theme}>
                   <div className=" lg:col-span-9">
-
+                  <form onSubmit={onSubmit}>
                     {/* Profile section */}
                     <div className="px-4 py-6 sm:p-6 lg:pb-8">
                       <div>
@@ -208,6 +209,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                                   value={formData.id}
                                   className="mt-1"
                                   size="small"
+                                  autoComplete="id"
                                   hidden
                                 />
                               </FormControl>
@@ -229,6 +231,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                                   error={!!errors.email}
                                   className="mt-1"
                                   size="small"
+                                  autoComplete="email"
                                 />
                                 {errors.email ? (
                                   <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
@@ -252,6 +255,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                                   error={!!errors.phoneNumber}
                                   className="mt-1"
                                   placeholder='(099) 00-00-000'
+                                  autoComplete="phone"
                                 />
                                 {errors.phoneNumber ? (
                                   <div className="h-6 text-xs text-red-500">Error: {errors.phoneNumber}</div>
@@ -340,6 +344,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                                 error={!!errors.firstName}
                                 className="mt-1"
                                 size="small"
+                                autoComplete="firstName"
                               />
                               {errors.firstName ? (
                                 <div className="h-6 text-xs text-red-500">Error: {errors.firstName}</div>
@@ -362,6 +367,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                                 error={!!errors.lastName}
                                 className="mt-1"
                                 size="small"
+                                autoComplete="lastName"
                               />
                               {errors.lastName ? (
                                 <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
@@ -387,6 +393,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                                 }}
                                 className="mt-1"
                                 size="small"
+                                autoComplete="birthday"
                               />
                             </FormControl>
 
@@ -408,6 +415,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                                 className="mt-1"
                                 size="small"
                                 type={showCurrentPassword ? 'text' : 'password'}
+                                autoComplete="password"
                                 InputProps={{
                                   endAdornment: (
                                     <InputAdornment position="end">
@@ -457,6 +465,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                                     className="mt-1"
                                     size="small"
                                     type={showNewPassword ? 'text' : 'password'}
+                                    autoComplete="newPassword"
                                     InputProps={{
                                       endAdornment: (
                                         <InputAdornment position="end">
@@ -488,6 +497,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                                     className="mt-1"
                                     size="small"
                                     type={showConfirmNewPassword ? 'text' : 'password'}
+                                    autoComplete="confirmNewPassword"
                                     InputProps={{
                                       endAdornment: (
                                         <InputAdornment position="end">
@@ -513,7 +523,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
 
                           <FormControl fullWidth variant="outlined">
                             <button
-                              onClick={onSubmit}
+                              // onClick={onSubmit}
                               className='inline-flex items-center justify-center rounded-md border bg-indigo-600 hover:bg-indigo-700
                   px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
                             >
@@ -583,6 +593,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                         </div>
                       </div>
                     </div>
+                    </form>
                   </div>
                 </ThemeProvider>
 

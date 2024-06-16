@@ -101,7 +101,8 @@ const RegisterPage = () => {
         }));
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         const { isValid, newErrors } = validateForm(formData, values.textmask);
         setErrors(newErrors);
         if (isValid) {
@@ -367,13 +368,13 @@ const RegisterPage = () => {
                                 ) : (
                                     isEmail ? (
                                         <div className="mb-4">
+                                            <form onSubmit={handleSubmit}>
                                             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                                                 <h2 className="mt-5 mb-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                                                     Email Registration
                                                 </h2>
                                             </div>
 
-                                            {/* <form onClick={handleSubmit}> */}
                                             <ThemeProvider theme={theme}>
                                                 <FormControl fullWidth variant="outlined">
                                                     <TextField
@@ -382,6 +383,7 @@ const RegisterPage = () => {
                                                         value={formData.firstName}
                                                         onChange={handleChange}
                                                         error={!!errors.firstName}
+                                                        autoComplete="firstName"
                                                     />
                                                     {errors.firstName ? (
                                                         <div className="h-6 text-xs text-red-500">Error: {errors.firstName}</div>
@@ -397,6 +399,7 @@ const RegisterPage = () => {
                                                         value={formData.lastName}
                                                         onChange={handleChange}
                                                         error={!!errors.lastName}
+                                                        autoComplete="lastName"
                                                     />
                                                     {errors.lastName ? (
                                                         <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
@@ -412,6 +415,7 @@ const RegisterPage = () => {
                                                         value={formData.email}
                                                         onChange={handleChange}
                                                         error={!!errors.email}
+                                                        autoComplete="email"
                                                     />
                                                     {errors.email ? (
                                                         <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
@@ -470,6 +474,7 @@ const RegisterPage = () => {
                                                         inputComponent={TextMaskCustom as any}
                                                         error={!!errors.phoneNumber}
                                                         placeholder="(099) 00-00-000"
+                                                        autoComplete="phone"
                                                     />
                                                     {errors.phoneNumber ? (
                                                         <div className="h-6 text-xs text-red-500">Error: {errors.phoneNumber}</div>
@@ -486,6 +491,7 @@ const RegisterPage = () => {
                                                         value={formData.password}
                                                         onChange={handleChange}
                                                         error={!!errors.password}
+                                                        autoComplete="password"
                                                         InputProps={{
                                                             endAdornment: (
                                                                 <InputAdornment position="end">
@@ -512,6 +518,7 @@ const RegisterPage = () => {
                                                         onChange={handleChange}
                                                         error={!!errors.confirmPassword}
                                                         helperText={errors.confirmPassword}
+                                                        autoComplete="confirmPassword"
                                                         InputProps={{
                                                             endAdornment: (
                                                                 <InputAdornment position="end">
@@ -534,7 +541,7 @@ const RegisterPage = () => {
                                                 <Button
                                                     className={classes.button}
                                                     type="submit"
-                                                    onClick={handleSubmit}
+                                                    // onClick={handleSubmit}
                                                     variant="contained"
                                                     size="large"
                                                     color="primary"
@@ -553,7 +560,7 @@ const RegisterPage = () => {
                                                     Cancel
                                                 </Button>
                                             </FormControl>
-                                            {/* </form> */}
+                                            </form>
                                         </div>
                                     ) : (
                                         <div className="mb-4">
@@ -679,7 +686,7 @@ const RegisterPage = () => {
                                                         <Button
                                                             className={classes.button}
                                                             type="submit"
-                                                            onClick={handleSubmit}
+                                                            // onClick={handleSubmit}
                                                             variant="contained"
                                                             size="large"
                                                             color="primary"

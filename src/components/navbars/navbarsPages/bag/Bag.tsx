@@ -2,18 +2,15 @@ import { useDispatch, useSelector } from "react-redux";
 import { IAuthReducerState } from "../../../../store/accounts/AuthReducer";
 import { useEffect, useState } from "react";
 import { BagItems, IBagUser } from "../../../../interfaces/Bag/IBagUser";
-import axios from "axios";
 import { MinusIcon, PlusIcon, TrashIcon } from "@heroicons/react/24/outline";
 import { IBagReducerState } from "../../../../store/bag/BagReducer";
 import { ICardReducerState } from "../../../../store/bag/CardReducer";
 import { IOrderCreate } from "../../../../interfaces/Bag/IOrderCreate";
 import { APP_ENV } from "../../../../env/config";
 import GoodsNotFound from "../../../../assets/goods-not-found.png";
-import { FormControl, Input, TextField, TextFieldProps } from '@material-ui/core';
+import { FormControl, Input, TextField } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 import '../../../../satoshi.css';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { JSX } from "react/jsx-runtime";
 import { ICity } from "../../../../interfaces/Bag/ICity";
 import { IWarehouse } from "../../../../interfaces/Bag/IWarehouse";
 import { RadioGroup } from '@headlessui/react';
@@ -27,6 +24,10 @@ import { State } from "../../../../interfaces/Custom/Phone/State";
 import { validatePhoneNumber } from "../../../../validations/custom/bag-phone-validations";
 import TextMaskCustom from "../../../../services/custom/phone-services";
 import { createOrder } from "../../../../services/order/order-services";
+import BranchShipping from "./ukraine/BranchShipping";
+import PostomatShipping from "./ukraine/PostomatShipping";
+import StoreShipping from "./ukraine/StoreShipping";
+import { getCity, getStore, getWarehouse } from "../../../../services/shipping/shipping-services";
 
 const Bag = () => {
   const baseUrl = APP_ENV.BASE_URL;
@@ -34,25 +35,34 @@ const Bag = () => {
   const { total, taxes, totalWithOutTax, initialIndividualItemPrice } = useSelector((redux: any) => redux.card as ICardReducerState);
   const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
   const { count } = useSelector((redux: any) => redux.bag as IBagReducerState);
-  const bagItems = useSelector((state: { card: ICardReducerState }) => state.card.items) || [];
   const [bagUser, setBagUser] = useState<IBagUser>();
+  const bagItems = useSelector((state: { card: ICardReducerState }) => state.card.items) || [];
+
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
   const [selectedShipping, setSelectedShipping] = useState<string | ''>('');
+  
   const [warehouseSelected, setSelectedWarehouse] = useState(false);
+  
   const [warehouseOptions, setWarehouseOptions] = useState<IWarehouse[]>([]);
-  const [selectedWarehouseOptions, setSelectedWarehouseOptions] = useState<IWarehouse | null>(null);
-  const [warehouse, setWarehouse] = useState<string>('');
   const [cityOptions, setCityOptions] = useState<ICity[]>([]);
+
   const [city, setCity] = useState<string>('');
-  const [storeOptions, setStoreOptions] = useState<IStore[]>([]);
-  const [filteredStores, setFilteredStores] = useState(storeOptions);
-  const [storeCities, setStoreCities] = useState<string[]>([]);
-  const [selectedStoreCity, setSelectedStoreCity] = useState<string | null>('');
-  const [selectedStore, setSelectedStore] = useState<IStore | null>(null);
+  const [warehouse, setWarehouse] = useState<string>('');
+  
+  const [selectedStore, setSelectedStore] = useState<IStore | null>(null); // вибраний магазин об'єкт
+  const [selectedWarehouseOptions, setSelectedWarehouseOptions] = useState<IWarehouse | null>(null);
+
+
+  const [selectedStoreCity, setSelectedStoreCity] = useState<string | null>(''); // вибраний магазин назва
+  const [storeOptions, setStoreOptions] = useState<IStore[]>([]); // список не фільрованих магазинів
+  const [filteredStores, setFilteredStores] = useState(storeOptions); // список фільтрованих магазин 
+  const [storeCities, setStoreCities] = useState<string[]>([]); // список міст магазинів
+  
+  const [activeBlock, setActiveBlock] = useState('personal');
   const [values, setValues] = useState<State>({
     textmask: '(   )    -  -  ',
   });
-  
+
   const [formData, setFormData] = useState({
     firstName: user?.FirstName || '',
     lastName: user?.LastName || '',
@@ -80,16 +90,22 @@ const Bag = () => {
         textmask: user?.PhoneNumber,
       }));
     }
-    getCity();
-    getStore();
+
+    getCity().then(resp => setCityOptions(resp));
+
+    getStore().then(resp => {
+      setStoreOptions(resp.storeOptions);
+      setStoreCities(resp.storeCities);
+    });
   }, [user, count]);
 
   useEffect(() => {
-    getWarehouse();
+    getWarehouse(city).then(resp => setWarehouseOptions(resp));
   }, [city]);
 
   useEffect(() => {
     clearFields();
+    setSelectedStoreCity('');
   }, [selectedShipping]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
@@ -161,6 +177,10 @@ const Bag = () => {
       const filtered = value ? storeOptions.filter(store => store.city === value) : storeOptions;
       setFilteredStores(filtered);
       setCity(value || '');
+      if (selectedStore && selectedStore.city !== value) {
+        setSelectedStore(null);
+        setWarehouse('');
+      }
     }
   }
 
@@ -169,55 +189,6 @@ const Bag = () => {
       setSelectedStore(value);
       setWarehouse(value?.name);
     };
-  }
-
-  const getWarehouse = async () => {
-    const apiUrl = 'https://api.novaposhta.ua/v2.0/json/';
-    const payload = {
-      apiKey: 'f8df4fb4933f7b40c96b872a1901be8e',
-      modelName: 'Address',
-      calledMethod: 'getWarehouses',
-      methodProperties: {
-        "CityRef": city
-      }
-    };
-
-    try {
-      const response = await axios.post(apiUrl, payload);
-      setWarehouseOptions(response.data.data);
-    } catch (error) {
-      console.error('Error fetching warehouses', error);
-    }
-  }
-
-  const getCity = async () => {
-    const apiUrl = 'https://api.novaposhta.ua/v2.0/json/';
-    const payload = {
-      apiKey: 'f8df4fb4933f7b40c96b872a1901be8e',
-      modelName: 'Address',
-      calledMethod: 'getCities',
-      methodProperties: {
-      }
-    };
-
-    try {
-      const response = await axios.post(apiUrl, payload);
-      setCityOptions(response.data.data);
-    } catch (error) {
-      console.error('Error fetching cities', error);
-    }
-  }
-
-  const getStore = async () => {
-    try {
-      const resp = await axios.get<IStore[]>(`${baseUrl}/api/StoreControllers/StoreAll`);
-      setStoreOptions(resp.data);
-      const uniqueCities = Array.from(new Set(resp.data.map(option => option.city)));
-      setStoreCities(uniqueCities);
-
-    } catch (error) {
-      console.error('Error fetching stores', error);
-    }
   }
 
   const clearFields = async () => {
@@ -233,6 +204,12 @@ const Bag = () => {
       ...prevData,
       payment: 'The money has been paid',
     }));
+  };
+
+  const handleBlockClick = (blockName: string) => {
+    if (activeBlock !== blockName) {
+      setActiveBlock(blockName);
+    }
   };
 
   return (
@@ -262,14 +239,13 @@ const Bag = () => {
               {bagItems.map((item: BagItems, index: number) => (
                 <div key={index} className="border-b bg-white pt-4 p-6 rounded-md shadow-md mb-8">
                   <div className="flex justify-between">
-                    <div className="flex justify-between">
-                      <h3 className="font-semibold mb-4 mr-14">Product {index + 1}</h3>
+                    <div className="flex justify-between items-center ">
+                      <h3 className="font-semibold mb-4 mr-14 ">Product {index + 1}</h3>
                       <h3 className="font-semibold mb-4">{item.name}</h3>
                     </div>
-                    <button className="font-medium text-gray-700 hover:text-indigo-500">
-                      <TrashIcon className="w-5 h-5 mb-4"
-                        onClick={() => deleteItems(item, user?.Email || '', dispatch)}
-                      />
+                    <button className="mb-3 group rounded-[50px] border border-gray-200 shadow-sm shadow-transparent p-2.5 flex items-center justify-center bg-white transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-100 hover:border-gray-300 focus-within:outline-gray-300"
+                      onClick={() => deleteItems(item, user?.Email || '', dispatch)}>
+                      <TrashIcon className="w-5 h-5 mb-4stroke-gray-900 transition-all duration-500 group-hover:stroke-black"/>
                     </button>
                   </div>
                   <div className="border-t pt-4 flex">
@@ -308,12 +284,14 @@ const Bag = () => {
             <div className="w-full lg:w-2/4 p-5 lg:mb-0">
 
               <form onSubmit={onSubmit}>
+
                 <div className="bg-white p-5 rounded-md shadow-md mb-8">
                   <div className="flex justify-between items-center">
-                    <h3 className="text-2xl font-semibold mb-4">Personal Information</h3>
+                    <h3 className="text-2xl font-semibold mb-4 cursor-pointer" onClick={() => handleBlockClick('personal')}>Personal Information</h3>
                   </div>
 
                   <div className="border-t pt-4">
+                  {activeBlock === 'personal' && (
                     <div className="">
 
                       <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
@@ -389,14 +367,18 @@ const Bag = () => {
                         </FormControl>
                       </ThemeProvider>
                     </div>
+                )}
                   </div>
                 </div>
 
-                <div className="bg-white p-5 rounded-md shadow-md mb-8">
-                  <div className="flex justify-between items-center">
-                    <h3 className="text-2xl font-semibold mb-4">Delivery Information</h3>
+                <div className={`bg-white p-5 rounded-md shadow-md mb-8 ${errors.city || errors.warehouse? 'border-2 border-red-500' : ''}`}>
+                <div className="flex justify-between items-center">
+                    <h3 className="text-2xl font-semibold mb-4 cursor-pointer" 
+                    onClick={() => handleBlockClick('delivery')}
+                    >Delivery Information</h3>
                   </div>
                   <div className="border-t pt-4">
+                  {activeBlock === 'delivery' && (
                     <div className="">
 
                       <ThemeProvider theme={theme}>
@@ -411,7 +393,8 @@ const Bag = () => {
                                   value={delivery.id}
                                   className={({ active, checked }) =>
                                     `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer ${active ? 'border-2 border-indigo-600 ring-2 ring-indigo-600' : ''
-                                    } ${checked ? 'border-2 border-indigo-600' : 'border-2 border-gray-200'}`
+                                    } ${checked ? 'border-2 border-indigo-600' : 'border-2 border-gray-200'}
+                                    ${selectedShipping === '' ? 'border-2 border-red-500' : ''}`
                                   }
                                 >
                                   {({ checked }) => (
@@ -434,172 +417,51 @@ const Bag = () => {
                         </div>
 
                         {selectedShipping === 'Branch' && (
-                          <div className="mt-5">
-                            <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
-                              City
-                            </label>
-
-                            <FormControl fullWidth variant="outlined">
-                              <Autocomplete
-                                id="city"
-                                options={cityOptions.filter(option => option.SettlementTypeDescription === 'місто')}
-                                getOptionLabel={(option) => option.Description}
-                                onChange={handleChangeCity}
-                                renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
-                                  <TextField
-                                    {...params}
-                                    fullWidth
-                                    size="small"
-                                    error={!!errors.city}
-                                  />
-                                )}
-                              />
-                              {errors.city ? (
-                                <div className="h-6 text-xs text-red-500">Error: {errors.city}</div>
-                              ) : (<div className="h-6 text-xs "> </div>)}
-                            </FormControl>
-
-                            <label htmlFor="warehouse" className="block text-sm font-medium text-gray-700 mb-2">
-                              Warehouse
-                            </label>
-
-                            <FormControl fullWidth variant="outlined">
-                              <Autocomplete
-                                id="warehouse"
-                                options={warehouseOptions.filter(option => option.CategoryOfWarehouse === 'Branch')}
-                                getOptionLabel={(option) => option.Description}
-                                value={warehouseOptions.find(option => option.CityRef === selectedWarehouseOptions?.CityRef) || null}
-                                onChange={handleChangeWarehouse}
-                                disabled={!warehouseSelected}
-                                renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
-                                  <TextField
-                                    {...params}
-                                    fullWidth
-                                    size="small"
-                                    error={!!errors.warehouse}
-                                  />
-                                )}
-                              />
-                              {errors.warehouse ? (
-                                <div className="h-6 text-xs text-red-500">Error: {errors.warehouse}</div>
-                              ) : (<div className="h-6 text-xs "> </div>)}
-                            </FormControl>
-                          </div>
+                          <BranchShipping
+                            cityOptions={cityOptions}
+                            warehouseOptions={warehouseOptions}
+                            handleChangeCity={handleChangeCity}
+                            handleChangeWarehouse={handleChangeWarehouse}
+                            warehouseSelected={warehouseSelected}
+                            selectedWarehouseOptions={selectedWarehouseOptions}
+                            errors={errors} />
                         )}
 
                         {selectedShipping === 'Postomat' && (
-                          <div className="mt-5">
-                            <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
-                              City
-                            </label>
-
-                            <FormControl fullWidth variant="outlined">
-                              <Autocomplete
-                                id="city"
-                                options={cityOptions.filter(option => option.SettlementTypeDescription === 'місто')}
-                                getOptionLabel={(option) => option.Description}
-                                onChange={handleChangeCity}
-                                renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
-                                  <TextField
-                                    {...params}
-                                    fullWidth
-                                    size="small"
-                                    error={!!errors.city}
-                                  />
-                                )}
-                              />
-                              {errors.city ? (
-                                <div className="h-6 text-xs text-red-500">Error: {errors.city}</div>
-                              ) : (<div className="h-6 text-xs "> </div>)}
-                            </FormControl>
-
-                            <label htmlFor="warehouse" className="block text-sm font-medium text-gray-700 mb-2">
-                              Postomat
-                            </label>
-
-                            <FormControl fullWidth variant="outlined">
-                              <Autocomplete
-                                id="warehouse"
-                                options={warehouseOptions.filter(option => option.CategoryOfWarehouse === 'Postomat')}
-                                getOptionLabel={(option) => option.Description}
-                                value={warehouseOptions.find(option => option.CityRef === selectedWarehouseOptions?.CityRef) || null}
-                                onChange={handleChangeWarehouse}
-                                disabled={!warehouseSelected}
-                                renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
-                                  <TextField
-                                    {...params}
-                                    fullWidth
-                                    size="small"
-                                    error={!!errors.warehouse}
-                                  />
-                                )}
-                              />
-                              {errors.warehouse ? (
-                                <div className="h-6 text-xs text-red-500">Error: {errors.warehouse}</div>
-                              ) : (<div className="h-6 text-xs "> </div>)}
-                            </FormControl>
-                          </div>
+                          <PostomatShipping
+                            cityOptions={cityOptions}
+                            warehouseOptions={warehouseOptions}
+                            handleChangeCity={handleChangeCity}
+                            handleChangeWarehouse={handleChangeWarehouse}
+                            warehouseSelected={warehouseSelected}
+                            selectedWarehouseOptions={selectedWarehouseOptions}
+                            errors={errors} />
                         )}
 
                         {selectedShipping === 'Store' && (
-                          <div className="mt-5">
-                            <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
-                              City
-                            </label>
+                          <StoreShipping
+                            storeCities={storeCities}
+                            filteredStores={filteredStores}
+                            handleChangeStoreCity={handleChangeStoreCity}
+                            handleChangeStore={handleChangeStore}
+                            warehouseSelected={warehouseSelected}
+                            selectedStoreCity={selectedStoreCity}
+                            selectedStore={selectedStore}
+                            errors={errors} />
 
-                            <FormControl fullWidth variant="outlined">
-                              <Autocomplete
-                                id="city"
-                                options={storeCities}
-                                onChange={handleChangeStoreCity}
-                                renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
-                                  <TextField
-                                    {...params}
-                                    fullWidth
-                                    size="small"
-                                    error={!!errors.city}
-                                  />
-                                )}
-                              />
-                              {errors.city ? (
-                                <div className="h-6 text-xs text-red-500">Error: {errors.city}</div>
-                              ) : (<div className="h-6 text-xs "> </div>)}
-                            </FormControl>
-                            <label htmlFor="store" className="block text-sm font-medium text-gray-700 mb-2">
-                              Store
-                            </label>
-                            <FormControl fullWidth variant="outlined">
-                              <Autocomplete
-                                id="store"
-                                options={filteredStores}
-                                getOptionLabel={(option) => option.name}
-                                value={selectedStoreCity ? selectedStore : null}
-                                onChange={handleChangeStore}
-                                disabled={!warehouseSelected}
-                                renderInput={(params: JSX.IntrinsicAttributes & TextFieldProps) => (
-                                  <TextField
-                                    {...params}
-                                    fullWidth
-                                    size="small"
-                                    error={!!errors.warehouse}
-                                  />
-                                )}
-                              />
-                              {errors.warehouse ? (
-                                <div className="h-6 text-xs text-red-500">Error: {errors.warehouse}</div>
-                              ) : (<div className="h-6 text-xs "> </div>)}
-                            </FormControl>
-                          </div>
                         )}
                       </ThemeProvider>
-                    </div>
+                    </div> 
+                    )} 
                   </div>
                 </div>
+
                 <div className="bg-white p-5 rounded-md shadow-md mb-4">
                   <div className="flex justify-between items-center">
-                    <h3 className="text-2xl font-semibold mb-4">Payment Information</h3>
+                    <h3 className="text-2xl font-semibold mb-4 cursor-pointer" onClick={() => handleBlockClick('payment')}>Payment Information</h3>
                   </div>
                   <div className="border-t pt-4">
+                  {activeBlock === 'payment' && (
                     <div className="mb-5 border-b pb-4">
                       <div className="pb-4">
                         <ThemeProvider theme={theme}>
@@ -677,6 +539,7 @@ const Bag = () => {
                       </dl>
 
                     </div>
+                    )}
                   </div>
                 </div>
                 {/* Checkout Button */}

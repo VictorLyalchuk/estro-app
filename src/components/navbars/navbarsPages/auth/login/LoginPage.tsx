@@ -109,7 +109,8 @@ const LoginPage = () => {
         }));
     };
 
-    const handleSubmitEmail = async () => {
+    const handleSubmitEmail = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         const { isValid, newErrors } = validateForm(formData, values.textmask);
         setErrors(newErrors);
         if (isValid) {
@@ -331,6 +332,7 @@ const LoginPage = () => {
 
                                 {!isPhoneLogin ? (
                                     <>
+                                 <form onSubmit={handleSubmitEmail}>
                                         <ThemeProvider theme={theme}>
                                             <FormControl fullWidth className={classes.margin} variant="outlined">
                                                 <TextField
@@ -339,6 +341,7 @@ const LoginPage = () => {
                                                     value={formData.email}
                                                     onChange={handleChange}
                                                     error={!!errors.email}
+                                                    autoComplete="email"
                                                 />
                                                 {errors.email ? (
                                                     <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
@@ -353,6 +356,7 @@ const LoginPage = () => {
                                                     value={formData.password}
                                                     onChange={handleChange}
                                                     error={!!errors.password}
+                                                    autoComplete="password"
                                                     InputProps={{
                                                         endAdornment: (
                                                             <InputAdornment position="end">
@@ -370,12 +374,12 @@ const LoginPage = () => {
                                         </ThemeProvider>
 
                                         <FormControl fullWidth className={classes.margin} variant="outlined">
-                                            <Button className={classes.button} onClick={handleSubmitEmail} type="submit" variant="contained" size="large" color="primary" disableElevation>
+                                            <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
                                                 Sign in
                                             </Button>
                                         </FormControl>
+                                        </form>
                                     </>
-
 
                                 ) : (
                                     <form onSubmit={handleSubmitPhone}>

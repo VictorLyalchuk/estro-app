@@ -37,7 +37,8 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
         }));
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         const { isValid, newErrors } = validateForm(formData);
         setErrors(newErrors);
         if (isValid) {
@@ -86,7 +87,7 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
                                         </h2>
                                     </div>
 
-                                    {/* <form onSubmit={handleSubmit}> */}
+                                    <form onSubmit={handleSubmit}>
                                         <ThemeProvider theme={theme}>
                                             <FormControl fullWidth variant="outlined">
                                                 <TextField
@@ -96,6 +97,7 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
                                                     value={formData.newPassword}
                                                     onChange={handleChange}
                                                     error={!!errors.newPassword}
+                                                    autoComplete="newPassword"
                                                     InputProps={{
                                                         endAdornment: (
                                                             <InputAdornment position="end">
@@ -120,6 +122,7 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
                                                     onChange={handleChange}
                                                     error={!!errors.confirmPassword}
                                                     helperText={errors.confirmPassword}
+                                                    autoComplete="confirmNewPassword"
                                                     InputProps={{
                                                         endAdornment: (
                                                             <InputAdornment position="end">
@@ -137,12 +140,12 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
                                         </ThemeProvider>
 
                                         <FormControl fullWidth variant="outlined">
-                                            <Button className={classes.button} onClick={handleSubmit} type="submit" variant="contained" size="large" color="primary" disableElevation>
+                                            <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
                                                 Reset Password
                                             </Button>
                                         </FormControl>
 
-                                    {/* </form> */}
+                                    </form>
 
                                 </div >
                             )}
