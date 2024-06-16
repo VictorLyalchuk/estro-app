@@ -9,7 +9,7 @@ const baseUrl = APP_ENV.BASE_URL;
 
 // Створюємо екземпляр axios
 const instance = axios.create({
-    baseURL: `${baseUrl}/api/FavoriteProducts`,
+    baseURL: `${baseUrl}/api/UserFavoriteProducts`,
     headers: {
         "Content-Type": "application/json"
     }

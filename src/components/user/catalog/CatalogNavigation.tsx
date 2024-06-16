@@ -20,7 +20,7 @@ import { RootState } from '../../../store/store.ts';
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer.ts';
 import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavoritesReducer.ts';
 import { HeartIcon } from '@heroicons/react/24/solid';
-import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/favoriteProducts/favorite-products-services.ts';
+import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/userFavoriteProducts/user-favorite-products-services.ts';
 import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts.ts';
 
 function classNames(...classes: string[]) {

@@ -1,4 +1,5 @@
-export interface IUserProfile {
+export interface IUserProfile
+ {
     id: string,
     firstName: string,
     lastName: string,
@@ -10,4 +11,5 @@ export interface IUserProfile {
     phoneNumberConfirmed: boolean,
     password: string,
     birthday: Date,
+    bonusBalance: number,
 }

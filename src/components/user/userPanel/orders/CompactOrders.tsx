@@ -2,20 +2,13 @@ import { Link } from "react-router-dom";
 import GoodsNotFound from "../../../../assets/goods-not-found.png";
 import { APP_ENV } from "../../../../env/config";
 import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/react/20/solid';
-import { CompactOrdersProps } from "../../../../interfaces/Custom/Phone/ProfileUser/ProfileUserProps";
+import { CompactOrdersProps } from "../../../../interfaces/ProfileUser/ProfileUserProps";
 import { ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
+import { formatDate } from "../../../../services/custom/format-data";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
-const formatDate = (dateString: string) => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric'
-  });
-};
 
 const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange, page, countPage, onPageChange }) => {
   const baseUrl = APP_ENV.BASE_URL;

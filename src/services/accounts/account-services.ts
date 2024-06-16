@@ -73,12 +73,15 @@ export function removeTokens() {
 
 export async function refreshToken() {
     try {
-        const response = await instance.put("/refresh-token", {
-            token: getToken(),
-        });
-        const token = response.data;
-        setToken(response.data);
-        return token;
+        const localToken = getToken();
+        if (localToken) {
+            const response = await instance.put("/refresh-token", {
+                token: getToken(),
+            });
+            const token = response.data;
+            setToken(response.data);
+            return token;
+        }
     } catch (error) {
         console.error("Failed to refresh token:", error);
         throw error;
@@ -143,10 +146,10 @@ export async function ConfirmEmail(email: string | null, token: string | null, c
     try {
         await instance.post(`ConfirmEmail`, { email, token });
         await refreshToken();
-        callback(null, "Success"); 
+        callback(null, "Success");
     } catch (error) {
         console.error('Error confirming email:', error);
-        callback(error); 
+        callback(error);
     }
 }
 
@@ -190,7 +193,7 @@ export async function login(_user: ILogin, dispatch: any) {
 
 export async function forgotPassword(user: any) {
     try {
-        await instance.post(`ForgotPassword`, user );
+        await instance.post(`ForgotPassword`, user);
     } catch (error) {
         console.error('Failed to edit user data:', error);
         throw error;
@@ -199,7 +202,7 @@ export async function forgotPassword(user: any) {
 
 export async function resetPassword(user: any) {
     try {
-        await instance.post(`ResetPassword`, user );
+        await instance.post(`ResetPassword`, user);
     } catch (error) {
         console.error('Failed to edit user data:', error);
         throw error;

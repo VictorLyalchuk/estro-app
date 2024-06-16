@@ -15,6 +15,7 @@ import Orders from './orders/Orders';
 import { getProfileOrders, getUserOrders } from '../../../services/order/order-services';
 import Favourites from './favourites/Favourites';
 import { RootState } from '../../../store/store';
+import { getUserBonusesByUserId } from '../../../services/userBonuses/user-bonuses-services';
 
 const UserPanelPage = () => {
     const location = useLocation();
@@ -22,11 +23,12 @@ const UserPanelPage = () => {
     const favoriteProducts = useSelector((state: RootState) => state.favorites.favoriteProducts);
     const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
     const [orders, setOrdersUser] = useState<IOrderUser[]>([]);
+    const [userProfile, setUserProfile] = useState<IUserProfile>();
+    const [userBonuses, setUserBonuses] = useState<IUserBonuses[]>([]);
     const [viewMode, setViewMode] = useState('detailed');
     const [activeTab, setActiveTab] = useState(0);
     const [page, setPage] = useState(1);
     const [countPage, setCountPage] = useState(0);
-    const [userProfile, setUserProfile] = useState<IUserProfile>();
 
     const handleViewModeChange = () => {
         setViewMode(prevMode => (prevMode === 'detailed' ? 'compact' : 'detailed'));
@@ -55,13 +57,14 @@ const UserPanelPage = () => {
         {
             name: 'Favorites',
             current: activeTab === 3,
-            component: <Favourites userProfile={userProfile} />,
+            component: <Favourites />,
             count: favoriteProducts.length.toString(),
         },
         {
             name: 'My Bonuses',
             current: activeTab === 4,
-            component: <Bonuses userProfile={userProfile} />,
+            component: <Bonuses userBonuses={userBonuses} bonusBalance = {userProfile?.bonusBalance} />,
+            count: userProfile?.bonusBalance?.toString() || '0',
         },
     ];
     const handleTabChange = (index: number) => {
@@ -101,6 +104,9 @@ const UserPanelPage = () => {
             getUserData(user.Email)
                 .then(data => setUserProfile(data))
                 .catch(error => console.error('Error fetching user data:', error));
+            getUserBonusesByUserId(user.Id)
+                .then(data => setUserBonuses(data))  
+                .catch(error => console.error('Error fetching bonuses data:', error));
         }
     }, [user, page]);
 

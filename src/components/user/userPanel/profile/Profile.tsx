@@ -1,4 +1,4 @@
-import { ProfileUserProps } from "../../../../interfaces/Custom/Phone/ProfileUser/ProfileUserProps";
+import { ProfileUserProps } from "../../../../interfaces/ProfileUser/ProfileUserProps";
 import { emailConfirm } from "../../../../services/accounts/account-services";
 
 

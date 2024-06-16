@@ -11,7 +11,7 @@ import { State } from '../../../../interfaces/Custom/Phone/State';
 import TextMaskCustom from '../../../../services/custom/phone-services';
 import { validateForm } from '../../../../validations/account/account-validations';
 import { validatePhoneNumber } from '../../../../validations/custom/phone-validations';
-import { SettingsUserProps } from '../../../../interfaces/Custom/Phone/ProfileUser/ProfileUserProps';
+import { SettingsUserProps } from '../../../../interfaces/ProfileUser/ProfileUserProps';
 import { Visibility, VisibilityOff } from '@material-ui/icons';
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'

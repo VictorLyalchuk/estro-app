@@ -1,6 +1,6 @@
 import { Fragment, SetStateAction, useEffect, useState } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
-import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, UserIcon, HeartIcon } from '@heroicons/react/24/outline'
+import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, UserIcon, HeartIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline'
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { AuthReducerActionType, IAuthReducerState } from "../../store/accounts/AuthReducer.ts";
@@ -11,6 +11,8 @@ import { getMainCategories } from '../../services/category/category-services.ts'
 import { getCountBagByEmail } from '../../services/bag/bag-services.ts';
 import { RootState } from '../../store/store.ts';
 import { FavoritesReducerActionType } from '../../store/favourites/FavoritesReducer.ts';
+import { IUserProfile } from '../../interfaces/Auth/IUserProfile.ts';
+import { getUserData } from '../../services/accounts/account-services.ts';
 
 const navigation = {
     featured: [
@@ -39,10 +41,14 @@ const NavbarsPage = () => {
     const [open, setOpen] = useState(false)
     const dispatch = useDispatch();
     const favoriteCount = useSelector((state: RootState) => state.favorites.count);
+    const [userProfile, setUserProfile] = useState<IUserProfile>();
 
     useEffect(() => {
         if (user?.Email) {
             getCountBagByEmail(user?.Email, dispatch);
+            getUserData(user.Email)
+                .then(data => setUserProfile(data))
+                .catch(error => console.error('Error fetching user data:', error));
         }
     }, [count, user]);
 
@@ -50,6 +56,7 @@ const NavbarsPage = () => {
         getMainCategories()
             .then((data: SetStateAction<IMainCategory[]>) => setCategoryList(data))
             .catch(error => console.error('Error fetching categories data:', error));
+
     }, []);
 
     const handleLogout = () => {
@@ -123,7 +130,7 @@ const NavbarsPage = () => {
                                             {categoryList.map((category) => (
                                                 <Tab.Panel key={category.name} className="space-y-10 px-4 pb-8 pt-10">
                                                     <div className="grid grid-cols-2 gap-x-4">
-                                                        {/* {category.featured.map((item) => (
+                                                        {/* {category.map((item) => (
                                                         <div key={item.name} className="group relative text-sm">
                                                             <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
                                                                 <img src={item.imageSrc} alt={item.imageAlt} className="object-cover object-center" />
@@ -356,24 +363,28 @@ const NavbarsPage = () => {
                                         <div className="ml-4 flow-root lg:ml-6">
                                             <a href="#" className="p-2 text-gray-400 hover:text-gray-500">
                                                 <div className="sr-only">Search</div>
-                                                <MagnifyingGlassIcon className="h-6 w-6" aria-hidden="true" />
+                                                <MagnifyingGlassIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
                                             </a>
+                                        </div>
+
+                                        {/* Bonuses */}
+                                        <div className="ml-4 flow-root lg:ml-6">
+                                            <Link to={"/account/bonuses"} className="group -m-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-10 flex items-center hover:text-gray-500 mr-12">
+                                                <CurrencyDollarIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true"/>
+                                                {userProfile?.bonusBalance?.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1)}</Link>
                                         </div>
 
                                         {/* Favorites */}
                                         <div className="ml-4 flow-root lg:ml-6">
                                             <Link to={"/account/favorites"} className="group -m-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-10 flex items-center hover:text-gray-500">
-                                                <HeartIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-3" aria-hidden="true" />
+                                                <HeartIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
                                                 {favoriteCount}</Link>
                                         </div>
 
                                         {/* Cart */}
                                         <div className="ml-4 flow-root lg:ml-6">
                                             <Link to={"/bag"} className="group -m-2 ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-20 flex items-center hover:text-gray-500">
-                                                <ShoppingBagIcon
-                                                    className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-3"
-                                                    aria-hidden="true"
-                                                />
+                                                <ShoppingBagIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true"/>
                                                 {count}</Link>
                                             <div className="sr-only">items in cart, view bag</div>
                                         </div>

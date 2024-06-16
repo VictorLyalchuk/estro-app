@@ -5,9 +5,8 @@ import RegisterPage from './register/RegisterPage';
 import LoginPage from './login/LoginPage';
 import ResetPassword from './forgotPassword/ResetPassword';
 import ForgotPassword from './forgotPassword/ForgotPassword';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useEffect } from 'react';
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')

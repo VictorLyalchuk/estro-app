@@ -1,4 +1,5 @@
-import { IUserProfile } from "../../../Auth/IUserProfile";
+import { IUserProfile } from "../Auth/IUserProfile";
+
 
 export interface ProfileUserProps {
     userProfile?: IUserProfile;
@@ -9,6 +10,10 @@ export interface SettingsUserProps {
     userProfile?: IUserProfile;
 }
 
+export interface BonusesUserProps {
+    userBonuses: IUserBonuses[];
+    bonusBalance?: number;
+}
 export interface CompactOrdersProps {
     orders: IOrderUser[];
     onViewModeChange: () => void;

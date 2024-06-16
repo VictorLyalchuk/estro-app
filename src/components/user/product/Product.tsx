@@ -17,7 +17,7 @@ import { HeartIcon } from '@heroicons/react/24/solid';
 import { HeartIcon as OutlineHeartIcon } from '@heroicons/react/24/outline'
 import { RootState } from '../../../store/store';
 import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavoritesReducer';
-import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/favoriteProducts/favorite-products-services';
+import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/userFavoriteProducts/user-favorite-products-services';
 import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts';
 
 const reviews = { href: '#', average: 4, totalCount: 117 }
