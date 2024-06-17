@@ -255,10 +255,10 @@ const Bag = () => {
                       className="w-24 h-36 object-cover rounded-md mr-4"
                     />
                     <div className="w-1/2 ml-4 mx-auto">
-                      <h3 className="text-lg font-semibold mb-2 mr-auto whitespace-nowrap">Total product price: {initialIndividualItemPrice[item.id].toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</h3>
+                      <h3 className="text-lg font-semibold mb-2 mr-auto whitespace-nowrap">Total product price: {initialIndividualItemPrice[item.id].toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</h3>
                       <p className="text-gray-600 mb-2">Size: {item.size}</p>
                       <p className="text-gray-600 mb-2">Article: {item.article}</p>
-                      <p className="text-gray-600 mb-2">Price: {item.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
+                      <p className="text-gray-600 mb-2">Price: {item.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
                       <div className="flex items-center ml-auto mt-6">
                         <button
                           onClick={() => decrease(item, user?.Email || '', dispatch)}
@@ -518,15 +518,15 @@ const Bag = () => {
                       <dl className="pt-2 mt-8 divide-y divide-gray-200 text-sm ">
                         <div className="flex items-center justify-between pb-4">
                           <dt className="text-gray-600">Subtotal</dt>
-                          <dd className="font-medium text-gray-900">{totalWithOutTax.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</dd>
+                          <dd className="font-medium text-gray-900">{totalWithOutTax.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
                         </div>
                         <div className="flex items-center justify-between py-4">
                           <dt className="text-gray-600">Tax</dt>
-                          <dd className="font-medium text-gray-900">{taxes.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</dd>
+                          <dd className="font-medium text-gray-900">{taxes.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
                         </div>
                         <div className="flex items-center justify-between py-4">
                           <dt className="text-gray-600">Discount</dt>
-                          <dd className="font-medium text-red-600">0 ₴</dd>
+                          <dd className="font-medium text-red-600">0 €</dd>
                         </div>
                         <div className="flex items-center justify-between py-4">
                           <dt className="text-gray-600">Payment</dt>
@@ -534,7 +534,7 @@ const Bag = () => {
                         </div>
                         <div className="flex items-center justify-between pt-4">
                           <dt className="font-medium text-gray-900">Order total</dt>
-                          <dd className="font-medium text-indigo-600">{total.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</dd>
+                          <dd className="font-medium text-indigo-600">{total.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
                         </div>
                       </dl>
 

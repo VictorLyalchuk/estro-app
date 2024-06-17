@@ -86,7 +86,7 @@ const Bonuses: React.FC<BonusesUserProps> = ({ userBonuses, bonusBalance }) => {
                           </td>
                           <td className="hidden px-6 py-5 text-right text-sm text-gray-500 sm:table-cell">{bonus.bonusesOperation}</td>
                           <td className="hidden px-6 py-5 text-right text-sm text-gray-500 sm:table-cell">{bonus.bonusesDescription}</td>
-                          <td className="py-5 pl-3 pr-6 text-right text-sm text-gray-500 sm:pr-6">
+                          <td className="py-5 pl-3 pr-6 text-right text-sm text-gray-500 sm:pr-6 whitespace-nowrap">
                             {bonus.bonusesOperation === "Accrual" ? (
                               <ArrowUpCircleIcon className="mr-2 h-5 w-5 text-green-700 inline-block align-middle" />
                             ) : (
