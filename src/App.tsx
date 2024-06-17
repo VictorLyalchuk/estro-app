@@ -20,7 +20,8 @@ import PrivacyPolicy from "./components/footer/footerPages/PrivacyPolicy";
 import About from "./components/footer/footerPages/About";
 import StoreLocations from "./components/footer/footerPages/StoreLocations";
 import AdminLayout from "./components/layout/AdminLayout";
-import AuthPage from "./components/navbars/navbarsPages/auth/AuthPage";
+// import AuthPage from "./components/navbars/navbarsPages/auth/AuthPage";
+import AuthPanelPage from "./components/navbars/navbarsPages/auth/AuthPanelPage";
 import UserPanelPage from "./components/user/userPanel/UserPanelPage";
 import UserLayout from "./components/layout/UserLayout";
 import GuestLayout from "./components/layout/GuestLayout";
@@ -56,9 +57,11 @@ function App() {
       <NavbarsPage />
       <Routes>
         <Route element={<GuestLayout />}>
-          <Route path='/auth' element={<AuthPage />} />
+          {/* <Route path='/auth' element={<AuthPage />} /> */}
+          <Route path='/auth' element={<AuthPanelPage />} />
         </Route>
-        <Route path="/auth/:email/:token" element={<AuthPage />} />
+        {/* <Route path="/auth/:email/:token" element={<AuthPage />} /> */}
+        <Route path="/auth/:email/:token" element={<AuthPanelPage />} />
 
         <Route path="/" element={<HomeStore />}></Route>
         <Route path="/:email/:token" element={<HomeStore />}></Route>

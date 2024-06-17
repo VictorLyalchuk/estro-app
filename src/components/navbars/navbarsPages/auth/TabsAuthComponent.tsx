@@ -5,7 +5,6 @@ interface Tab {
   name: string;
   current: boolean;
   component: React.ReactNode;
-  count?: string;
 }
 
 interface TabsComponentProps {
@@ -13,7 +12,7 @@ interface TabsComponentProps {
   onTabChange: (index: number) => void;
 }
 
-const TabsOrdersComponent: React.FC<TabsComponentProps> = ({ tabs, onTabChange }) => {
+const TabsAuthComponent: React.FC<TabsComponentProps> = ({ tabs, onTabChange }) => {
   const currentTab = tabs.find((tab) => tab.current);
 
   return (
@@ -41,7 +40,7 @@ const TabsOrdersComponent: React.FC<TabsComponentProps> = ({ tabs, onTabChange }
       </div>
       <div className="hidden sm:block p-8 pt-4">
         <div className="border-b border-gray-200">
-          <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+          <nav className="-mb-px flex space-x-0" aria-label="Tabs">
             {tabs.map((tab, index) => (
               <a
                 key={tab.name}
@@ -50,7 +49,7 @@ const TabsOrdersComponent: React.FC<TabsComponentProps> = ({ tabs, onTabChange }
                   tab.current
                     ? 'border-indigo-500 text-indigo-600'
                     : 'border-transparent text-gray-500 hover:border-gray-200 hover:text-gray-700',
-                  'w-1/4 border-b-2 py-4 px-1 text-center text-sm font-medium'
+                  'w-1/3 border-b-2 py-4 px-1 text-center text-sm font-medium'
                 )}
                 aria-current={tab.current ? 'page' : undefined}
                 onClick={(e) => {
@@ -59,16 +58,6 @@ const TabsOrdersComponent: React.FC<TabsComponentProps> = ({ tabs, onTabChange }
                 }}
               >
                 {tab.name}
-                {tab.count ? (
-                  <span
-                    className={classNames(
-                      tab.current ? 'bg-indigo-100 text-indigo-600' : 'bg-gray-100 text-gray-900',
-                      'ml-3 hidden rounded-full py-0.5 px-2.5 text-xs font-medium md:inline-block'
-                    )}
-                  >
-                    {tab.count}
-                  </span>
-                ) : null}
               </a>
             ))}
           </nav>
@@ -78,4 +67,4 @@ const TabsOrdersComponent: React.FC<TabsComponentProps> = ({ tabs, onTabChange }
   );
 };
 
-export default TabsOrdersComponent;
+export default TabsAuthComponent;

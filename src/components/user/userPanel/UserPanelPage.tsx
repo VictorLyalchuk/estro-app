@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer';
 import { IUserProfile } from '../../../interfaces/Auth/IUserProfile';
 import { getUserData } from '../../../services/accounts/account-services';
-import TabsOrdersComponent from './TabsOrdersComponent';
+import TabsOrdersComponent from './TabsUserComponent';
 import Profile from './profile/Profile';
 import Settings from './settings/Settings';
 import Bonuses from './bonuses/Bonuses';
