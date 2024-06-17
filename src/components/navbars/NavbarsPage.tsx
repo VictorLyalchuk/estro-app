@@ -64,6 +64,7 @@ const NavbarsPage = () => {
         dispatch({ type: AuthReducerActionType.LOGOUT_USER });
         dispatch({ type: BagReducerActionType.DELETE_BAG_ALL });
         dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL })
+        setUserProfile(undefined);
     };
 
     return (
@@ -371,7 +372,7 @@ const NavbarsPage = () => {
                                         <div className="ml-4 flow-root lg:ml-6">
                                             <Link to={"/account/bonuses"} className="group -m-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-10 flex items-center hover:text-gray-500 mr-12">
                                                 <CurrencyDollarIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true"/>
-                                                {userProfile?.bonusBalance?.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1)}</Link>
+                                                { user? userProfile?.bonusBalance?.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1) : 0}</Link>
                                         </div>
 
                                         {/* Favorites */}

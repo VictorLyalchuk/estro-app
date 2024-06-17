@@ -23,15 +23,9 @@ const DropdownUser = () => {
   
   const handleLogout = () => {
     localStorage.removeItem("token");
-    dispatch({
-      type: AuthReducerActionType.LOGOUT_USER,
-    });
-    dispatch({
-      type: BagReducerActionType.DELETE_BAG_ALL,
-    });
-    dispatch({
-      type: FavoritesReducerActionType.DELETE_FAVORITES_ALL,
-  })
+    dispatch({ type: AuthReducerActionType.LOGOUT_USER, });
+    dispatch({ type: BagReducerActionType.DELETE_BAG_ALL, });
+    dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL, })
   };
 
   // close on click outside

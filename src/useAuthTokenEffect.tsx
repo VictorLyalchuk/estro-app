@@ -29,35 +29,37 @@ const useAuthTokenEffect = () => {
         });
 
 
-        const tokenExpiration = new Date().getTime() + 60 * 60 * 1000; // 60 хвилин
-        localStorage.setItem('tokenExpiration', tokenExpiration.toString());
-        const logoutTimer = setTimeout(() => {
-          // Виклик функції логауту
-          dispatch({ type: AuthReducerActionType.LOGOUT_USER });
-          dispatch({ type: BagReducerActionType.DELETE_BAG_ALL });
-          dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL });
-        }, 60 * 60 * 1000); // 60 хвилин
-        localStorage.setItem('logoutTimer', logoutTimer.toString());
+        // const tokenExpiration = new Date().getTime() + 60 * 60 * 1000; // 60 хвилин
+        // localStorage.setItem('tokenExpiration', tokenExpiration.toString());
+        // const logoutTimer = setTimeout(() => {
+        //   // Виклик функції логауту
+        //   dispatch({ type: AuthReducerActionType.LOGOUT_USER });
+        //   dispatch({ type: BagReducerActionType.DELETE_BAG_ALL });
+        //   dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL });
+        // }, 60 * 60 * 1000); // 60 хвилин
+        // localStorage.setItem('logoutTimer', logoutTimer.toString());
 
       } else {
-        dispatch({ type: AuthReducerActionType.LOGOUT_USER });
-      }
-    };
-
-
-
-    const checkTokenExpiration = () => {
-      const tokenExpiration = localStorage.getItem('tokenExpiration');
-      if (tokenExpiration && new Date().getTime() > parseInt(tokenExpiration)) {
-        // Виклик функції логауту
         dispatch({ type: AuthReducerActionType.LOGOUT_USER });
         dispatch({ type: BagReducerActionType.DELETE_BAG_ALL });
         dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL });
       }
     };
 
-    // Перевірка часу токену кожні 5 секунд
-    const tokenCheckInterval = setInterval(checkTokenExpiration, 5000);
+
+
+    // const checkTokenExpiration = () => {
+    //   const tokenExpiration = localStorage.getItem('tokenExpiration');
+    //   if (tokenExpiration && new Date().getTime() > parseInt(tokenExpiration)) {
+    //     // Виклик функції логауту
+    //     dispatch({ type: AuthReducerActionType.LOGOUT_USER });
+    //     dispatch({ type: BagReducerActionType.DELETE_BAG_ALL });
+    //     dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL });
+    //   }
+    // };
+
+    // // Перевірка часу токену кожні 5 секунд
+    // const tokenCheckInterval = setInterval(checkTokenExpiration, 5000);
 
 
 
@@ -68,7 +70,7 @@ const useAuthTokenEffect = () => {
     handleTokenChange();
 
     return () => {
-      clearInterval(tokenCheckInterval);
+      // clearInterval(tokenCheckInterval);
 
       window.removeEventListener('storage', handleTokenChange);
     };
