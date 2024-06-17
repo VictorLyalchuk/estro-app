@@ -82,7 +82,7 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                             <Link to={`/product/${product.productId}`}>{product.name}</Link>
                           </h3>
                           <p className="mt-3 font-medium text-gray-900">Article: {product.article}</p>
-                          <p className="mt-3 font-medium text-gray-900">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
+                          <p className="mt-3 font-medium text-gray-900">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
                           <p className="mt-3 font-medium text-gray-900">Quantity: {product.quantity}</p>
                           <p className="mt-3 font-medium text-gray-900">Size: {product.size}</p>
                           <p className="mt-3 text-gray-500">{product.description}</p>
@@ -179,19 +179,19 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                     <dl className="mt-8 divide-y divide-gray-200 text-sm lg:col-span-7 lg:mt-0 lg:pr-8">
                       <div className="flex items-center justify-between pb-4">
                         <dt className="text-gray-600">Subtotal</dt>
-                        <dd className="font-medium text-gray-900">{order.subtotal.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</dd>
+                        <dd className="font-medium text-gray-900">{order.subtotal.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
                       </div>
                       <div className="flex items-center justify-between py-4">
                         <dt className="text-gray-600">Tax</dt>
-                        <dd className="font-medium text-gray-900">{order.tax.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</dd>
+                        <dd className="font-medium text-gray-900">{order.tax.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
                       </div>
                       <div className="flex items-center justify-between py-4">
                         <dt className="text-gray-600">Discount</dt>
-                        <dd className="font-medium text-red-600">{order.discount.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</dd>
+                        <dd className="font-medium text-red-600">{order.discount.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
                       </div>
                       <div className="flex items-center justify-between pt-4">
                         <dt className="font-medium text-gray-900">Order total</dt>
-                        <dd className="font-medium text-indigo-600">{order.orderTotal.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} ₴</dd>
+                        <dd className="font-medium text-indigo-600">{order.orderTotal.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
                       </div>
                     </dl>
                   </div>

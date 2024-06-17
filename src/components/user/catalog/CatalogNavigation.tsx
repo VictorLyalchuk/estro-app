@@ -548,7 +548,7 @@ export default function CatalogNavigation() {
                               <p className="mt-1 text-xs text-gray-500">{product.article}</p>
                               <p className="mt-1 text-xs text-gray-500">{product.purpose}</p>
                             </div>
-                            <p className="text-sm font-bold text-red-800 whitespace-nowrap" >{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
+                            <p className="text-sm font-bold text-red-800 whitespace-nowrap" >{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
                           </div>
                         </Link>
 

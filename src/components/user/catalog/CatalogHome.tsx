@@ -559,7 +559,7 @@ export default function CatalogHome() {
                                     <h3 className="mt-4 text-sm text-gray-700 line-clamp-2 break-words w-45">{product.name.split(' ').slice(0, 3).join(' ')}</h3>
                                     <p className="mt-1 text-xs text-gray-500">{product.article}</p>
                                     <p className="mt-1 text-xs text-gray-500">{product.purpose}</p>
-                                    <p className="mt-1 text-lg font-medium text-red-900">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
+                                    <p className="mt-1 text-lg font-medium text-red-900">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
                                     <div className="flex items-end opacity-0 group-hover:opacity-100" aria-hidden="true">
                                         <ul className="mt-4 grid grid-cols-12 gap-2">
                                             <li className="text-xs border-transparent pointer-events-none -inset-px rounded-md">

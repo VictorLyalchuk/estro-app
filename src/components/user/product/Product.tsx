@@ -187,7 +187,7 @@ export default function Product() {
             <div className="lg:row-span-3 lg:mt-0">
               <div className="mt-4 flex items-center justify-between">
                 <h2 className="sr-only">Product information</h2>
-                <p className="text-3xl tracking-tight text-red-800">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
+                <p className="text-3xl tracking-tight text-red-800">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
 
               </div>
             </div>

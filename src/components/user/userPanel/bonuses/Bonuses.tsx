@@ -39,7 +39,7 @@ const Bonuses: React.FC<BonusesUserProps> = ({ userBonuses, bonusBalance }) => {
                 <div >
                   <h1 className="text-2xl font-bold tracking-tight text-gray-900">My Bonuses</h1>
                   <div className='mt-5 text-green-700 bg-green-50 ring-green-600/20 rounded-md py-1 px-2 text-2xl font-medium  flex items-center justify-center leading-loose'>
-                    $ {bonusBalance?.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1)}
+                    {bonusBalance?.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1)} €
                   </div>
                 </div>
                 {userBonuses.length > 6 && (
@@ -91,7 +91,7 @@ const Bonuses: React.FC<BonusesUserProps> = ({ userBonuses, bonusBalance }) => {
                               <ArrowUpCircleIcon className="mr-2 h-5 w-5 text-green-700 inline-block align-middle" />
                             ) : (
                               <ArrowDownCircleIcon className="mr-2 h-5 w-5 text-red-700 inline-block align-middle" />
-                            )} $ {bonus.bonusesAccrued.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1)}
+                            )}{bonus.bonusesAccrued.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1)} €
                           </td>
                         </tr>
                       ))}
@@ -108,7 +108,7 @@ const Bonuses: React.FC<BonusesUserProps> = ({ userBonuses, bonusBalance }) => {
                         <th scope="row" className="pl-6 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:hidden">
                           Bonus Balance
                         </th>
-                        <td className="pl-3 pr-6 pt-4 text-right text-sm font-semibold text-gray-900 sm:pr-6">$ {bonusBalance?.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1)}</td>
+                        <td className="pl-3 pr-6 pt-4 text-right text-sm font-semibold text-gray-900 sm:pr-6">{bonusBalance?.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1)} €</td>
                       </tr>
                     </tfoot>
                   </table>
