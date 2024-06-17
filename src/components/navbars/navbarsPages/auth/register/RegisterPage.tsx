@@ -291,7 +291,7 @@ const RegisterPage = () => {
             <div className="bg-gray-100">
                 <div className="container mx-auto">
                     <div className="bg-white rounded-md shadow-md p-5 flex flex-col lg:flex-row">
-                        <div className="w-full lg:w-2/4 p-5 lg:mb-0">
+                        <div className="order-2 lg:order-1 w-full lg:w-2/4 p-5 lg:mb-0">
 
                             <div className="bg-white-container-register flex flex-col justify-center items-center h-full">
                                 <h1 className="text-white text-9xl hover:text-indigo-300">estro</h1>
@@ -331,7 +331,7 @@ const RegisterPage = () => {
 
                             </div>
                         </div>
-                        <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0 flex flex-col justify-center items-center">
+                        <div className="order-1 lg:order-2 w-full lg:w-2/4 p-5 mb-8 lg:mb-0 flex flex-col justify-center items-center">
                             {!isChosen ? (
 
                                 <div className={"flex-col flex "}>
@@ -661,10 +661,7 @@ const RegisterPage = () => {
 
                                                         </div>
                                                     ) : null}
-
-
                                                 </ThemeProvider>
-
                                                 <FormControl fullWidth variant="outlined">
                                                     {!isTryToCode ? (
                                                         <Button
