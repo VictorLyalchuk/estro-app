@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Button, FormControl, TextField } from '@material-ui/core';
+import { Button, FormControl } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 import '../../../../../satoshi.css';
 import '../../../../../index.css';
@@ -8,6 +8,7 @@ import { forgotPassword } from '../../../../../services/accounts/account-service
 import { validateForm } from '../../../../../validations/account/forgot-validations';
 import { theme } from '../../../../../theme/theme';
 import { useStyles } from '../../../../../theme/Styles';
+import TextFieldComponent from '../../../../../ui/label/TextFieldComponent';
 
 const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfirmation: () => void }) => {
     const classes = useStyles();
@@ -29,7 +30,8 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
         }));
     };
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
         const { isValid, newErrors } = validateForm(formData);
         setErrors(newErrors);
         if (isValid) {
@@ -55,7 +57,6 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
             <div className="bg-gray-100">
                 <div className="container mx-auto">
                     <div className="bg-white rounded-md shadow-md p-5 flex flex-col lg:flex-row">
-
                         <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0 flex flex-col justify-center items-center">
                             {isSendEmail ? (
                                 <div className="text-center">
@@ -65,37 +66,31 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
                                         Check your email and continue the password recovery process.</p>
                                 </div>
                             ) : (
-                                <div className="mb-24 ">
+                                <div className="mb-24 w-full">
                                     <div className="sm:mx-auto sm:w-full sm:max-w-sm" >
                                         <h2 className="mt-5 mb-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                                             Forgot Password
                                         </h2>
                                     </div>
 
-                                    {/* <form onSubmit={handleSubmit}> */}
+                                    <form onSubmit={handleSubmit}>
                                         <ThemeProvider theme={theme}>
-                                            <FormControl fullWidth variant="outlined">
-                                                <TextField
+                                        <TextFieldComponent
                                                     label="Email"
                                                     name="email"
+                                                    id="email"
                                                     value={formData.email}
                                                     onChange={handleChange}
-                                                    error={!!errors.email}
+                                                    error={errors.email}
+                                                    autoComplete="email"
                                                 />
-                                                {errors.email ? (
-                                                    <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
-                                                ) : (<div className="h-6 text-xs "> </div>)}
-                                            </FormControl>
                                         </ThemeProvider>
-
                                             <FormControl fullWidth variant="outlined">
-                                                <Button className={classes.button} onClick={handleSubmit} type="submit" variant="contained" size="large" color="primary" disableElevation>
+                                                <Button className={classes.button}  type="submit" variant="contained" size="large" color="primary" disableElevation>
                                                     Reset Password
                                                 </Button>
                                             </FormControl>
-
-                                    {/* </form> */}
-
+                                    </form>
                                 </div >
                             )}
                         </div >

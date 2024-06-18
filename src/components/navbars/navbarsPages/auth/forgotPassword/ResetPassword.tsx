@@ -1,6 +1,5 @@
 import { useState } from 'react';
-import { Button, FormControl, IconButton, InputAdornment, TextField } from '@material-ui/core';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { Button, FormControl } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 import 'tailwindcss/tailwind.css';
 import '../../../../../index.css';
@@ -9,6 +8,7 @@ import { validateForm } from '../../../../../validations/account/reset-validatio
 import { resetPassword } from '../../../../../services/accounts/account-services';
 import { theme } from '../../../../../theme/theme';
 import { useStyles } from '../../../../../theme/Styles';
+import PasswordFieldComponent from '../../../../../ui/label/PasswordFieldComponent';
 
 const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
     const classes = useStyles();
@@ -79,66 +79,37 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
                                     <p className="text-gray-500">You have successfully restored your password. Please proceed to login.</p>
                                 </div>
                             ) : (
-
                                 <div className="mb-24 ">
                                     <div className="sm:mx-auto sm:w-full sm:max-w-sm" >
                                         <h2 className="mt-5 mb-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                                             Reset Password
                                         </h2>
                                     </div>
-
                                     <form onSubmit={handleSubmit}>
                                         <ThemeProvider theme={theme}>
-                                            <FormControl fullWidth variant="outlined">
-                                                <TextField
-                                                    label="New Password"
-                                                    type={showPassword ? 'text' : 'password'}
-                                                    name="newPassword"
-                                                    value={formData.newPassword}
-                                                    onChange={handleChange}
-                                                    error={!!errors.newPassword}
-                                                    autoComplete="newPassword"
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <IconButton onClick={handlePasswordToggle} edge="end">
-                                                                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                                                                </IconButton>
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                                {errors.newPassword ? (
-                                                    <div className="h-6 text-xs text-red-500">Error: {errors.newPassword}</div>
-                                                ) : (<div className="h-6 text-xs "> </div>)}
-                                            </FormControl >
-
-                                            <FormControl fullWidth variant="outlined">
-                                                <TextField
-                                                    label="Confirm New Password "
-                                                    type={showConfirmPassword ? 'text' : 'password'}
-                                                    name="confirmPassword"
-                                                    value={formData.confirmPassword}
-                                                    onChange={handleChange}
-                                                    error={!!errors.confirmPassword}
-                                                    helperText={errors.confirmPassword}
-                                                    autoComplete="confirmNewPassword"
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <IconButton onClick={handleConfirmPasswordToggle} edge="end">
-                                                                    {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
-                                                                </IconButton>
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
-                                                />
-                                                {errors.confirmPassword ? (
-                                                    <div className="h-6 text-xs text-red-500">Error: {errors.confirmPassword}</div>
-                                                ) : (<div className="h-12 text-xs "> </div>)}
-                                            </FormControl>
+                                            <PasswordFieldComponent
+                                                label="New Password"
+                                                name="newPassword"
+                                                id="newPassword"
+                                                value={formData.newPassword}
+                                                onChange={handleChange}
+                                                error={errors.newPassword}
+                                                autoComplete="newPassword"
+                                                showPassword={showPassword}
+                                                handlePasswordToggle={handlePasswordToggle}
+                                            />
+                                            <PasswordFieldComponent
+                                                label="Confirm New Password"
+                                                name="confirmPassword"
+                                                id="confirmPassword"
+                                                value={formData.confirmPassword}
+                                                onChange={handleChange}
+                                                error={errors.confirmPassword}
+                                                autoComplete="confirmNewPassword"
+                                                showPassword={showConfirmPassword}
+                                                handlePasswordToggle={handleConfirmPasswordToggle}
+                                            />
                                         </ThemeProvider>
-
                                         <FormControl fullWidth variant="outlined">
                                             <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
                                                 Reset Password

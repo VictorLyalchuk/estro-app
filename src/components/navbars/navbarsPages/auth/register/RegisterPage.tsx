@@ -4,21 +4,23 @@ import { IRegister } from '../../../../../interfaces/Auth/IRegister';
 import 'tailwindcss/tailwind.css';
 import '../../../../../index.css';
 import { APP_ENV } from "../../../../../env/config";
-import { Button, FormControl, IconButton, Input, InputAdornment, InputLabel, TextField } from '@material-ui/core';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
-import { UserCircleIcon, GiftIcon, BanknotesIcon, TrophyIcon } from '@heroicons/react/24/outline';
+import { Button, FormControl } from '@material-ui/core';
+import { GiftIcon, BanknotesIcon, TrophyIcon } from '@heroicons/react/24/outline';
 import { ThemeProvider } from '@material-ui/core/styles';
 import '../../../../../satoshi.css';
 import { useGoogleLogin } from "@react-oauth/google";
 import ReactCodeInput from "react-code-input";
 import Modal from '../../../../cropImage/Modal';
 import { validateForm } from '../../../../../validations/account/register-validations';
-import TextMaskCustom from '../../../../../services/custom/phone-services';
 import { State } from '../../../../../interfaces/Custom/Phone/State';
 import { validatePhoneNumber } from '../../../../../validations/custom/register-phone-validations';
 import { register } from '../../../../../services/accounts/account-services';
 import { theme } from '../../../../../theme/theme';
 import { useStyles } from '../../../../../theme/Styles';
+import TextFieldComponent from '../../../../../ui/label/TextFieldComponent';
+import FileInputComponent from '../../../../../ui/label/FileInputComponent';
+import PhoneNumberComponent from '../../../../../ui/label/PhoneNumberComponent';
+import PasswordFieldComponent from '../../../../../ui/label/PasswordFieldComponent';
 
 const RegisterPage = () => {
     const baseUrl = APP_ENV.BASE_URL;
@@ -43,7 +45,6 @@ const RegisterPage = () => {
     const [isDisabled, setIsDisabled] = useState(false);
     const [countdown, setCountdown] = useState(30);
     const [pinCode, setPinCode] = useState("");
-
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [modalOpen, setModalOpen] = useState(false);
 
@@ -366,197 +367,107 @@ const RegisterPage = () => {
                                     isEmail ? (
                                         <div className="mb-4">
                                             <form onSubmit={handleSubmit}>
-                                            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                                                <h2 className="mt-5 mb-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                                                    Email Registration
-                                                </h2>
-                                            </div>
-
-                                            <ThemeProvider theme={theme}>
-                                                <FormControl fullWidth variant="outlined">
-                                                    <TextField
+                                                <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+                                                    <h2 className="mt-5 mb-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                                                        Email Registration
+                                                    </h2>
+                                                </div>
+                                                <ThemeProvider theme={theme}>
+                                                    <TextFieldComponent
                                                         label="First Name"
                                                         name="firstName"
+                                                        id="firstName"
                                                         value={formData.firstName}
                                                         onChange={handleChange}
-                                                        error={!!errors.firstName}
+                                                        error={errors.firstName}
                                                         autoComplete="firstName"
                                                     />
-                                                    {errors.firstName ? (
-                                                        <div className="h-6 text-xs text-red-500">Error: {errors.firstName}</div>
-                                                    ) : (
-                                                        <div className="h-6 text-xs"> </div>
-                                                    )}
-                                                </FormControl>
-
-                                                <FormControl fullWidth variant="outlined">
-                                                    <TextField
+                                                    <TextFieldComponent
                                                         label="Last Name"
                                                         name="lastName"
+                                                        id="lastName"
                                                         value={formData.lastName}
                                                         onChange={handleChange}
-                                                        error={!!errors.lastName}
+                                                        error={errors.lastName}
                                                         autoComplete="lastName"
                                                     />
-                                                    {errors.lastName ? (
-                                                        <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
-                                                    ) : (
-                                                        <div className="h-6 text-xs"> </div>
-                                                    )}
-                                                </FormControl>
-
-                                                <FormControl fullWidth variant="outlined">
-                                                    <TextField
+                                                    <TextFieldComponent
                                                         label="Email"
                                                         name="email"
+                                                        id="email"
                                                         value={formData.email}
                                                         onChange={handleChange}
-                                                        error={!!errors.email}
+                                                        error={errors.email}
                                                         autoComplete="email"
                                                     />
-                                                    {errors.email ? (
-                                                        <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
-                                                    ) : (
-                                                        <div className="h-6 text-xs"> </div>
-                                                    )}
-                                                </FormControl>
-                                            </ThemeProvider>
+                                                </ThemeProvider>
 
-                                            <FormControl fullWidth variant="outlined">
-                                                <div className="mb-5 mt-2 flex justify-center items-center gap-x-3 relative">
-                                                    {selectedImage ? (
-                                                        <img
-                                                            src={selectedImage}
-                                                            alt="Selected"
-                                                            className="h-12 w-12 rounded-full"
-                                                        />
-                                                    ) : (
-                                                        <UserCircleIcon className="h-12 w-12 text-gray-300" aria-hidden="true" />
-                                                    )}
-                                                    <input
-                                                        type="file"
-                                                        accept="image/*"
-                                                        // onChange={handleImageSelect}
-                                                        onChange={handleFileChange}
-                                                        style={{ display: 'none' }}
-                                                    />
-                                                    <Button
-                                                        variant="contained"
-                                                        size="small"
-                                                        color="primary"
-                                                        className={classes.button}
-                                                        onClick={handleSelectFile}
-                                                    >
-                                                        select
-                                                    </Button>
-                                                </div>
-                                            </FormControl>
-
-                                            {modalOpen && selectedFile && (
-                                                <Modal
-                                                    changeImage={handleImageSelect}
-                                                    closeModal={() => setModalOpen(false)}
-                                                    file={selectedFile}
+                                                <FileInputComponent
+                                                    selectedImage={selectedImage}
+                                                    handleFileChange={handleFileChange}
+                                                    handleSelectFile={handleSelectFile}
                                                 />
-                                            )}
-
-                                            <ThemeProvider theme={theme}>
-                                                <FormControl fullWidth>
-                                                    <InputLabel>Phone Number</InputLabel>
-                                                    <Input
-                                                        name="textmask"
-                                                        value={values.textmask}
-                                                        onChange={handleChangePhoneNumber}
-                                                        id="formatted-text-mask-input"
-                                                        inputComponent={TextMaskCustom as any}
-                                                        error={!!errors.phoneNumber}
-                                                        placeholder="(099) 00-00-000"
-                                                        autoComplete="phone"
+                                                {modalOpen && selectedFile && (
+                                                    <Modal
+                                                        changeImage={handleImageSelect}
+                                                        closeModal={() => setModalOpen(false)}
+                                                        file={selectedFile}
                                                     />
-                                                    {errors.phoneNumber ? (
-                                                        <div className="h-6 text-xs text-red-500">Error: {errors.phoneNumber}</div>
-                                                    ) : (
-                                                        <div className="h-6 text-xs"> </div>
-                                                    )}
-                                                </FormControl>
-
-                                                <FormControl fullWidth variant="outlined">
-                                                    <TextField
+                                                )}
+                                                <ThemeProvider theme={theme}>
+                                                    <PhoneNumberComponent
+                                                        value={values.textmask}
+                                                        label=""
+                                                        id="textmark"
+                                                        onChange={handleChangePhoneNumber}
+                                                        error={errors.phoneNumber}
+                                                    />
+                                                    <PasswordFieldComponent
                                                         label="Password"
-                                                        type={showPassword ? 'text' : 'password'}
                                                         name="password"
+                                                        id="password"
                                                         value={formData.password}
                                                         onChange={handleChange}
-                                                        error={!!errors.password}
+                                                        error={errors.password}
                                                         autoComplete="password"
-                                                        InputProps={{
-                                                            endAdornment: (
-                                                                <InputAdornment position="end">
-                                                                    <IconButton onClick={handlePasswordToggle} edge="end">
-                                                                        {showPassword ? <Visibility /> : <VisibilityOff />}
-                                                                    </IconButton>
-                                                                </InputAdornment>
-                                                            ),
-                                                        }}
+                                                        showPassword={showPassword}
+                                                        handlePasswordToggle={handlePasswordToggle}
                                                     />
-                                                    {errors.password ? (
-                                                        <div className="h-6 text-xs text-red-500">Error: {errors.password}</div>
-                                                    ) : (
-                                                        <div className="h-6 text-xs"> </div>
-                                                    )}
-                                                </FormControl>
-
-                                                <FormControl fullWidth variant="outlined">
-                                                    <TextField
+                                                    <PasswordFieldComponent
                                                         label="Confirm Password"
-                                                        type={showConfirmPassword ? 'text' : 'password'}
                                                         name="confirmPassword"
+                                                        id="confirmPassword"
                                                         value={formData.confirmPassword}
                                                         onChange={handleChange}
-                                                        error={!!errors.confirmPassword}
-                                                        helperText={errors.confirmPassword}
+                                                        error={errors.confirmPassword}
                                                         autoComplete="confirmPassword"
-                                                        InputProps={{
-                                                            endAdornment: (
-                                                                <InputAdornment position="end">
-                                                                    <IconButton onClick={handleConfirmPasswordToggle} edge="end">
-                                                                        {showConfirmPassword ? <Visibility /> : <VisibilityOff />}
-                                                                    </IconButton>
-                                                                </InputAdornment>
-                                                            ),
-                                                        }}
+                                                        showPassword={showConfirmPassword}
+                                                        handlePasswordToggle={handleConfirmPasswordToggle}
                                                     />
-                                                    {errors.confirmPassword ? (
-                                                        <div className="h-6 text-xs text-red-500">Error: {errors.confirmPassword}</div>
-                                                    ) : (
-                                                        <div className="h-12 text-xs"> </div>
-                                                    )}
-                                                </FormControl>
-                                            </ThemeProvider>
+                                                </ThemeProvider>
 
-                                            <FormControl fullWidth variant="outlined">
-                                                <Button
-                                                    className={classes.button}
-                                                    type="submit"
-                                                    // onClick={handleSubmit}
-                                                    variant="contained"
-                                                    size="large"
-                                                    color="primary"
-                                                    disableElevation
-                                                >
-                                                    Register
-                                                </Button>
-                                                <Button
-                                                    className={classes.button}
-                                                    type="button"
-                                                    variant="contained"
-                                                    size="large"
-                                                    color="primary"
-                                                    onClick={() => { setIsChosen(false); setIsEmail(false); }}
-                                                >
-                                                    Cancel
-                                                </Button>
-                                            </FormControl>
+                                                <FormControl fullWidth variant="outlined">
+                                                    <Button
+                                                        className={classes.button}
+                                                        type="submit"
+                                                        variant="contained"
+                                                        size="large"
+                                                        color="primary"
+                                                        disableElevation
+                                                    >
+                                                        Register
+                                                    </Button>
+                                                    <Button
+                                                        className={classes.button}
+                                                        type="button"
+                                                        variant="contained"
+                                                        size="large"
+                                                        color="primary"
+                                                        onClick={() => { setIsChosen(false); setIsEmail(false); }}
+                                                    >
+                                                        Cancel
+                                                    </Button>
+                                                </FormControl>
                                             </form>
                                         </div>
                                     ) : (
@@ -569,86 +480,45 @@ const RegisterPage = () => {
 
                                             <form onSubmit={handlePhoneSubmit}>
                                                 <ThemeProvider theme={theme}>
-                                                    <FormControl fullWidth variant="outlined">
-                                                        <TextField
-                                                            label="First Name"
-                                                            name="firstName"
-                                                            value={formData.firstName}
-                                                            onChange={handleChange}
-                                                            error={!!errors.firstName}
-                                                        />
-                                                        {errors.firstName ? (
-                                                            <div className="h-6 text-xs text-red-500">Error: {errors.firstName}</div>
-                                                        ) : (
-                                                            <div className="h-6 text-xs"> </div>
-                                                        )}
-                                                    </FormControl>
-
-                                                    <FormControl fullWidth variant="outlined">
-                                                        <TextField
-                                                            label="Last Name"
-                                                            name="lastName"
-                                                            value={formData.lastName}
-                                                            onChange={handleChange}
-                                                            error={!!errors.lastName}
-                                                        />
-                                                        {errors.lastName ? (
-                                                            <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
-                                                        ) : (
-                                                            <div className="h-6 text-xs"> </div>
-                                                        )}
-                                                    </FormControl>
-
-
+                                                    <TextFieldComponent
+                                                        label="First Name"
+                                                        name="firstName"
+                                                        id="firstName"
+                                                        value={formData.firstName}
+                                                        onChange={handleChange}
+                                                        error={errors.firstName}
+                                                        autoComplete="firstName"
+                                                    />
+                                                    <TextFieldComponent
+                                                        label="Last Name"
+                                                        name="lastName"
+                                                        id="lastName"
+                                                        value={formData.lastName}
+                                                        onChange={handleChange}
+                                                        error={errors.lastName}
+                                                        autoComplete="lastName"
+                                                    />
                                                 </ThemeProvider>
-
-                                                <FormControl fullWidth variant="outlined">
-                                                    <div className="mb-5 mt-2 flex justify-center items-center gap-x-3 relative">
-                                                        {selectedImage ? (
-                                                            <img
-                                                                src={selectedImage}
-                                                                alt="Selected"
-                                                                className="h-12 w-12 rounded-full"
-                                                            />
-                                                        ) : (
-                                                            <UserCircleIcon className="h-12 w-12 text-gray-300" aria-hidden="true" />
-                                                        )}
-                                                        <input
-                                                            type="file"
-                                                            accept="image/*"
-                                                            onChange={handleFileChange}
-                                                            // onChange={handleImageSelect}
-                                                            style={{ display: 'none' }}
-                                                        />
-                                                        <Button
-                                                            variant="contained"
-                                                            size="small"
-                                                            color="primary"
-                                                            className={classes.button}
-                                                            onClick={handleSelectFile}
-                                                        >
-                                                            select
-                                                        </Button>
-                                                    </div>
-                                                </FormControl>
+                                                <FileInputComponent
+                                                    selectedImage={selectedImage}
+                                                    handleFileChange={handleFileChange}
+                                                    handleSelectFile={handleSelectFile}
+                                                />
+                                                {modalOpen && selectedFile && (
+                                                    <Modal
+                                                        changeImage={handleImageSelect}
+                                                        closeModal={() => setModalOpen(false)}
+                                                        file={selectedFile}
+                                                    />
+                                                )}
                                                 <ThemeProvider theme={theme}>
-                                                    <FormControl fullWidth>
-                                                        <InputLabel>Phone Number</InputLabel>
-                                                        <Input
-                                                            name="textmask"
-                                                            value={values.textmask}
-                                                            onChange={handleChangePhoneNumber}
-                                                            id="formatted-text-mask-input"
-                                                            inputComponent={TextMaskCustom as any}
-                                                            error={!!errors.phoneNumber}
-                                                            placeholder="(099) 00-00-000"
-                                                        />
-                                                        {errors.phoneNumber ? (
-                                                            <div className="h-6 text-xs text-red-500">Error: {errors.phoneNumber}</div>
-                                                        ) : (
-                                                            <div className="h-6 text-xs"> </div>
-                                                        )}
-                                                    </FormControl>
+                                                    <PhoneNumberComponent
+                                                        value={values.textmask}
+                                                        label="Phone Number"
+                                                        id="textmark"
+                                                        onChange={handleChangePhoneNumber}
+                                                        error={errors.phoneNumber}
+                                                    />
                                                     {isTryToCode ? (
                                                         <div className={"mb-3 flex justify-center"}>
                                                             <ReactCodeInput
@@ -680,7 +550,6 @@ const RegisterPage = () => {
                                                         <Button
                                                             className={classes.button}
                                                             type="submit"
-                                                            // onClick={handleSubmit}
                                                             variant="contained"
                                                             size="large"
                                                             color="primary"
@@ -688,7 +557,6 @@ const RegisterPage = () => {
                                                         >
                                                             Register
                                                         </Button>
-
                                                     )}
 
                                                     <Button
@@ -705,10 +573,8 @@ const RegisterPage = () => {
                                             </form>
                                         </div>
                                     )
-
                                 )
                             )}
-
                         </div >
 
                         <div className={`fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 ${errorMessage ? 'block' : 'hidden'}`}>

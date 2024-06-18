@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import { SetStateAction, useEffect, useState } from 'react';
 import 'tailwindcss/tailwind.css';
 import '../../../../../index.css';
+import '../../../../../satoshi.css';
 import { APP_ENV } from "../../../../../env/config";
-import { Button, FormControl, IconButton, Input, InputAdornment, InputLabel, TextField } from '@material-ui/core';
-import { Visibility, VisibilityOff } from '@material-ui/icons';
+import { Button, FormControl } from '@material-ui/core';
 import { GiftIcon } from '@heroicons/react/24/outline';
 import { ILogin } from '../../../../../interfaces/Auth/ILogin';
 import { IUser } from '../../../../../interfaces/Auth/IUser';
@@ -17,39 +17,19 @@ import { TrophyIcon } from '@heroicons/react/24/outline';
 import { Divider } from "antd";
 import { useGoogleLogin } from '@react-oauth/google';
 import { ThemeProvider } from '@material-ui/core/styles';
-import '../../../../../satoshi.css';
-import MaskedInput from "react-text-mask";
 import ReactCodeInput from "react-code-input";
 import { validateForm } from '../../../../../validations/account/login-validations';
 import { validatePhoneNumber } from '../../../../../validations/custom/login-phone-validations';
 import { login } from '../../../../../services/accounts/account-services';
 import { theme } from '../../../../../theme/theme';
 import { useStyles } from '../../../../../theme/Styles';
+import TextFieldComponent from '../../../../../ui/label/TextFieldComponent';
+import PasswordFieldComponent from '../../../../../ui/label/PasswordFieldComponent';
+import PhoneNumberComponent from '../../../../../ui/label/PhoneNumberComponent';
+import { State } from '../../../../../interfaces/Custom/Phone/State';
 
-interface TextMaskCustomProps {
-    inputRef: (ref: HTMLInputElement | null) => void;
-}
 interface GoogleOAuthResponse {
     access_token: string;
-
-}
-function TextMaskCustom(props: TextMaskCustomProps) {
-    const { inputRef, ...other } = props;
-
-    return (
-        <MaskedInput
-            {...other}
-            ref={(ref: any) => {
-                inputRef(ref ? ref.inputElement : null);
-            }}
-            mask={['(', /[0-9]/, /\d/, /\d/, ')', ' ', /\d/, /\d/, '-', /\d/, /\d/, '-', /\d/, /\d/, /\d/]}
-            placeholderChar={'\u2000'}
-        />
-    );
-}
-
-interface State {
-    textmask: string;
 }
 
 const LoginPage = () => {
@@ -81,7 +61,6 @@ const LoginPage = () => {
         }
         return () => clearInterval(timer);
     }, [isDisabled, countdown]);
-
 
     const [values, setValues] = useState<State>({
         textmask: '(   )    -  -  ',
@@ -306,7 +285,7 @@ const LoginPage = () => {
             phoneNumber: cleanedValue,
         }));
 
-        validatePhoneNumber(cleanedValue, errors, setErrors );
+        validatePhoneNumber(cleanedValue, errors, setErrors);
     };
     const [pinCode, setPinCode] = useState("");
     // const [btnIsPressed, setBtnIsPressed] = useState(false);
@@ -323,7 +302,7 @@ const LoginPage = () => {
                     <div className="bg-white rounded-md shadow-md p-5 flex flex-col lg:flex-row">
 
                         <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0 flex flex-col justify-center items-center">
-                            <div className="mb-24 ">
+                            <div className="mb-24 w-full">
                                 <div className="sm:mx-auto sm:w-full sm:max-w-sm" >
                                     <h2 className="mt-5 mb-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
                                         Login
@@ -332,85 +311,53 @@ const LoginPage = () => {
 
                                 {!isPhoneLogin ? (
                                     <>
-                                 <form onSubmit={handleSubmitEmail}>
-                                        <ThemeProvider theme={theme}>
-                                            <FormControl fullWidth className={classes.margin} variant="outlined">
-                                                <TextField
+                                        <form onSubmit={handleSubmitEmail}>
+                                            <ThemeProvider theme={theme}>
+                                                <TextFieldComponent
                                                     label="Email"
                                                     name="email"
+                                                    id="email"
                                                     value={formData.email}
                                                     onChange={handleChange}
-                                                    error={!!errors.email}
+                                                    error={errors.email}
                                                     autoComplete="email"
                                                 />
-                                                {errors.email ? (
-                                                    <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
-                                                ) : (<div className="h-6 text-xs "> </div>)}
-                                            </FormControl>
-
-                                            <FormControl fullWidth className={classes.margin} variant="outlined">
-                                                <TextField
+                                                <PasswordFieldComponent
                                                     label="Password"
-                                                    type={showPassword ? 'text' : 'password'}
                                                     name="password"
+                                                    id="password"
                                                     value={formData.password}
                                                     onChange={handleChange}
-                                                    error={!!errors.password}
+                                                    error={errors.password}
                                                     autoComplete="password"
-                                                    InputProps={{
-                                                        endAdornment: (
-                                                            <InputAdornment position="end">
-                                                                <IconButton onClick={handlePasswordToggle} edge="end">
-                                                                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                                                                </IconButton>
-                                                            </InputAdornment>
-                                                        ),
-                                                    }}
+                                                    showPassword={showPassword}
+                                                    handlePasswordToggle={handlePasswordToggle}
                                                 />
-                                                {errors.password ? (
-                                                    <div className="h-6 text-xs text-red-500">Error: {errors.password}</div>
-                                                ) : (<div className="h-6 text-xs "> </div>)}
-                                            </FormControl >
-                                        </ThemeProvider>
-
-                                        <FormControl fullWidth className={classes.margin} variant="outlined">
-                                            <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
-                                                Sign in
-                                            </Button>
-                                        </FormControl>
+                                            </ThemeProvider>
+                                            <FormControl fullWidth className={classes.margin} variant="outlined">
+                                                <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
+                                                    Sign in
+                                                </Button>
+                                            </FormControl>
                                         </form>
                                     </>
 
                                 ) : (
                                     <form onSubmit={handleSubmitPhone}>
                                         <ThemeProvider theme={theme}>
-
-
-                                            <FormControl fullWidth className={classes.margin} variant={"outlined"}>
-                                                <InputLabel >Phone Number</InputLabel>
-
-                                                <Input
-                                                    name="textmask"
-                                                    value={values.textmask}
-                                                    onChange={handleChangePhoneNumber}
-                                                    id="formatted-text-mask-input"
-                                                    inputComponent={TextMaskCustom as any}
-                                                    error={!!errors.phoneNumber}
-                                                    placeholder='(099) 00-00-000'
-                                                />
-                                                {errors.phoneNumber ? (
-                                                    <div className="h-6 text-xs text-red-500">Error: {errors.phoneNumber}</div>
-                                                ) : (<div className="h-6 text-xs "> </div>)}
-                                            </FormControl>
-
-
-
+                                            <PhoneNumberComponent
+                                                value={values.textmask}
+                                                label="Phone Number"
+                                                id="textmark"
+                                                onChange={handleChangePhoneNumber}
+                                                error={errors.phoneNumber}
+                                            />
                                         </ThemeProvider>
-                                        <FormControl fullWidth className={classes.margin} variant="outlined">
 
-                                            {isPhoneExists ? (
+                                        {isPhoneExists ? (
+                                            <FormControl fullWidth className={classes.margin}>
                                                 <div className={"justify-center text-center flex-col"}>
-                                                    <div className={"mb-3"}>
+                                                    <div>
                                                         <ReactCodeInput
                                                             inputMode={"numeric"}
                                                             name="pinCode"
@@ -418,11 +365,11 @@ const LoginPage = () => {
                                                             onChange={handlePinChange}
                                                             value={pinCode}
                                                         />
-
                                                     </div>
                                                 </div>
-                                            ) : null}
-
+                                            </FormControl>
+                                        ) : null}
+                                        <FormControl fullWidth className={classes.margin}>
                                             {!isPhoneExists ? (
                                                 <Button className={classes.button} disabled={isDisabled} type="submit" variant="contained" size="large" color="primary" disableElevation>
                                                     {isDisabled ? `Send code (${countdown}s)` : 'Send code'}
@@ -438,13 +385,11 @@ const LoginPage = () => {
 
                                 <Divider>or</Divider>
                                 <div className={"flex justify-center"}>
-
                                     <Button className={"bg-gray-400"} onClick={() => loginGoogle()}>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
                                             <path fill="currentColor" d="M881 442.4H519.7v148.5h206.4c-8.9 48-35.9 88.6-76.6 115.8c-34.4 23-78.3 36.6-129.9 36.6c-99.9 0-184.4-67.5-214.6-158.2c-7.6-23-12-47.6-12-72.9s4.4-49.9 12-72.9c30.3-90.6 114.8-158.1 214.7-158.1c56.3 0 106.8 19.4 146.6 57.4l110-110.1c-66.5-62-153.2-100-256.6-100c-149.9 0-279.6 86-342.7 211.4c-26 51.8-40.8 110.4-40.8 172.4S151 632.8 177 684.6C240.1 810 369.8 896 519.7 896c103.6 0 190.4-34.4 253.8-93c72.5-66.8 114.4-165.2 114.4-282.1c0-27.2-2.4-53.3-6.9-78.5" />
                                         </svg>
                                     </Button>
-
                                 </div>
                                 <div className={"flex justify-center mt-5"}>
                                     {!isPhoneLogin ?
@@ -459,7 +404,6 @@ const LoginPage = () => {
                         </div >
 
                         <div className="w-full lg:w-2/4 p-5 lg:mb-0">
-
                             <div className="bg-white-container-login flex flex-col justify-center items-center h-full">
                                 <h1 className="text-white text-9xl hover:text-indigo-300">estro</h1>
                                 <p className="text-white text-sx mb-10 hover:text-indigo-300">SHOES, CLOTHING & ACCESSORIES</p>

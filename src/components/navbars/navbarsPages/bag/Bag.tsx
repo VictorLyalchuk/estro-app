@@ -8,7 +8,7 @@ import { ICardReducerState } from "../../../../store/bag/CardReducer";
 import { IOrderCreate } from "../../../../interfaces/Bag/IOrderCreate";
 import { APP_ENV } from "../../../../env/config";
 import GoodsNotFound from "../../../../assets/goods-not-found.png";
-import { FormControl, Input, TextField } from '@material-ui/core';
+import { FormControl } from '@material-ui/core';
 import { ThemeProvider } from '@material-ui/core/styles';
 import '../../../../satoshi.css';
 import { ICity } from "../../../../interfaces/Bag/ICity";
@@ -22,12 +22,13 @@ import { theme } from "../../../../theme/theme";
 import { validateForm } from "../../../../validations/bag/bag-validations";
 import { State } from "../../../../interfaces/Custom/Phone/State";
 import { validatePhoneNumber } from "../../../../validations/custom/bag-phone-validations";
-import TextMaskCustom from "../../../../services/custom/phone-services";
 import { createOrder } from "../../../../services/order/order-services";
 import BranchShipping from "./ukraine/BranchShipping";
 import PostomatShipping from "./ukraine/PostomatShipping";
 import StoreShipping from "./ukraine/StoreShipping";
 import { getCity, getStore, getWarehouse } from "../../../../services/shipping/shipping-services";
+import TextFieldComponent from "../../../../ui/label/TextFieldComponent";
+import PhoneNumberComponent from "../../../../ui/label/PhoneNumberComponent";
 
 const Bag = () => {
   const baseUrl = APP_ENV.BASE_URL;
@@ -40,15 +41,15 @@ const Bag = () => {
 
   const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
   const [selectedShipping, setSelectedShipping] = useState<string | ''>('');
-  
+
   const [warehouseSelected, setSelectedWarehouse] = useState(false);
-  
+
   const [warehouseOptions, setWarehouseOptions] = useState<IWarehouse[]>([]);
   const [cityOptions, setCityOptions] = useState<ICity[]>([]);
 
   const [city, setCity] = useState<string>('');
   const [warehouse, setWarehouse] = useState<string>('');
-  
+
   const [selectedStore, setSelectedStore] = useState<IStore | null>(null); // вибраний магазин об'єкт
   const [selectedWarehouseOptions, setSelectedWarehouseOptions] = useState<IWarehouse | null>(null);
 
@@ -57,7 +58,7 @@ const Bag = () => {
   const [storeOptions, setStoreOptions] = useState<IStore[]>([]); // список не фільрованих магазинів
   const [filteredStores, setFilteredStores] = useState(storeOptions); // список фільтрованих магазин 
   const [storeCities, setStoreCities] = useState<string[]>([]); // список міст магазинів
-  
+
   const [activeBlock, setActiveBlock] = useState('personal');
   const [values, setValues] = useState<State>({
     textmask: '(   )    -  -  ',
@@ -245,7 +246,7 @@ const Bag = () => {
                     </div>
                     <button className="mb-3 group rounded-[50px] border border-gray-200 shadow-sm shadow-transparent p-2.5 flex items-center justify-center bg-white transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-100 hover:border-gray-300 focus-within:outline-gray-300"
                       onClick={() => deleteItems(item, user?.Email || '', dispatch)}>
-                      <TrashIcon className="w-5 h-5 mb-4stroke-gray-900 transition-all duration-500 group-hover:stroke-black"/>
+                      <TrashIcon className="w-5 h-5 mb-4stroke-gray-900 transition-all duration-500 group-hover:stroke-black" />
                     </button>
                   </div>
                   <div className="border-t pt-4 flex">
@@ -291,168 +292,146 @@ const Bag = () => {
                   </div>
 
                   <div className="border-t pt-4">
-                  {activeBlock === 'personal' && (
-                    <div className="">
+                    {activeBlock === 'personal' && (
+                      <div className="">
 
-                      <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
-                        First Name
-                      </label>
-                      <ThemeProvider theme={theme}>
-                        <FormControl fullWidth variant="outlined">
-                          <TextField
+                        <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
+                          First Name
+                        </label>
+                        <ThemeProvider theme={theme}>
+                          <TextFieldComponent
+                            label=""
                             name="firstName"
                             id="firstName"
                             value={formData.firstName}
                             onChange={handleChange}
-                            error={!!errors.firstName}
-                            className="mt-1"
-                            size="small"
+                            error={errors.firstName}
+                            autoComplete="firstName"
                           />
-                          {errors.firstName ? (
-                            <div className="h-6 text-xs text-red-500">Error: {errors.firstName}</div>
-                          ) : (<div className="h-6 text-xs "> </div>)}
-                        </FormControl>
-                        <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
-                          Last Name
-                        </label>
-                        <FormControl fullWidth variant="outlined">
-                          <TextField
+                          <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
+                            Last Name
+                          </label>
+                          <TextFieldComponent
+                            label=""
                             name="lastName"
                             id="lastName"
                             value={formData.lastName}
                             onChange={handleChange}
-                            error={!!errors.lastName}
-                            size="small"
+                            error={errors.lastName}
+                            autoComplete="lastName"
                           />
-                          {errors.lastName ? (
-                            <div className="h-6 text-xs text-red-500">Error: {errors.lastName}</div>
-                          ) : (<div className="h-6 text-xs "> </div>)}
-                        </FormControl>
 
-                        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                          Email
-                        </label>
-                        <FormControl fullWidth variant="outlined">
-                          <TextField
+                          <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
+                            Email
+                          </label>
+                          <TextFieldComponent
+                            label=""
                             name="email"
                             id="email"
                             value={formData.email}
                             onChange={handleChange}
-                            error={!!errors.email}
-                            size="small"
+                            error={errors.email}
                             autoComplete="email"
-
                           />
-                          {errors.email ? (
-                            <div className="h-6 text-xs text-red-500">Error: {errors.email}</div>
-                          ) : (<div className="h-6 text-xs "> </div>)}
-                        </FormControl>
 
-                        <label htmlFor="textmask" className="block text-sm font-medium text-gray-700 mb-2">
-                          Phone
-                        </label>
-                        <FormControl fullWidth variant="outlined">
-                          <Input
-                            name="textmask"
-                            id="textmask"
+                          <label htmlFor="textmask" className="block text-sm font-medium text-gray-700 mb-2">
+                            Phone
+                          </label>
+                          <PhoneNumberComponent
                             value={values.textmask}
+                            label=""
+                            id="textmask"
                             onChange={changePhoneNumber}
-                            inputComponent={TextMaskCustom as any}
-                            error={!!errors.phoneNumber}
-                            placeholder='(099) 00-00-000'
+                            error={errors.phoneNumber}
                           />
-                          {errors.phoneNumber ? (
-                            <div className="h-6 text-xs text-red-500">Error: {errors.phoneNumber}</div>
-                          ) : (<div className="h-6 text-xs "> </div>)}
-                        </FormControl>
-                      </ThemeProvider>
-                    </div>
-                )}
+                        </ThemeProvider>
+                      </div>
+                    )}
                   </div>
                 </div>
 
-                <div className={`bg-white p-5 rounded-md shadow-md mb-8 ${errors.city || errors.warehouse? 'border-2 border-red-500' : ''}`}>
-                <div className="flex justify-between items-center">
-                    <h3 className="text-2xl font-semibold mb-4 cursor-pointer" 
-                    onClick={() => handleBlockClick('delivery')}
+                <div className={`bg-white p-5 rounded-md shadow-md mb-8 ${errors.city || errors.warehouse ? 'border-2 border-red-500' : ''}`}>
+                  <div className="flex justify-between items-center">
+                    <h3 className="text-2xl font-semibold mb-4 cursor-pointer"
+                      onClick={() => handleBlockClick('delivery')}
                     >Delivery Information</h3>
                   </div>
                   <div className="border-t pt-4">
-                  {activeBlock === 'delivery' && (
-                    <div className="">
+                    {activeBlock === 'delivery' && (
+                      <div className="">
 
-                      <ThemeProvider theme={theme}>
+                        <ThemeProvider theme={theme}>
 
-                        <div >
-                          <RadioGroup value={selectedShipping} onChange={setSelectedShipping} >
-                            <RadioGroup.Label className="sr-only">Delivery Information</RadioGroup.Label>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                              {deliveryList.map((delivery) => (
-                                <RadioGroup.Option
-                                  key={delivery.id}
-                                  value={delivery.id}
-                                  className={({ active, checked }) =>
-                                    `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer ${active ? 'border-2 border-indigo-600 ring-2 ring-indigo-600' : ''
-                                    } ${checked ? 'border-2 border-indigo-600' : 'border-2 border-gray-200'}
+                          <div >
+                            <RadioGroup value={selectedShipping} onChange={setSelectedShipping} >
+                              <RadioGroup.Label className="sr-only">Delivery Information</RadioGroup.Label>
+                              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                {deliveryList.map((delivery) => (
+                                  <RadioGroup.Option
+                                    key={delivery.id}
+                                    value={delivery.id}
+                                    className={({ active, checked }) =>
+                                      `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer ${active ? 'border-2 border-indigo-600 ring-2 ring-indigo-600' : ''
+                                      } ${checked ? 'border-2 border-indigo-600' : 'border-2 border-gray-200'}
                                     ${selectedShipping === '' ? 'border-2 border-red-500' : ''}`
-                                  }
-                                >
-                                  {({ checked }) => (
-                                    <div className="px-6 py-4">
-                                      <div className="flex items-center justify-between">
-                                        <RadioGroup.Label as="div" className="font-bold text-xl mb-2 mr-10">
-                                          {delivery.logo}{delivery.title}
-                                        </RadioGroup.Label>
-                                        {checked && (
-                                          <CheckCircleIcon className="h-5 w-5 text-indigo-600" aria-hidden="true" />
-                                        )}
+                                    }
+                                  >
+                                    {({ checked }) => (
+                                      <div className="px-6 py-4">
+                                        <div className="flex items-center justify-between">
+                                          <RadioGroup.Label as="div" className="font-bold text-xl mb-2 mr-10">
+                                            {delivery.logo}{delivery.title}
+                                          </RadioGroup.Label>
+                                          {checked && (
+                                            <CheckCircleIcon className="h-5 w-5 text-indigo-600" aria-hidden="true" />
+                                          )}
+                                        </div>
+                                        <p className="text-gray-700 text-base">{delivery.subtitle}</p>
                                       </div>
-                                      <p className="text-gray-700 text-base">{delivery.subtitle}</p>
-                                    </div>
-                                  )}
-                                </RadioGroup.Option>
-                              ))}
-                            </div>
-                          </RadioGroup>
-                        </div>
+                                    )}
+                                  </RadioGroup.Option>
+                                ))}
+                              </div>
+                            </RadioGroup>
+                          </div>
 
-                        {selectedShipping === 'Branch' && (
-                          <BranchShipping
-                            cityOptions={cityOptions}
-                            warehouseOptions={warehouseOptions}
-                            handleChangeCity={handleChangeCity}
-                            handleChangeWarehouse={handleChangeWarehouse}
-                            warehouseSelected={warehouseSelected}
-                            selectedWarehouseOptions={selectedWarehouseOptions}
-                            errors={errors} />
-                        )}
+                          {selectedShipping === 'Branch' && (
+                            <BranchShipping
+                              cityOptions={cityOptions}
+                              warehouseOptions={warehouseOptions}
+                              handleChangeCity={handleChangeCity}
+                              handleChangeWarehouse={handleChangeWarehouse}
+                              warehouseSelected={warehouseSelected}
+                              selectedWarehouseOptions={selectedWarehouseOptions}
+                              errors={errors} />
+                          )}
 
-                        {selectedShipping === 'Postomat' && (
-                          <PostomatShipping
-                            cityOptions={cityOptions}
-                            warehouseOptions={warehouseOptions}
-                            handleChangeCity={handleChangeCity}
-                            handleChangeWarehouse={handleChangeWarehouse}
-                            warehouseSelected={warehouseSelected}
-                            selectedWarehouseOptions={selectedWarehouseOptions}
-                            errors={errors} />
-                        )}
+                          {selectedShipping === 'Postomat' && (
+                            <PostomatShipping
+                              cityOptions={cityOptions}
+                              warehouseOptions={warehouseOptions}
+                              handleChangeCity={handleChangeCity}
+                              handleChangeWarehouse={handleChangeWarehouse}
+                              warehouseSelected={warehouseSelected}
+                              selectedWarehouseOptions={selectedWarehouseOptions}
+                              errors={errors} />
+                          )}
 
-                        {selectedShipping === 'Store' && (
-                          <StoreShipping
-                            storeCities={storeCities}
-                            filteredStores={filteredStores}
-                            handleChangeStoreCity={handleChangeStoreCity}
-                            handleChangeStore={handleChangeStore}
-                            warehouseSelected={warehouseSelected}
-                            selectedStoreCity={selectedStoreCity}
-                            selectedStore={selectedStore}
-                            errors={errors} />
+                          {selectedShipping === 'Store' && (
+                            <StoreShipping
+                              storeCities={storeCities}
+                              filteredStores={filteredStores}
+                              handleChangeStoreCity={handleChangeStoreCity}
+                              handleChangeStore={handleChangeStore}
+                              warehouseSelected={warehouseSelected}
+                              selectedStoreCity={selectedStoreCity}
+                              selectedStore={selectedStore}
+                              errors={errors} />
 
-                        )}
-                      </ThemeProvider>
-                    </div> 
-                    )} 
+                          )}
+                        </ThemeProvider>
+                      </div>
+                    )}
                   </div>
                 </div>
 
@@ -461,84 +440,84 @@ const Bag = () => {
                     <h3 className="text-2xl font-semibold mb-4 cursor-pointer" onClick={() => handleBlockClick('payment')}>Payment Information</h3>
                   </div>
                   <div className="border-t pt-4">
-                  {activeBlock === 'payment' && (
-                    <div className="mb-5 border-b pb-4">
-                      <div className="pb-4">
-                        <ThemeProvider theme={theme}>
-                          {formData.payment === 'The money has not been paid' && (
-                            <>
-                              <div>
-                                <RadioGroup value={selectedPayment} onChange={setSelectedPayment} >
-                                  <RadioGroup.Label className="sr-only">Delivery Information</RadioGroup.Label>
-                                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {paymentList.map((payment) => (
-                                      <RadioGroup.Option
-                                        key={payment.id}
-                                        value={payment.id}
-                                        className={({ active, checked }) =>
-                                          `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer ${active ? 'border-2 border-indigo-600 ring-2 ring-indigo-600' : ''
-                                          } ${checked ? 'border-2 border-indigo-600' : 'border-2 border-gray-200'}`
-                                        }
-                                      >
-                                        {({ checked }) => (
-                                          <div className="px-6 py-4">
-                                            <div className="flex items-center justify-between">
-                                              <RadioGroup.Label as="div" className="font-bold text-xl mb-2 mr-10">
-                                                {payment.logo} {payment.title}
-                                              </RadioGroup.Label>
-                                              {checked && (
-                                                <CheckCircleIcon className="h-5 w-5 text-indigo-600" aria-hidden="true" />
-                                                // <span className="text-blue-700 font-bold">&#10003;</span>
-                                              )}
+                    {activeBlock === 'payment' && (
+                      <div className="mb-5 border-b pb-4">
+                        <div className="pb-4">
+                          <ThemeProvider theme={theme}>
+                            {formData.payment === 'The money has not been paid' && (
+                              <>
+                                <div>
+                                  <RadioGroup value={selectedPayment} onChange={setSelectedPayment} >
+                                    <RadioGroup.Label className="sr-only">Delivery Information</RadioGroup.Label>
+                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                      {paymentList.map((payment) => (
+                                        <RadioGroup.Option
+                                          key={payment.id}
+                                          value={payment.id}
+                                          className={({ active, checked }) =>
+                                            `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer ${active ? 'border-2 border-indigo-600 ring-2 ring-indigo-600' : ''
+                                            } ${checked ? 'border-2 border-indigo-600' : 'border-2 border-gray-200'}`
+                                          }
+                                        >
+                                          {({ checked }) => (
+                                            <div className="px-6 py-4">
+                                              <div className="flex items-center justify-between">
+                                                <RadioGroup.Label as="div" className="font-bold text-xl mb-2 mr-10">
+                                                  {payment.logo} {payment.title}
+                                                </RadioGroup.Label>
+                                                {checked && (
+                                                  <CheckCircleIcon className="h-5 w-5 text-indigo-600" aria-hidden="true" />
+                                                  // <span className="text-blue-700 font-bold">&#10003;</span>
+                                                )}
+                                              </div>
+                                              <p className="text-gray-700 text-base">{payment.subtitle}</p>
                                             </div>
-                                            <p className="text-gray-700 text-base">{payment.subtitle}</p>
-                                          </div>
-                                        )}
-                                      </RadioGroup.Option>
-                                    ))}
-                                  </div>
-                                </RadioGroup>
-                              </div>
-
-                              {selectedPayment === 'PaymentBefore' && (
-                                <div className="mt-5">
-                                  <button
-                                    type="button"
-                                    onClick={moneyPayment}
-                                    className='mt-10 flex w-40 mx-auto items-center justify-center rounded-md border bg-indigo-600 hover:bg-indigo-700
-                                px-8 py-3 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'>
-                                    Pay Now
-                                  </button>
+                                          )}
+                                        </RadioGroup.Option>
+                                      ))}
+                                    </div>
+                                  </RadioGroup>
                                 </div>
-                              )}
-                            </>
-                          )}
-                        </ThemeProvider>
-                      </div>
-                      <dl className="pt-2 mt-8 divide-y divide-gray-200 text-sm ">
-                        <div className="flex items-center justify-between pb-4">
-                          <dt className="text-gray-600">Subtotal</dt>
-                          <dd className="font-medium text-gray-900">{totalWithOutTax.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
-                        </div>
-                        <div className="flex items-center justify-between py-4">
-                          <dt className="text-gray-600">Tax</dt>
-                          <dd className="font-medium text-gray-900">{taxes.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
-                        </div>
-                        <div className="flex items-center justify-between py-4">
-                          <dt className="text-gray-600">Discount</dt>
-                          <dd className="font-medium text-red-600">0 €</dd>
-                        </div>
-                        <div className="flex items-center justify-between py-4">
-                          <dt className="text-gray-600">Payment</dt>
-                          <dd className={`font-medium ${formData.payment === 'The money has not been paid' ? 'text-red-500' : 'text-green-500'}`}>{formData.payment}</dd>
-                        </div>
-                        <div className="flex items-center justify-between pt-4">
-                          <dt className="font-medium text-gray-900">Order total</dt>
-                          <dd className="font-medium text-indigo-600">{total.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
-                        </div>
-                      </dl>
 
-                    </div>
+                                {selectedPayment === 'PaymentBefore' && (
+                                  <div className="mt-5">
+                                    <button
+                                      type="button"
+                                      onClick={moneyPayment}
+                                      className='mt-10 flex w-40 mx-auto items-center justify-center rounded-md border bg-indigo-600 hover:bg-indigo-700
+                                px-8 py-3 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'>
+                                      Pay Now
+                                    </button>
+                                  </div>
+                                )}
+                              </>
+                            )}
+                          </ThemeProvider>
+                        </div>
+                        <dl className="pt-2 mt-8 divide-y divide-gray-200 text-sm ">
+                          <div className="flex items-center justify-between pb-4">
+                            <dt className="text-gray-600">Subtotal</dt>
+                            <dd className="font-medium text-gray-900">{totalWithOutTax.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
+                          </div>
+                          <div className="flex items-center justify-between py-4">
+                            <dt className="text-gray-600">Tax</dt>
+                            <dd className="font-medium text-gray-900">{taxes.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
+                          </div>
+                          <div className="flex items-center justify-between py-4">
+                            <dt className="text-gray-600">Discount</dt>
+                            <dd className="font-medium text-red-600">0 €</dd>
+                          </div>
+                          <div className="flex items-center justify-between py-4">
+                            <dt className="text-gray-600">Payment</dt>
+                            <dd className={`font-medium ${formData.payment === 'The money has not been paid' ? 'text-red-500' : 'text-green-500'}`}>{formData.payment}</dd>
+                          </div>
+                          <div className="flex items-center justify-between pt-4">
+                            <dt className="font-medium text-gray-900">Order total</dt>
+                            <dd className="font-medium text-indigo-600">{total.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
+                          </div>
+                        </dl>
+
+                      </div>
                     )}
                   </div>
                 </div>

@@ -93,11 +93,11 @@ const UserPanelPage = () => {
 
     useEffect(() => {
         if (user) {
-            getUserOrders(user.Email)
+            getUserOrders(user.Id)
                 .then(data => setCountPage(data))
                 .catch(error => console.error('Error fetching count order data:', error));
                 
-            getProfileOrders(user.Email, page)
+            getProfileOrders(user.Id, page)
                 .then(data => setOrdersUser(data))
                 .catch(error => console.error('Error fetching user data:', error));
 

@@ -14,9 +14,9 @@ const instance = axios.create({
     }
 });
 
-export async function getProfileOrders(userEmail: string | null, page: number) {
+export async function getProfileOrders(Id: string | null, page: number) {
     try {
-        const response = await instance.get<IOrderUser[]>(`GetOrderByEmail/${userEmail}`, { params: { page } });
+        const response = await instance.get<IOrderUser[]>(`GetOrderById/${Id}`, { params: { page } });
         return response.data;
     } catch (error) {
         console.error('Failed to fetch orders data:', error);
@@ -24,9 +24,9 @@ export async function getProfileOrders(userEmail: string | null, page: number) {
     }
 }
 
-export async function getUserOrders(userEmail: string | null) {
+export async function getUserOrders(Id: string | null) {
     try {
-        const response = await instance.get<number>(`GetCountOrderByEmail/${userEmail}`);
+        const response = await instance.get<number>(`GetCountOrderById/${Id}`);
         return response.data;
     } catch (error) {
         console.error('Failed to fetch orders data:', error);

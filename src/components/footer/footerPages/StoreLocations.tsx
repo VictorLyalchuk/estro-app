@@ -1,23 +1,16 @@
 import { useEffect, useState } from 'react';
 import { IStore } from '../../../interfaces/Catalog/IStore';
-import axios from 'axios';
-import { APP_ENV } from '../../../env/config';
+import { getStore } from '../../../services/shipping/shipping-services';
 
 const StoreLocations = () => {
-  const baseUrl = APP_ENV.BASE_URL;
   const [storeOptions, setStoreOptions] = useState<IStore[]>([]);
   const cities = [...new Set(storeOptions.map(store => store.city))];
   const [selectedCity, setSelectedCity] = useState('Kiyv');
 
   useEffect(() => {
-    try {
-      axios.get<IStore[]>(`${baseUrl}/api/StoreControllers/StoreAll`)
-        .then(resp => {
-          setStoreOptions(resp.data);
-        })
-    } catch (error) {
-      console.error('Error fetching stores', error);
-    }
+    getStore().then(resp => {
+      setStoreOptions(resp.storeOptions);
+    });
   }, []);
 
   const filteredStores = selectedCity
