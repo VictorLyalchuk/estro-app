@@ -44,7 +44,6 @@ const Bag = () => {
   const [selectedStore, setSelectedStore] = useState<IStore | null>(null); // вибраний магазин об'єкт
   const [selectedWarehouseOptions, setSelectedWarehouseOptions] = useState<IWarehouse | null>(null);
 
-
   const [selectedStoreCity, setSelectedStoreCity] = useState<string | null>(''); // вибраний магазин назва
   const [storeOptions, setStoreOptions] = useState<IStore[]>([]); // список не фільрованих магазинів
   const [filteredStores, setFilteredStores] = useState(storeOptions); // список фільтрованих магазин 

@@ -7,7 +7,6 @@ import { BagReducerActionType } from '../../../../store/bag/BagReducer';
 import { ArrowLeftOnRectangleIcon, Cog6ToothIcon, CurrencyDollarIcon, DocumentChartBarIcon, HeartIcon, UserIcon } from '@heroicons/react/24/outline';
 import { FavoritesReducerActionType } from '../../../../store/favourites/FavoritesReducer';
 
-
 const DropdownUser = () => {
   const baseUrl = APP_ENV.BASE_URL;
   const { isAuth, user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
