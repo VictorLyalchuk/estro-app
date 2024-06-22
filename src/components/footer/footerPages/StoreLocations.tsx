@@ -20,7 +20,7 @@ const StoreLocations = () => {
   return (
     <>
       <div className="bg-gray-100 min-h-[900px]">
-        <div className="text-gray-700 mx-auto max-w-8xl px-4 sm:px-6 lg:px-8 text-center">
+        <div className="text-gray-700 mx-auto max-w-8xl px-4 sm:px-6 lg:px-8 text-center p-8">
           <h2 className="text-4xl font-bold mb-4 text-center">Estro Store</h2>
           {/* Sidebar для кнопок */}
           <div className=" p-4 bg-transparent cursor-pointer">
@@ -43,7 +43,7 @@ const StoreLocations = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 text-gray-700 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6 ">
               {filteredStores.map((store, index) => (
-                <div key={index} className="bg-white rounded-md p-6 shadow-md mb-8 mt-8 hover:bg-indigo-400 hover:text-white">
+                <div key={index} className="bg-white rounded-md p-6 shadow-md mb-2 mt-2 hover:bg-indigo-400 hover:text-white">
                   <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-7xl lg:px-8 hover:bg-indigo-400">
                       <h3 className="text-xl font-semibold mb-2">{store.name}</h3>
                       <p className="text-sm mb-2">{store.address}</p>
