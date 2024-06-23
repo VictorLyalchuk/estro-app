@@ -1,7 +1,7 @@
 import { RadioGroup } from '@headlessui/react';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { ThemeProvider } from "@material-ui/core/styles";
-import { paymentList } from '../../../../../data/deliveryList';
+import { paymentList } from '../../../../../data/paymentList';
 import { useSelector } from 'react-redux';
 import { ICardReducerState } from '../../../../../store/bag/CardReducer';
 

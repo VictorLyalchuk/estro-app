@@ -7,4 +7,3 @@ export const initialSortOptions: ISortOptions[] = [
     { name: 'Price: Low to High', url: 'price_low_to_high', current: false },
     { name: 'Price: High to Low', url: 'price_high_to_low', current: false },
 ];
-

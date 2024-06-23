@@ -13,6 +13,7 @@ import { RootState } from '../../store/store.ts';
 import { FavoritesReducerActionType } from '../../store/favourites/FavoritesReducer.ts';
 import { IUserProfile } from '../../interfaces/Auth/IUserProfile.ts';
 import { getUserData } from '../../services/accounts/account-services.ts';
+import LanguageSelector from './navbarsPages/language/LanguageSelector.tsx';
 
 const navigation = {
     featured: [
@@ -334,20 +335,12 @@ const NavbarsPage = () => {
 
                                     <div className="ml-auto flex items-center">
 
-                                        <div className="hidden lg:ml-8 lg:flex border-r pr-7">
-                                            <a href="#" className="flex items-center text-gray-700 hover:text-gray-800">
-                                                <img
-                                                    src="../images/usa.webp"
-                                                    alt=""
-                                                    className="block h-auto w-5 flex-shrink-0"
-                                                />
-                                                <span className="ml-3 block text-sm font-medium">USA</span>
-                                                <span className="sr-only">change currency</span>
-                                            </a>
+                                        <div className="lg:ml-8 lg:flex border-r pr-5">
+                                        <LanguageSelector />
                                         </div>
                                         {isAuth ? (
                                             <>
-                                                <div className="pl-7">
+                                                <div className="hidden lg:flex pl-5">
                                                     <DropdownUser />
                                                 </div>
                                             </>
