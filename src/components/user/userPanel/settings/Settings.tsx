@@ -15,10 +15,10 @@ import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
 import Modal from '../../../cropImage/Modal';
 import { theme } from '../../../../theme/theme';
-import BirthdayComponent from '../../../../ui/no-lable/BirthdayComponent';
-import PasswordFieldNoLableComponent from '../../../../ui/no-lable/PasswordFieldNoLableComponent';
-import TextFieldNoLableComponent from '../../../../ui/no-lable/TextFieldNoLableComponent';
-import PhoneNumberNoLableComponent from '../../../../ui/no-lable/PhoneNumberNoLableComponent';
+import BirthdayComponent from '../../../../ui/no-label/BirthdayComponent';
+import PasswordFieldNoLableComponent from '../../../../ui/no-label/PasswordFieldNoLableComponent';
+import TextFieldNoLableComponent from '../../../../ui/no-label/TextFieldNoLableComponent';
+import PhoneNumberNoLableComponent from '../../../../ui/no-label/PhoneNumberNoLableComponent';
 
 const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
   const baseUrl = APP_ENV.BASE_URL;

@@ -1,5 +1,4 @@
 import { RadioGroup } from '@headlessui/react';
-import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import { ThemeProvider } from "@material-ui/core/styles";
 import { paymentList } from '../../../../../data/paymentList';
 import { useSelector } from 'react-redux';
@@ -12,7 +11,6 @@ interface PaymentInformationProps {
   handleBlockClick: (block: string) => void;
   selectedPayment: string | null;
   setSelectedPayment: (value: string) => void;
-  moneyPayment: () => void;
 }
 
 const PaymentInformation: React.FC<PaymentInformationProps> = ({
@@ -22,8 +20,6 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
     handleBlockClick,
     selectedPayment,
     setSelectedPayment,
-    moneyPayment,
-
   }) => {
   const { total, taxes, totalWithOutTax } = useSelector((redux: any) => redux.card as ICardReducerState);
 
@@ -42,47 +38,26 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
                       <div>
                         <RadioGroup value={selectedPayment} onChange={setSelectedPayment}>
                           <RadioGroup.Label className="sr-only">Payment Information</RadioGroup.Label>
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                             {paymentList.map((payment) => (
                               <RadioGroup.Option
                                 key={payment.id}
                                 value={payment.id}
                                 className={({ active, checked }) =>
-                                  `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer ${active ? 'border-2 border-indigo-600 ring-2 ring-indigo-600' : ''
-                                  } ${checked ? 'border-2 border-indigo-600' : 'border-2 border-gray-200'}`
-                                }
-                              >
-                                {({ checked }) => (
-                                  <div className="px-6 py-4">
-                                    <div className="flex items-center justify-between">
-                                      <RadioGroup.Label as="div" className="font-bold text-xl mb-2 mr-10">
-                                        {payment.logo} {payment.title}
+                                  `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer  hover:border-indigo-600 ${active ? 'border-2 border-indigo-600 ring-2 ring-indigo-600' : ''
+                                  } ${checked ? 'border-2 border-indigo-600' : 'border-2 border-gray-200' } `}>
+                                  <div className="px-4 py-1 flex-1 ">
+                                    <div className="flex justify-center item-center">
+                                      <RadioGroup.Label as="div">
+                                        {payment.logo} 
                                       </RadioGroup.Label>
-                                      {checked && (
-                                        <CheckCircleIcon className="h-5 w-5 text-indigo-600" aria-hidden="true" />
-                                      )}
                                     </div>
-                                    <p className="text-gray-700 text-base">{payment.subtitle}</p>
                                   </div>
-                                )}
                               </RadioGroup.Option>
                             ))}
                           </div>
                         </RadioGroup>
                       </div>
-  
-                      {selectedPayment === 'PaymentBefore' && (
-                        <div className="mt-5">
-                          <button
-                            type="button"
-                            onClick={moneyPayment}
-                            className='mt-10 flex w-40 mx-auto items-center justify-center rounded-md border bg-indigo-600 hover:bg-indigo-700
-                            px-8 py-3 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
-                          >
-                            Pay Now
-                          </button>
-                        </div>
-                      )}
                     </>
                   )}
                 </ThemeProvider>
