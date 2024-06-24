@@ -1,20 +1,17 @@
 import { Route, Routes } from "react-router-dom";
-import NotFound from "./components/notFound/NotFound";
+import Page404 from "./components/notFound/Page404";
 import Logo from "./components/logo/Logo";
-import Bag from "./components/header/headerPages/bag/Bag";
+import Bag from "./components/navbars/navbarsPages/bag/Bag";
 import Product from "./components/user/product/Product";
-import Catalog from "./components/user/catalog/Catalog";
-import Header from "./components/header/HeaderPage";
-import { Suspense, useEffect, useState } from "react";
+import CatalogNavigation from "./components/user/catalog/CatalogNavigation";
+import NavbarsPage from "./components/navbars/NavbarsPage";
+import { useEffect, useState } from "react";
 import Loader from "./components/Dashboard/common/Loader";
-import DefaultLayout from "./components/Dashboard/layout/DefaultLayout";
-import MainDashboard from "./components/Dashboard/pages/MainDashboard";
 import { Toaster } from 'react-hot-toast';
-import routes from './components/Dashboard/routes';
 import AddProduct from "./components/admin/product/AddProduct";
 import EditProduct from "./components/admin/product/EditProduct";
 import AddStorage from "./components/admin/product/AddStorage";
-import HomePage from "./components/homePage/HomePage";
+import OurBrand from "./components/footer/footerPages/OurBrand";
 import Footer from "./components/footer/FooterPage";
 import DeliveryandPayment from "./components/footer/footerPages/DeliveryAndPayment";
 import ReturnExchange from "./components/footer/footerPages/ReturnExchange";
@@ -23,15 +20,27 @@ import PrivacyPolicy from "./components/footer/footerPages/PrivacyPolicy";
 import About from "./components/footer/footerPages/About";
 import StoreLocations from "./components/footer/footerPages/StoreLocations";
 import AdminLayout from "./components/layout/AdminLayout";
-import AuthPage from "./components/header/headerPages/auth/AuthPage";
-import AccountPage from "./components/account/AccountPage";
+// import AuthPage from "./components/navbars/navbarsPages/auth/AuthPage";
+import AuthPanelPage from "./components/navbars/navbarsPages/auth/AuthPanelPage";
+import UserPanelPage from "./components/user/userPanel/UserPanelPage";
+import UserLayout from "./components/layout/UserLayout";
+import GuestLayout from "./components/layout/GuestLayout";
+import HomeStore from "./components/homePage/HomeStore";
+import CatalogHome from "./components/user/catalog/CatalogHome";
+import Tables from "./components/Dashboard/pages/Tables";
+
+import useAuthTokenEffect from "./useAuthTokenEffect";
+import useGetFavoritesEffect from "./useGetFavoritesEffect";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
 
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
-  }, []);
+    }, []);
+    
+    useAuthTokenEffect()
+    useGetFavoritesEffect();
 
   return loading ? (
     <>
@@ -44,58 +53,51 @@ function App() {
         reverseOrder={false}
         containerClassName="overflow-auto"
       />
-      <Logo/>
-      <Header />
+      <Logo />
+      <NavbarsPage />
       <Routes>
-        <Route path='/dashboard' element={<DefaultLayout />}>
-          <Route index element={<MainDashboard />} />
-          {routes.map((routes, index) => {
-            const { path, component: Component } = routes;
-            return (
-              <Route
-                key={index}
-                path={path}
-                element={
-                  <Suspense fallback={<Loader />}>
-                    <Component />
-                  </Suspense>
-                }
-              />
-            );
-          })}
+        <Route element={<GuestLayout />}>
+          {/* <Route path='/auth' element={<AuthPage />} /> */}
+          <Route path='/auth' element={<AuthPanelPage />} />
         </Route>
+        {/* <Route path="/auth/:email/:token" element={<AuthPage />} /> */}
+        <Route path="/auth/:email/:token" element={<AuthPanelPage />} />
 
-        <Route path='/auth' element={<AuthPage />} />
-        <Route path="/auth/:email/:token" element={<AuthPage/>} />
-
-        <Route path="/" element={<HomePage />}></Route>
-        <Route path="catalog/:subName/:urlName" element={<Catalog />} />
+        <Route path="/" element={<HomeStore />}></Route>
+        <Route path="/:email/:token" element={<HomeStore />}></Route>
+        <Route path="catalog/:subName/:urlName" element={<CatalogNavigation />} />
+        <Route path="catalog/:subName" element={<CatalogNavigation />} />
+        <Route path="catalog-home" element={<CatalogHome />} />
+        <Route path="catalog-home/:main" element={<CatalogHome />} />
         <Route path="product/:Id" element={<Product />} />
-        <Route path='/bag' element={<Bag /> } />
+        <Route path='/bag' element={<Bag />} />
 
-        <Route path='account/settings' element={<AccountPage /> } />
-        <Route path='account/settings/:email/:token' element={<AccountPage /> } />
-
-
-
+        <Route element={<UserLayout />}>
+          <Route path="account/orders" element={<UserPanelPage />} />
+          <Route path='account/profile' element={<UserPanelPage />} />
+          <Route path='account/settings' element={<UserPanelPage />} />
+          <Route path='account/favorites' element={<UserPanelPage />} />
+          <Route path='account/bonuses' element={<UserPanelPage />} />
+        </Route>
 
         <Route path="/admin" element={<AdminLayout />}>
+          <Route path="tables" element={<Tables />} />
           <Route path="add-product" element={<AddProduct />} />
-          <Route path="edit-product/:Id" element={ <EditProduct />} />
-          <Route path="add-storage/:Id" element={ <AddStorage />} />
+          <Route path="edit-product/:Id" element={<EditProduct />} />
+          <Route path="add-storage/:Id" element={<AddStorage />} />
         </Route>
 
-        <Route path='*' element={<NotFound />} />
-        <Route path="/delivery-and-payment" element={<DeliveryandPayment /> } />
+        <Route path='*' element={<Page404 />} />
+        <Route path="/delivery-and-payment" element={<DeliveryandPayment />} />
         <Route path="/return-exchange" element={<ReturnExchange />} />
         <Route path="/warranty-product-care" element={<WarrantyProductCare />} />
         <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+        <Route path="/our-brand" element={<OurBrand />}></Route>
         <Route path="/about" element={<About />} />
         <Route path="/store-locations" element={<StoreLocations />} />
 
       </Routes>
-      <Footer/>
-
+      <Footer />
     </>
   );
 }

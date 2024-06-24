@@ -4,7 +4,7 @@ export enum CardReducerActionType {
     SET = "SET_ITEM",
     DELETE = "DELETE_ITEM",
     UPDATE_TOTAL = "UPDATE_TOTAL",
-    DELETE_ALL = "DELETE_ALL",
+    DELETE_CARD_ALL = "DELETE_CARD_ALL",
 }
 
 export interface ICardReducerState {
@@ -61,7 +61,7 @@ const cardReducer = (state = initState, action: ICardReducerAction): ICardReduce
                 items: newItems,
             };
 
-        case CardReducerActionType.DELETE_ALL:
+        case CardReducerActionType.DELETE_CARD_ALL:
             return {
                 items: [],
                 total: 0,

@@ -1,18 +1,24 @@
 import { useEffect, useState } from 'react'
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { Image, message } from 'antd';
 import { StarIcon } from '@heroicons/react/20/solid'
 import { RadioGroup } from '@headlessui/react'
-import { Link, useNavigate, useParams } from "react-router-dom";
-import { IProduct, IStorages } from '../../../interfaces/Site/IProduct';
-import axios from 'axios';
-import {Image, message} from 'antd';
-import Slider from 'react-slick';
-import 'slick-carousel/slick/slick.css';
-import 'slick-carousel/slick/slick-theme.css';
-import { useDispatch, useSelector } from 'react-redux';
+import { IProduct, IStorages } from '../../../interfaces/Product/IProduct';
 import { BagReducerActionType } from '../../../store/bag/BagReducer';
-import { IBag } from '../../../interfaces/Bag/IBag';
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer';
-import {APP_ENV} from "../../../env/config";
+import { IBag } from '../../../interfaces/Bag/IBag';
+import { APP_ENV } from "../../../env/config";
+import { getProductById } from '../../../services/product/product-services';
+import { createBag } from '../../../services/bag/bag-services';
+import Carousel from 'react-material-ui-carousel';
+import Slider from 'react-slick';
+import { HeartIcon } from '@heroicons/react/24/solid';
+import { HeartIcon as OutlineHeartIcon } from '@heroicons/react/24/outline'
+import { RootState } from '../../../store/store';
+import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavoritesReducer';
+import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/userFavoriteProducts/user-favorite-products-services';
+import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts';
 
 const reviews = { href: '#', average: 4, totalCount: 117 }
 
@@ -26,34 +32,22 @@ export default function Product() {
   const { isAuth, user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
   const [product, setProduct] = useState<IProduct>();
   const [selectedSize, setSelectedSize] = useState<IStorages | null>(null);
-  const [currentImageIndex, setCurrentImageIndex] = useState<number>(2);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+  const favoriteProducts = useSelector((state: RootState) => state.favorites.favoriteProducts);
+  const isFavorite = (productId: number) => favoriteProducts.some((product: { productId: number }) => product.productId === productId);
+
   useEffect(() => {
-    axios.get<IProduct>(`${baseUrl}/api/Product/ProductByID/${Id}`)
-      .then(resp => {
-        setProduct(resp.data);
-      });
+    if (Id) {
+      getProductById(Id)
+        .then(data => setProduct(data))
+        .catch(error => console.error('Error fetching product data:', error));
+    }
   }, [Id]);
 
   if (!product) {
     return <p></p>
   }
-
-  const handleImageChange = (index: number) => {
-    setCurrentImageIndex(index);
-  };
-
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 5000,
-  };
 
   const addToBag = async () => {
     if (!isAuth) {
@@ -68,11 +62,7 @@ export default function Product() {
       };
 
       try {
-        await axios.post(`${baseUrl}/api/Bag/CreateBag`, model, {
-          headers: {
-            "Content-Type": "application/json"
-          }
-        });
+        await createBag(model);
         setSelectedSize(null);
         dispatch({
           type: BagReducerActionType.PRODUCT_BAG_COUNT,
@@ -80,7 +70,6 @@ export default function Product() {
             pluscount: 1
           }
         });
-        // navigate("/bag");
       }
       catch (ex) {
         message.error('Error adding to bag!');
@@ -88,21 +77,38 @@ export default function Product() {
     }
   }
 
+  const favoriteToggle = async (product: IProduct, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
+    e.preventDefault();
+    if (user) {
+      const favoriteProduct: IFavoriteProducts = {
+        userId: user?.Id,
+        productId: product.id,
+        productName: product.name,
+        productPrice: product.price,
+        productImage: product.imagesPath?.[0] ?? '',
+        storages: product.storages || null
+      };
+      if (!isFavorite(product.id)) {
+        dispatch(addToFavorite(favoriteProduct));
+        await addFavoriteProduct(favoriteProduct);
+      } else {
+        dispatch(removeFromFavorite(favoriteProduct));
+        await removeFavoriteProduct(favoriteProduct);
+      }
+    }
+  };
+
   return (
     <div className="overflow-hidden rounded-sm border-stroke bg-gray-100 shadow-default dark:border-strokedark dark:bg-boxdark text-body">
 
       <div className="pt-6">
         <nav aria-label="Breadcrumb" >
           <ol role="list" className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-            {/* {product .breadcrumbs.map((breadcrumb) => ( */}
-
             <li key={`${product.id}-mainCategory`}>
               <div className="flex items-center">
-                <a
-                  // href={`/catalog/${product.urlMainCategoryName}`} 
-                  className="mr-2 text-sm font-medium text-gray-900">
+                <Link to={`/catalog-home/${product.urlMainCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
                   {product.mainCategoryName}
-                </a>
+                </Link>
                 <svg
                   width={16}
                   height={20}
@@ -119,11 +125,9 @@ export default function Product() {
             <li key={`${product.id}-subCategory`}>
 
               <div className="flex items-center">
-                <a
-                  // href={`/catalog/${product.urlSubCategoryName}`} 
-                  className="mr-2 text-sm font-medium text-gray-900">
+                <Link to={`/catalog/${product.urlSubCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
                   {product.subCategoryName}
-                </a>
+                </Link>
                 <svg
                   width={16}
                   height={20}
@@ -136,9 +140,7 @@ export default function Product() {
                 </svg>
               </div>
             </li>
-
             <li key={`${product.id}-category`}>
-
               <div className="flex items-center">
                 <Link to={`/catalog/${product.urlSubCategoryName}/${product.urlCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
                   {product.categoryName}
@@ -156,45 +158,38 @@ export default function Product() {
               </div>
 
             </li>
-            {/* ))} */}
             <li className="text-sm">
-              {/* <a href={product.urlCategoryName} aria-current="page" className="font-medium text-gray-500 hover:text-gray-600">
-                {product.categoryName}
-              </a> */}
             </li>
           </ol>
         </nav>
-
         {/* Image gallery */}
-        <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-1 lg:gap-x-8 lg:px-8">
-          <Slider  {...settings} className='btn-indigo-500 '>
-            {product.images?.map((image, index) => (
-              <div
-                key={image.id}
-                onClick={() => handleImageChange(index)}
-                className={`aspect-h-4 aspect-w-3 overflow-hidden rounded-lg ${index === currentImageIndex ? 'lg:block' : 'hidden lg:grid lg:grid-cols-1 lg:gap-y-8'
-                  }`}
-              >
-                <Image
-                  src={`${baseUrl}/uploads/1200_${image?.imagePath || '/uploads/default.jpg'}`}
-                  alt={product.name}
-                  className="h-full w-full object-cover object-center cursor-pointer"
-                />
-              </div>
-            ))}
+        <div className="mx-auto mt-6 max-w-2xl px-6 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-1 lg:gap-x-8 lg:px-8">
+          <Slider>
+            {/* <Carousel arrows  autoplay={false}> */}
+            <Carousel swipe animation="fade" duration={1500} autoPlay={true} indicators={true} className="h-full w-full">
+              {product.images?.map((image, index) => (
+                <div key={index} className="aspect-h-4 aspect-w-3 rounded" >
+                  <Image
+                    src={`${baseUrl}/uploads/1200_${image?.imagePath || '/uploads/imagenot.webp'}`}
+                    alt={product.name}
+                    className="h-full w-full object-cover object-center cursor-pointer"
+                  />
+                </div>
+              ))}
+            </Carousel>
           </Slider >
-         
-
           <div className="mt-4 lg:row-span-3 lg:mt-0 lg:col-start-3">
             {/* Options */}
             <div className="mt-9 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
               <p className="text-3xl font-medium  text-gray-900">{product.name}</p>
             </div>
+            <div className="lg:row-span-3 lg:mt-0">
+              <div className="mt-4 flex items-center justify-between">
+                <h2 className="sr-only">Product information</h2>
+                <p className="text-3xl tracking-tight text-red-800">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
 
-            <div className="mt-4 lg:row-span-3 lg:mt-0">
-              <h2 className="sr-only">Product information</h2>
-              <p className="text-3xl tracking-tight text-red-800">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
+              </div>
             </div>
             {/* Reviews */}
             <div className="mt-6">
@@ -239,12 +234,13 @@ export default function Product() {
                         key={size.size}
                         value={size}
                         disabled={!size.inStock}
-                        className={({ active }) =>
+                        className={({ active, checked }) =>
                           classNames(
                             size.inStock
                               ? 'cursor-pointer bg-gray-100 text-gray-900 shadow-sm '
                               : 'cursor-not-allowed bg-gray-50 text-gray-200',
                             active ? 'bg-indigo-600 text-white ' : '',
+                            checked ? 'bg-indigo-600 text-white' : '',
                             'group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-indigo-600 hover:text-white focus:outline-none sm:flex-1 sm:py-6'
                           )
                         }
@@ -283,16 +279,30 @@ export default function Product() {
                   </div>
                 </RadioGroup>
               </div>
+              <div className="mt-8 flex items-center justify-between">
+                <button
+                  type="button"
+                  disabled={!selectedSize}
+                  onClick={addToBag}
+                  className={`p-2 mr-3 flex w-full items-center justify-center rounded-md border ${!selectedSize ? 'bg-gray-300' : 'bg-indigo-600 hover:bg-indigo-700'
+                    } px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+                >
+                  {selectedSize ? 'Add to bag' : 'Select a size'}
+                </button>
 
-              <button
-                type="button"
-                disabled={!selectedSize}
-                onClick={addToBag}
-                className={`mt-10 flex w-full items-center justify-center rounded-md border ${!selectedSize ? 'bg-gray-300' : 'bg-indigo-600 hover:bg-indigo-700'
-                  } px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
-              >
-                Add to bag
-              </button>
+                <div className="cursor-pointer">
+                  {isFavorite(product.id) ? (
+                    <button className="shrink-0 hover:bg-gray-200 p-2 rounded-xl">
+                      <HeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                    </button>
+
+                  ) : (
+                    <button className="shrink-0 hover:bg-gray-200 p-2 rounded-xl">
+                      <OutlineHeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                    </button>
+                  )}
+                </div>
+              </div>
             </form>
 
             <div className="mt-8">
@@ -332,7 +342,7 @@ export default function Product() {
                 <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
                   {product.highlights.map((highlight, index) => (
                     <li
-                      key={index} 
+                      key={index}
                       className="text-gray-400">
                       <span className="text-sm text-gray-600">{highlight}</span>
                     </li>

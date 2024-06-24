@@ -1,84 +1,61 @@
-h1, a, input, button, MenuProps{
-  /* transition: background-color 0.5s, color 0.5s, border 0.5s; */
-  transition: background-color 0.3s, border-color 0.3s, color 0.3s; 
+h1,
+a,
+input,
+button,
+MenuProps {
+	/* transition: background-color 0.5s, color 0.5s, border 0.5s; */
+	transition: background-color 0.3s, border-color 0.3s, color 0.3s;
 }
 
 .custom-button-style {
-  background-color: #303A47;
-  border: 1px solid #303A47;
+	background-color: #303A47;
+	border: 1px solid #303A47;
 }
 
 .custom-button-style:hover {
-  background-color: #ffffff; 
-  color: #303A47;
-  border: 1px solid #303A47;
+	background-color: #ffffff;
+	color: #303A47;
+	border: 1px solid #303A47;
 }
 
-.custom-input-style {
-  border: 1px solid #303A47;
-  display:inline-table
-}
 
-.custom-input-style:hover,
-.custom-input-style:focus {
-  box-shadow: 0 0 0 0px #303A47; 
-}
 body {
-  font-family: 'Satoshi', sans-serif;
+	font-family: 'Satoshi', sans-serif;
 }
 
-h1, h2, h3, h4, h5, h6 {
-  font-family: 'Satoshi', sans-serif;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	font-family: 'Satoshi', sans-serif;
 }
 
 p {
-  font-family: 'Satoshi', sans-serif;
+	font-family: 'Satoshi', sans-serif;
 }
 
 .ant-modal-footer .ant-btn-primary {
-  background-color: #4F46E5; 
-  color: #fff; 
-  transition: background-color 0.3s, border-color 0.3s, color 0.3s; 
+	background-color: #4F46E5;
+	color: #fff;
+	transition: background-color 0.3s, border-color 0.3s, color 0.3s;
 }
-.ant-btn{
-  transition: background-color 0.3s, border-color 0.3s, color 0.3s; 
-  /* color: #4F46E5;  */
+
+.ant-btn {
+	transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+	/* color: #4F46E5;  */
 }
+
 .ant-modal-footer .ant-btn-primary:hover {
-  background-color: #4338CA !important;
-  color: #fff;
+	background-color: #4338CA !important;
+	color: #fff;
 }
-
-
-Input:focus, Form.Item:focus {
-  border-color: #303A47 !important; 
-}
-
-Input:hover, Form.Item:hover {
-  border-color: #303A47 !important; 
-}
-
-
-.input-container:hover,
-.input-container:focus {
-  border-color: #303A47 !important;
-}
-
-.input-container-confirm-password:hover,
-.input-container-confirm-password:focus {
-  border-color: #303A47 !important;
-}
-
-
-
-
-
-
 
 .hover14 {
 	position: relative;
-
 }
+
 .hover14::before {
 	position: absolute;
 	top: 0;
@@ -88,20 +65,23 @@ Input:hover, Form.Item:hover {
 	content: '';
 	width: 50%;
 	height: 100%;
-	background: -webkit-linear-gradient(left, rgba(255,255,255,0) 0%, rgba(255,255,255,.3) 100%);
-	background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,.3) 100%);
+	background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .3) 100%);
+	background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .3) 100%);
 	-webkit-transform: skewX(-25deg);
 	transform: skewX(-25deg);
 }
+
 .hover14:hover::before {
 	-webkit-animation: shine 1.75s;
 	animation: shine 1.75s;
 }
+
 @-webkit-keyframes shine {
 	100% {
 		left: 125%;
 	}
 }
+
 @keyframes shine {
 	100% {
 		left: 125%;
@@ -114,18 +94,22 @@ Input:hover, Form.Item:hover {
 	-webkit-animation: flash 1.5s;
 	animation: flash 1.5s;
 }
+
 @-webkit-keyframes flash {
 	0% {
 		opacity: .4;
 	}
+
 	100% {
 		opacity: 1;
 	}
 }
+
 @keyframes flash {
 	0% {
 		opacity: .4;
 	}
+
 	100% {
 		opacity: 1;
 	}
@@ -141,36 +125,43 @@ Input:hover, Form.Item:hover {
 	content: '';
 	width: 0;
 	height: 0;
-	background: rgba(255,255,255,.2);
+	background: rgba(255, 255, 255, .2);
 	border-radius: 100%;
 	-webkit-transform: translate(-50%, -50%);
 	transform: translate(-50%, -50%);
 	opacity: 0;
 }
+
 .hover15:hover::before {
 	-webkit-animation: circle .75s;
 	animation: circle .75s;
 }
+
 @-webkit-keyframes circle {
 	0% {
 		opacity: 1;
 	}
+
 	40% {
 		opacity: 1;
 	}
+
 	100% {
 		width: 200%;
 		height: 200%;
 		opacity: 0;
 	}
 }
+
 @keyframes circle {
 	0% {
 		opacity: 1;
 	}
+
 	40% {
 		opacity: 1;
 	}
+
 	100% {
 		width: 200%;
 		height: 200%;
@@ -178,18 +169,25 @@ Input:hover, Form.Item:hover {
 	}
 }
 
-.img-box{
-  background-image: url('../public/images/estro2.webp');
-  background-position: center;
-  background-size: cover;
+.img-box {
+	background-image: url('../public/images/estro2.webp');
+	background-position: center;
+	background-size: cover;
 }
 
-.form-box{
-  /* background: transparent; */
-  background-color: rgba(255,255,255,0.2);
-  backdrop-filter: blur(10px);
-  box-shadow: -10px 0 10px rgba(0,0,0,0.1);
+.form-box {
+	/* background: transparent; */
+	background-color: rgba(255, 255, 255, 0.2);
+	backdrop-filter: blur(10px);
+	box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
 }
+
+
+
+
+
+
+
 
 
 .bg-white-container-register {
@@ -203,73 +201,83 @@ Input:hover, Form.Item:hover {
 	background-image: linear-gradient(rgb(83, 79, 79), #303A47), linear-gradient(#ffffff, #303A47);
 	background-blend-mode: hard-light;
 	animation: colorChange 5s infinite alternate;
-  }
-  
-  @keyframes colorChange {
-	0% {
-	  background-color: #303A47;
-	}
-	100% {
-	  background-color: #ffffff;
-	}
-  }
+}
 
-  .bg-white-container-login {
+@keyframes colorChange {
+	0% {
+		background-color: #303A47;
+	}
+
+	100% {
+		background-color: #ffffff;
+	}
+}
+
+.bg-white-container-login {
 	border-radius: 5px 5px 5px 150px;
 	height: 670px;
 	width: 100%;
 	color: white;
 	margin: 0;
 	transition: background-color 0.8s, border-color 0.8s, color 0.8s;
-  
+
 	background-image: linear-gradient(rgb(83, 79, 79), #303A47), linear-gradient(#ffffff, #303A47);
 	background-blend-mode: hard-light;
 	animation: colorChange 5s infinite alternate;
-  }
-  
-  @keyframes colorChange {
-	0% {
-	  background-color: #303A47;
-	}
-	100% {
-	  background-color: #ffffff;
-	}
-  }
+}
 
-  .bg-white-container-home {
+@keyframes colorChange {
+	0% {
+		background-color: #303A47;
+	}
+
+	100% {
+		background-color: #ffffff;
+	}
+}
+
+.bg-white-container-home {
 	border-radius: 5px 5px 5px 5px;
 	height: 550px;
 	width: 100%;
 	color: white;
 	margin: 0;
 	transition: background-color 0.8s, border-color 0.8s, color 0.8s;
-  
+
 	background-image: linear-gradient(rgb(83, 79, 79), #303A47), linear-gradient(#ffffff, #303A47);
 	background-blend-mode: hard-light;
 	animation: colorChange 5s infinite alternate;
-  }
-  
-  @keyframes colorChange {
-	0% {
-	  background-color: #303A47;
-	}
-	100% {
-	  background-color: #ffffff;
-	}
-  }
+}
 
-  .bg-white-container-header {
+@keyframes colorChange {
+	0% {
+		background-color: #303A47;
+	}
+
+	100% {
+		background-color: #ffffff;
+	}
+}
+
+.bg-white-container-header {
 	transition: background-color 0.8s, border-color 0.8s, color 0.8s;
-	background-image: linear-gradient(rgb(66, 60, 60), #303A47), linear-gradient(#303A47, #303A47 );
+	background-image: linear-gradient(rgb(66, 60, 60), #303A47), linear-gradient(#303A47, #303A47);
 	background-blend-mode: hard-light;
 	animation: colorChange 10s infinite alternate;
-  }
-  
-  @keyframes colorChange {
+}
+
+@keyframes colorChange {
 	0% {
-	  background-color: #303A47;
+		background-color: #303A47;
 	}
+
 	100% {
-	  background-color: #ffffff;
+		background-color: #ffffff;
 	}
-  }
+}
+
+.fiCircle {
+	border-radius: 100%;
+	border: none;
+	box-shadow: inset 0 0 0 2px rgba(0, 0, 0, .06);
+}
