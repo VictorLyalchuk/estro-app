@@ -70,9 +70,8 @@ const DeliveryInformation: React.FC<DeliveryInformationProps> = ({
                         key={delivery.id}
                         value={delivery.id}
                         className={({ active, checked }) =>
-                          `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer ${active ? 'border-2 border-indigo-600 ring-2 ring-indigo-600' : ''
-                          } ${checked ? 'border-2 border-indigo-600' : 'border-2 border-gray-200'}
-                                    ${selectedShipping === '' ? 'border-2 border-red-500' : ''}`
+                          `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer hover:border-indigo-600 ${active ? 'border-2 border-indigo-600 ring-2 ring-indigo-600' : ''
+                          } ${checked ? 'border-2 border-indigo-600' : 'border-2 border-gray-200'}`
                         }
                       >
                         {({ checked }) => (

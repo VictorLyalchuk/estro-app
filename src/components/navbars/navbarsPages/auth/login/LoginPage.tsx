@@ -212,31 +212,17 @@ const LoginPage = () => {
                 const userData = res.data;
                 console.log(userData);
 
-                const loginData = {
+                const loginData: ILogin = {
                     email: userData.email,
                     authType: 'google',
+                    password: '',
+                    phoneNumber: '',
                 };
 
                 console.log(loginData);
 
                 try {
-                    const response = await axios.post(`${baseUrl}/api/AccountControllers/Login`, loginData);
-                    const { token } = response.data;
-                    const user = jwtDecode(token) as IUser;
-
-                    dispatch({
-                        type: AuthReducerActionType.LOGIN_USER,
-                        payload: {
-                            Email: user.Email,
-                            FirstName: user.FirstName,
-                            LastName: user.LastName,
-                            Role: user.Role,
-                            ImagePath: user.ImagePath,
-                            AuthType: user.AuthType,
-                        } as IUser,
-                    });
-
-                    localStorage.setItem('token', token);
+                    await login(loginData, dispatch);
                     navigate('/');
                 } catch (error) {
                     console.error('Login error:', error);

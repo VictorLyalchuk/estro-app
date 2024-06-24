@@ -11,7 +11,7 @@ import '../../../../satoshi.css';
 import { ICity } from "../../../../interfaces/Bag/ICity";
 import { IWarehouse } from "../../../../interfaces/Bag/IWarehouse";
 import { IStore } from "../../../../interfaces/Catalog/IStore";
-import {  getBagByEmail, getBagItemsByEmail } from "../../../../services/bag/bag-services";
+import { getBagByEmail, getBagItemsByEmail } from "../../../../services/bag/bag-services";
 import { theme } from "../../../../theme/theme";
 import { validateForm } from "../../../../validations/bag/bag-validations";
 import { State } from "../../../../interfaces/Custom/Phone/State";
@@ -22,6 +22,8 @@ import PersonalInformation from "./bagComponents/PersonalInformation";
 import DeliveryInformation from "./bagComponents/DeliveryInformation";
 import PaymentInformation from "./bagComponents/PaymentInformation";
 import OrderSummary from "./bagComponents/OrderSummary";
+import VisaCreditCard from "./bagComponents/VisaCreditCard";
+
 
 const Bag = () => {
   const dispatch = useDispatch();
@@ -50,6 +52,9 @@ const Bag = () => {
   const [storeCities, setStoreCities] = useState<string[]>([]); // список міст магазинів
 
   const [activeBlock, setActiveBlock] = useState('personal');
+
+  const [isQuickviewOpen, setQuickviewOpen] = useState(false);
+
   const [values, setValues] = useState<State>({
     textmask: '(   )    -  -  ',
   });
@@ -82,7 +87,7 @@ const Bag = () => {
       }));
     }
 
-    getCity().then(resp => setCityOptions(resp));
+    // getCity().then(resp => setCityOptions(resp));
 
     getStore().then(resp => {
       setStoreOptions(resp.storeOptions);
@@ -115,6 +120,9 @@ const Bag = () => {
     event.preventDefault();
     const { isValid, newErrors } = validateForm(formData, city, warehouse, selectedShipping, values.textmask);
     setErrors(newErrors);
+
+    setQuickviewOpen(true);
+
     if (isValid) {
       createOrder(model, dispatch);
     }
@@ -260,7 +268,6 @@ const Bag = () => {
                   handleBlockClick={handleBlockClick}
                   selectedPayment={selectedPayment}
                   setSelectedPayment={setSelectedPayment}
-                  moneyPayment={moneyPayment}
                 />
 
                 {/* Checkout Button */}
@@ -275,6 +282,13 @@ const Bag = () => {
                   </FormControl>
                 </div>
               </form>
+              
+              {isQuickviewOpen && (
+                <VisaCreditCard 
+                isOpen={isQuickviewOpen}
+                setOpen={setQuickviewOpen}
+                />
+              )}
             </div>
           </>
         ) : (
