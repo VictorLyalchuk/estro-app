@@ -369,7 +369,8 @@ export default function CatalogNavigation() {
                     />
                   </Menu.Button>
                 </div>
-
+                
+                {/* Sort */}
                 <Transition
                   as={Fragment}
                   enter="transition ease-out duration-100"

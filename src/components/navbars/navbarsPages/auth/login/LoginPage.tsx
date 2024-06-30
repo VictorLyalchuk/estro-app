@@ -23,9 +23,9 @@ import { validatePhoneNumber } from '../../../../../validations/custom/login-pho
 import { login } from '../../../../../services/accounts/account-services';
 import { theme } from '../../../../../theme/theme';
 import { useStyles } from '../../../../../theme/Styles';
-import TextFieldComponent from '../../../../../ui/label/TextFieldComponent';
-import PasswordFieldComponent from '../../../../../ui/label/PasswordFieldComponent';
-import PhoneNumberComponent from '../../../../../ui/label/PhoneNumberComponent';
+import TextFieldComponent from '../../../../../ui/input-with-label/TextFieldComponent';
+import PasswordFieldComponent from '../../../../../ui/input-with-label/PasswordFieldComponent';
+import PhoneNumberComponent from '../../../../../ui/input-with-label/PhoneNumberComponent';
 import { State } from '../../../../../interfaces/Custom/Phone/State';
 
 interface GoogleOAuthResponse {
@@ -307,6 +307,7 @@ const LoginPage = () => {
                                                     onChange={handleChange}
                                                     error={errors.email}
                                                     autoComplete="email"
+                                                    maxLength={30}       
                                                 />
                                                 <PasswordFieldComponent
                                                     label="Password"

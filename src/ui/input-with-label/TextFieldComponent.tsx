@@ -8,9 +8,10 @@ interface TextFieldComponentProps {
     onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     error: string | null;
     autoComplete: string;
+    maxLength: number;
 }
 
-const TextFieldComponent: React.FC<TextFieldComponentProps> = ({ label, name, id, value, onChange, error, autoComplete }) => (
+const TextFieldComponent: React.FC<TextFieldComponentProps> = ({ label, name, id, value, onChange, error, autoComplete, maxLength }) => (
         <FormControl fullWidth >
             <TextField
                 variant="standard"
@@ -21,6 +22,9 @@ const TextFieldComponent: React.FC<TextFieldComponentProps> = ({ label, name, id
                 onChange={onChange}
                 error={!!error}
                 autoComplete={autoComplete}
+                inputProps={{
+                    maxLength: maxLength 
+                }}
             />
             {error ? (
                 <div className="h-6 text-xs text-red-500">Error: {error}</div>

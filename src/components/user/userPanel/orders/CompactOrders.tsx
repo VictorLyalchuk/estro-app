@@ -149,11 +149,10 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
                   <div className="bg-gray-100 px-4 py-6 sm:rounded-lg sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:px-8 lg:py-8">
                     <dl className="grid grid-cols-2 gap-6 text-sm sm:grid-cols-2 md:gap-x-8 lg:col-span-7">
                       <div>
-                        <dt className="font-medium text-gray-900">Billing address</dt>
+                        <dt className="font-medium text-gray-900">Billing person</dt>
                         <dd className="mt-3 text-gray-500">
-                          <span className="block">Floyd Miles</span>
-                          <span className="block">7363 Cynthia Pass</span>
-                          <span className="block">Toronto, ON N3Y 4H8</span>
+                          <span className="block">{order.firstName}</span>
+                          <span className="block">{order.lastName}</span>
                         </dd>
                       </div>
                       <div>

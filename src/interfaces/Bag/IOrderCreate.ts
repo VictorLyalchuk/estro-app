@@ -4,9 +4,16 @@ export interface IOrderCreate{
     firstName: string;
     lastName: string;
     phonenumber: string;
+
     payment: string;
-    state: string;
-    region: string;
+    paymentMethod: string,
+    cardHolderName : string,
+    cardNumber : string,
+    cardMonthExpires : string,
+    cardYearExpires : string,
+    
+    country: string;
     city: string;
+    state: string;
     street: string;
 }

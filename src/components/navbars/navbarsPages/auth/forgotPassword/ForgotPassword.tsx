@@ -8,7 +8,7 @@ import { forgotPassword } from '../../../../../services/accounts/account-service
 import { validateForm } from '../../../../../validations/account/forgot-validations';
 import { theme } from '../../../../../theme/theme';
 import { useStyles } from '../../../../../theme/Styles';
-import TextFieldComponent from '../../../../../ui/label/TextFieldComponent';
+import TextFieldComponent from '../../../../../ui/input-with-label/TextFieldComponent';
 
 const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfirmation: () => void }) => {
     const classes = useStyles();
@@ -83,6 +83,7 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
                                                     onChange={handleChange}
                                                     error={errors.email}
                                                     autoComplete="email"
+                                                    maxLength={30}       
                                                 />
                                         </ThemeProvider>
                                             <FormControl fullWidth variant="outlined">

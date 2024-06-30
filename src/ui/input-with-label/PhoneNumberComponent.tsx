@@ -21,6 +21,7 @@ const PhoneNumberComponent: React.FC<PhoneFieldComponentProps> = ({ value, label
             InputProps={{inputComponent: TextMaskCustom as any}}
             error={!!error}
             autoComplete="phone"
+            placeholder='(099) 00-00-000'
         />
         {error ? (
             <div className="h-6 text-xs text-red-500">Error: {error}</div>

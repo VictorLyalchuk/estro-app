@@ -3,8 +3,11 @@ interface Errors {
     lastName: string;
     phoneNumber: string;
     email: string;
-    city: string;
-    warehouse: string;
+    country: string,
+    city: string,
+    state: string,
+    street: string,
+    paymentMethod: string;
   }
   
   export const validatePhoneNumber = (

@@ -292,9 +292,13 @@ const NavbarsPage = () => {
                                                                                     {category.subCategories.map((section) => (
 
                                                                                         <div key={section.name}>
-                                                                                            <p id={`${section.name}-heading`} className="font-bold text-gray-900">
-                                                                                                {section.name}
-                                                                                            </p>
+                                                                                            <Popover.Panel>
+                                                                                                {({ close }) => (
+                                                                                                    <Link id={`${section.name}-heading`} to={`/catalog/${section.urlName}`} onClick={() => close()} className="font-bold text-gray-900">
+                                                                                                        {section.name}
+                                                                                                    </Link>
+                                                                                                )}
+                                                                                            </Popover.Panel>
                                                                                             <ul
                                                                                                 role="list"
                                                                                                 aria-labelledby={`${section.name}-heading`}
@@ -336,7 +340,7 @@ const NavbarsPage = () => {
                                     <div className="ml-auto flex items-center">
 
                                         <div className="lg:ml-8 lg:flex border-r pr-5">
-                                        <LanguageSelector />
+                                            <LanguageSelector />
                                         </div>
                                         {isAuth ? (
                                             <>
@@ -363,9 +367,9 @@ const NavbarsPage = () => {
 
                                         {/* Bonuses */}
                                         <div className="ml-4 flow-root lg:ml-6">
-                                        <Link to={"/account/bonuses"} className={`group -m-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-10 flex items-center hover:text-gray-500 ${user ? "mr-12" : "mr-2"}`}>
-                                                <CurrencyDollarIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true"/>
-                                                { user? userProfile?.bonusBalance?.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1) : 0}</Link>
+                                            <Link to={"/account/bonuses"} className={`group -m-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-10 flex items-center hover:text-gray-500 ${user ? "mr-12" : "mr-2"}`}>
+                                                <CurrencyDollarIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
+                                                {user ? userProfile?.bonusBalance?.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1) : 0}</Link>
                                         </div>
 
                                         {/* Favorites */}
@@ -378,7 +382,7 @@ const NavbarsPage = () => {
                                         {/* Cart */}
                                         <div className="ml-4 flow-root lg:ml-6">
                                             <Link to={"/bag"} className="group -m-2 ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-20 flex items-center hover:text-gray-500">
-                                                <ShoppingBagIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true"/>
+                                                <ShoppingBagIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
                                                 {count}</Link>
                                             <div className="sr-only">items in cart, view bag</div>
                                         </div>

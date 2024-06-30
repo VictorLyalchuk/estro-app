@@ -1,6 +1,8 @@
 import axios from 'axios';
 import { IStore } from '../../interfaces/Catalog/IStore';
 import { APP_ENV } from '../../env/config';
+import { ICity } from '../../interfaces/Address/ICity';
+import { ICountry } from '../../interfaces/Address/ICountry';
 
 const baseUrl = APP_ENV.BASE_URL;
 
@@ -12,52 +14,32 @@ const instance = axios.create({
     }
 });
 
-export const getCity = async () => {
-    const apiUrl = 'https://api.novaposhta.ua/v2.0/json/';
-    const payload = {
-        apiKey: 'f8df4fb4933f7b40c96b872a1901be8e',
-        modelName: 'Address',
-        calledMethod: 'getCities',
-        methodProperties: {
-        }
-    };
-
+export async function getStore() {
     try {
-        const response = await axios.post(apiUrl, payload);
-        return response.data.data;
+        const response = await instance.get<IStore[]>(`StoreAll`);
+        return response.data;
     } catch (error) {
-        console.error('Error fetching cities', error);
-        return [];
+        console.error('Failed to fetch store data:', error);
+        throw error;
     }
-}
+};
 
-export const getWarehouse = async (city: string) => {
-    const apiUrl = 'https://api.novaposhta.ua/v2.0/json/';
-    const payload = {
-        apiKey: 'f8df4fb4933f7b40c96b872a1901be8e',
-        modelName: 'Address',
-        calledMethod: 'getWarehouses',
-        methodProperties: {
-            "CityRef": city
-        }
-    };
-
+export async function getCountry() {
     try {
-        const response = await axios.post(apiUrl, payload);
-        return response.data.data;
+        const response = await instance.get<ICountry[]>(`getCountry`);
+        return response.data;
     } catch (error) {
-        console.error('Error fetching warehouses', error);
-        return [];
+        console.error('Failed to fetch country data:', error);
+        throw error;
     }
-}
+};
 
-export const getStore = async () => {
+export async function getCity() {
     try {
-      const resp = await instance.get<IStore[]>(`StoreAll`);
-      const uniqueCities = Array.from(new Set(resp.data.map(option => option.city)));
-      return { storeOptions: resp.data, storeCities: uniqueCities };
+        const response = await instance.get<ICity[]>(`getCity`);
+        return response.data;
     } catch (error) {
-      console.error('Error fetching stores', error);
-      return { storeOptions: [], storeCities: [] };
+        console.error('Failed to fetch city data:', error);
+        throw error;
     }
-  };
+};

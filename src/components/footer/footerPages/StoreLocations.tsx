@@ -1,16 +1,16 @@
 import { useEffect, useState } from 'react';
 import { IStore } from '../../../interfaces/Catalog/IStore';
-import { getStore } from '../../../services/shipping/shipping-services';
+import { getCity, getStore } from '../../../services/shipping/shipping-services';
+import { ICity } from '../../../interfaces/Address/ICity';
 
 const StoreLocations = () => {
   const [storeOptions, setStoreOptions] = useState<IStore[]>([]);
-  const cities = [...new Set(storeOptions.map(store => store.city))];
+  const [cityOptions, setCityOptions] = useState<ICity[]>([]);
   const [selectedCity, setSelectedCity] = useState('Kiyv');
 
   useEffect(() => {
-    getStore().then(resp => {
-      setStoreOptions(resp.storeOptions);
-    });
+    getStore().then(resp => {setStoreOptions(resp);});
+    getCity().then(resp => {setCityOptions(resp);});
   }, []);
 
   const filteredStores = selectedCity
@@ -25,14 +25,14 @@ const StoreLocations = () => {
           {/* Sidebar для кнопок */}
           <div className=" p-4 bg-transparent cursor-pointer">
 
-            {cities.map(city => (
+            {cityOptions.map(city => (
               <a
-                key={city}
-                onClick={() => setSelectedCity(city)}
-                className={`text-gray-700 mr-2 py-1 px-2 w-full rounded-md focus:outline-none hover:text-indigo-500 ${selectedCity === city ? 'bg-indigo-500 text-white hover:text-white' : 'bg-transparent'
+                key={city.id}
+                onClick={() => setSelectedCity(city.cityName)}
+                className={`text-gray-700 mr-2 py-1 px-2 w-full rounded-md focus:outline-none hover:text-indigo-500 ${selectedCity === city.cityName ? 'bg-indigo-500 text-white hover:text-white' : 'bg-transparent'
                   }`}
               >
-                {city}
+                {city.cityName}
               </a>
             ))}
           </div>

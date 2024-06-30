@@ -4,40 +4,6 @@
     box-sizing: border-box;
 }
 
-
-
-/*--------------------
-Buttons
---------------------*/
-.react-fancy-visa-card .form button {
-    display: block;
-    background: #bded7d;
-    color: white;
-    text-decoration: none;
-    margin: 20px 0;
-    padding: 15px 15px;
-    border-radius: 5px;
-    position: relative;
-}
-
-.react-fancy-visa-card .form button::after {
-    content: "";
-    position: absolute;
-    z-index: 1;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    transition: all 0.2s ease-in-out;
-    box-shadow: inset 0 3px 0 rgba(0, 0, 0, 0), 0 3px 3px rgba(0, 0, 0, 0.2);
-    border-radius: 5px;
-}
-
-.react-fancy-visa-card .form button:hover::after {
-    background: rgba(0, 0, 0, 0.1);
-    box-shadow: inset 0 3px 0 rgba(0, 0, 0, 0.2);
-}
-
 /*--------------------
 Form
 --------------------*/
@@ -52,14 +18,17 @@ Form
     width: 60%;
 }
 .react-fancy-visa-card .form fieldset.fieldset-expiration .select {
-    width: 84px;
+    width: 104px;
     margin-right: 12px;
     float: left;
 }
+
+
+
 .react-fancy-visa-card .form fieldset.fieldset-ccv {
     clear: none;
     float: right;
-    width: 86px;
+    width: 96px;
 }
 .react-fancy-visa-card  .form fieldset label {
     display: block;
@@ -80,39 +49,9 @@ Form
 .react-fancy-visa-card .form fieldset input,
 .react-fancy-visa-card .form fieldset .select {
     width: 100%;
-    height: 38px;
-    color: #333333;
-    padding: 10px;
-    border-radius: 5px;
-    outline: none !important;
-    border: 1px solid rgba(0, 0, 0, 0.3);
-    box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.2);
     font-size: 19px;
 }
-.react-fancy-visa-card .form fieldset input.input-cart-number,
-.react-fancy-visa-card .form fieldset .select.input-cart-number {
-    width: 82px;
-    display: inline-block;
-    margin-right: 8px;
-}
-.react-fancy-visa-card .form fieldset input.input-cart-number:last-child,
-.react-fancy-visa-card .form fieldset .select.input-cart-number:last-child {
-    margin-right: 0;
-}
-.react-fancy-visa-card .form fieldset .select {
-    position: relative;
-}
-.react-fancy-visa-card .form fieldset .select::after {
-    content: "";
-    border-top: 8px solid #222;
-    border-left: 4px solid transparent;
-    border-right: 4px solid transparent;
-    position: absolute;
-    z-index: 2;
-    top: 14px;
-    right: 10px;
-    pointer-events: none;
-}
+
 .react-fancy-visa-card .form fieldset .select select {
     appearance: none;
     -webkit-appearance: none;
@@ -122,7 +61,7 @@ Form
     border: none;
     width: 100%;
     outline: none !important;
-    top: 6px;
+    top: 66px;
     left: 6px;
     background: none;
     font-size: 19px !important;
@@ -131,7 +70,7 @@ Form
     color: transparent;
     text-shadow: 0 0 0 #000;
 }
-.react-fancy-visa-card .form button {
+.react-fancy-visa-card {
     width: 100%;
     outline: none !important;
     background: linear-gradient(180deg, #49a09b, #3d8291);
@@ -143,7 +82,7 @@ Form
     margin-top: 90px;
     font-size: 18px;
 }
-.react-fancy-visa-card .form button .fa {
+.react-fancy-visa-card {
     margin-right: 6px;
 }
 
@@ -181,8 +120,8 @@ Credit Card
     height: 250px;
     border-radius: 15px;
     backface-visibility: hidden;
-    /* background: linear-gradient(135deg, #bd677rgb(88, 103, 197)23f); */
-    background: linear-gradient(135deg, #6070c1, #111a94);
+    background: url(../../../../../assets/backgroundDark.webp);
+    background-size: cover;
     position: absolute;
     color: #fff;
     top: 0;
@@ -198,7 +137,6 @@ Credit Card
     height: 100%;
     top: 0;
     left: 0;
-    background: url("http://cdn.flaticon.com/svg/44/44386.svg") no-repeat center;
     background-size: cover;
     opacity: 0.05;
 }
@@ -211,7 +149,6 @@ Credit Card
     position: absolute;
     top: 9px;
     right: 20px;
-    width: 60px;
 }
 .react-fancy-visa-card .credit-card-box .logo svg {
     width: 100%;
@@ -231,12 +168,11 @@ Credit Card
     top: 185px;
 }
 .react-fancy-visa-card .credit-card-box .chip {
-    position: absolute;
-    width: 60px;
-    height: 45px;
-    top: 20px;
-    left: 20px;
-    background: linear-gradient(135deg, #ddccf0 0%, #d1e9f5 44%, #f8ece7 100%);
+    width: 50px;
+    top: 30px;
+    left: 30px;
+    background: url(../../../../../assets/chip.webp);
+    background-size: cover;
     border-radius: 8px;
 }
 .react-fancy-visa-card .credit-card-box .chip::before {
@@ -265,7 +201,6 @@ Credit Card
     margin: 0 auto;
     top: 103px;
     left: 19px;
-    font-size: 38px;
 }
 .react-fancy-visa-card .credit-card-box label {
     font-size: 10px;
@@ -306,6 +241,6 @@ Credit Card
     padding: 10px;
 }
 .react-fancy-visa-card .credit-card-box .ccv label {
-    margin: -25px 0 14px;
+    margin: -25px 0 7px;
     color: #fff;
 }

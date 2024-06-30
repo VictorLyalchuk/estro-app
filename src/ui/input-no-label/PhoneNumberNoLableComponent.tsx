@@ -23,6 +23,7 @@ const PhoneNumberNoLableComponent: React.FC<PhoneFieldNoLableComponentProps> = (
             autoComplete="phone"
             className="mt-1"
             size="small"
+            placeholder='(099) 00-00-000'
         />
         {error ? (
             <div className="h-6 text-xs text-red-500">Error: {error}</div>

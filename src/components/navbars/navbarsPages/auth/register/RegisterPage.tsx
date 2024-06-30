@@ -17,10 +17,10 @@ import { validatePhoneNumber } from '../../../../../validations/custom/register-
 import { register } from '../../../../../services/accounts/account-services';
 import { theme } from '../../../../../theme/theme';
 import { useStyles } from '../../../../../theme/Styles';
-import TextFieldComponent from '../../../../../ui/label/TextFieldComponent';
-import FileInputComponent from '../../../../../ui/label/FileInputComponent';
-import PhoneNumberComponent from '../../../../../ui/label/PhoneNumberComponent';
-import PasswordFieldComponent from '../../../../../ui/label/PasswordFieldComponent';
+import TextFieldComponent from '../../../../../ui/input-with-label/TextFieldComponent';
+import FileInputComponent from '../../../../../ui/input-with-label/FileInputComponent';
+import PhoneNumberComponent from '../../../../../ui/input-with-label/PhoneNumberComponent';
+import PasswordFieldComponent from '../../../../../ui/input-with-label/PasswordFieldComponent';
 
 const RegisterPage = () => {
     const baseUrl = APP_ENV.BASE_URL;
@@ -381,6 +381,7 @@ const RegisterPage = () => {
                                                         onChange={handleChange}
                                                         error={errors.firstName}
                                                         autoComplete="firstName"
+                                                        maxLength={30}       
                                                     />
                                                     <TextFieldComponent
                                                         label="Last Name"
@@ -390,6 +391,7 @@ const RegisterPage = () => {
                                                         onChange={handleChange}
                                                         error={errors.lastName}
                                                         autoComplete="lastName"
+                                                        maxLength={30}       
                                                     />
                                                     <TextFieldComponent
                                                         label="Email"
@@ -399,6 +401,7 @@ const RegisterPage = () => {
                                                         onChange={handleChange}
                                                         error={errors.email}
                                                         autoComplete="email"
+                                                        maxLength={30}       
                                                     />
                                                 </ThemeProvider>
 
@@ -488,6 +491,7 @@ const RegisterPage = () => {
                                                         onChange={handleChange}
                                                         error={errors.firstName}
                                                         autoComplete="firstName"
+                                                        maxLength={30}       
                                                     />
                                                     <TextFieldComponent
                                                         label="Last Name"
@@ -497,6 +501,7 @@ const RegisterPage = () => {
                                                         onChange={handleChange}
                                                         error={errors.lastName}
                                                         autoComplete="lastName"
+                                                        maxLength={30}       
                                                     />
                                                 </ThemeProvider>
                                                 <FileInputComponent
