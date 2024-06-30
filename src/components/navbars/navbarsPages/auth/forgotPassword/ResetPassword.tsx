@@ -8,7 +8,7 @@ import { validateForm } from '../../../../../validations/account/reset-validatio
 import { resetPassword } from '../../../../../services/accounts/account-services';
 import { theme } from '../../../../../theme/theme';
 import { useStyles } from '../../../../../theme/Styles';
-import PasswordFieldComponent from '../../../../../ui/label/PasswordFieldComponent';
+import PasswordFieldComponent from '../../../../../ui/input-with-label/PasswordFieldComponent';
 
 const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
     const classes = useStyles();

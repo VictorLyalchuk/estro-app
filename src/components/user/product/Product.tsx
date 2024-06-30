@@ -19,6 +19,7 @@ import { RootState } from '../../../store/store';
 import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavoritesReducer';
 import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/userFavoriteProducts/user-favorite-products-services';
 import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts';
+import Brightness1RoundedIcon from '@mui/icons-material/Brightness1Rounded';
 
 const reviews = { href: '#', average: 4, totalCount: 117 }
 
@@ -165,8 +166,9 @@ export default function Product() {
         {/* Image gallery */}
         <div className="mx-auto mt-6 max-w-2xl px-6 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-1 lg:gap-x-8 lg:px-8">
           <Slider>
-            {/* <Carousel arrows  autoplay={false}> */}
-            <Carousel swipe animation="fade" duration={1500} autoPlay={true} indicators={true} className="h-full w-full">
+            <Carousel swipe animation="fade" duration={1500} autoPlay={true} indicatorIconButtonProps={{ style: { width: '35px', height: '35px',},}} 
+            IndicatorIcon={<Brightness1RoundedIcon fontSize='small' />} 
+            indicators={true} className="h-full w-full" >
               {product.images?.map((image, index) => (
                 <div key={index} className="aspect-h-4 aspect-w-3 rounded" >
                   <Image

@@ -8,53 +8,35 @@ import { IOrderCreate } from "../../../../interfaces/Bag/IOrderCreate";
 import GoodsNotFound from "../../../../assets/goods-not-found.png";
 import { FormControl } from '@material-ui/core';
 import '../../../../satoshi.css';
-import { ICity } from "../../../../interfaces/Bag/ICity";
-import { IWarehouse } from "../../../../interfaces/Bag/IWarehouse";
 import { IStore } from "../../../../interfaces/Catalog/IStore";
 import { getBagByEmail, getBagItemsByEmail } from "../../../../services/bag/bag-services";
 import { theme } from "../../../../theme/theme";
 import { validateForm } from "../../../../validations/bag/bag-validations";
 import { State } from "../../../../interfaces/Custom/Phone/State";
 import { validatePhoneNumber } from "../../../../validations/custom/bag-phone-validations";
-import { createOrder } from "../../../../services/order/order-services";
-import { getCity, getStore, getWarehouse } from "../../../../services/shipping/shipping-services";
+import { getCity, getCountry, getStore } from "../../../../services/shipping/shipping-services";
 import PersonalInformation from "./bagComponents/PersonalInformation";
 import DeliveryInformation from "./bagComponents/DeliveryInformation";
 import PaymentInformation from "./bagComponents/PaymentInformation";
 import OrderSummary from "./bagComponents/OrderSummary";
-import VisaCreditCard from "./bagComponents/VisaCreditCard";
-
+import VisaCreditCard from "./creditCard/VisaCreditCard";
+import { ICity } from "../../../../interfaces/Address/ICity";
+import { ICountry } from "../../../../interfaces/Address/ICountry";
 
 const Bag = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
   const { count } = useSelector((redux: any) => redux.bag as IBagReducerState);
-  const [bagUser, setBagUser] = useState<IBagUser>();
   const bagItems = useSelector((state: { card: ICardReducerState }) => state.card.items) || [];
-
-  const [selectedPayment, setSelectedPayment] = useState<string | null>(null);
+  const [bagUser, setBagUser] = useState<IBagUser>();
+  const [orderModel, setOrderModel] = useState<IOrderCreate | null>(null);
+  const [selectedPayment, setSelectedPayment] = useState<string | ''>('');
   const [selectedShipping, setSelectedShipping] = useState<string | ''>('');
-
-  const [warehouseSelected, setSelectedWarehouse] = useState(false);
-
-  const [warehouseOptions, setWarehouseOptions] = useState<IWarehouse[]>([]);
+  const [countryOptions, setCountryOptions] = useState<ICountry[]>([]);
   const [cityOptions, setCityOptions] = useState<ICity[]>([]);
-
-  const [city, setCity] = useState<string>('');
-  const [warehouse, setWarehouse] = useState<string>('');
-
-  const [selectedStore, setSelectedStore] = useState<IStore | null>(null); // вибраний магазин об'єкт
-  const [selectedWarehouseOptions, setSelectedWarehouseOptions] = useState<IWarehouse | null>(null);
-
-  const [selectedStoreCity, setSelectedStoreCity] = useState<string | null>(''); // вибраний магазин назва
-  const [storeOptions, setStoreOptions] = useState<IStore[]>([]); // список не фільрованих магазинів
-  const [filteredStores, setFilteredStores] = useState(storeOptions); // список фільтрованих магазин 
-  const [storeCities, setStoreCities] = useState<string[]>([]); // список міст магазинів
-
-  const [activeBlock, setActiveBlock] = useState('personal');
-
+  const [storeOptions, setStoreOptions] = useState<IStore[]>([]);
+  const [activeBlocks, setActiveBlocks] = useState<string[]>(['personal', 'delivery', 'payment']);
   const [isQuickviewOpen, setQuickviewOpen] = useState(false);
-
   const [values, setValues] = useState<State>({
     textmask: '(   )    -  -  ',
   });
@@ -64,8 +46,15 @@ const Bag = () => {
     lastName: user?.LastName || '',
     email: user?.Email || '',
     phoneNumber: user?.PhoneNumber || '',
-    address: '',
     payment: 'The money has not been paid',
+    paymentMethod: '',
+  });
+
+  const [shippingData, setShippingData] = useState({
+    country: '',
+    city: '',
+    state: '',
+    street: '',
   });
 
   const [errors, setErrors] = useState({
@@ -73,10 +62,13 @@ const Bag = () => {
     lastName: '',
     email: '',
     phoneNumber: '',
-    city: '',
-    warehouse: '',
+    country: "",
+    city: "",
+    state: "",
+    street: "",
+    paymentMethod: '',
   });
-
+ 
   useEffect(() => {
     if (user) {
       getBagByEmail(user?.Email).then(data => setBagUser(data));
@@ -86,25 +78,18 @@ const Bag = () => {
         textmask: user?.PhoneNumber,
       }));
     }
-
-    // getCity().then(resp => setCityOptions(resp));
-
-    getStore().then(resp => {
-      setStoreOptions(resp.storeOptions);
-      setStoreCities(resp.storeCities);
-    });
+    
+    getCountry().then(resp => setCountryOptions(resp));
+    getCity().then(resp => setCityOptions(resp));
+    getStore().then(resp => setStoreOptions(resp));
   }, [user, count]);
 
   useEffect(() => {
-    getWarehouse(city).then(resp => setWarehouseOptions(resp));
-  }, [city]);
-
-  useEffect(() => {
     clearFields();
-    setSelectedStoreCity('');
   }, [selectedShipping]);
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+
     const model: IOrderCreate = {
       firstName: formData.firstName,
       lastName: formData.lastName,
@@ -112,19 +97,24 @@ const Bag = () => {
       email: formData.email,
       emailUser: user?.Email || "",
       payment: formData.payment,
-      state: "Ukraine",
-      region: selectedWarehouseOptions?.SettlementAreaDescription || "",
-      city: selectedWarehouseOptions?.CityDescription || selectedStore?.city || "",
-      street: selectedWarehouseOptions?.Description || (selectedStore ? `${selectedStore.name} ${selectedStore.address}` : ""),
+      paymentMethod: selectedPayment,
+
+      country: shippingData.country,
+      city: shippingData?.city || "",
+      state: shippingData.state || "",
+      street: shippingData.street || "",
+     
+      cardHolderName: "",
+      cardNumber: "",
+      cardMonthExpires: "",
+      cardYearExpires: "",
     };
     event.preventDefault();
-    const { isValid, newErrors } = validateForm(formData, city, warehouse, selectedShipping, values.textmask);
+    const { isValid, newErrors } = validateForm(formData, shippingData, selectedPayment, selectedShipping, values.textmask, setActiveBlocks);
     setErrors(newErrors);
-
-    setQuickviewOpen(true);
-
     if (isValid) {
-      createOrder(model, dispatch);
+      setOrderModel(model);
+      setQuickviewOpen(true);
     }
   }
 
@@ -132,6 +122,15 @@ const Bag = () => {
     const { name, value } = event.target;
 
     setFormData((prevData) => ({
+      ...prevData,
+      [name]: value,
+    }));
+  };
+
+  const handleChangeShipping = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = event.target;
+
+    setShippingData((prevData) => ({
       ...prevData,
       [name]: value,
     }));
@@ -153,62 +152,21 @@ const Bag = () => {
     validatePhoneNumber(cleanedValue, errors, setErrors);
   };
 
-  const handleChangeCity = (_e: React.ChangeEvent<{}>, value: ICity | null) => {
-    if (value) {
-      setSelectedWarehouse(true);
-      setCity(value.Ref);
-    }
-  }
-
-  const handleChangeWarehouse = (_e: React.ChangeEvent<{}>, value: IWarehouse | null) => {
-    if (!value) {
-      setSelectedWarehouseOptions(null);
-    } else {
-      setWarehouse(value.Ref);
-      setSelectedWarehouseOptions(value);
-    }
-  }
-
-  const handleChangeStoreCity = (_e: React.ChangeEvent<{}>, value: string | null) => {
-    if (value !== selectedStoreCity) {
-      setSelectedWarehouse(true);
-      setSelectedStoreCity(value);
-      const filtered = value ? storeOptions.filter(store => store.city === value) : storeOptions;
-      setFilteredStores(filtered);
-      setCity(value || '');
-      if (selectedStore && selectedStore.city !== value) {
-        setSelectedStore(null);
-        setWarehouse('');
-      }
-    }
-  }
-
-  const handleChangeStore = (_e: React.ChangeEvent<{}>, value: IStore | null) => {
-    if (value) {
-      setSelectedStore(value);
-      setWarehouse(value?.name);
-    };
-  }
-
   const clearFields = async () => {
-    setWarehouse("");
-    setCity("");
-    setSelectedWarehouseOptions(null);
-    setSelectedStore(null);
-    setSelectedWarehouse(false);
-  };
-
-  const moneyPayment = async () => {
-    setFormData((prevData) => ({
-      ...prevData,
-      payment: 'The money has been paid',
-    }));
+    setShippingData({
+      country: '',
+      city: '',
+      state: '',
+      street: '',
+    });
   };
 
   const handleBlockClick = (blockName: string) => {
-    if (activeBlock !== blockName) {
-      setActiveBlock(blockName);
-    }
+    setActiveBlocks((prevActiveBlocks) =>
+      prevActiveBlocks.includes(blockName)
+        ? prevActiveBlocks.filter((name) => name !== blockName)
+        : [...prevActiveBlocks, blockName]
+    );
   };
 
   return (
@@ -233,7 +191,7 @@ const Bag = () => {
                   formData={formData}
                   handleChange={handleChange}
                   errors={errors}
-                  activeBlock={activeBlock}
+                  activeBlock={activeBlocks}
                   handleBlockClick={handleBlockClick}
                   changePhoneNumber={changePhoneNumber}
                   values={values}
@@ -241,30 +199,25 @@ const Bag = () => {
 
                 {/* Shipping */}
                 <DeliveryInformation
-                  theme={theme}
                   errors={errors}
-                  activeBlock={activeBlock}
+                  activeBlock={activeBlocks}
                   handleBlockClick={handleBlockClick}
                   selectedShipping={selectedShipping}
                   setSelectedShipping={setSelectedShipping}
+                  handleChangeShipping={handleChangeShipping}
+                  //Store
+                  countryOptions={countryOptions}
                   cityOptions={cityOptions}
-                  warehouseOptions={warehouseOptions}
-                  handleChangeCity={handleChangeCity}
-                  handleChangeWarehouse={handleChangeWarehouse}
-                  warehouseSelected={warehouseSelected}
-                  selectedWarehouseOptions={selectedWarehouseOptions}
-                  storeCities={storeCities}
-                  filteredStores={filteredStores}
-                  handleChangeStoreCity={handleChangeStoreCity}
-                  handleChangeStore={handleChangeStore}
-                  selectedStoreCity={selectedStoreCity}
-                  selectedStore={selectedStore}
-                />
+                  storeOptions={storeOptions}
+                  //Address Shipping
+                  shippingData={shippingData} 
+                       />
                 {/* Patment */}
                 <PaymentInformation
                   theme={theme}
+                  errors={errors}
                   formData={formData}
-                  activeBlock={activeBlock}
+                  activeBlock={activeBlocks}
                   handleBlockClick={handleBlockClick}
                   selectedPayment={selectedPayment}
                   setSelectedPayment={setSelectedPayment}
@@ -283,10 +236,12 @@ const Bag = () => {
                 </div>
               </form>
               
-              {isQuickviewOpen && (
+              {isQuickviewOpen && orderModel && (
                 <VisaCreditCard 
+                theme={theme}
                 isOpen={isQuickviewOpen}
                 setOpen={setQuickviewOpen}
+                model={orderModel}
                 />
               )}
             </div>

@@ -1,65 +1,59 @@
 import { ThemeProvider } from '@material-ui/core/styles';
 import { RadioGroup } from '@headlessui/react';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
-import PostomatShipping from '../ukraineDelivery/PostomatShipping';
-import BranchShipping from '../ukraineDelivery/BranchShipping';
-import StoreShipping from '../ukraineDelivery/StoreShipping';
-import { IWarehouse } from '../../../../../interfaces/Bag/IWarehouse';
-import { ICity } from '../../../../../interfaces/Bag/ICity';
+import StoreShipping from '../shipping/StoreShipping';
 import { IStore } from '../../../../../interfaces/Catalog/IStore';
 import { deliveryList } from '../../../../../data/deliveryList';
+import { ArrowDownIcon, ArrowLongRightIcon } from '@heroicons/react/24/outline';
+import AddressShipping from '../shipping/AddressShipping';
+import { theme } from '../../../../../theme/theme';
+import { ICity } from '../../../../../interfaces/Address/ICity';
+import { ICountry } from '../../../../../interfaces/Address/ICountry';
 
 interface DeliveryInformationProps {
-  theme: any;
   errors: { city?: string; warehouse?: string };
-  activeBlock: string;
+  activeBlock: string[] | null;
   handleBlockClick: (block: string) => void;
   selectedShipping: string;
   setSelectedShipping: (value: string) => void;
-  cityOptions: ICity[];
-  warehouseOptions: IWarehouse[];
-  handleChangeCity: (event: React.ChangeEvent<{}>, value: ICity | null) => void;
-  handleChangeWarehouse: (event: React.ChangeEvent<{}>, value: IWarehouse | null) => void;
-  warehouseSelected: boolean;
-  selectedWarehouseOptions: IWarehouse | null;
-  storeCities: string[];
-  filteredStores: IStore[];
-  handleChangeStoreCity: (event: React.ChangeEvent<{}>, value: string | null) => void;
-  handleChangeStore: (event: React.ChangeEvent<{}>, value: IStore | null) => void;
-  selectedStoreCity: string | null;
-  selectedStore: IStore | null;
+  storeOptions: IStore[];
+  handleChangeShipping: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  countryOptions: ICountry[] | null;
+  cityOptions: ICity[] | null;
+  shippingData: { country: string, city: string, state: string, street: string, };
 }
 
 const DeliveryInformation: React.FC<DeliveryInformationProps> = ({
-  theme,
   errors,
   activeBlock,
   handleBlockClick,
   selectedShipping,
   setSelectedShipping,
+  handleChangeShipping,
+  storeOptions,
+  countryOptions,
   cityOptions,
-  warehouseOptions,
-  handleChangeCity,
-  handleChangeWarehouse,
-  warehouseSelected,
-  selectedWarehouseOptions,
-  storeCities,
-  filteredStores,
-  handleChangeStoreCity,
-  handleChangeStore,
-  selectedStoreCity,
-  selectedStore,
+  shippingData,
 }) => {
   return (
-    <div className={`bg-white p-5 rounded-md shadow-md mb-8 ${errors.city || errors.warehouse ? 'border-2 border-red-500' : ''}`}>
-      <div className="flex justify-between items-center">
-        <h3 className="text-2xl font-semibold mb-4 cursor-pointer" onClick={() => handleBlockClick('delivery')}>
+    <div className={`bg-white p-5 rounded-md shadow-md mb-8`}>
+      <div className="flex justify-between items-center mb-4 " onClick={() => handleBlockClick('delivery')}>
+        <h3 className="text-2xl font-semibold cursor-pointer" >
           Delivery Information
         </h3>
+        {activeBlock?.includes('delivery') ? (
+          <div className='group rounded-[50px] border border-gray-200 shadow-sm shadow-transparent p-2.5 flex items-center justify-center bg-white transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-100 hover:border-gray-300 focus-within:outline-gray-300'>
+            <ArrowDownIcon className="h-5 w-5 cursor-pointer stroke-gray-900 transition-all duration-500 group-hover:stroke-black" />
+          </div>
+        ) : (
+          <div className='group rounded-[50px] border border-gray-200 shadow-sm shadow-transparent p-2.5 flex items-center justify-center bg-white transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-100 hover:border-gray-300 focus-within:outline-gray-300'>
+            <ArrowLongRightIcon className="h-5 w-5 cursor-pointer stroke-gray-900 transition-all duration-500 group-hover:stroke-black" />
+          </div>
+        )}
       </div>
       <div className="border-t pt-4">
-        {activeBlock === 'delivery' && (
-          <div className="">
+        {activeBlock?.includes('delivery') && (
+          <div className="pb-4">
             <ThemeProvider theme={theme}>
               <div >
                 <RadioGroup value={selectedShipping} onChange={setSelectedShipping} >
@@ -71,9 +65,7 @@ const DeliveryInformation: React.FC<DeliveryInformationProps> = ({
                         value={delivery.id}
                         className={({ active, checked }) =>
                           `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer hover:border-indigo-600 ${active ? 'border-2 border-indigo-600 ring-2 ring-indigo-600' : ''
-                          } ${checked ? 'border-2 border-indigo-600' : 'border-2 border-gray-200'}`
-                        }
-                      >
+                          } ${checked ? 'ring-2 ring-indigo-600 border-2 border-indigo-600' : 'border-2 border-gray-200'} ${errors.city || errors.warehouse ? 'border-2 border-red-600' : ''}`}>
                         {({ checked }) => (
                           <div className="px-6 py-4">
                             <div className="flex items-center justify-between">
@@ -93,39 +85,21 @@ const DeliveryInformation: React.FC<DeliveryInformationProps> = ({
                 </RadioGroup>
               </div>
 
-              {selectedShipping === 'Branch' && (
-                <BranchShipping
-                  cityOptions={cityOptions}
-                  warehouseOptions={warehouseOptions}
-                  handleChangeCity={handleChangeCity}
-                  handleChangeWarehouse={handleChangeWarehouse}
-                  warehouseSelected={warehouseSelected}
-                  selectedWarehouseOptions={selectedWarehouseOptions}
+              {selectedShipping === 'Address' && (
+                <AddressShipping
                   errors={errors}
-                />
-              )}
-
-              {selectedShipping === 'Postomat' && (
-                <PostomatShipping
-                  cityOptions={cityOptions}
-                  warehouseOptions={warehouseOptions}
-                  handleChangeCity={handleChangeCity}
-                  handleChangeWarehouse={handleChangeWarehouse}
-                  warehouseSelected={warehouseSelected}
-                  selectedWarehouseOptions={selectedWarehouseOptions}
-                  errors={errors}
+                  shippingData={shippingData}
+                  handleChangeShipping={handleChangeShipping}
                 />
               )}
 
               {selectedShipping === 'Store' && (
                 <StoreShipping
-                  storeCities={storeCities}
-                  filteredStores={filteredStores}
-                  handleChangeStoreCity={handleChangeStoreCity}
-                  handleChangeStore={handleChangeStore}
-                  warehouseSelected={warehouseSelected}
-                  selectedStoreCity={selectedStoreCity}
-                  selectedStore={selectedStore}
+                  countryOptions={countryOptions}
+                  cityOptions={cityOptions}
+                  handleChangeShipping={handleChangeShipping}
+                  shippingData={shippingData}
+                  storeOptions={storeOptions}
                   errors={errors}
                 />
               )}
