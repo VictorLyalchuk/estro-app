@@ -23,7 +23,7 @@ interface Errors {
   confirmNewPassword: string;
 }
 
-export const validateForm = (formData: FormData, textmask: string, userProfile: IUserProfile | undefined): { isValid: boolean; newErrors: Errors } => {
+export const validateForm = (formData: FormData, textmask: string, userProfile: IUserProfile | undefined, authType: string | undefined): { isValid: boolean; newErrors: Errors } => {
   let isValid = true;
   const newErrors: Errors = {
     firstName: '',
@@ -51,12 +51,15 @@ export const validateForm = (formData: FormData, textmask: string, userProfile: 
     isValid = false;
   }
 
-  if (formData.password.trim() === '') {
-    newErrors.password = 'Password is required';
-    isValid = false;
-  } else if (formData.password.trim() !== userProfile?.password) {
-    newErrors.password = 'Password is not correct';
-    isValid = false;
+  if(authType === 'standard'){
+
+    if (formData.password.trim() === '') {
+      newErrors.password = 'Password is required';
+      isValid = false;
+    } else if (formData.password.trim() !== userProfile?.password) {
+      newErrors.password = 'Password is not correct';
+      isValid = false;
+    }
   }
 
   if (textmask) {
