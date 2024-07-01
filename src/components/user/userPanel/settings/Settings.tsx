@@ -19,8 +19,9 @@ import BirthdayComponent from '../../../../ui/input-no-label/BirthdayComponent';
 import PasswordFieldNoLableComponent from '../../../../ui/input-no-label/PasswordFieldNoLableComponent';
 import TextFieldNoLableComponent from '../../../../ui/input-no-label/TextFieldNoLableComponent';
 import PhoneNumberNoLableComponent from '../../../../ui/input-no-label/PhoneNumberNoLableComponent';
+import TextFieldReadOnlyNoLableComponent from '../../../../ui/input-no-label/TextFieldReadOnlyNoLableComponent';
 
-const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
+const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
   const baseUrl = APP_ENV.BASE_URL;
   const dispatch = useDispatch();
   const [profileUpdated, setProfileUpdated] = useState(false);
@@ -159,7 +160,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { isValid, newErrors } = validateForm(formData, values.textmask, userProfile);
+    const { isValid, newErrors } = validateForm(formData, values.textmask, userProfile, authType);
     setErrors(newErrors);
     if (isValid) {
       const model: IUserEdit = {
@@ -223,13 +224,15 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                                 Email
                               </label>
                               <div className="mt-2 flex rounded-md shadow-sm">
-                                <TextFieldNoLableComponent
+                                <TextFieldReadOnlyNoLableComponent
                                   name="email"
                                   id="email"
                                   value={formData.email}
                                   onChange={handleChange}
                                   error={errors.email}
                                   autoComplete="email"
+                                  maxLength={30}
+                                  readOnly={authType === 'google'}
                                 />
                               </div>
                             </div>
@@ -324,6 +327,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                                 onChange={handleChange}
                                 error={errors.firstName}
                                 autoComplete="firstName"
+                                maxLength={50}
                               />
                             </div>
                           </div>
@@ -340,6 +344,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                                 onChange={handleChange}
                                 error={errors.lastName}
                                 autoComplete="lastName"
+                                maxLength={50}
                               />
                             </div>
                           </div>
@@ -357,79 +362,84 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile }) => {
                             </div>
                           </div>
 
-                          <div className="col-span-12 sm:col-span-6">
-                            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                              Current Password
-                            </label>
-                            <div className="mt-2 flex rounded-md shadow-sm">
-                              <PasswordFieldNoLableComponent
-                                name="password"
-                                id="password"
-                                value={formData.password}
-                                onChange={handleChange}
-                                error={errors.password}
-                                autoComplete="password"
-                                showPassword={showCurrentPassword}
-                                handlePasswordToggle={currentPasswordToggle}
-                              />
+                          {authType === 'standard' && (
+                            <div className="col-span-12 sm:col-span-6">
+                              <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                                Current Password
+                              </label>
+                              <div className="mt-2 flex rounded-md shadow-sm">
+                                <PasswordFieldNoLableComponent
+                                  name="password"
+                                  id="password"
+                                  value={formData.password}
+                                  onChange={handleChange}
+                                  error={errors.password}
+                                  autoComplete="password"
+                                  showPassword={showCurrentPassword}
+                                  handlePasswordToggle={currentPasswordToggle}
+                                />
+                              </div>
                             </div>
-                          </div>
+                          )}
                         </div>
                       </div>
 
                       {/* New password section */}
                       <div className=" pt-6 ">
-                        <div className="px-4 sm:px-6">
-                          <div>
-                            <h2 className="text-lg font-medium leading-6 text-gray-900">Change Password</h2>
-                            <button onClick={() => { setUpdatePassword((prevState) => !prevState); }} type="button" className="text-sm font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-                              Click here to change your password
-                            </button>
+                        {authType === 'standard' && (
+                          <>
+                            <div className="px-4 sm:px-6">
+                              <div>
+                                <h2 className="text-lg font-medium leading-6 text-gray-900">Change Password</h2>
+                                <button onClick={() => { setUpdatePassword((prevState) => !prevState); }} type="button" className="text-sm font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
+                                  Click here to change your password
+                                </button>
 
-                          </div>
-                        </div>
-
-                        {updatePassword && (
-                          <div className="px-4 py-6 sm:p-6 lg:pb-8"  >
-                            <div className="mt-6 grid grid-cols-12 gap-6">
-                              <div className="col-span-12 sm:col-span-6">
-                                <label htmlFor="newPassword" className="block text-sm font-medium leading-6 text-gray-900">
-                                  New Password
-                                </label>
-                                <div className="mt-2 flex rounded-md shadow-sm">
-                                  <PasswordFieldNoLableComponent
-                                    name="newPassword"
-                                    id="newPassword"
-                                    value={formData.newPassword}
-                                    onChange={handleChange}
-                                    error={errors.newPassword}
-                                    autoComplete="newPassword"
-                                    showPassword={showNewPassword}
-                                    handlePasswordToggle={newPasswordToggle}
-                                  />
-                                </div>
-                              </div>
-                              <div className="col-span-12 sm:col-span-6">
-                                <label htmlFor="confirmNewPassword" className="block text-sm font-medium leading-6 text-gray-900">
-                                  Confirm New Password
-                                </label>
-                                <div className="mt-2 flex rounded-md shadow-sm">
-                                  <PasswordFieldNoLableComponent
-                                    name="confirmNewPassword"
-                                    id="confirmNewPassword"
-                                    value={formData.confirmNewPassword}
-                                    onChange={handleChange}
-                                    error={errors.confirmNewPassword}
-                                    autoComplete="password"
-                                    showPassword={showConfirmNewPassword}
-                                    handlePasswordToggle={confirmNewPasswordToggle}
-                                  />
-                                </div>
                               </div>
                             </div>
-                          </div>
-                        )}
 
+                            {updatePassword && (
+                              <div className="px-4 py-6 sm:p-6 lg:pb-8"  >
+                                <div className="mt-6 grid grid-cols-12 gap-6">
+                                  <div className="col-span-12 sm:col-span-6">
+                                    <label htmlFor="newPassword" className="block text-sm font-medium leading-6 text-gray-900">
+                                      New Password
+                                    </label>
+                                    <div className="mt-2 flex rounded-md shadow-sm">
+                                      <PasswordFieldNoLableComponent
+                                        name="newPassword"
+                                        id="newPassword"
+                                        value={formData.newPassword}
+                                        onChange={handleChange}
+                                        error={errors.newPassword}
+                                        autoComplete="newPassword"
+                                        showPassword={showNewPassword}
+                                        handlePasswordToggle={newPasswordToggle}
+                                      />
+                                    </div>
+                                  </div>
+                                  <div className="col-span-12 sm:col-span-6">
+                                    <label htmlFor="confirmNewPassword" className="block text-sm font-medium leading-6 text-gray-900">
+                                      Confirm New Password
+                                    </label>
+                                    <div className="mt-2 flex rounded-md shadow-sm">
+                                      <PasswordFieldNoLableComponent
+                                        name="confirmNewPassword"
+                                        id="confirmNewPassword"
+                                        value={formData.confirmNewPassword}
+                                        onChange={handleChange}
+                                        error={errors.confirmNewPassword}
+                                        autoComplete="password"
+                                        showPassword={showConfirmNewPassword}
+                                        handlePasswordToggle={confirmNewPasswordToggle}
+                                      />
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            )}
+                          </>
+                        )}
                         <div className="mt-4 flex justify-end gap-x-3 px-4 py-4 sm:px-6">
                           <div className="flex justify-end w-64">
 

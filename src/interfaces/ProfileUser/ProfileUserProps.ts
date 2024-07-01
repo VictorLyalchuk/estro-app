@@ -8,6 +8,7 @@ export interface ProfileUserProps {
 
 export interface SettingsUserProps {
     userProfile?: IUserProfile;
+    authType: string | undefined;
 }
 
 export interface BonusesUserProps {

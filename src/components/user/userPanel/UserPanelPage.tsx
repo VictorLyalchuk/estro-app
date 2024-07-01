@@ -52,7 +52,7 @@ const UserPanelPage = () => {
         {
             name: 'Settings',
             current: activeTab === 2,
-            component: <Settings userProfile={userProfile} />,
+            component: <Settings userProfile={userProfile} authType ={user?.AuthType}/>,
         },
         {
             name: 'Favorites',
