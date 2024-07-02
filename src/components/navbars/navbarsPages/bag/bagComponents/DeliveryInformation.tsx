@@ -11,7 +11,7 @@ import { ICity } from '../../../../../interfaces/Address/ICity';
 import { ICountry } from '../../../../../interfaces/Address/ICountry';
 
 interface DeliveryInformationProps {
-  errors: { city?: string; warehouse?: string };
+  errors: { shipping: string };
   activeBlock: string[] | null;
   handleBlockClick: (block: string) => void;
   selectedShipping: string;
@@ -65,7 +65,7 @@ const DeliveryInformation: React.FC<DeliveryInformationProps> = ({
                         value={delivery.id}
                         className={({ active, checked }) =>
                           `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer hover:border-indigo-600 ${active ? 'border-2 border-indigo-600 ring-2 ring-indigo-600' : ''
-                          } ${checked ? 'ring-2 ring-indigo-600 border-2 border-indigo-600' : 'border-2 border-gray-200'} ${errors.city || errors.warehouse ? 'border-2 border-red-600' : ''}`}>
+                          } ${checked ? 'ring-2 ring-indigo-600 border-2 border-indigo-600' : 'border-2 border-gray-200'} ${errors.shipping ? 'border-2 border-red-600' : ''}`}>
                         {({ checked }) => (
                           <div className="px-6 py-4">
                             <div className="flex items-center justify-between">

@@ -67,6 +67,7 @@ const Bag = () => {
     state: "",
     street: "",
     paymentMethod: '',
+    shipping: '',
   });
  
   useEffect(() => {
