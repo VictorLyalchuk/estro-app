@@ -20,6 +20,8 @@ import { addToFavorite, removeFromFavorite } from '../../../store/favourites/Fav
 import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/userFavoriteProducts/user-favorite-products-services';
 import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts';
 import Brightness1RoundedIcon from '@mui/icons-material/Brightness1Rounded';
+import WomanSizeGuideComponent from './WomanSizeGuideComponent';
+import ManSizeGuideComponent from './ManSizeGuideComponent';
 
 const reviews = { href: '#', average: 4, totalCount: 117 }
 
@@ -37,6 +39,7 @@ export default function Product() {
   const navigate = useNavigate();
   const favoriteProducts = useSelector((state: RootState) => state.favorites.favoriteProducts);
   const isFavorite = (productId: number) => favoriteProducts.some((product: { productId: number }) => product.productId === productId);
+  const [isQuickviewOpen, setQuickviewOpen] = useState(false);
 
   useEffect(() => {
     if (Id) {
@@ -99,6 +102,30 @@ export default function Product() {
     }
   };
 
+  const renderSizeGuide = (isQuickviewOpen: boolean) => {
+    if (!isQuickviewOpen || typeof product.mainCategoryName !== 'string') {
+      return null;
+    }
+
+    switch (product.mainCategoryName) {
+      case 'Woman':
+        return (
+          <WomanSizeGuideComponent
+            isOpen={isQuickviewOpen}
+            setOpen={setQuickviewOpen}
+          />
+        );
+      case 'Man':
+        return (
+          <ManSizeGuideComponent
+            isOpen={isQuickviewOpen}
+            setOpen={setQuickviewOpen}
+          />
+        );
+      default:
+        return null;
+    }
+  };
   return (
     <div className="overflow-hidden rounded-sm border-stroke bg-gray-100 shadow-default dark:border-strokedark dark:bg-boxdark text-body">
 
@@ -166,9 +193,9 @@ export default function Product() {
         {/* Image gallery */}
         <div className="mx-auto mt-6 max-w-2xl px-6 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-1 lg:gap-x-8 lg:px-8">
           <Slider>
-            <Carousel swipe animation="fade" duration={1500} autoPlay={true} indicatorIconButtonProps={{ style: { width: '35px', height: '35px',},}} 
-            IndicatorIcon={<Brightness1RoundedIcon fontSize='small' />} 
-            indicators={true} className="h-full w-full" >
+            <Carousel swipe animation="fade" duration={1500} autoPlay={true} indicatorIconButtonProps={{ style: { width: '35px', height: '35px', }, }}
+              IndicatorIcon={<Brightness1RoundedIcon fontSize='small' />}
+              indicators={true} className="h-full w-full" >
               {product.images?.map((image, index) => (
                 <div key={index} className="aspect-h-4 aspect-w-3 rounded" >
                   <Image
@@ -221,10 +248,12 @@ export default function Product() {
               <div className="mt-10">
                 <div className="flex items-center justify-between">
                   <h3 className="text-sm font-medium text-gray-900">Size</h3>
-                  <a href="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                  <a onClick={() => setQuickviewOpen(true)} className="text-sm font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer">
                     Size guide
                   </a>
                 </div>
+
+                {renderSizeGuide(isQuickviewOpen)}
 
                 <RadioGroup value={selectedSize}
                   onChange={setSelectedSize}
