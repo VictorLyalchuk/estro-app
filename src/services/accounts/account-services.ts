@@ -130,7 +130,8 @@ export async function refreshRedux(dispatch: any) {
                     LastName: user.LastName,
                     Role: user.Role,
                     ImagePath: user.ImagePath,
-                    PhoneNumber: user.PhoneNumber
+                    PhoneNumber: user.PhoneNumber,
+                    AuthType: user.AuthType
                 }
             });
         } else {

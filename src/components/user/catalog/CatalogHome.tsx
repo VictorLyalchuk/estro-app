@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Disclosure, Menu, Popover, Transition } from '@headlessui/react'
-import { ArrowLongLeftIcon, ArrowLongRightIcon, XMarkIcon, HeartIcon as OutlineHeartIcon } from '@heroicons/react/24/outline'
+import { ArrowLongLeftIcon, ArrowLongRightIcon, XMarkIcon, HeartIcon as OutlineHeartIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
 import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { HeartIcon } from '@heroicons/react/24/solid'
 import { IProduct, IStorages } from '../../../interfaces/Product/IProduct'
@@ -35,6 +35,7 @@ export default function CatalogHome() {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const { main } = useParams();
+    const { text } = useParams();
     const [productList, setProduct] = useState<IProduct[]>([]);
     const [filterOptionsList, setFilterOptionsList] = useState<IInfo[]>([]);
     const [filters, setFilters] = useState<{ name: string; values: string[] }[]>([]);
@@ -54,6 +55,7 @@ export default function CatalogHome() {
     const [sortOptions, setSortOptions] = useState<ISortOptions[]>(initialSortOptions);
     const [subCategoryIndex, setSubCategoryIndex] = useState(0);
     const [categoriesLoaded, setCategoriesLoaded] = useState(false);
+    const [searchValue, setSearchValue] = useState('');
     const filterValueCounts = filterOptionsList.map((section) =>
         filters.reduce((count, filter) => {
             if (filter.name === section.value) {
@@ -204,6 +206,7 @@ export default function CatalogHome() {
                 ItemsPerPage: newFilters.find(f => f.name === 'ItemsPerPage')?.values || itemsPerPage,
                 Sort: newFilters.find(f => f.name === 'Sort')?.values?.join('_') || undefined,
                 Page: newFilters.find(f => f.name === 'Page')?.values || page,
+                Search: text || '',
                 MainCategory: main,
                 SubName: newFilters.find(f => f.name === 'SubName')?.values || undefined,
                 UrlName: await getFilterCategory(),
@@ -234,10 +237,11 @@ export default function CatalogHome() {
     }, []);
 
     useEffect(() => {
-        if (categoriesLoaded) {
-            loadFromURL();
-        }
-    }, [categoriesLoaded, location.search, page, itemsPerPage]);
+        // if (categoriesLoaded) {
+        loadFromURL();
+        setSearchValue(text?.replace(/_/g, " ") || '');
+        // }
+    }, [categoriesLoaded, location.search, page, itemsPerPage, text]);
 
     const favoriteToggle = async (product: IProduct, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
         e.preventDefault();
@@ -259,6 +263,18 @@ export default function CatalogHome() {
             }
         }
     };
+
+    const handaleSearch = (event: { key: string; }) => {
+        if (event.key === 'Enter') {
+            if (searchValue.trim() !== "") {
+                const formattedSearchValue = searchValue.replace(/ /g, "_");
+                navigate(`/catalog-home/search/${formattedSearchValue}`)
+            }
+            else if (searchValue.trim() === "") {
+                navigate(`/catalog-home`)
+            }
+        }
+    }
 
     return (
         <div className="bg-gray-100">
@@ -357,11 +373,54 @@ export default function CatalogHome() {
                 <main>
                     <div className="bg-gray-100">
                         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-                            <h1 className="text-3xl font-bold tracking-tight text-gray-900">ESTRO</h1>
-                            <p className="mt-4 max-w-xl text-sm text-gray-700">
-                                Our thoughtfully designed workspace objects are crafted in limited runs. Improve your productivity and
-                                organization with these sale items before we run out.
-                            </p>
+                            <div className="flex flex-col lg:flex-row">
+                                <div className="lg:mr-4 w-full lg:w-2/4 lg:border-r">
+                                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">ESTRO</h1>
+                                    <p className="mt-4 max-w-xl text-sm text-gray-700">
+                                        Our thoughtfully designed workspace objects are crafted in limited runs. Improve your productivity and
+                                        organization with these sale items before we run out.
+                                    </p>
+                                </div>
+                                <div className="lg:ml-4 mt-8 lg:mt-0 w-full lg:w-2/4 ">
+                                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">SEARCH</h1>
+                                    <div className="mt-4 flex-grow w-96">
+                                        <form className="flex w-full lg:ml-0"
+                                        >
+                                            <label htmlFor="mobile-search-field" className="sr-only">
+                                                Search
+                                            </label>
+                                            <label htmlFor="desktop-search-field" className="sr-only">
+                                                Search
+                                            </label>
+                                            <div className="relative w-full text-gray-400 focus-within:text-gray-600">
+                                                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
+                                                    <MagnifyingGlassIcon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+                                                </div>
+                                                <input
+                                                    name="mobile-search-field"
+                                                    id="mobile-search-field"
+                                                    className="h-full w-full border-transparent py-2 pl-8 pr-3 text-base text-gray-900 focus:border-transparent focus:outline-none focus:ring-0 focus:placeholder:text-gray-400 sm:hidden"
+                                                    placeholder="Search"
+                                                    type="search"
+                                                    value={searchValue}
+                                                    onChange={(e) => setSearchValue(e.target.value)}
+                                                    onKeyDown={handaleSearch}
+                                                />
+                                                <input
+                                                    name="desktop-search-field"
+                                                    id="desktop-search-field"
+                                                    className="hidden h-full w-full border-transparent py-2 pl-8 pr-3 text-sm text-gray-900 focus:border-transparent focus:outline-none focus:ring-0 focus:placeholder:text-gray-400 sm:block"
+                                                    placeholder="Search products"
+                                                    type="search"
+                                                    value={searchValue}
+                                                    onChange={(e) => setSearchValue(e.target.value)}
+                                                    onKeyDown={handaleSearch}
+                                                />
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
 

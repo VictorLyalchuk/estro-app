@@ -20,7 +20,6 @@ import PrivacyPolicy from "./components/footer/footerPages/PrivacyPolicy";
 import About from "./components/footer/footerPages/About";
 import StoreLocations from "./components/footer/footerPages/StoreLocations";
 import AdminLayout from "./components/layout/AdminLayout";
-// import AuthPage from "./components/navbars/navbarsPages/auth/AuthPage";
 import AuthPanelPage from "./components/navbars/navbarsPages/auth/AuthPanelPage";
 import UserPanelPage from "./components/user/userPanel/UserPanelPage";
 import UserLayout from "./components/layout/UserLayout";
@@ -57,10 +56,8 @@ function App() {
       <NavbarsPage />
       <Routes>
         <Route element={<GuestLayout />}>
-          {/* <Route path='/auth' element={<AuthPage />} /> */}
           <Route path='/auth' element={<AuthPanelPage />} />
         </Route>
-        {/* <Route path="/auth/:email/:token" element={<AuthPage />} /> */}
         <Route path="/auth/:email/:token" element={<AuthPanelPage />} />
 
         <Route path="/" element={<HomeStore />}></Route>
@@ -69,6 +66,7 @@ function App() {
         <Route path="catalog/:subName" element={<CatalogNavigation />} />
         <Route path="catalog-home" element={<CatalogHome />} />
         <Route path="catalog-home/:main" element={<CatalogHome />} />
+        <Route path="catalog-home/search/:text" element={<CatalogHome />} />
         <Route path="product/:Id" element={<Product />} />
         <Route path='/bag' element={<Bag />} />
 
