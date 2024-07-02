@@ -1,7 +1,7 @@
 import { Fragment, SetStateAction, useEffect, useState } from 'react'
 import { Dialog, Popover, Tab, Transition } from '@headlessui/react'
 import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, UserIcon, HeartIcon, CurrencyDollarIcon } from '@heroicons/react/24/outline'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { AuthReducerActionType, IAuthReducerState } from "../../store/accounts/AuthReducer.ts";
 import { IMainCategory } from '../../interfaces/Catalog/IMainCategory.ts';
@@ -43,6 +43,9 @@ const NavbarsPage = () => {
     const dispatch = useDispatch();
     const favoriteCount = useSelector((state: RootState) => state.favorites.count);
     const [userProfile, setUserProfile] = useState<IUserProfile>();
+    const [viewSearch, setViewSearch] = useState('hidden');
+    const [searchValue, setSearchValue] = useState('');
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (user?.Email) {
@@ -67,6 +70,24 @@ const NavbarsPage = () => {
         dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL })
         setUserProfile(undefined);
     };
+
+    const changeVisibleSearch = () => {
+        setViewSearch(prevMode => (prevMode === 'show' ? 'hidden' : 'show'));
+    }
+    
+    const handaleSearch = (event: { key: string; }) => {
+        if (event.key === 'Enter') {
+            if (searchValue.trim() !== "") {
+                const formattedSearchValue = searchValue.replace(/ /g, "_");
+                changeVisibleSearch();
+                navigate(`catalog-home/search/${formattedSearchValue}`)
+            }
+            else if (searchValue.trim() === "") {
+                changeVisibleSearch();
+                navigate(`catalog-home`)
+            }
+        }
+    }
 
     return (
         <div className="bg-gray-100 text-body ">
@@ -221,7 +242,7 @@ const NavbarsPage = () => {
 
                         <nav aria-label="Top" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ">
                             <div>
-                                <div className="flex h-16 items-center">
+                                <div className="flex items-center h-16">
                                     <button
                                         type="button"
                                         className="relative rounded-md bg-gray-100 p-2 text-gray-400 lg:hidden"
@@ -338,54 +359,99 @@ const NavbarsPage = () => {
                                     </Popover.Group>
 
                                     <div className="ml-auto flex items-center">
-
-                                        <div className="lg:ml-8 lg:flex border-r pr-5">
-                                            <LanguageSelector />
-                                        </div>
-                                        {isAuth ? (
+                                        {/* Search */}
+                                        {viewSearch !== 'hidden' && (
                                             <>
-                                                <div className="hidden lg:flex pl-5">
-                                                    <DropdownUser />
+                                                <div className="ml-4 flex-grow w-96">
+                                                    <form className="flex w-full lg:ml-0"
+                                                    >
+                                                        <label htmlFor="mobile-search-field" className="sr-only">
+                                                            Search
+                                                        </label>
+                                                        <label htmlFor="desktop-search-field" className="sr-only">
+                                                            Search
+                                                        </label>
+                                                        <div className="relative w-full text-gray-400 focus-within:text-gray-600">
+                                                            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
+                                                                <MagnifyingGlassIcon className="h-5 w-5 flex-shrink-0" aria-hidden="true" />
+                                                            </div>
+                                                            <input
+                                                                name="mobile-search-field"
+                                                                id="mobile-search-field"
+                                                                className="h-full w-full border-transparent py-2 pl-8 pr-3 text-base text-gray-900 focus:border-transparent focus:outline-none focus:ring-0 focus:placeholder:text-gray-400 sm:hidden"
+                                                                placeholder="Search"
+                                                                type="search"
+                                                                onChange={(e) => setSearchValue(e.target.value)}
+                                                                onKeyDown={handaleSearch}
+                                                            />
+                                                            <input
+                                                                name="desktop-search-field"
+                                                                id="desktop-search-field"
+                                                                className="hidden h-full w-full border-transparent py-2 pl-8 pr-3 text-sm text-gray-900 focus:border-transparent focus:outline-none focus:ring-0 focus:placeholder:text-gray-400 sm:block"
+                                                                placeholder="Search products"
+                                                                type="search"
+                                                                onChange={(e) => setSearchValue(e.target.value)}
+                                                                onKeyDown={handaleSearch}
+                                                            />
+                                                        </div>
+                                                        <a onClick={changeVisibleSearch} className="p-2 group text-gray-400 hover:text-gray-500 cursor-pointer">
+                                                            <XMarkIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
+                                                        </a>
+                                                    </form>
                                                 </div>
                                             </>
-                                        ) : (
-
-                                            <div className="ml-4 flow-root lg:ml-6">
-                                                <Link className="group -m-2 p-2 text-gray-400 hover:text-gray-500" to={"/auth"} >
-                                                    <UserIcon className="h-6 w-6" aria-hidden="true" />
-                                                </Link>
-                                            </div>
                                         )}
 
-                                        {/* Search */}
-                                        <div className="ml-4 flow-root lg:ml-6">
-                                            <a href="#" className="p-2 text-gray-400 hover:text-gray-500">
-                                                <div className="sr-only">Search</div>
-                                                <MagnifyingGlassIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
-                                            </a>
-                                        </div>
+                                        {viewSearch === 'hidden' && (
+                                            <>
+                                                <div className="lg:ml-8 lg:flex border-r pr-5">
+                                                    <LanguageSelector />
+                                                </div>
+                                                {isAuth ? (
+                                                    <>
+                                                        <div className="hidden lg:flex pl-5">
+                                                            <DropdownUser />
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <div className="ml-4 flow-root lg:ml-6">
+                                                        <Link className="group -m-2 p-2 text-gray-400 hover:text-gray-500" to={"/auth"} >
+                                                            <UserIcon className="h-6 w-6" aria-hidden="true" />
+                                                        </Link>
+                                                    </div>
+                                                )}
 
-                                        {/* Bonuses */}
-                                        <div className="ml-4 flow-root lg:ml-6">
-                                            <Link to={"/account/bonuses"} className={`group -m-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-10 flex items-center hover:text-gray-500 ${user ? "mr-12" : "mr-2"}`}>
-                                                <CurrencyDollarIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
-                                                {user ? userProfile?.bonusBalance?.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1) : 0}</Link>
-                                        </div>
+                                                {/* Bonuses */}
+                                                <div className="ml-4 flow-root lg:ml-6">
+                                                    <Link to={"/account/bonuses"} className={`group -m-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-10 flex items-center hover:text-gray-500 ${user ? "mr-12" : "mr-2"}`}>
+                                                        <CurrencyDollarIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
+                                                        {user ? userProfile?.bonusBalance?.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1) : 0}</Link>
+                                                </div>
 
-                                        {/* Favorites */}
-                                        <div className="ml-4 flow-root lg:ml-6">
-                                            <Link to={"/account/favorites"} className="group -m-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-10 flex items-center hover:text-gray-500">
-                                                <HeartIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
-                                                {favoriteCount}</Link>
-                                        </div>
+                                                {/* Search */}
+                                                <div className="ml-4 flow-root lg:ml-6">
+                                                    <a onClick={changeVisibleSearch} className="p-2 group text-gray-400 hover:text-gray-500 cursor-pointer">
+                                                        <div className="sr-only">Search</div>
+                                                        <MagnifyingGlassIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
+                                                    </a>
+                                                </div>
 
-                                        {/* Cart */}
-                                        <div className="ml-4 flow-root lg:ml-6">
-                                            <Link to={"/bag"} className="group -m-2 ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-20 flex items-center hover:text-gray-500">
-                                                <ShoppingBagIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
-                                                {count}</Link>
-                                            <div className="sr-only">items in cart, view bag</div>
-                                        </div>
+                                                {/* Favorites */}
+                                                <div className="ml-4 flow-root lg:ml-6">
+                                                    <Link to={"/account/favorites"} className="group -m-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-10 flex items-center hover:text-gray-500">
+                                                        <HeartIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
+                                                        {favoriteCount}</Link>
+                                                </div>
+
+                                                {/* Cart */}
+                                                <div className="ml-4 flow-root lg:ml-6">
+                                                    <Link to={"/bag"} className="group -m-2 ml-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-20 flex items-center hover:text-gray-500">
+                                                        <ShoppingBagIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
+                                                        {count}</Link>
+                                                    <div className="sr-only">items in cart, view bag</div>
+                                                </div>
+                                            </>
+                                        )}
                                     </div>
                                 </div>
                             </div>

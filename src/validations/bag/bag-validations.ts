@@ -23,6 +23,7 @@ interface Errors {
     state: string,
     street: string,
     paymentMethod: string;
+    shipping: string;
 }
 
 export const validateForm = (formData: FormData, shippingData: ShippingData, selectedPayment: string, selectedShipping: string, textmask: string, setActiveBlocks: (blocks: (prevBlocks: string[]) => string[]) => void
@@ -38,6 +39,7 @@ export const validateForm = (formData: FormData, shippingData: ShippingData, sel
         state: "",
         street: "",
         paymentMethod: "",
+        shipping: "",
     };
 
     if (formData.firstName.trim() === '') {
@@ -76,7 +78,13 @@ export const validateForm = (formData: FormData, shippingData: ShippingData, sel
         setActiveBlocks(prevBlocks => prevBlocks.includes('delivery') ? prevBlocks : [...prevBlocks, 'delivery']);
     }
 
-    if (selectedShipping === 'Store') {
+    if (selectedShipping === '') {
+        newErrors.shipping = 'Shipping is required';
+        isValid = false;
+        setActiveBlocks(prevBlocks => prevBlocks.includes('delivery') ? prevBlocks : [...prevBlocks, 'delivery']);
+    }
+
+    else if (selectedShipping === 'Store') {
         if (shippingData.street.trim() === '') {
             newErrors.street = 'Store is required';
             isValid = false;

@@ -8,6 +8,7 @@ interface Errors {
     state: string,
     street: string,
     paymentMethod: string;
+    shipping: string;
   }
   
   export const validatePhoneNumber = (
