@@ -2,6 +2,7 @@
 import { ThemeProvider } from '@material-ui/core/styles';
 import TextFieldComponent from "../../../../../ui/input-with-label/TextFieldComponent";
 import { theme } from "../../../../../theme/theme";
+import {t} from "i18next";
 
 interface AddressShippingProps {
     errors: { country?: string; city?: string; state?: string; street?: string };
@@ -13,7 +14,7 @@ const AddressShipping: React.FC<AddressShippingProps> = ({ shippingData, errors,
     <div className="mt-5">
         <ThemeProvider theme={theme}>
             <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
-                Country
+                {t('Bag_AddressShipping_Country')}
             </label>
             <TextFieldComponent
                 label=""
@@ -25,7 +26,7 @@ const AddressShipping: React.FC<AddressShippingProps> = ({ shippingData, errors,
                 autoComplete="country" 
                 maxLength={30}            />
             <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
-                City
+                {t('Bag_AddressShipping_City')}
             </label>
             <TextFieldComponent
                 label=""
@@ -39,7 +40,7 @@ const AddressShipping: React.FC<AddressShippingProps> = ({ shippingData, errors,
             />
 
             <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-2">
-                State
+                {t('Bag_AddressShipping_State')}
             </label>
             <TextFieldComponent
                 label=""
@@ -53,7 +54,7 @@ const AddressShipping: React.FC<AddressShippingProps> = ({ shippingData, errors,
             />
 
             <label htmlFor="street" className="block text-sm font-medium text-gray-700 mb-2">
-                Street
+                {t('Bag_AddressShipping_Street')}
             </label>
             <TextFieldComponent
                 label=""

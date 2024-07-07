@@ -4,6 +4,7 @@ import { decrease, deleteItems, increase } from "../../../../../services/bag/bag
 import { APP_ENV } from "../../../../../env/config";
 import { useSelector } from "react-redux";
 import { ICardReducerState } from "../../../../../store/bag/CardReducer";
+import {t} from "i18next";
 
 interface OrderSummaryProps {
   bagUser: IBagUser | undefined;
@@ -25,12 +26,12 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
     <div className="w-full lg:w-2/4 p-5 lg:mb-0">
       <div className="bg-white p-5 rounded-md shadow-md mb-8">
         <div className="grid grid-rows-1">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900 ">Order Summary</h1>
+          <h1 className="text-3xl font-bold tracking-tight text-gray-900 ">{t('Bag_OrderSummary')}</h1>
           <dl className="flex mt-2">
-            <dt className="text-gray-500">Order Date&nbsp;</dt>
+            <dt className="text-gray-500">{t('Bag_OrderSummary_OrderDate')}&nbsp;</dt>
             <dd className="font-medium text-gray-900"></dd>
             <dt>
-              <span className="sr-only">Date</span>
+              <span className="sr-only">{t('Bag_OrderSummary_Date')}</span>
               <span className="mx-2 text-gray-400" aria-hidden="true">
                 &middot;
               </span>
@@ -45,7 +46,7 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
         <div key={index} className="border-b bg-white pt-4 p-6 rounded-md shadow-md mb-8">
           <div className="flex justify-between">
             <div className="flex justify-between items-center ">
-              <h3 className="font-semibold mb-4 mr-14 ">Product {index + 1}</h3>
+              <h3 className="font-semibold mb-4 mr-14 ">{t('Bag_OrderSummary_Product')} {index + 1}</h3>
               <h3 className="font-semibold mb-4">{item.name}</h3>
             </div>
             <button className="mb-3 group rounded-[50px] border border-gray-200 shadow-sm shadow-transparent p-2.5 flex items-center justify-center bg-white transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-100 hover:border-gray-300 focus-within:outline-gray-300"
@@ -60,10 +61,10 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
               className="w-24 h-36 object-cover rounded-md mr-4"
             />
             <div className="w-1/2 ml-4 mx-auto">
-              <h3 className="text-lg font-semibold mb-2 mr-auto whitespace-nowrap">Total product price: {initialIndividualItemPrice[item.id].toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</h3>
-              <p className="text-gray-600 mb-2">Size: {item.size}</p>
-              <p className="text-gray-600 mb-2">Article: {item.article}</p>
-              <p className="text-gray-600 mb-2">Price: {item.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
+              <h3 className="text-lg font-semibold mb-2 mr-auto whitespace-nowrap">{t('Bag_OrderSummary_TotalProductPrice')} {initialIndividualItemPrice[item.id].toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</h3>
+              <p className="text-gray-600 mb-2">{t('Bag_OrderSummary_Size')}: {item.size}</p>
+              <p className="text-gray-600 mb-2">{t('Bag_OrderSummary_Article')}: {item.article}</p>
+              <p className="text-gray-600 mb-2">{t('Bag_OrderSummary_Price')}: {item.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
               <div className="flex items-center ml-auto mt-6">
                 <button
                   onClick={() => decrease(item, email || '', dispatch)}

@@ -1,6 +1,12 @@
 export interface ICity {
     id: string;
-    cityName: string;
+    cityName_en: string;
+    cityName_es: string;
+    cityName_fr: string;
+    cityName_uk: string;
     countryId: string;
-    countryName: string;
+    countryName_en: string;
+    countryName_es: string;
+    countryName_fr: string;
+    countryName_uk: string;
 }

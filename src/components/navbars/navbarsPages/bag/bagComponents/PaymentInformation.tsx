@@ -4,6 +4,7 @@ import { paymentList } from '../../../../../data/paymentList';
 import { useSelector } from 'react-redux';
 import { ICardReducerState } from '../../../../../store/bag/CardReducer';
 import { ArrowDownIcon, ArrowLongRightIcon } from '@heroicons/react/24/outline';
+import {t} from "i18next";
 
 interface PaymentInformationProps {
   theme: any;
@@ -29,7 +30,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
   return (
     <div className={`bg-white p-5 rounded-md shadow-md mb-4`}>
       <div className="flex justify-between items-center mb-4" onClick={() => handleBlockClick('payment')}>
-        <h3 className="text-2xl font-semibold cursor-pointer" >Payment Information</h3>
+        <h3 className="text-2xl font-semibold cursor-pointer" >{t('Bag_PaymentInfo')}</h3>
         {activeBlock?.includes('payment') ? (
           <div className='group rounded-[50px] border border-gray-200 shadow-sm shadow-transparent p-2.5 flex items-center justify-center bg-white transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-100 hover:border-gray-300 focus-within:outline-gray-300'>
             <ArrowDownIcon className="h-5 w-5 cursor-pointer stroke-gray-900 transition-all duration-500 group-hover:stroke-black" />
@@ -76,23 +77,23 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
             </div>
             <dl className="pt-2 mt-8 divide-y divide-gray-200 text-sm ">
               <div className="flex items-center justify-between pb-4">
-                <dt className="text-gray-600">Subtotal</dt>
+                <dt className="text-gray-600">{t('Bag_PaymentInfo_Subtotal')}</dt>
                 <dd className="font-medium text-gray-900">{totalWithOutTax.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
               </div>
               <div className="flex items-center justify-between py-4">
-                <dt className="text-gray-600">Tax</dt>
+                <dt className="text-gray-600">{t('Bag_PaymentInfo_Tax')}</dt>
                 <dd className="font-medium text-gray-900">{taxes.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
               </div>
               <div className="flex items-center justify-between py-4">
-                <dt className="text-gray-600">Discount</dt>
+                <dt className="text-gray-600">{t('Bag_PaymentInfo_Discount')}</dt>
                 <dd className="font-medium text-red-600">0 €</dd>
               </div>
               <div className="flex items-center justify-between py-4">
-                <dt className="text-gray-600">Payment</dt>
+                <dt className="text-gray-600">{t('Bag_PaymentInfo_Payment')}</dt>
                 <dd className={`font-medium ${formData.payment === 'The money has not been paid' ? 'text-red-500' : 'text-green-500'}`}>{formData.payment}</dd>
               </div>
               <div className="flex items-center justify-between pt-4">
-                <dt className="font-medium text-gray-900">Order total</dt>
+                <dt className="font-medium text-gray-900">{t('Bag_PaymentInfo_OrderTotal')}</dt>
                 <dd className="font-medium text-indigo-600">{total.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
               </div>
             </dl>

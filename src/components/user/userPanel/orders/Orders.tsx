@@ -6,6 +6,7 @@ import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/react/20/solid
 import { OrdersProps } from "../../../../interfaces/ProfileUser/ProfileUserProps";
 import { ArrowsPointingInIcon } from "@heroicons/react/24/outline";
 import { formatDate } from "../../../../services/custom/format-data";
+import {t} from "i18next";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -35,12 +36,12 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
               <div className="mx-auto max-w-2xl pb-8 pt-8 sm:px-6 sm:pt-8 lg:max-w-7xl lg:px-8 ">
                 <div className="flex justify-between space-y-2 px-4 border-b border-gray-200 pb-5 sm:flex sm:items-baseline sm:justify-between sm:space-y-0 sm:px-0">
                   <div className="grid grid-rows-1 px-4 py-6 sm:p-6 lg:pb-8">
-                    <h1 className="text-3xl font-bold tracking-tight text-gray-900 ">Order Details</h1>
+                    <h1 className="text-3xl font-bold tracking-tight text-gray-900 ">{t('Order_OrderDetails')}</h1>
                     <dl className="flex mt-2">
-                      <dt className="text-gray-500">Order #&nbsp;</dt>
+                      <dt className="text-gray-500">{t('Order_Order')} #&nbsp;</dt>
                       <dd className="font-medium text-gray-900">{order.id}</dd>
                       <dt>
-                        <span className="sr-only">Date</span>
+                        <span className="sr-only">{t('Order_Date')}</span>
                         <span className="mx-2 text-gray-400" aria-hidden="true">
                           &middot;
                         </span>
@@ -53,7 +54,7 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
 
                   <div className="flex sm:items-start sm:space-x-4 px-4 py-6 sm:p-6 lg:pb-8">
                     <button onClick={onViewModeChange} className="text-gray-400 hover:text-indigo-600">
-                      <span className="sr-only">View grid</span>
+                      <span className="sr-only">{t('Order_ViewGrid')}</span>
                       <ArrowsPointingInIcon className="h-7 w-7" aria-hidden="true" />
                     </button>
                   </div>
@@ -61,7 +62,7 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
 
                 <section aria-labelledby="products-heading" className="mt-4">
                   <h2 id="products-heading" className="sr-only">
-                    Products purchased
+                    {t('Order_ProductsPurchased')}
                   </h2>
 
                   <div className="space-y-24">
@@ -81,16 +82,16 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                           <h3 className="text-lg font-medium text-gray-900">
                             <Link to={`/product/${product.productId}`}>{product.name}</Link>
                           </h3>
-                          <p className="mt-3 font-medium text-gray-900">Article: {product.article}</p>
+                          <p className="mt-3 font-medium text-gray-900">{t('Order_Article')}: {product.article}</p>
                           <p className="mt-3 font-medium text-gray-900">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
-                          <p className="mt-3 font-medium text-gray-900">Quantity: {product.quantity}</p>
-                          <p className="mt-3 font-medium text-gray-900">Size: {product.size}</p>
+                          <p className="mt-3 font-medium text-gray-900">{t('Order_Quantity')}: {product.quantity}</p>
+                          <p className="mt-3 font-medium text-gray-900">{t('Order_Size')}: {product.size}</p>
                           <p className="mt-3 text-gray-500">{product.description}</p>
                         </div>
                         <div className="px-4 py-6 sm:col-span-12 md:col-span-7">
                           <dl className="grid grid-cols-1 gap-y-8 border-b border-gray-200 py-8 sm:grid-cols-2 sm:gap-x-6 sm:py-6 md:py-10">
                             <div>
-                              <dt className="font-medium text-gray-900">Delivery address</dt>
+                              <dt className="font-medium text-gray-900">{t('Order_DeliveryAddress')}</dt>
                               <dd className="mt-3 text-gray-500">
                                 <span className="block">{order.address.region}</span>
                                 <span className="block">{order.address.city}</span>
@@ -98,7 +99,7 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                               </dd>
                             </div>
                             <div>
-                              <dt className="font-medium text-gray-900">Contacts for delivery</dt>
+                              <dt className="font-medium text-gray-900">{t('Order_Contacts')}</dt>
                               <dd className="mt-3 space-y-3 text-gray-500">
                                 <p>{order.email}</p>
                                 <p>{order.phoneNumber}</p>
@@ -107,7 +108,7 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                           </dl>
                           <p className="mt-6 font-medium text-gray-900 md:mt-10">
                             {product.dueDate === '0001-01-01T00:00:00'
-                              ? 'Date not determined'
+                              ? t('Order_DateNotDetermined')
                               : `${product.status} on `}
                             {product.dueDate !== '0001-01-01T00:00:00' && (
                               <time dateTime={product.dueDate}>{formatDate(product.dueDate)}</time>
@@ -121,15 +122,15 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                               />
                             </div>
                             <div className="mt-6 hidden grid-cols-4 font-medium text-gray-600 sm:grid">
-                              <div className="text-indigo-600">Order placed</div>
+                              <div className="text-indigo-600">{t('Order_OrderPlaced')}</div>
                               <div className={classNames(product.step > 0 ? 'text-indigo-600' : '', 'text-center')}>
-                                Processing
+                                {t('Order_Processing')}
                               </div>
                               <div className={classNames(product.step > 1 ? 'text-indigo-600' : '', 'text-center')}>
-                                Shipped
+                                {t('Order_Shipped')}
                               </div>
                               <div className={classNames(product.step > 2 ? 'text-indigo-600' : '', 'text-right')}>
-                                Delivered
+                                {t('Order_Delivered')}
                               </div>
                             </div>
                           </div>
@@ -142,20 +143,20 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                 {/* Billing */}
                 <section aria-labelledby="summary-heading" className="mt-24">
                   <h2 id="summary-heading" className="sr-only">
-                    Billing Summary
+                    {t('Order_BillingSummary')}
                   </h2>
 
                   <div className="rounded-lg bg-gray-50 px-6 py-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:px-0 lg:py-8">
                     <dl className="grid grid-cols-1 gap-6 text-sm sm:grid-cols-2 md:gap-x-8 lg:col-span-5 lg:pl-8">
                       <div>
-                        <dt className="font-medium text-gray-900">Billing person</dt>
+                        <dt className="font-medium text-gray-900">{t('Order_BillingPerson')}</dt>
                         <dd className="mt-3 text-gray-500">
                         <span className="block">{order.firstName}</span>
                         <span className="block">{order.lastName}</span>
                         </dd>
                       </div>
                       <div>
-                        <dt className="font-medium text-gray-900">Payment information</dt>
+                        <dt className="font-medium text-gray-900">{t('Order_PaymentInformation')}</dt>
                         <dd className="mt-3 flex">
                           <div>
                             <svg aria-hidden="true" width={36} height={24} viewBox="0 0 36 24" className="h-6 w-auto">
@@ -168,8 +169,8 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                             <p className="sr-only">Visa</p>
                           </div>
                           <div className="ml-4">
-                            <p className="text-gray-900">Ending with 4242</p>
-                            <p className="text-gray-600">Expires 02 / 24</p>
+                            <p className="text-gray-900">{t('Order_EndingWith')} 4242</p>
+                            <p className="text-gray-600">{t('Order_Expires')} 02 / 24</p>
                           </div>
                         </dd>
                       </div>
@@ -177,19 +178,19 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
 
                     <dl className="mt-8 divide-y divide-gray-200 text-sm lg:col-span-7 lg:mt-0 lg:pr-8">
                       <div className="flex items-center justify-between pb-4">
-                        <dt className="text-gray-600">Subtotal</dt>
+                        <dt className="text-gray-600">{t('Order_Subtotal')}</dt>
                         <dd className="font-medium text-gray-900">{order.subtotal.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
                       </div>
                       <div className="flex items-center justify-between py-4">
-                        <dt className="text-gray-600">Tax</dt>
+                        <dt className="text-gray-600">{t('Order_Tax')}</dt>
                         <dd className="font-medium text-gray-900">{order.tax.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
                       </div>
                       <div className="flex items-center justify-between py-4">
-                        <dt className="text-gray-600">Discount</dt>
+                        <dt className="text-gray-600">{t('Order_Discount')}</dt>
                         <dd className="font-medium text-red-600">{order.discount.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
                       </div>
                       <div className="flex items-center justify-between pt-4">
-                        <dt className="font-medium text-gray-900">Order total</dt>
+                        <dt className="font-medium text-gray-900">{t('Order_OrderTotal')}</dt>
                         <dd className="font-medium text-indigo-600">{order.orderTotal.toLocaleString('uk-UA', { minimumFractionDigits: 2 }).slice(0, -1)} €</dd>
                       </div>
                     </dl>
@@ -204,9 +205,9 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
               <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between ">
                 <div>
                   <p className="text-sm text-gray-700">
-                    Showing <span className="font-medium">{indexOfFirstItem + 1}</span> to{' '}
-                    <span className="font-medium">{Math.min(indexOfLastItem, countPage)}</span> of{' '}
-                    <span className="font-medium">{countPage}</span> results
+                    {t('Order_Showing')} <span className="font-medium">{indexOfFirstItem + 1}</span> {t('Order_To')}{' '}
+                    <span className="font-medium">{Math.min(indexOfLastItem, countPage)}</span> {t('Order_Of')}{' '}
+                    <span className="font-medium">{countPage}</span> {t('Order_Results')}
                   </p>
                 </div>
               </div>
@@ -223,7 +224,7 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                         }`}
                     >
                       <ArrowLongLeftIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-                      Previous
+                      {t('Order_Previous')}
                     </button>
                   </div>
 
@@ -253,7 +254,7 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                           : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
                         }`}
                     >
-                      Next
+                      {t('Order_Next')}
                       <ArrowLongRightIcon className="ml-3 h-5 w-5 text-gray-400" aria-hidden="true" />
                     </button>
                   </div>
@@ -270,7 +271,7 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
               <img src={GoodsNotFound}></img>
             </div>
             <div className="mt-8 flex justify-center">
-              <p>No orders.</p>
+              <p>{t('Order_NoOrders')}</p>
             </div>
           </div>
         </div>

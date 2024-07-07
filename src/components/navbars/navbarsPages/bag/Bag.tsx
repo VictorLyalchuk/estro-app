@@ -22,6 +22,7 @@ import OrderSummary from "./bagComponents/OrderSummary";
 import VisaCreditCard from "./creditCard/VisaCreditCard";
 import { ICity } from "../../../../interfaces/Address/ICity";
 import { ICountry } from "../../../../interfaces/Address/ICountry";
+import {t} from "i18next";
 
 const Bag = () => {
   const dispatch = useDispatch();
@@ -213,7 +214,7 @@ const Bag = () => {
                   //Address Shipping
                   shippingData={shippingData} 
                        />
-                {/* Patment */}
+                {/* Payment */}
                 <PaymentInformation
                   theme={theme}
                   errors={errors}
@@ -231,7 +232,7 @@ const Bag = () => {
                       type="submit"
                       className='flex w-full items-center justify-center rounded-md border bg-indigo-600 hover:bg-indigo-700
                   px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'>
-                      Confirm The Order
+                      {t('Bag_Confirm')}
                     </button>
                   </FormControl>
                 </div>
@@ -254,7 +255,7 @@ const Bag = () => {
                 <img src={GoodsNotFound}></img>
               </div>
               <div className="mt-8 flex justify-center">
-                <p>No items in the bag.</p>
+                <p>{t('Bag_NoItems')}</p>
               </div>
             </div>
           </div>

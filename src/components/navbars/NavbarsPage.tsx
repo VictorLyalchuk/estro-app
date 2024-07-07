@@ -14,22 +14,8 @@ import { FavoritesReducerActionType } from '../../store/favourites/FavoritesRedu
 import { IUserProfile } from '../../interfaces/Auth/IUserProfile.ts';
 import { getUserData } from '../../services/accounts/account-services.ts';
 import LanguageSelector from './navbarsPages/language/LanguageSelector.tsx';
+import i18next, {t} from "i18next";
 
-const navigation = {
-    featured: [
-        {
-            name: 'New Arrivals',
-            href: '#',
-            imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg',
-            imageAlt: 'Models sitting back to back, wearing Basic Tee in black and bone.',
-        },
-        {
-            name: 'Basic Tees',
-            href: '#',
-            imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg',
-            imageAlt: 'Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.',
-        },],
-}
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -46,6 +32,23 @@ const NavbarsPage = () => {
     const [viewSearch, setViewSearch] = useState('hidden');
     const [searchValue, setSearchValue] = useState('');
     const navigate = useNavigate();
+
+    const navigation = {
+        featured: [
+            {
+                name: t('Navbars_NewArrivals'),
+                href: '#',
+                imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg',
+                imageAlt: 'Models sitting back to back, wearing Basic Tee in black and bone.',
+            },
+            {
+                name: t('Navbars_BasicTees'),
+                href: '#',
+                imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg',
+                imageAlt: 'Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.',
+            },],
+    }
+
 
     useEffect(() => {
         if (user?.Email) {
@@ -83,6 +86,7 @@ const NavbarsPage = () => {
                 navigate(`catalog-home/search/${formattedSearchValue}`)
             }
             else if (searchValue.trim() === "") {
+                console.log(categoryList);
                 changeVisibleSearch();
                 navigate(`catalog-home`)
             }
@@ -136,7 +140,7 @@ const NavbarsPage = () => {
                                             <Tab.List className="-mb-px flex space-x-8 px-4">
                                                 {categoryList.map((category) => (
                                                     <Tab
-                                                        key={category.name}
+                                                        key={category.name_en}
                                                         className={({ selected }) =>
                                                             classNames(
                                                                 selected ? 'border-indigo-600 text-indigo-600' : 'border-transparent text-gray-900',
@@ -144,14 +148,17 @@ const NavbarsPage = () => {
                                                             )
                                                         }
                                                     >
-                                                        {category.name}
+                                                        {i18next.language === 'uk' ? category.name_uk : null}
+                                                        {i18next.language === 'en' ? category.name_en : null}
+                                                        {i18next.language === 'es' ? category.name_es : null}
+                                                        {i18next.language === 'fr' ? category.name_fr : null}
                                                     </Tab>
                                                 ))}
                                             </Tab.List>
                                         </div>
                                         <Tab.Panels as={Fragment}>
                                             {categoryList.map((category) => (
-                                                <Tab.Panel key={category.name} className="space-y-10 px-4 pb-8 pt-10">
+                                                <Tab.Panel key={category.name_en} className="space-y-10 px-4 pb-8 pt-10">
                                                     <div className="grid grid-cols-2 gap-x-4">
                                                         {/* {category.map((item) => (
                                                         <div key={item.name} className="group relative text-sm">
@@ -169,9 +176,12 @@ const NavbarsPage = () => {
                                                     ))} */}
                                                     </div>
                                                     {category.subCategories.map((section) => (
-                                                        <div key={section.name}>
+                                                        <div key={section.name_en}>
                                                             <p id={`${category.id}-${section.id}-heading-mobile`} className="font-medium text-gray-900">
-                                                                {section.name}
+                                                                {i18next.language === 'uk' ? section.name_uk : null}
+                                                                {i18next.language === 'en' ? section.name_en : null}
+                                                                {i18next.language === 'es' ? section.name_es : null}
+                                                                {i18next.language === 'fr' ? section.name_fr : null}
                                                             </p>
                                                             <ul
                                                                 role="list"
@@ -179,8 +189,13 @@ const NavbarsPage = () => {
                                                                 className="mt-6 flex flex-col space-y-6"
                                                             >
                                                                 {section.categories.map((item) => (
-                                                                    <li key={item.name} className="flow-root">
-                                                                        <Link to={`/catalog/${section.urlName}/${item.urlName}`} onClick={() => setOpen(false)}>{item.name} </Link>
+                                                                    <li key={item.name_en} className="flow-root">
+                                                                        <Link to={`/catalog/${section.urlName}/${item.urlName}`} onClick={() => setOpen(false)}>
+                                                                            {i18next.language === 'uk' ? item.name_uk : null}
+                                                                            {i18next.language === 'en' ? item.name_en : null}
+                                                                            {i18next.language === 'es' ? item.name_es : null}
+                                                                            {i18next.language === 'fr' ? item.name_fr : null}
+                                                                        </Link>
                                                                     </li>
                                                                 ))}
                                                             </ul>
@@ -195,7 +210,7 @@ const NavbarsPage = () => {
                                         <Link to={"/store-locations"}
                                             className="flex items-center -mb-px text-sm font-medium text-gray-700 hover:text-indigo-500"
                                         >
-                                            Store
+                                            {t('Navbars_Store')}
                                         </Link>
                                     </div>
                                     {isAuth ? (
@@ -257,7 +272,7 @@ const NavbarsPage = () => {
                                     <Popover.Group className="hidden lg:ml-8 lg:block lg:self-stretch">
                                         <div className="flex h-full space-x-8 ">
                                             {categoryList.map((category) => (
-                                                <Popover key={category.name} className="flex">
+                                                <Popover key={category.name_en} className="flex">
                                                     {({ open }) => (
                                                         <>
                                                             <div className="relative flex">
@@ -269,7 +284,10 @@ const NavbarsPage = () => {
                                                                         'relative z-10 -mb-px flex items-center pt-px text-sm font-medium transition-colors duration-200 ease-out hover:text-indigo-500'
                                                                     )}
                                                                 >
-                                                                    {category.name}
+                                                                    {i18next.language === 'uk' && category.name_uk}
+                                                                    {i18next.language === 'en' && category.name_en}
+                                                                    {i18next.language === 'es' && category.name_es}
+                                                                    {i18next.language === 'fr' && category.name_fr}
                                                                 </Popover.Button>
                                                             </div>
 
@@ -304,7 +322,7 @@ const NavbarsPage = () => {
                                                                                                 {item.name}
                                                                                             </a>
                                                                                             <Link to={"/"} aria-hidden="true" className="mt-1">
-                                                                                                Shop now
+                                                                                                {t('Navbars_ShopNow')}
                                                                                             </Link>
                                                                                         </div>
                                                                                     ))}
@@ -312,25 +330,31 @@ const NavbarsPage = () => {
                                                                                 <div className="row-start-1 grid grid-cols-3 gap-x-8 gap-y-10 text-sm">
                                                                                     {category.subCategories.map((section) => (
 
-                                                                                        <div key={section.name}>
+                                                                                        <div key={section.name_en}>
                                                                                             <Popover.Panel>
                                                                                                 {({ close }) => (
-                                                                                                    <Link id={`${section.name}-heading`} to={`/catalog/${section.urlName}`} onClick={() => close()} className="font-bold text-gray-900">
-                                                                                                        {section.name}
+                                                                                                    <Link id={`${section.name_en}-heading`} to={`/catalog/${section.urlName}`} onClick={() => close()} className="font-bold text-gray-900">
+                                                                                                        {i18next.language === 'uk' ? section.name_uk : null}
+                                                                                                        {i18next.language === 'en' ? section.name_en : null}
+                                                                                                        {i18next.language === 'es' ? section.name_es : null}
+                                                                                                        {i18next.language === 'fr' ? section.name_fr : null}
                                                                                                     </Link>
                                                                                                 )}
                                                                                             </Popover.Panel>
                                                                                             <ul
                                                                                                 role="list"
-                                                                                                aria-labelledby={`${section.name}-heading`}
+                                                                                                aria-labelledby={`${section.name_en}-heading`}
                                                                                                 className="mt-6 space-y-6 sm:mt-4 sm:space-y-4"
                                                                                             >
                                                                                                 {section.categories.map((item) => (
-                                                                                                    <li key={item.name} className="flex hover:text-indigo-500">
+                                                                                                    <li key={item.name_en} className="flex hover:text-indigo-500">
                                                                                                         <Popover.Panel>
                                                                                                             {({ close }) => (
                                                                                                                 <Link to={`/catalog/${section.urlName}/${item.urlName}`} onClick={() => close()}>
-                                                                                                                    {item.name}
+                                                                                                                    {i18next.language === 'uk' ? item.name_uk : null}
+                                                                                                                    {i18next.language === 'en' ? item.name_en : null}
+                                                                                                                    {i18next.language === 'es' ? item.name_es : null}
+                                                                                                                    {i18next.language === 'fr' ? item.name_fr : null}
                                                                                                                 </Link>
                                                                                                             )}
                                                                                                         </Popover.Panel>
@@ -353,7 +377,7 @@ const NavbarsPage = () => {
                                             <Link to={"/store-locations"}
                                                 className="flex items-center -mb-px text-sm font-medium text-gray-700 hover:text-indigo-500"
                                             >
-                                                Store
+                                                {t('Navbars_Store')}
                                             </Link>
                                         </div>
                                     </Popover.Group>
@@ -379,7 +403,7 @@ const NavbarsPage = () => {
                                                                 name="mobile-search-field"
                                                                 id="mobile-search-field"
                                                                 className="h-full w-full border-transparent py-2 pl-8 pr-3 text-base text-gray-900 focus:border-transparent focus:outline-none focus:ring-0 focus:placeholder:text-gray-400 sm:hidden"
-                                                                placeholder="Search"
+                                                                placeholder={t('Navbars_SearchProducts')}
                                                                 type="search"
                                                                 onChange={(e) => setSearchValue(e.target.value)}
                                                                 onKeyDown={handaleSearch}
@@ -388,7 +412,7 @@ const NavbarsPage = () => {
                                                                 name="desktop-search-field"
                                                                 id="desktop-search-field"
                                                                 className="hidden h-full w-full border-transparent py-2 pl-8 pr-3 text-sm text-gray-900 focus:border-transparent focus:outline-none focus:ring-0 focus:placeholder:text-gray-400 sm:block"
-                                                                placeholder="Search products"
+                                                                placeholder={t('Navbars_SearchProducts')}
                                                                 type="search"
                                                                 onChange={(e) => setSearchValue(e.target.value)}
                                                                 onKeyDown={handaleSearch}

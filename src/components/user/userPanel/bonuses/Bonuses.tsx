@@ -2,6 +2,7 @@ import { BonusesUserProps } from "../../../../interfaces/ProfileUser/ProfileUser
 import { ArrowDownCircleIcon, ArrowUpCircleIcon } from '@heroicons/react/20/solid'
 import { formatDate } from "../../../../services/custom/format-data";
 import { useState } from "react";
+import {t} from "i18next";
 
 // const bonuses = [
 //   {
@@ -37,14 +38,14 @@ const Bonuses: React.FC<BonusesUserProps> = ({ userBonuses, bonusBalance }) => {
             <div className="px-4 py-6 sm:p-6 lg:pb-8 min-h-[500px]">
               <div className="sm:flex sm:items-center justify-between">
                 <div >
-                  <h1 className="text-2xl font-bold tracking-tight text-gray-900">My Bonuses</h1>
+                  <h1 className="text-2xl font-bold tracking-tight text-gray-900">{t('Bonuses_MyBonuses')}</h1>
                   <div className='mt-5 text-green-700 bg-green-50 ring-green-600/20 rounded-md py-1 px-2 text-2xl font-medium  flex items-center justify-center leading-loose'>
                     {bonusBalance?.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1)} €
                   </div>
                 </div>
                 {userBonuses.length > 6 && (
                   <button onClick={handleLoadAllProducts} className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">
-                    {showAllBonusess ? 'Show less' : 'Browse all favorites'}
+                    {showAllBonusess ? t('Bonuses_ShowLess') : t('Bonuses_BrowseAll')}
                     {showAllBonusess ? (<span aria-hidden="true"> &larr;</span>) : (<span aria-hidden="true"> &rarr;</span>)}
                   </button>
                 )}
@@ -61,16 +62,16 @@ const Bonuses: React.FC<BonusesUserProps> = ({ userBonuses, bonusBalance }) => {
                     <thead className="border-b border-gray-300 text-gray-900">
                       <tr>
                         <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
-                          Order
+                          {t('Bonuses_Order')}
                         </th>
                         <th scope="col" className="hidden px-3 py-3.5 text-right text-sm font-semibold text-gray-900 sm:table-cell">
-                          Operation
+                          {t('Bonuses_Operation')}
                         </th>
                         <th scope="col" className="hidden px-3 py-3.5 text-right text-sm font-semibold text-gray-900 sm:table-cell">
-                          Description
+                          {t('Bonuses_Description')}
                         </th>
                         <th scope="col" className="py-3.5 pl-3 pr-4 text-right text-sm font-semibold text-gray-900 sm:pr-6">
-                          Bonuses Accrued
+                          {t('Bonuses_BonusesAccrued')}
                         </th>
                       </tr>
                     </thead>
@@ -81,7 +82,7 @@ const Bonuses: React.FC<BonusesUserProps> = ({ userBonuses, bonusBalance }) => {
                           className={`border-b border-gray-200 ${bonus.bonusesOperation === "Accrual" ? "bg-green-50" : "bg-red-50"}`}
                         >
                           <td className="max-w-0 py-5 pl-6 pr-3 text-sm sm:pl-6">
-                            <div className="font-medium text-gray-900">Order #{bonus.name}</div>
+                            <div className="font-medium text-gray-900">{t('Bonuses_Order')} #{bonus.name}</div>
                             <div className="mt-1 truncate text-gray-500">{formatDate(bonus.orderDate)}</div>
                           </td>
                           <td className="hidden px-6 py-5 text-right text-sm text-gray-500 sm:table-cell">{bonus.bonusesOperation}</td>
@@ -103,10 +104,10 @@ const Bonuses: React.FC<BonusesUserProps> = ({ userBonuses, bonusBalance }) => {
                           colSpan={3}
                           className="hidden pl-6 pr-3 pt-4 text-right text-sm font-semibold text-gray-900 sm:table-cell sm:pl-6"
                         >
-                          Bonus Balance
+                          {t('Bonuses_BonusBalance')}
                         </th>
                         <th scope="row" className="pl-6 pr-3 pt-4 text-left text-sm font-semibold text-gray-900 sm:hidden">
-                          Bonus Balance
+                          {t('Bonuses_BonusBalance')}
                         </th>
                         <td className="pl-3 pr-6 pt-4 text-right text-sm font-semibold text-gray-900 sm:pr-6">{bonusBalance?.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1)} €</td>
                       </tr>
@@ -117,7 +118,7 @@ const Bonuses: React.FC<BonusesUserProps> = ({ userBonuses, bonusBalance }) => {
                 <div className="container mx-auto p-8 flex justify-center relative mx-auto max-w-7xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row">
                   <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0">
                     <div className="mt-8 flex justify-center mb-90">
-                      <p>No bonuses.</p>
+                      <p>{t('Bonuses_NoBonuses')}</p>
                     </div>
                   </div>
                 </div>
@@ -125,7 +126,7 @@ const Bonuses: React.FC<BonusesUserProps> = ({ userBonuses, bonusBalance }) => {
               {userBonuses.length > 6 && (
                 <div className="mt-6 sm:hidden">
                   <button onClick={handleLoadAllProducts} className="text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">
-                    {showAllBonusess ? 'Show less' : 'Browse all favorites'}
+                    {showAllBonusess ? t('Bonuses_ShowLess') : t('Bonuses_BrowseAll')}
                     {showAllBonusess ? (<span aria-hidden="true"> &larr;</span>) : (<span aria-hidden="true"> &rarr;</span>)}
                   </button>
                 </div>

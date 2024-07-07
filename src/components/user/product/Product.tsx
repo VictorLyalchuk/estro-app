@@ -22,6 +22,7 @@ import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavorit
 import Brightness1RoundedIcon from '@mui/icons-material/Brightness1Rounded';
 import WomanSizeGuideComponent from './WomanSizeGuideComponent';
 import ManSizeGuideComponent from './ManSizeGuideComponent';
+import {t} from "i18next";
 
 const reviews = { href: '#', average: 4, totalCount: 117 }
 
@@ -76,7 +77,7 @@ export default function Product() {
         });
       }
       catch (ex) {
-        message.error('Error adding to bag!');
+        message.error(t('Product_ErrorAddingToBag'));
       }
     }
   }
@@ -222,7 +223,7 @@ export default function Product() {
             </div>
             {/* Reviews */}
             <div className="mt-6">
-              <h3 className="sr-only">Reviews</h3>
+              <h3 className="sr-only">{t('Product_Reviews')}</h3>
               <div className="flex items-center">
                 <div className="flex items-center">
                   {[0, 1, 2, 3, 4].map((rating, index) => (
@@ -236,9 +237,9 @@ export default function Product() {
                     />
                   ))}
                 </div>
-                <p className="sr-only">{reviews.average} out of 5 stars</p>
+                <p className="sr-only">{reviews.average} {t('Product_OutOf')} 5 {t('Product_Stars')}</p>
                 <a href={reviews.href} className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                  {reviews.totalCount} reviews
+                  {reviews.totalCount} {t('Product_Reviews')}
                 </a>
               </div>
             </div>
@@ -247,9 +248,9 @@ export default function Product() {
               {/* Sizes */}
               <div className="mt-10">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium text-gray-900">Size</h3>
+                  <h3 className="text-sm font-medium text-gray-900">{t('Product_Size')}</h3>
                   <a onClick={() => setQuickviewOpen(true)} className="text-sm font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer">
-                    Size guide
+                    {t('Product_SizeGuide')}
                   </a>
                 </div>
 
@@ -258,7 +259,7 @@ export default function Product() {
                 <RadioGroup value={selectedSize}
                   onChange={setSelectedSize}
                   className="mt-4">
-                  <RadioGroup.Label className="sr-only">Choose a size</RadioGroup.Label>
+                  <RadioGroup.Label className="sr-only">{t('Product_ChooseASize')}</RadioGroup.Label>
                   <div className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4">
                     {product.storages?.map((size) => (
                       <RadioGroup.Option
@@ -318,7 +319,7 @@ export default function Product() {
                   className={`p-2 mr-3 flex w-full items-center justify-center rounded-md border ${!selectedSize ? 'bg-gray-300' : 'bg-indigo-600 hover:bg-indigo-700'
                     } px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
                 >
-                  {selectedSize ? 'Add to bag' : 'Select a size'}
+                  {selectedSize ? t('Product_AddToBag') : t('Product_SelectASize')}
                 </button>
 
                 <div className="cursor-pointer">
@@ -337,16 +338,16 @@ export default function Product() {
             </form>
 
             <div className="mt-8">
-              <h3 className="text-1xl text-gray-900">Article: {product.article}</h3>
+              <h3 className="text-1xl text-gray-900">{t('Product_Article')}: {product.article}</h3>
             </div>
             <div className="mt-4">
-              <h3 className="text-1xl text-gray-900">Color: {product.color}</h3>
+              <h3 className="text-1xl text-gray-900">{t('Product_Color')}: {product.color}</h3>
             </div>
             <div className="mt-4">
-              <h3 className="text-1xl text-gray-900">Material: {product.material}</h3>
+              <h3 className="text-1xl text-gray-900">{t('Product_Material')}: {product.material}</h3>
             </div>
             <div className="mt-4">
-              <h3 className="text-1xl text-gray-900">Period: {product.purpose}</h3>
+              <h3 className="text-1xl text-gray-900">{t('Product_Period')}: {product.purpose}</h3>
             </div>
           </div>
         </div>
@@ -358,7 +359,7 @@ export default function Product() {
           <div className="py-10 lg:col-span-3 lg:col-start-1 lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
             {/* Description and details */}
             <div>
-              <h2 className="text-sm font-medium text-gray-900">Description</h2>
+              <h2 className="text-sm font-medium text-gray-900">{t('Product_Description')}</h2>
 
 
               <div className="mt-4 space-y-6">
@@ -367,7 +368,7 @@ export default function Product() {
             </div>
 
             <div className="mt-10">
-              <h3 className="text-sm font-medium text-gray-900">Highlights</h3>
+              <h3 className="text-sm font-medium text-gray-900">{t('Product_Highlights')}</h3>
 
               <div className="mt-4">
                 <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
@@ -383,7 +384,7 @@ export default function Product() {
             </div>
 
             <div className="mt-10">
-              <h2 className="text-sm font-medium text-gray-900">Details</h2>
+              <h2 className="text-sm font-medium text-gray-900">{t('Product_Details')}</h2>
 
               <div className="mt-4 space-y-6">
                 <p className="text-sm text-gray-600">{product.details}</p>

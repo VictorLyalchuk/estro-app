@@ -7,6 +7,7 @@ import ResetPassword from './forgotPassword/ResetPassword';
 import ForgotPassword from './forgotPassword/ForgotPassword';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import {useTranslation} from "react-i18next";
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -14,7 +15,8 @@ function classNames(...classes: string[]) {
 
 const AuthPage = () => {
     const { email, token } = useParams<{ email: string, token: string }>();
-    const [activeTab, setActiveTab] = useState(0); 
+    const [activeTab, setActiveTab] = useState(0);
+    const {t} = useTranslation();
 
     const handlePasswordResetConfirmation: () => void = () => {
         setActiveTab(2); 
@@ -48,7 +50,7 @@ const AuthPage = () => {
                                                     : 'text-white hover:bg-white/[0.12] hover:text-white'
                                             )
                                         }
-                                    >Login
+                                    >{t('AuthPanelPage_Login')}
                                     </Tab>
                                     <Tab
                                         className={({ selected }) =>
@@ -60,7 +62,7 @@ const AuthPage = () => {
                                                     : 'text-white hover:bg-white/[0.12] hover:text-white'
                                             )
                                         }
-                                    >Register
+                                    >{t('AuthPanelPage_Register')}
                                     </Tab>
                                     <Tab
                                         className={({ selected }) =>
@@ -72,7 +74,7 @@ const AuthPage = () => {
                                                     : 'text-white hover:bg-white/[0.12] hover:text-white'
                                             )
                                         }
-                                    >Forgot password
+                                    >{t('AuthPanelPage_ForgotPassword')}
                                     </Tab>
                                 </Tab.List>
 

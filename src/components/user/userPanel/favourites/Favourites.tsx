@@ -8,6 +8,7 @@ import { IFavoriteProducts } from "../../../../interfaces/FavoriteProducts/IFavo
 import { removeFromFavorite } from "../../../../store/favourites/FavoritesReducer";
 import { removeFavoriteProduct } from "../../../../services/userFavoriteProducts/user-favorite-products-services";
 import useGetFavoritesEffect from "../../../../useGetFavoritesEffect";
+import {t} from "i18next";
 
 const Favourites = () => {
   const [showAllProducts, setShowAllProducts] = useState(false);
@@ -35,10 +36,10 @@ const Favourites = () => {
           <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
             <div className="px-4 py-6 sm:p-6 lg:pb-8 min-h-[500px]">
               <div className="sm:flex sm:items-baseline sm:justify-between">
-                <h2 className="text-2xl font-bold tracking-tight text-gray-900">My Favorites</h2>
+                <h2 className="text-2xl font-bold tracking-tight text-gray-900">{t('Favorites_MyFavorites')}</h2>
                 {favoriteProducts.length > 6 && (
                   <button onClick={handleLoadAllProducts} className="hidden text-sm font-semibold text-indigo-600 hover:text-indigo-500 sm:block">
-                    {showAllProducts ? 'Show less' : 'Browse all favorites'}
+                    {showAllProducts ? t('Favorites_ShowLess') : t('Favorites_BrowseAll')}
                     {showAllProducts ? (<span aria-hidden="true"> &larr;</span>) : (<span aria-hidden="true"> &rarr;</span>)}
                   </button>
                 )}
@@ -67,21 +68,23 @@ const Favourites = () => {
                       </Link>
                       <div className="flex items-end opacity-0 group-hover:opacity-100" aria-hidden="true">
                         {!product.storages?.every(storage => !storage.inStock) ? (
-                          <ul className="mt-4 grid grid-cols-12 gap-2">
-                            <li className="text-xs border-transparent pointer-events-none -inset-px rounded-md">
-                              Size:
-                            </li>
-                            {product.storages?.map((size) => (
-                              size.inStock && (
-                                <li key={size.size}
-                                  // onClick={() => handleQuickviewOpen(product, size)}
-                                  className="cursor-pointer text-xs border-transparent -inset-px rounded-md ml-2 hover:text-indigo-500">
-                                  {size.size}
-                                </li>
-                              )
-                            ))}
-                          </ul>
+                            <div className="mt-4 flex flex-wrap gap-2">
+                              <p className="mr-0.5 text-xs border-transparent pointer-events-none -inset-px rounded-md">
+                                {t('Favorites_Size')}
+                              </p>
+                              {product.storages?.map((size) => (
+                                  size.inStock && (
+                                      <p key={size.size}
+                                          // onClick={() => handleQuickviewOpen(product, size)}
+                                         className="cursor-pointer text-xs border-transparent -inset-px rounded-md hover:text-indigo-500">
+                                        {size.size}
+                                      </p>
+                                  )
+                              ))}
+                            </div>
                         ) : null}
+
+
                       </div>
                     </div>
                   ))}
@@ -91,7 +94,7 @@ const Favourites = () => {
               {favoriteProducts.length > 6 && (
                 <div className="mt-6 sm:hidden">
                   <button onClick={handleLoadAllProducts} className="block text-sm font-semibold text-indigo-600 hover:text-indigo-500">
-                    {showAllProducts ? 'Show less' : 'Browse all favorites'}
+                    {showAllProducts ? t('Favorites_ShowLess') : t('Favorites_BrowseAll')}
                     {showAllProducts ? (<span aria-hidden="true"> &larr;</span>) : (<span aria-hidden="true"> &rarr;</span>)}
                   </button>
                 </div>
@@ -100,9 +103,9 @@ const Favourites = () => {
                 <div className="sm:flex sm:flex-1 sm:items-center sm:justify-between ">
                   <div>
                     <p className="text-sm text-gray-700">
-                      Showing <span className="font-medium">{displayedProducts.length}
-                        {' '}of{' '}</span>
-                      <span className="font-medium">{favoriteProducts.length}</span> results
+                      {t('CatalogHome_PaginationShowing')} <span className="font-medium">{displayedProducts.length}
+                        {' '}{t('CatalogHome_PaginationOf')}{' '}</span>
+                      <span className="font-medium">{favoriteProducts.length}</span> {t('CatalogHome_PaginationResults')}
                     </p>
                   </div>
                 </div>

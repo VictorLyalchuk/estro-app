@@ -17,6 +17,7 @@ import { RootState } from '../../../store/store';
 import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavoritesReducer';
 import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/userFavoriteProducts/user-favorite-products-services';
 import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts'
+import {t} from "i18next";
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -62,7 +63,7 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                 });
             }
             catch (ex) {
-                console.error('Error adding to bag!');
+                console.error(t('Product_ErrorAddingToBag'));
             }
         }
     }
@@ -122,7 +123,7 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                             onClick={() => setOpen(false)}
                                             tabIndex={0}
                                         >
-                                            <span className="sr-only">Close</span>
+                                            <span className="sr-only">{t('Product_Close')}</span>
                                             <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                                         </button>
                                         <div className="grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:gap-x-8">
@@ -144,7 +145,7 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
 
                                                 <section aria-labelledby="information-heading" className="mt-2">
                                                     <h3 id="information-heading" className="sr-only">
-                                                        Product information
+                                                        {t('Product_ProductInformation')}
                                                     </h3>
                                                     <div className="mt-4 flex items-center justify-between">
 
@@ -177,15 +178,15 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
 
                                                 <section aria-labelledby="options-heading" className="mt-10">
                                                     <h3 id="options-heading" className="sr-only">
-                                                        Product options
+                                                        {t('Product_ProductOptions')}
                                                     </h3>
                                                     <form>
                                                         {/* Sizes */}
                                                         <div className="mt-10">
                                                             <div className="flex items-center justify-between">
-                                                                <h4 className="text-sm font-medium text-gray-900">Size</h4>
+                                                                <h4 className="text-sm font-medium text-gray-900">{t('Product_Size')}</h4>
                                                                 <a href="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                                                                    Size guide
+                                                                    {t('Product_SizeGuide')}
                                                                 </a>
                                                             </div>
                                                             <RadioGroup
@@ -251,7 +252,7 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                                                 className={`p-2 mr-3 flex w-full items-center justify-center rounded-md border ${!selectedSize ? 'bg-gray-300' : 'bg-indigo-600 hover:bg-indigo-700'
                                                                     } px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
                                                             >
-                                                                {selectedSize ? 'Add to bag' : 'Select a size'}
+                                                                {selectedSize ? t('Product_AddToBag') : t('Product_SelectASize')}
                                                             </button>
 
                                                             <div className="cursor-pointer">

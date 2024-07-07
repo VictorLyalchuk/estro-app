@@ -27,6 +27,8 @@ import TextFieldComponent from '../../../../../ui/input-with-label/TextFieldComp
 import PasswordFieldComponent from '../../../../../ui/input-with-label/PasswordFieldComponent';
 import PhoneNumberComponent from '../../../../../ui/input-with-label/PhoneNumberComponent';
 import { State } from '../../../../../interfaces/Custom/Phone/State';
+import {useTranslation} from "react-i18next";
+import i18next from "i18next";
 
 interface GoogleOAuthResponse {
     access_token: string;
@@ -49,6 +51,7 @@ const LoginPage = () => {
     const [myToken, setMyToken] = useState("");
     const [isDisabled, setIsDisabled] = useState(false);
     const [countdown, setCountdown] = useState(30);
+    const {t} = useTranslation();
 
     useEffect(() => {
         let timer: string | number | NodeJS.Timeout | undefined;
@@ -98,7 +101,7 @@ const LoginPage = () => {
                 navigate("/");
             } catch (error) {
                 console.error("Login error:", error);
-                setErrorMessage("Invalid email or password");
+                setErrorMessage(t('LoginPage_InvalidEmailOrPassword'));
                 setTimeout(() => {
                     setErrorMessage("");
                 }, 1000);
@@ -120,7 +123,7 @@ const LoginPage = () => {
 
         } catch (error) {
             console.error("Login error:", error);
-            setErrorMessage("Invalid email or password");
+            setErrorMessage(t('LoginPage_InvalidEmailOrPassword'));
             setTimeout(() => {
                 setErrorMessage("");
             }, 1000);
@@ -190,7 +193,7 @@ const LoginPage = () => {
 
             setIsPhoneExists(false);
             console.error("Verification error:", error);
-            setErrorMessage("Invalid code or verification failed");
+            setErrorMessage(t('LoginPage_InvalidCodeOrVerification'));
             setTimeout(() => {
                 setErrorMessage("");
             }, 1000);
@@ -200,6 +203,7 @@ const LoginPage = () => {
 
     const googleSuccess = async (response: GoogleOAuthResponse) => {
         console.log(response);
+        console.log(i18next.language);
 
         if (response) {
             try {
@@ -226,7 +230,7 @@ const LoginPage = () => {
                     navigate('/');
                 } catch (error) {
                     console.error('Login error:', error);
-                    setErrorMessage('Invalid email or password');
+                    setErrorMessage(t('LoginPage_InvalidEmailOrPassword'));
                     setTimeout(() => {
                         setErrorMessage('');
                     }, 1000);
@@ -291,7 +295,7 @@ const LoginPage = () => {
                             <div className="mb-24 w-full">
                                 <div className="sm:mx-auto sm:w-full sm:max-w-sm" >
                                     <h2 className="mt-5 mb-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                                        Login
+                                        {t('LoginPage_Login')}
                                     </h2>
                                 </div>
 
@@ -300,7 +304,7 @@ const LoginPage = () => {
                                         <form onSubmit={handleSubmitEmail}>
                                             <ThemeProvider theme={theme}>
                                                 <TextFieldComponent
-                                                    label="Email"
+                                                    label={t('LoginPage_Email')}
                                                     name="email"
                                                     id="email"
                                                     value={formData.email}
@@ -310,7 +314,7 @@ const LoginPage = () => {
                                                     maxLength={30}       
                                                 />
                                                 <PasswordFieldComponent
-                                                    label="Password"
+                                                    label={t('LoginPage_Password')}
                                                     name="password"
                                                     id="password"
                                                     value={formData.password}
@@ -323,7 +327,7 @@ const LoginPage = () => {
                                             </ThemeProvider>
                                             <FormControl fullWidth className={classes.margin} variant="outlined">
                                                 <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
-                                                    Sign in
+                                                    {t('LoginPage_SignIn')}
                                                 </Button>
                                             </FormControl>
                                         </form>
@@ -334,7 +338,7 @@ const LoginPage = () => {
                                         <ThemeProvider theme={theme}>
                                             <PhoneNumberComponent
                                                 value={values.textmask}
-                                                label="Phone Number"
+                                                label={t('LoginPage_PhoneNumber')}
                                                 id="textmark"
                                                 onChange={handleChangePhoneNumber}
                                                 error={errors.phoneNumber}
@@ -359,18 +363,18 @@ const LoginPage = () => {
                                         <FormControl fullWidth className={classes.margin}>
                                             {!isPhoneExists ? (
                                                 <Button className={classes.button} disabled={isDisabled} type="submit" variant="contained" size="large" color="primary" disableElevation>
-                                                    {isDisabled ? `Send code (${countdown}s)` : 'Send code'}
+                                                    {isDisabled ? t('LoginPage_SendCode') + `(${countdown}s)` : t('LoginPage_SendCode')}
                                                 </Button>
                                             ) : (
                                                 <Button className={classes.button} onClick={handleCodeConfirm} type="button" variant="contained" size="large" color="primary" disableElevation>
-                                                    Sign in
+                                                    {t('LoginPage_SignIn')}
                                                 </Button>
                                             )}
                                         </FormControl>
                                     </form>
                                 )}
 
-                                <Divider>or</Divider>
+                                <Divider>{t('LoginPage_Or')}</Divider>
                                 <div className={"flex justify-center"}>
                                     <Button className={"bg-gray-400"} onClick={() => loginGoogle()}>
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024">
@@ -381,10 +385,10 @@ const LoginPage = () => {
                                 <div className={"flex justify-center mt-5"}>
                                     {!isPhoneLogin ?
                                         (
-                                            <p onClick={togglePhone} className="cursor-pointer hover:scale-110 transition-transform duration-300">Use phone</p>
+                                            <p onClick={togglePhone} className="cursor-pointer hover:scale-110 transition-transform duration-300">{t('LoginPage_UsePhone')}</p>
                                         ) :
                                         (
-                                            <p onClick={toggleEmail} className="cursor-pointer hover:scale-110 transition-transform duration-300">Use email</p>
+                                            <p onClick={toggleEmail} className="cursor-pointer hover:scale-110 transition-transform duration-300">{t('LoginPage_UseEmail')}</p>
                                         )}
                                 </div>
                             </div >
@@ -393,36 +397,36 @@ const LoginPage = () => {
                         <div className="w-full lg:w-2/4 p-5 lg:mb-0">
                             <div className="bg-white-container-login flex flex-col justify-center items-center h-full">
                                 <h1 className="text-white text-9xl hover:text-indigo-300">estro</h1>
-                                <p className="text-white text-sx mb-10 hover:text-indigo-300">SHOES, CLOTHING & ACCESSORIES</p>
+                                <p className="text-white text-sx mb-10 hover:text-indigo-300">{t('Logo_Paragraph')}</p>
 
                                 <br />
 
                                 <p className="text-center text-sx hover:text-indigo-300">
-                                    Welcome back
+                                    {t('LoginPage_WelcomeBack')}
                                 </p>
                                 <br />
 
                                 <p className="text-center text-sx hover:text-indigo-300">
-                                    Check your account, you have a discount
+                                    {t('LoginPage_CheckAccount')}
                                 </p>
                                 <br />
                                 <ul className="list-disc text-sx text-left">
                                     <li className="mb-5 mt-2 flex justify-center items-center gap-x-3 relative hover:text-indigo-300">
                                         <BanknotesIcon className="h-7 w-7 text-gray-300" />
                                         <p className="text-center">
-                                            Rewards
+                                            {t('LoginPage_Rewards')}
                                         </p>
                                     </li>
                                     <li className="mb-5 mt-2 flex justify-center items-center gap-x-3 relative hover:text-indigo-300">
                                         <GiftIcon className="h-7 w-7 text-gray-300" />
                                         <p className="text-center">
-                                            Surprises!
+                                            {t('LoginPage_Surprises')}
                                         </p>
                                     </li>
                                     <li className="mb-5 mt-2 flex justify-center items-center gap-x-3 relative hover:text-indigo-300" >
                                         <TrophyIcon className="h-7 w-7 text-gray-300" />
                                         <p className="text-center">
-                                            Personal promotions!
+                                            {t('LoginPage_PersonalPromotions')}
                                         </p>
                                     </li>
                                 </ul>

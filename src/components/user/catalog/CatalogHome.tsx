@@ -13,7 +13,6 @@ import qs, { ParsedQs } from 'qs'
 import { getProductsist, getQuantityProducts } from '../../../services/product/product-services'
 import { getInfoList } from '../../../services/info/info-services'
 import ProductQuickview from '../product/ProductQuickview'
-import { initialSortOptions } from '../../../data/initialSortOptions'
 import { getMainCategories } from '../../../services/category/category-services'
 import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/userFavoriteProducts/user-favorite-products-services'
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer'
@@ -21,12 +20,21 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavoritesReducer'
 import { RootState } from '../../../store/store'
 import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts'
+import i18next, {t} from "i18next";
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
 }
 
 export default function CatalogHome() {
+    const initialSortOptions: ISortOptions[] = [
+        { name: t('Sort_Newest'), url: 'newest', current: false },
+        { name: t('Sort_Popular'), url: 'most_popular', current: false },
+        { name: t('Sort_Rating'), url: 'best_rating', current: false },
+        { name: t('Sort_LowToHigh'), url: 'price_low_to_high', current: false },
+        { name: t('Sort_HighToLow'), url: 'price_high_to_low', current: false },
+    ];
+
     const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
     const favoriteProducts = useSelector((state: RootState) => state.favorites.favoriteProducts);
     const isFavorite = (productId: number) => favoriteProducts.some((product: { productId: number }) => product.productId === productId);
@@ -166,16 +174,33 @@ export default function CatalogHome() {
                     mainCategory.subCategories.forEach((subCategory, index) => {
                         const options = subCategory.categories.map(category => ({
                             id: category.id.toString(),
-                            label: category.name,
+                            label: (() => {
+                                switch (i18next.language) {
+                                    case 'uk':
+                                        return category.name_uk;
+                                    case 'en':
+                                        return category.name_en;
+                                    case 'es':
+                                        return category.name_es;
+                                    case 'fr':
+                                        return category.name_fr;
+                                    default:
+                                        return category.name_en; // Fallback to English if language not found
+                                }
+                            })(),
                             value: category.urlName
                         }));
 
                         subCategoryWithOptions.push({
                             id: subCategory.id.toString(),
-                            name: subCategory.name,
+                            name_en: subCategory.name_en,
+                            name_es: subCategory.name_es,
+                            name_fr: subCategory.name_fr,
+                            name_uk: subCategory.name_uk,
                             value: `category-${index + 1}`,
                             options: options
                         });
+
                     });
 
                     setSubCategoryIndex(mainCategory.subCategories.length);
@@ -320,12 +345,17 @@ export default function CatalogHome() {
                                     {/* Filters */}
                                     <form className="mt-4">
                                         {filterOptionsList.map((section) => (
-                                            <Disclosure as="div" key={section.name} className="border-t border-gray-200 px-4 py-6">
+                                            <Disclosure as="div" key={section.name_en} className="border-t border-gray-200 px-4 py-6">
                                                 {({ open }) => (
                                                     <>
                                                         <h3 className="-mx-2 -my-3 flow-root">
                                                             <Disclosure.Button className="flex w-full items-center justify-between bg-gray-100 px-2 py-3 text-sm text-gray-400">
-                                                                <span className="font-medium text-gray-900 hover:text-indigo-500">{section.name}</span>
+                                                                <span className="font-medium text-gray-900 hover:text-indigo-500">
+                                                                    {i18next.language === 'uk' && section.name_uk}
+                                                                    {i18next.language === 'en' && section.name_en}
+                                                                    {i18next.language === 'es' && section.name_es}
+                                                                    {i18next.language === 'fr' && section.name_fr}
+                                                                </span>
                                                                 <span className="ml-6 flex items-center">
                                                                     <ChevronDownIcon
                                                                         className={classNames(open ? '-rotate-180' : 'rotate-0', 'h-5 w-5 transform')}
@@ -377,20 +407,19 @@ export default function CatalogHome() {
                                 <div className="lg:mr-4 w-full lg:w-2/4 lg:border-r">
                                     <h1 className="text-3xl font-bold tracking-tight text-gray-900">ESTRO</h1>
                                     <p className="mt-4 max-w-xl text-sm text-gray-700">
-                                        Our thoughtfully designed workspace objects are crafted in limited runs. Improve your productivity and
-                                        organization with these sale items before we run out.
+                                        {t('CatalogHome_EstroDescription')}
                                     </p>
                                 </div>
                                 <div className="lg:ml-4 mt-8 lg:mt-0 w-full lg:w-2/4 ">
-                                    <h1 className="text-3xl font-bold tracking-tight text-gray-900">SEARCH</h1>
+                                    <h1 className="text-3xl font-bold tracking-tight text-gray-900 uppercase">{t('CatalogHome_Search')}</h1>
                                     <div className="mt-4 flex-grow w-96">
                                         <form className="flex w-full lg:ml-0"
                                         >
                                             <label htmlFor="mobile-search-field" className="sr-only">
-                                                Search
+                                                {t('CatalogHome_Search')}
                                             </label>
                                             <label htmlFor="desktop-search-field" className="sr-only">
-                                                Search
+                                                {t('CatalogHome_Search')}
                                             </label>
                                             <div className="relative w-full text-gray-400 focus-within:text-gray-600">
                                                 <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center">
@@ -410,7 +439,7 @@ export default function CatalogHome() {
                                                     name="desktop-search-field"
                                                     id="desktop-search-field"
                                                     className="hidden h-full w-full border-transparent py-2 pl-8 pr-3 text-sm text-gray-900 focus:border-transparent focus:outline-none focus:ring-0 focus:placeholder:text-gray-400 sm:block"
-                                                    placeholder="Search products"
+                                                    placeholder={t('CatalogHome_SearchProducts')}
                                                     type="search"
                                                     value={searchValue}
                                                     onChange={(e) => setSearchValue(e.target.value)}
@@ -427,7 +456,7 @@ export default function CatalogHome() {
                     {/* Filters */}
                     <section aria-labelledby="filter-heading">
                         <h2 id="filter-heading" className="sr-only">
-                            Filters
+                            {t('CatalogHome_Filters')}
                         </h2>
 
                         <div className="relative mx-auto max-w-7xl border-b border-gray-200 bg-gray-100 pb-4">
@@ -435,7 +464,7 @@ export default function CatalogHome() {
                                 <Menu as="div" className="relative inline-block text-left">
                                     <div>
                                         <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-indigo-500">
-                                            Sort
+                                            {t('CatalogHome_Sort')}
                                             <ChevronDownIcon
                                                 className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                                                 aria-hidden="true"
@@ -481,7 +510,7 @@ export default function CatalogHome() {
                                     className="inline-block text-sm font-medium text-gray-700 hover:text-gray-900 hover:text-indigo-500 sm:hidden"
                                     onClick={() => setMobileFiltersOpen(true)}
                                 >
-                                    Filters
+                                    {t('CatalogHome_Filters')}
                                 </button>
 
                                 <div className="hidden sm:block">
@@ -489,9 +518,14 @@ export default function CatalogHome() {
                                         <Popover.Group className="-mx-4 flex items-center divide-x divide-gray-200">
                                             {filterOptionsList.map((section, index) => (
 
-                                                <Popover key={section.name} className="relative inline-block px-4 text-left">
+                                                <Popover key={section.name_en} className="relative inline-block px-4 text-left">
                                                     <Popover.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-indigo-500 ">
-                                                        <span>{section.name}</span>
+                                                        <span>
+                                                            {i18next.language === 'uk' && section.name_uk}
+                                                            {i18next.language === 'en' && section.name_en}
+                                                            {i18next.language === 'es' && section.name_es}
+                                                            {i18next.language === 'fr' && section.name_fr}
+                                                        </span>
                                                         {filterValueCounts[index] > 0 && (
                                                             <span className="ml-1.5 rounded bg-gray-200 px-1.5 py-0.5 text-xs font-semibold tabular-nums text-gray-700">
                                                                 {filterValueCounts[index]}
@@ -553,7 +587,7 @@ export default function CatalogHome() {
                         <div className="bg-gray-100">
                             <div className="mx-auto max-w-7xl px-4 py-3 sm:flex sm:items-center sm:px-6 lg:px-8">
                                 <h3 className="text-sm font-medium text-gray-500">
-                                    Filters
+                                    {t('CatalogHome_Filters')}
                                     <span className="sr-only">, active</span>
                                 </h3>
                                 <div aria-hidden="true" className="hidden h-5 w-px bg-gray-300 sm:ml-4 sm:block" />
@@ -586,8 +620,8 @@ export default function CatalogHome() {
                                     </div>
                                 </div>
                                 <div className=" m-1 inline-flex items-center rounded-full border border-gray-200 bg-gray-100 py-1.5 pl-3 pr-2 text-sm font-medium text-gray-900">
-                                    <button type="button" onClick={resetFilters} className="text-gray-800 hover:text-indigo-500">
-                                        Clear all
+                                    <button type="button" onClick={resetFilters} className="text-gray-800 hover:text-indigo-500 w-20">
+                                        {t('CatalogHome_FiltersClear')}
                                     </button>
                                 </div>
                             </div>
@@ -620,20 +654,25 @@ export default function CatalogHome() {
                                     <p className="mt-1 text-xs text-gray-500">{product.purpose}</p>
                                     <p className="mt-1 text-lg font-medium text-red-900">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
                                     <div className="flex items-end opacity-0 group-hover:opacity-100" aria-hidden="true">
-                                        <ul className="mt-4 grid grid-cols-12 gap-2">
-                                            <li className="text-xs border-transparent pointer-events-none -inset-px rounded-md">
-                                                Size:
-                                            </li>
-                                            {product.storages?.map((size) => (
-                                                size.inStock && (
-                                                    <li key={size.size}
-                                                        onClick={() => handleQuickviewOpen(product, size)}
-                                                        className="cursor-pointer text-xs border-transparent -inset-px rounded-md ml-2 hover:text-indigo-500">
-                                                        {size.size}
-                                                    </li>
-                                                )
-                                            ))}
-                                        </ul>
+                                        <div className="mt-4 flex items-center gap-1">
+                                            <p className=" text-xs border-transparent pointer-events-none -inset-px rounded-md">
+                                                {t('CatalogHome_Size')}:
+                                            </p>
+                                            <div className="flex gap-1">
+                                                {product.storages?.map((size) => (
+                                                    size.inStock && (
+                                                        <p
+                                                            key={size.size}
+                                                            onClick={() => handleQuickviewOpen(product, size)}
+                                                            className="cursor-pointer text-xs border-transparent -inset-px rounded-md hover:text-indigo-500"
+                                                        >
+                                                            {size.size}
+                                                        </p>
+                                                    )
+                                                ))}
+                                            </div>
+                                        </div>
+
                                     </div>
 
                                     <div className="flex items-end pt-2 opacity-0 group-hover:opacity-100" aria-hidden="true">
@@ -654,9 +693,9 @@ export default function CatalogHome() {
                             <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between ">
                                 <div>
                                     <p className="text-sm text-gray-700">
-                                        Showing <span className="font-medium">{indexOfFirstItem + 1}</span> to{' '}
-                                        <span className="font-medium">{Math.min(indexOfLastItem, countPage)}</span> of{' '}
-                                        <span className="font-medium">{countPage}</span> results
+                                        {t('CatalogHome_PaginationShowing')} <span className="font-medium">{indexOfFirstItem + 1}</span> {t('CatalogHome_PaginationTo')}{' '}
+                                        <span className="font-medium">{Math.min(indexOfLastItem, countPage)}</span> {t('CatalogHome_PaginationOf')}{' '}
+                                        <span className="font-medium">{countPage}</span> {t('CatalogHome_PaginationResults')}
                                     </p>
                                 </div>
                             </div>
@@ -674,7 +713,8 @@ export default function CatalogHome() {
                                                 }`}
                                         >
                                             <ArrowLongLeftIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-                                            Previous
+                                            {t('CatalogHome_Previous')}
+
                                         </button>
                                     </div>
 
@@ -704,7 +744,7 @@ export default function CatalogHome() {
                                                     : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
                                                 }`}
                                         >
-                                            Next
+                                            {t('CatalogHome_Next')}
                                             <ArrowLongRightIcon className="ml-3 h-5 w-5 text-gray-400" aria-hidden="true" />
                                         </button>
                                     </div>

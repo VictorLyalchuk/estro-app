@@ -6,6 +6,7 @@ import { APP_ENV } from "../../../../env/config";
 import { BagReducerActionType } from '../../../../store/bag/BagReducer';
 import { ArrowLeftOnRectangleIcon, Cog6ToothIcon, CurrencyDollarIcon, DocumentChartBarIcon, HeartIcon, UserIcon } from '@heroicons/react/24/outline';
 import { FavoritesReducerActionType } from '../../../../store/favourites/FavoritesReducer';
+import {useTranslation} from "react-i18next";
 
 const DropdownUser = () => {
   const baseUrl = APP_ENV.BASE_URL;
@@ -14,6 +15,7 @@ const DropdownUser = () => {
   const dispatch = useDispatch();
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
+  const {t} = useTranslation();
 
   const handleDropdownClick = (event: { preventDefault: () => void; }) => {
     event.preventDefault(); 
@@ -89,7 +91,7 @@ const DropdownUser = () => {
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500 "
             >
               <DocumentChartBarIcon className="h-5 w-5" aria-hidden="true" />
-              My Orders
+              {t('DropdownUser_MyOrders')}
             </Link>
           </li>
           <li>
@@ -99,7 +101,7 @@ const DropdownUser = () => {
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500 "
             >
               <UserIcon className="h-5 w-5" aria-hidden="true" />
-              Profile
+              {t('DropdownUser_Profile')}
             </Link>
           </li>
 
@@ -110,7 +112,7 @@ const DropdownUser = () => {
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500"
             >
               <Cog6ToothIcon className="h-5 w-5" aria-hidden="true" />
-              Account Settings
+              {t('DropdownUser_AccountSettings')}
             </Link>
           </li>
 
@@ -121,7 +123,7 @@ const DropdownUser = () => {
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500"
             >
               <HeartIcon className="h-5 w-5" aria-hidden="true" />
-              Favorites
+              {t('DropdownUser_Favorites')}
             </Link>
           </li>
 
@@ -132,14 +134,14 @@ const DropdownUser = () => {
               className="flex items-center gap-3.5 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500"
             >
               <CurrencyDollarIcon className="h-5 w-5" aria-hidden="true" />
-              Bonuses
+              {t('DropdownUser_Bonuses')}
             </Link>
           </li>
 
         </ul>
         <Link className="flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500" to={"/"} onClick={handleLogout}>
           <ArrowLeftOnRectangleIcon className="h-5 w-5" aria-hidden="true" />
-          Log Out
+          {t('DropdownUser_LogOut')}
         </Link>
       </div>
       {/* <!-- Dropdown End --> */}

@@ -12,6 +12,7 @@ import visa from '../../../../../assets/visa.webp'
 import CardTextFieldNoLableComponent from '../../../../../ui/input-for-card/CardTextFieldComponent';
 import { Theme, ThemeProvider } from '@material-ui/core/styles';
 import { validateForm } from '../../../../../validations/bag/card-validations';
+import {t} from "i18next";
 
 interface VisaCreditCardProps {
     theme: Theme;
@@ -186,7 +187,7 @@ const VisaCreditCard: React.FC<VisaCreditCardProps> = ({ isOpen, setOpen, model,
                                                     <div className="logo absolute w-26 h-22 top-2 m-2">{renderLogo()}</div>
                                                     <div className="number text-3xl">{formatCreditCardNumber(cardData.creditCardNumber)}</div>
                                                     <div className="card-holder">
-                                                        <label className="text-xs opacity-50">Card holder</label>
+                                                        <label className="text-xs opacity-50">{t('Bag_Card_CardHolder')}</label>
                                                         <div className="text-lg">{cardData.creditCardHolderName}</div>
                                                     </div>
                                                 </div>
@@ -198,7 +199,7 @@ const VisaCreditCard: React.FC<VisaCreditCardProps> = ({ isOpen, setOpen, model,
                                                         <div>{cardData.creditCardCvv}</div>
                                                     </div>
                                                     <div className="card-expiration-date">
-                                                        <label className="text-xs opacity-50">Expires</label>
+                                                        <label className="text-xs opacity-50">{t('Bag_Card_Expires')}</label>
                                                         <div>{cardData.creditCardExpMonth}/{cardData.creditCardExpYear.slice(-2)}</div>
                                                     </div>
                                                 </div>
@@ -207,7 +208,7 @@ const VisaCreditCard: React.FC<VisaCreditCardProps> = ({ isOpen, setOpen, model,
                                         <ThemeProvider theme={theme}>
                                             <form className="form" autoComplete="off" noValidate onSubmit={handleSubmit}>
                                                 <fieldset>
-                                                    <label htmlFor="card-number">Card Number</label>
+                                                    <label htmlFor="card-number">{t('Bag_Card_CardNumber')}</label>
                                                     <CardTextFieldNoLableComponent
                                                         name="card-number"
                                                         id="card-number"
@@ -220,7 +221,7 @@ const VisaCreditCard: React.FC<VisaCreditCardProps> = ({ isOpen, setOpen, model,
                                                     />
                                                 </fieldset>
                                                 <fieldset>
-                                                    <label htmlFor="card-holder">Card holder</label>
+                                                    <label htmlFor="card-holder">{t('Bag_Card_CardHolder')}</label>
                                                     <CardTextFieldNoLableComponent
                                                         name="card-holder"
                                                         id="card-holder"
@@ -234,7 +235,7 @@ const VisaCreditCard: React.FC<VisaCreditCardProps> = ({ isOpen, setOpen, model,
                                                 </fieldset>
                                                 <fieldset className="fieldset-expiration">
                                                     <label className="expiration" htmlFor="card-expiration-month">
-                                                        Expiration Month / Year
+                                                        {t('Bag_Card_CardExpiration')}
                                                     </label>
                                                     <div className="select">
                                                         <FormControl fullWidth variant="outlined">
@@ -293,7 +294,7 @@ const VisaCreditCard: React.FC<VisaCreditCardProps> = ({ isOpen, setOpen, model,
                                                         type="submit"
                                                         className='flex w-full items-center justify-center rounded-md border bg-indigo-600 hover:bg-indigo-700
                                                     px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'>
-                                                        Pay now
+                                                        {t('Bag_Card_PayNow')}
                                                     </button>
                                                 </FormControl>
                                             </form>
