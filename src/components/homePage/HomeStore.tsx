@@ -6,8 +6,10 @@ import { Link, useParams } from "react-router-dom";
 import { ConfirmEmail } from "../../services/accounts/account-services";
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
+import {useTranslation} from "react-i18next";
 
 const HomeStore = () => {
+  const {t} = useTranslation();
   const baseUrl = APP_ENV.BASE_URL;
   const [images, setImages] = useState<IHomeImage[]>([]);
   const { email, token } = useParams<{ email: string, token: string }>();
@@ -50,9 +52,9 @@ const HomeStore = () => {
                           className="absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-300 ease-in-out saturate-[.77] group-hover:saturate-150"
                         />
                         <div className="relative flex w-full flex-col items-end justify-start bg-black bg-opacity-10 p-8 sm:p-12">
-                          <h1 className="mt-2 text-5xl font-medium text-white text-opacity-75">Woman</h1>
+                          <h1 className="mt-2 text-5xl font-medium text-white text-opacity-75">{t('HomeStore_Women')}</h1>
                           <Link to={"/catalog-home/woman"} className="mt-4 text-xl px-1 py-1 font-semibold leading-7 text-white text-opacity-75 hover:text-indigo-400">
-                            <span aria-hidden="true">&larr;</span> Shop now
+                            <span aria-hidden="true">&larr;</span> {t('HomeStore_ShopNow')}
                           </Link>
                         </div>
                       </div>
@@ -63,9 +65,9 @@ const HomeStore = () => {
                           className="absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-300 ease-in-out saturate-[.77] group-hover:saturate-150"
                         />
                         <div className="relative flex w-full flex-col items-start justify-start bg-black bg-opacity-10 p-8 sm:p-12">
-                          <h1 className="mt-2 text-5xl font-medium text-white text-opacity-75">Man</h1>
+                          <h1 className="mt-2 text-5xl font-medium text-white text-opacity-75">{t('HomeStore_Men')}</h1>
                           <Link to={"/catalog-home/man"} className="mt-4 text-xl px-1 py-1 font-semibold leading-7 text-white text-opacity-75 hover:text-indigo-400">
-                            Shop now <span aria-hidden="true">&rarr;</span>
+                            {t('HomeStore_ShopNow')} <span aria-hidden="true">&rarr;</span>
                           </Link>
                         </div>
                       </div>
@@ -105,11 +107,11 @@ const HomeStore = () => {
                                     </div>
                                     <div className="mt-3 text-center sm:mt-5">
                                       <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
-                                        Success
+                                        {t('HomeStore_Success')}
                                       </Dialog.Title>
                                       <div className="mt-2">
                                         <p className="text-sm text-gray-500">
-                                          Your emeil has been successfully verified
+                                          {t('HomeStore_YourEmailVerified')}
                                         </p>
                                       </div>
                                     </div>
@@ -120,7 +122,7 @@ const HomeStore = () => {
                                       className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                       onClick={() => setOpen(false)}
                                     >
-                                      Go back to site
+                                      {t('HomeStore_GoBackToSite')}
                                     </button>
                                   </div>
                                 </Dialog.Panel>

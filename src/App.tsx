@@ -31,9 +31,9 @@ import Tables from "./components/Dashboard/pages/Tables";
 import useAuthTokenEffect from "./useAuthTokenEffect";
 import useGetFavoritesEffect from "./useGetFavoritesEffect";
 
+import './i18n/i18n.ts';
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
-
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
     }, []);

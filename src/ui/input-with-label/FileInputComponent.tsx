@@ -1,5 +1,6 @@
 import { Button, FormControl } from '@material-ui/core';
 import { UserCircleIcon } from '@heroicons/react/24/outline';
+import {t} from "i18next";
 
 interface FileFieldComponentProps {
     selectedImage: string | null;
@@ -27,7 +28,7 @@ interface FileFieldComponentProps {
         color="primary"
         onClick={handleSelectFile}
       >
-        Select
+          {t('RegisterPage_Select')}
       </Button>
     </div>
   </FormControl>

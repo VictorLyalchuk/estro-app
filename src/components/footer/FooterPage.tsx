@@ -1,8 +1,11 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFacebook, faInstagram, faYoutube, faTelegram, faLinkedin } from '@fortawesome/free-brands-svg-icons';
 import { Link } from 'react-router-dom';
+import {useTranslation} from "react-i18next";
 
 const FooterPage = () => {
+    const {t} = useTranslation();
+
     return (
 
         <footer className="bg-gray-100 p-8 ">
@@ -10,64 +13,64 @@ const FooterPage = () => {
                 <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {/* Column 1 */}
                     <div className="mb-4">
-                        <h3 className="text-lg font-bold mb-4 text-center">Company</h3>
+                        <h3 className="text-lg font-bold mb-4 text-center">{t('Footer_Company')}</h3>
                         <ul className='text-gray-500'>
                             <li className="mb-1 hover:text-indigo-500 text-center">
-                                <Link to="/about">About</Link>
+                                <Link to="/about">{t('Footer_About')}</Link>
                             </li>
                             <li className="mb-1 hover:text-indigo-500 text-center">
-                                <Link to="/our-brand">Our Brand</Link>
+                                <Link to="/our-brand">{t('Footer_Brand')}</Link>
                             </li>
                             <li className="mb-1 hover:text-indigo-500 text-center">
-                                <Link to="/privacy-policy">Privacy Policy</Link>
+                                <Link to="/privacy-policy">{t('Footer_Privacy')}</Link>
                             </li>
                             <li className="mb-1 hover:text-indigo-500 text-center">
-                                <Link to="/store-locations">Store Locations</Link>
+                                <Link to="/store-locations">{t('Footer_Stores')}</Link>
                             </li>
                         </ul>
                     </div>
 
                     {/* Column 2 */}
                     <div className="mb-4">
-                        <h3 className="text-lg font-bold mb-4 text-center">Information</h3>
+                        <h3 className="text-lg font-bold mb-4 text-center">{t('Footer_Information')}</h3>
                         <ul className='text-gray-500'>
                             <li className="mb-1 hover:text-indigo-500 text-center">
-                                <Link to="/delivery-and-payment">Delivery and payment</Link>
+                                <Link to="/delivery-and-payment">{t('Footer_Delivery')}</Link>
                             </li>
                             <li className="mb-1 hover:text-indigo-500 text-center">
-                                <Link to="/return-exchange">Return or exchange</Link>
+                                <Link to="/return-exchange">{t('Footer_Return')}</Link>
                             </li>
                             <li className="mb-1 hover:text-indigo-500 text-center">
-                                <Link to="/warranty-product-care">Warranty & Product Care</Link>
+                                <Link to="/warranty-product-care">{t('Footer_Warranty')}</Link>
                             </li>
                             <li className="mb-1 hover:text-indigo-500 text-center">
-                                <a href='https://www.google.com.ua/maps/search/estro+%D0%BC%D0%B0%D0%B3%D0%B0%D0%B7%D0%B8%D0%BD%D0%B8/@48.3857507,25.280604,6.75z?hl=uk&entry=ttu'>Map</a>
+                                <a href='https://www.google.com.ua/maps/search/estro+%D0%BC%D0%B0%D0%B3%D0%B0%D0%B7%D0%B8%D0%BD%D0%B8/@48.3857507,25.280604,6.75z?hl=uk&entry=ttu'>{t('Footer_Map')}</a>
                             </li>
                         </ul>
                     </div>
 
                     {/* Column 3 */}
                     <div className="mb-4">
-                        <h3 className="text-lg font-bold mb-4 text-center">Support Service</h3>
+                        <h3 className="text-lg font-bold mb-4 text-center">{t('Footer_Support')}</h3>
                         <ul className='text-gray-500'>
                             <li className="mb-1 hover:text-indigo-500 cursor-pointer text-center">
-                                <a href="tel:+380991679999">+380 (99) 167 99 99</a>
+                                <a href="tel:+380991679999">{t('Footer_Phone1')}</a>
                             </li>
                             <li className="mb-1 hover:text-indigo-500 cursor-pointer text-center">
-                                <a href="tel:+380981679999">+380 (98) 167 99 99</a>
+                                <a href="tel:+380981679999">{t('Footer_Phone2')}</a>
                             </li>
                             <li className="mb-1 hover:text-indigo-500 cursor-pointer text-center">
-                                <a href="tel:+380731679999">+380 (73) 167 99 99</a>
+                                <a href="tel:+380731679999">{t('Footer_Phone3')}</a>
                             </li>
                             <li className="mb-1 hover:text-indigo-500 cursor-pointer text-center">
-                                <a href="tel:+380800330770">+380 (800) 33 07 70</a>
+                                <a href="tel:+380800330770">{t('Footer_Phone4')}</a>
                             </li>
-                            <li className="text-xs mb-4 text-gray-400 text-center">Monday - Saturday from 09:00 to 18:00</li>
+                            <li className="text-xs mb-4 text-gray-400 text-center">{t('Footer_WorkingDays')}</li>
                         </ul>
                     </div>
                     {/* Column 4 */}
                     <div className="mb-4 order-2 ">
-                        <h3 className="text-lg font-bold mb-4 text-center">Social Media</h3>
+                        <h3 className="text-lg font-bold mb-4 text-center">{t('Footer_SocMedia')}</h3>
                         <ul className="flex space-x-2 text-gray-500 flex justify-center">
                             <li className="mb-4 hover:text-indigo-500">
                                 <a href="https://www.facebook.com/EstroUkraine"><FontAwesomeIcon icon={faFacebook} /></a>
@@ -90,7 +93,7 @@ const FooterPage = () => {
 
                 {/* Copyright */}
                 <div className="text-center mt-8">
-                    <p className="text-sm text-gray-500 hover:text-indigo-500">&copy; 2024 Estro Shop Team, Inc. All rights reserved.</p>
+                    <p className="text-sm text-gray-500 hover:text-indigo-500">&copy; 2024 Estro Shop Team, Inc. {t('Footer_Rights')}.</p>
                 </div>
             </div>
         </footer>

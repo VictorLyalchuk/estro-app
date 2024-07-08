@@ -1,6 +1,8 @@
 import { useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../../../../../node_modules/flag-icons/css/flag-icons.min.css';
+import i18next from "i18next";
+import {useTranslation} from "react-i18next";
 
 interface Language {
     code: string;
@@ -9,17 +11,15 @@ interface Language {
 interface FlagIconProps {
     countryCode: string;
 }
-const languages: Language[] = [
-    { code: 'en', name: 'English' },
-    { code: 'es', name: 'Spanish' },
-    { code: 'fr', name: 'French' },
-    { code: 'ua', name: 'Ukraine' },
-];
+
+
 function FlagIcon({ countryCode = "" }: FlagIconProps) {
     if (countryCode === "en") {
         countryCode = "gb";
     }
-
+    if (countryCode === "uk") {
+        countryCode = "ua";
+    }
     return (
         <span
             className={`fi fis fi-${countryCode} fiCircle inline-block mr-2 fi-${countryCode}`}
@@ -27,11 +27,35 @@ function FlagIcon({ countryCode = "" }: FlagIconProps) {
     );
 }
 const LanguageSelector = () => {
+    const {t} = useTranslation();
+    const languages: Language[] = [
+        { code: 'en', name: t('LanguageSelector_Eng') },
+        { code: 'es', name: t('LanguageSelector_Esp') },
+        { code: 'fr', name: t('LanguageSelector_Fr') },
+        { code: 'uk', name: t('LanguageSelector_Ukr') },
+    ];
     const [dropdownOpen, setDropdownOpen] = useState(false);
     const trigger = useRef<any>(null);
     const dropdown = useRef<any>(null);
-    const [selectedLanguage, setSelectedLanguage] = useState<Language | null>(languages[0]);
+    const getInitialLanguage = () => {
+        const storedLanguageCode = localStorage.getItem('i18nextLng');
+        if (storedLanguageCode) {
+            const foundLanguage = languages.find(lang => lang.code === storedLanguageCode);
+            if (foundLanguage) {
+                return foundLanguage;
+            }
+        }
+        return languages[0];
+    };
 
+    const [selectedLanguage, setSelectedLanguage] = useState<Language | null>(getInitialLanguage());
+
+    useEffect(() => {
+        // Save selected language to localStorage when it changes
+        if (selectedLanguage) {
+            localStorage.setItem('i18nextLng', selectedLanguage.code);
+        }
+    }, [selectedLanguage]);
     const handleDropdownClick = (event: { preventDefault: () => void; }) => {
         event.preventDefault();
         setDropdownOpen(!dropdownOpen);
@@ -65,6 +89,8 @@ const LanguageSelector = () => {
 
     const changeLanguage = (language: Language) => {
         setSelectedLanguage(language);
+        i18next.changeLanguage(language.code);
+        window.location.reload(); // Reload the page when language changes
     };
 
     return (
@@ -86,7 +112,7 @@ const LanguageSelector = () => {
                 ref={dropdown}
                 onFocus={() => setDropdownOpen(true)}
                 onBlur={() => setDropdownOpen(false)}
-                className={`absolute mt-4 flex w-32 flex-col rounded-sm border border-stroke bg-gray-100 shadow-default dark:border-strokedark dark:bg-boxdark ${dropdownOpen === true ? 'block' : 'hidden'
+                className={`absolute mt-4 flex w-34 flex-col rounded-sm border border-stroke bg-gray-100 shadow-default dark:border-strokedark dark:bg-boxdark ${dropdownOpen === true ? 'block' : 'hidden'
                     }`}
             >
                 <div className="py-4 grid grid-cols-1 gap-5">
@@ -94,7 +120,7 @@ const LanguageSelector = () => {
                         return (
                             <button
                                 key={language.code}
-                                onClick={() => changeLanguage(language)}
+                                onClick={() => {changeLanguage(language); i18next.changeLanguage(language.code)}}
                                 className={`${selectedLanguage?.code === language.code
                                     ? "bg-gray-100 text-gray-900 font-bold"
                                     : "text-gray-700"

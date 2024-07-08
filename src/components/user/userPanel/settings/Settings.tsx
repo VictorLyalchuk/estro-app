@@ -20,6 +20,7 @@ import PasswordFieldNoLableComponent from '../../../../ui/input-no-label/Passwor
 import TextFieldNoLableComponent from '../../../../ui/input-no-label/TextFieldNoLableComponent';
 import PhoneNumberNoLableComponent from '../../../../ui/input-no-label/PhoneNumberNoLableComponent';
 import TextFieldReadOnlyNoLableComponent from '../../../../ui/input-no-label/TextFieldReadOnlyNoLableComponent';
+import {t} from "i18next";
 
 const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
   const baseUrl = APP_ENV.BASE_URL;
@@ -197,7 +198,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
                       {/* Profile section */}
                       <div className="px-4 py-6 sm:p-6 lg:pb-8">
                         <div>
-                          <h2 className="text-lg font-medium leading-6 text-gray-900">Profile Settings</h2>
+                          <h2 className="text-lg font-medium leading-6 text-gray-900">{t('ProfileSettings_ProfileSettings')}</h2>
                         </div>
 
                         <div className="mt-6 flex flex-col lg:flex-row">
@@ -221,7 +222,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
 
                             <div>
                               <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                                Email
+                                {t('ProfileSettings_Email')}
                               </label>
                               <div className="mt-2 flex rounded-md shadow-sm">
                                 <TextFieldReadOnlyNoLableComponent
@@ -239,7 +240,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
 
                             <div>
                               <label htmlFor="textmask" className="block text-sm font-medium leading-6 text-gray-900">
-                                Phone
+                                {t('ProfileSettings_Phone')}
                               </label>
                               <div className="mt-2">
                                 <PhoneNumberNoLableComponent
@@ -254,7 +255,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
 
                           <div className="mt-6 flex-grow lg:ml-6 lg:mt-0 lg:flex-shrink-0 lg:flex-grow-0">
                             <p className="text-sm font-medium leading-6 text-gray-900" aria-hidden="true">
-                              Photo
+                              {t('ProfileSettings_Photo')}
                             </p>
                             <div className="mt-2 lg:hidden">
                               <div className="flex items-center">
@@ -277,8 +278,8 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
                                     htmlFor="mobile-user-photo"
                                     className="pointer-events-none block rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 peer-hover:ring-gray-400 peer-focus:ring-2 peer-focus:ring-sky-500"
                                   >
-                                    <span>Change</span>
-                                    <span className="sr-only"> user photo</span>
+                                    <span>{t('ProfileSettings_Change')}</span>
+                                    <span className="sr-only"> {t('ProfileSettings_UserPhoto')}</span>
                                   </label>
                                 </div>
                               </div>
@@ -290,8 +291,8 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
                                 htmlFor="desktop-user-photo"
                                 className="absolute inset-0 flex h-full w-full items-center justify-center bg-black bg-opacity-75 text-sm font-medium text-white opacity-0 focus-within:opacity-0 hover:opacity-100"
                               >
-                                <span>Change</span>
-                                <span className="sr-only"> user photo</span>
+                                <span>{t('ProfileSettings_Change')}</span>
+                                <span className="sr-only"> {t('ProfileSettings_UserPhoto')}</span>
                                 <input
                                   type="file"
                                   accept="image/*"
@@ -317,7 +318,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
                         <div className="mt-6 grid grid-cols-12 gap-6">
                           <div className="col-span-12 sm:col-span-6">
                             <label htmlFor="firstName" className="block text-sm font-medium leading-6 text-gray-900">
-                              First name
+                              {t('ProfileSettings_FirstName')}
                             </label>
                             <div className="mt-2 flex rounded-md shadow-sm">
                               <TextFieldNoLableComponent
@@ -334,7 +335,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
 
                           <div className="col-span-12 sm:col-span-6">
                             <label htmlFor="lastName" className="block text-sm font-medium leading-6 text-gray-900">
-                              Last name
+                              {t('ProfileSettings_LastName')}
                             </label>
                             <div className="mt-2 flex rounded-md shadow-sm">
                               <TextFieldNoLableComponent
@@ -351,7 +352,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
 
                           <div className="col-span-12 sm:col-span-6">
                             <label htmlFor="birthday" className="block text-sm font-medium leading-6 text-gray-900">
-                              Birthday
+                              {t('ProfileSettings_Birthday')}
                             </label>
 
                             <div className="mt-2 flex rounded-md shadow-sm">
@@ -365,7 +366,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
                           {authType === 'standard' && (
                             <div className="col-span-12 sm:col-span-6">
                               <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                                Current Password
+                                {t('ProfileSettings_CurrentPassword')}
                               </label>
                               <div className="mt-2 flex rounded-md shadow-sm">
                                 <PasswordFieldNoLableComponent
@@ -390,9 +391,9 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
                           <>
                             <div className="px-4 sm:px-6">
                               <div>
-                                <h2 className="text-lg font-medium leading-6 text-gray-900">Change Password</h2>
+                                <h2 className="text-lg font-medium leading-6 text-gray-900">{t('ProfileSettings_ChangePassword')}</h2>
                                 <button onClick={() => { setUpdatePassword((prevState) => !prevState); }} type="button" className="text-sm font-semibold leading-6 text-indigo-600 hover:text-indigo-500">
-                                  Click here to change your password
+                                  {t('ProfileSettings_ClickHere')}
                                 </button>
 
                               </div>
@@ -403,7 +404,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
                                 <div className="mt-6 grid grid-cols-12 gap-6">
                                   <div className="col-span-12 sm:col-span-6">
                                     <label htmlFor="newPassword" className="block text-sm font-medium leading-6 text-gray-900">
-                                      New Password
+                                      {t('ProfileSettings_NewPassword')}
                                     </label>
                                     <div className="mt-2 flex rounded-md shadow-sm">
                                       <PasswordFieldNoLableComponent
@@ -420,7 +421,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
                                   </div>
                                   <div className="col-span-12 sm:col-span-6">
                                     <label htmlFor="confirmNewPassword" className="block text-sm font-medium leading-6 text-gray-900">
-                                      Confirm New Password
+                                      {t('ProfileSettings_ConfirmNewPassword')}
                                     </label>
                                     <div className="mt-2 flex rounded-md shadow-sm">
                                       <PasswordFieldNoLableComponent
@@ -449,7 +450,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
                                 className='inline-flex items-center justify-center rounded-md border bg-indigo-600 hover:bg-indigo-700
                               px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'
                               >
-                                Save
+                                {t('ProfileSettings_Save')}
                               </button>
                               {profileUpdated && (
                                 <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-96">
@@ -485,11 +486,11 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
                                                 </div>
                                                 <div className="mt-3 text-center sm:mt-5">
                                                   <Dialog.Title as="h3" className="text-base font-semibold leading-6 text-gray-900">
-                                                    Success
+                                                    {t('ProfileSettings_Success')}
                                                   </Dialog.Title>
                                                   <div className="mt-2">
                                                     <p className="text-sm text-gray-500">
-                                                      Profile updated successfully
+                                                      {t('ProfileSettings_ProfileUpdated')}
                                                     </p>
                                                   </div>
                                                 </div>
@@ -500,7 +501,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
                                                   className="inline-flex w-full justify-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                                   onClick={() => setOpen(false)}
                                                 >
-                                                  Go back to profile
+                                                  {t('ProfileSettings_GoBack')}
                                                 </button>
                                               </div>
                                             </Dialog.Panel>

@@ -16,6 +16,7 @@ import { getProfileOrders, getUserOrders } from '../../../services/order/order-s
 import Favourites from './favourites/Favourites';
 import { RootState } from '../../../store/store';
 import { getUserBonusesByUserId } from '../../../services/userBonuses/user-bonuses-services';
+import {useTranslation} from "react-i18next";
 
 const UserPanelPage = () => {
     const location = useLocation();
@@ -29,6 +30,7 @@ const UserPanelPage = () => {
     const [activeTab, setActiveTab] = useState(0);
     const [page, setPage] = useState(1);
     const [countPage, setCountPage] = useState(0);
+    const {t} = useTranslation();
 
     const handleViewModeChange = () => {
         setViewMode(prevMode => (prevMode === 'detailed' ? 'compact' : 'detailed'));
@@ -38,30 +40,30 @@ const UserPanelPage = () => {
     };
     const tabs = [
         {
-            name: 'Orders',
+            name: t('UserPanelPage_Orders'),
             current: activeTab === 0,
             component: viewMode === 'detailed' ? <CompactOrders orders={orders} onViewModeChange={handleViewModeChange} page={page} countPage={countPage} onPageChange={handlePageChange} />
             : <Orders orders={orders} onViewModeChange={handleViewModeChange} page={page} countPage={countPage} onPageChange={handlePageChange} />,
             count: countPage.toString(),
         },
         {
-            name: 'Profile',
+            name: t('UserPanelPage_Profile'),
             current: activeTab === 1,
             component: <Profile userProfile={userProfile} countPage={countPage} />,
         },
         {
-            name: 'Settings',
+            name: t('UserPanelPage_Settings'),
             current: activeTab === 2,
             component: <Settings userProfile={userProfile} authType ={user?.AuthType}/>,
         },
         {
-            name: 'Favorites',
+            name: t('UserPanelPage_Favorites'),
             current: activeTab === 3,
             component: <Favourites />,
             count: favoriteProducts.length.toString(),
         },
         {
-            name: 'My Bonuses',
+            name: t('UserPanelPage_MyBonuses'),
             current: activeTab === 4,
             component: <Bonuses userBonuses={userBonuses} bonusBalance = {userProfile?.bonusBalance} />,
             count: userProfile?.bonusBalance?.toString() || '0',

@@ -7,12 +7,13 @@ import RegisterPage from './register/RegisterPage';
 import ForgotPassword from './forgotPassword/ForgotPassword';
 import { useParams } from 'react-router-dom';
 import ResetPassword from './forgotPassword/ResetPassword';
-
+import {useTranslation} from "react-i18next";
 
 
 const AuthPanelPage = () => {
     const [activeTab, setActiveTab] = useState(0);
     const { email, token } = useParams<{ email: string, token: string }>();
+    const {t} = useTranslation();
 
     const handlePasswordResetConfirmation: () => void = () => {
         setActiveTab(2); 
@@ -29,17 +30,17 @@ const AuthPanelPage = () => {
 
     const tabs = [
         {
-            name: 'Login',
+            name: t('AuthPanelPage_Login'),
             current: activeTab === 0,
             component: <LoginPage />,
         },
         {
-            name: 'Register',
+            name: t('AuthPanelPage_Register'),
             current: activeTab === 1,
             component: <RegisterPage  />,
         },
         {
-            name: 'Forgot password',
+            name: t('AuthPanelPage_ForgotPassword'),
             current: activeTab === 2,
             component: email && token ? (
                 <ResetPassword email={email} token={token} />

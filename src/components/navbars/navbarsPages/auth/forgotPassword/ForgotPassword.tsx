@@ -9,8 +9,10 @@ import { validateForm } from '../../../../../validations/account/forgot-validati
 import { theme } from '../../../../../theme/theme';
 import { useStyles } from '../../../../../theme/Styles';
 import TextFieldComponent from '../../../../../ui/input-with-label/TextFieldComponent';
+import {useTranslation} from "react-i18next";
 
 const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfirmation: () => void }) => {
+    const {t} = useTranslation();
     const classes = useStyles();
     const [isSendEmail, setSendEmail] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
@@ -60,23 +62,23 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
                         <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0 flex flex-col justify-center items-center">
                             {isSendEmail ? (
                                 <div className="text-center">
-                                    <h2 className="text-2xl font-bold text-gray-900">Email Was Successfully Received</h2>
+                                    <h2 className="text-2xl font-bold text-gray-900">{t('ForgotPassword_EmailSuccessful')}</h2>
                                     <br />
                                     <p className="text-gray-500">
-                                        Check your email and continue the password recovery process.</p>
+                                        {t('ForgotPassword_CheckEmail')}</p>
                                 </div>
                             ) : (
                                 <div className="mb-24 w-full">
                                     <div className="sm:mx-auto sm:w-full sm:max-w-sm" >
                                         <h2 className="mt-5 mb-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                                            Forgot Password
+                                            {t('ForgotPassword_ForgotPassword')}
                                         </h2>
                                     </div>
 
                                     <form onSubmit={handleSubmit}>
                                         <ThemeProvider theme={theme}>
                                         <TextFieldComponent
-                                                    label="Email"
+                                                    label={t('ForgotPassword_Email')}
                                                     name="email"
                                                     id="email"
                                                     value={formData.email}
@@ -88,7 +90,7 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
                                         </ThemeProvider>
                                             <FormControl fullWidth variant="outlined">
                                                 <Button className={classes.button}  type="submit" variant="contained" size="large" color="primary" disableElevation>
-                                                    Reset Password
+                                                    {t('ForgotPassword_ResetPassword')}
                                                 </Button>
                                             </FormControl>
                                     </form>
@@ -100,17 +102,17 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
 
                             <div className="bg-white-container-login flex flex-col justify-center items-center h-full">
                                 <h1 className="text-white text-9xl hover:text-indigo-300">estro</h1>
-                                <p className="text-white text-sx mb-10 hover:text-indigo-300">SHOES, CLOTHING & ACCESSORIES</p>
+                                <p className="text-white text-sx mb-10 hover:text-indigo-300">{t('Logo_Paragraph')}</p>
 
                                 <br />
 
                                 <p className="text-center text-sx hover:text-indigo-300">
-                                    Forgot your password?
+                                    {t('ForgotPassword_Forgot?')}
                                 </p>
                                 <br />
 
                                 <p className="text-center text-sx hover:text-indigo-300">
-                                    Please follow the instructions below to restore it
+                                    {t('ForgotPassword_FollowInstructions')}
                                 </p>
 
                             </div>

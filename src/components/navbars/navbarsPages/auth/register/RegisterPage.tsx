@@ -21,8 +21,10 @@ import TextFieldComponent from '../../../../../ui/input-with-label/TextFieldComp
 import FileInputComponent from '../../../../../ui/input-with-label/FileInputComponent';
 import PhoneNumberComponent from '../../../../../ui/input-with-label/PhoneNumberComponent';
 import PasswordFieldComponent from '../../../../../ui/input-with-label/PasswordFieldComponent';
+import {useTranslation} from "react-i18next";
 
 const RegisterPage = () => {
+    const {t} = useTranslation();
     const baseUrl = APP_ENV.BASE_URL;
     const twilio_auth_token = APP_ENV.TWILIO_AUTH_TOKEN;
     const twilio_acc_sid = APP_ENV.TWILIO_ACC_SID;
@@ -110,7 +112,7 @@ const RegisterPage = () => {
                 setIsEmail(false);
             } catch (error) {
                 console.error("Register error:", error);
-                setErrorMessage("Register error. Try again later");
+                setErrorMessage(t('RegisterPage_RegisterError'));
                 setTimeout(() => {
                     setErrorMessage("");
                 }, 1000);
@@ -149,7 +151,7 @@ const RegisterPage = () => {
                 setIsPhone(false);
             } catch (error) {
                 console.error("Register error:", error);
-                setErrorMessage("Register error. Try again later");
+                setErrorMessage(t('RegisterPage_RegisterError'));
                 setTimeout(() => {
                     setErrorMessage("");
                 }, 1000);
@@ -164,7 +166,7 @@ const RegisterPage = () => {
             }, 30000); // 30 seconds
 
             console.error("Verification error:", error);
-            setErrorMessage("Invalid code or verification failed");
+            setErrorMessage(t('LoginPage_InvalidCodeOrVerification'));
             setTimeout(() => {
                 setErrorMessage("");
             }, 1000);
@@ -198,7 +200,7 @@ const RegisterPage = () => {
 
             } catch (error) {
                 console.error("Register error:", error);
-                setErrorMessage("Register error. Try again later");
+                setErrorMessage(t('RegisterPage_RegisterError'));
                 setTimeout(() => {
                     setErrorMessage("");
                 }, 1000);
@@ -280,7 +282,7 @@ const RegisterPage = () => {
 
         } catch (error) {
             console.error("Register error:", error);
-            setErrorMessage("Invalid phone number");
+            setErrorMessage(t('RegisterPage_InvalidPhone'));
             setTimeout(() => {
                 setErrorMessage("");
             }, 1000);
@@ -296,36 +298,36 @@ const RegisterPage = () => {
 
                             <div className="bg-white-container-register flex flex-col justify-center items-center h-full">
                                 <h1 className="text-white text-9xl hover:text-indigo-300">estro</h1>
-                                <p className="text-white text-sx mb-10 hover:text-indigo-300">SHOES, CLOTHING & ACCESSORIES</p>
+                                <p className="text-white text-sx mb-10 hover:text-indigo-300">{t('Logo_Paragraph')}</p>
 
                                 <br />
 
                                 <p className="text-center text-sx hover:text-indigo-300">
-                                    If you don't have an account yet, register now
+                                    {t('RegisterPage_RegisterNow')}
                                 </p>
                                 <br />
 
                                 <p className="text-center text-sx hover:text-indigo-300">
-                                    Register and get the most out of the Estro bonus program
+                                    {t('RegisterPage_BonusProgram')}
                                 </p>
                                 <br />
                                 <ul className="list-disc text-sx text-left">
                                     <li className="mb-5 mt-2 flex justify-center items-center gap-x-3 relative hover:text-indigo-300">
                                         <BanknotesIcon className="h-7 w-7 text-gray-300" />
                                         <p className="text-center">
-                                            Rewards
+                                            {t('RegisterPage_Rewards')}
                                         </p>
                                     </li>
                                     <li className="mb-5 mt-2 flex justify-center items-center gap-x-3 relative hover:text-indigo-300">
                                         <GiftIcon className="h-7 w-7 text-gray-300" />
                                         <p className="text-center">
-                                            Surprises!
+                                            {t('RegisterPage_Surprises')}
                                         </p>
                                     </li>
                                     <li className="mb-5 mt-2 flex justify-center items-center gap-x-3 relative hover:text-indigo-300" >
                                         <TrophyIcon className="h-7 w-7 text-gray-300" />
                                         <p className="text-center">
-                                            Personal promotions!
+                                            {t('RegisterPage_PersonalPromotions')}
                                         </p>
                                     </li>
                                 </ul>
@@ -337,16 +339,16 @@ const RegisterPage = () => {
 
                                 <div className={"flex-col flex "}>
                                     <div className={"text-center mb-3"}>
-                                        <h2>Choose your option:</h2>
+                                        <h2>{t('RegisterPage_ChooseOption')}</h2>
                                     </div>
                                     <div className={"flex-col bg-gray-100 p-10 rounded-2xl gap-2 w-59 flex"}>
                                         <Button onClick={() => { setIsEmail(true); setIsChosen(true); }} className={"h-20"} size="large">
                                             <svg className={"h-20 -ml-2"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16"><g fill="none" stroke="#383843" strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5"><path d="M1.75 3.75h12.5v9.5H1.75z" /><path d="m2.25 4.25l5.75 5l5.75-5" /></g></svg>
-                                            <p className={"ml-2 lowercase"}>Email</p>
+                                            <p className={"ml-2 lowercase"}>{t('RegisterPage_Email')}</p>
                                         </Button>
                                         <Button onClick={() => { setIsPhone(true); setIsChosen(true); }} className={"h-20"} size="large">
                                             <svg className={"h-20 -ml-4"} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path fill="#3d3d3d" d="M9 14a.5.5 0 0 0 0 1h2a.5.5 0 0 0 0-1zM7 2a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM6 4a1 1 0 0 1 1-1h6a1 1 0 0 1 1 1v12a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1z" /></svg>
-                                            <p className={"lowercase"}>Phone</p>
+                                            <p className={"lowercase"}>{t('RegisterPage_Phone')}</p>
                                         </Button>
                                         <Button onClick={() => registerGoogle()} className={"h-20"} size="large">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 1024"><path fill="#383843" d="M881 442.4H519.7v148.5h206.4c-8.9 48-35.9 88.6-76.6 115.8c-34.4 23-78.3 36.6-129.9 36.6c-99.9 0-184.4-67.5-214.6-158.2c-7.6-23-12-47.6-12-72.9s4.4-49.9 12-72.9c30.3-90.6 114.8-158.1 214.7-158.1c56.3 0 106.8 19.4 146.6 57.4l110-110.1c-66.5-62-153.2-100-256.6-100c-149.9 0-279.6 86-342.7 211.4c-26 51.8-40.8 110.4-40.8 172.4S151 632.8 177 684.6C240.1 810 369.8 896 519.7 896c103.6 0 190.4-34.4 253.8-93c72.5-66.8 114.4-165.2 114.4-282.1c0-27.2-2.4-53.3-6.9-78.5" /></svg>
@@ -359,9 +361,9 @@ const RegisterPage = () => {
                             ) : (
                                 isRegistered && !isEmail && !isPhone ? (
                                     <div className="text-center">
-                                        <h2 className="text-2xl font-bold text-gray-900">Registration Successful</h2>
+                                        <h2 className="text-2xl font-bold text-gray-900">{t('RegisterPage_RegistrationSuccessful')}</h2>
                                         <br />
-                                        <p className="text-gray-500">You have successfully registered. Please proceed to login.</p>
+                                        <p className="text-gray-500">{t('RegisterPage_ProceedToLogin')}</p>
                                     </div>
                                 ) : (
                                     isEmail ? (
@@ -369,12 +371,12 @@ const RegisterPage = () => {
                                             <form onSubmit={handleSubmit}>
                                                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                                                     <h2 className="mt-5 mb-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                                                        Email Registration
+                                                        {t('RegisterPage_EmailRegistration')}
                                                     </h2>
                                                 </div>
                                                 <ThemeProvider theme={theme}>
                                                     <TextFieldComponent
-                                                        label="First Name"
+                                                        label={t('RegisterPage_FirstName')}
                                                         name="firstName"
                                                         id="firstName"
                                                         value={formData.firstName}
@@ -384,7 +386,7 @@ const RegisterPage = () => {
                                                         maxLength={30}       
                                                     />
                                                     <TextFieldComponent
-                                                        label="Last Name"
+                                                        label={t('RegisterPage_LastName')}
                                                         name="lastName"
                                                         id="lastName"
                                                         value={formData.lastName}
@@ -394,7 +396,7 @@ const RegisterPage = () => {
                                                         maxLength={30}       
                                                     />
                                                     <TextFieldComponent
-                                                        label="Email"
+                                                        label={t('RegisterPage_Email')}
                                                         name="email"
                                                         id="email"
                                                         value={formData.email}
@@ -426,7 +428,7 @@ const RegisterPage = () => {
                                                         error={errors.phoneNumber}
                                                     />
                                                     <PasswordFieldComponent
-                                                        label="Password"
+                                                        label={t('RegisterPage_Password')}
                                                         name="password"
                                                         id="password"
                                                         value={formData.password}
@@ -437,7 +439,7 @@ const RegisterPage = () => {
                                                         handlePasswordToggle={handlePasswordToggle}
                                                     />
                                                     <PasswordFieldComponent
-                                                        label="Confirm Password"
+                                                        label={t('RegisterPage_ConfirmPassword')}
                                                         name="confirmPassword"
                                                         id="confirmPassword"
                                                         value={formData.confirmPassword}
@@ -458,7 +460,7 @@ const RegisterPage = () => {
                                                         color="primary"
                                                         disableElevation
                                                     >
-                                                        Register
+                                                        {t('RegisterPage_Register')}
                                                     </Button>
                                                     <Button
                                                         className={classes.button}
@@ -468,7 +470,7 @@ const RegisterPage = () => {
                                                         color="primary"
                                                         onClick={() => { setIsChosen(false); setIsEmail(false); }}
                                                     >
-                                                        Cancel
+                                                        {t('RegisterPage_Cancel')}
                                                     </Button>
                                                 </FormControl>
                                             </form>
@@ -477,14 +479,14 @@ const RegisterPage = () => {
                                         <div className="mb-4">
                                             <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                                                 <h2 className="mt-5 mb-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                                                    Phone Registration
+                                                    {t('RegisterPage_PhoneRegistration')}
                                                 </h2>
                                             </div>
 
                                             <form onSubmit={handlePhoneSubmit}>
                                                 <ThemeProvider theme={theme}>
                                                     <TextFieldComponent
-                                                        label="First Name"
+                                                        label={t('RegisterPage_FirstName')}
                                                         name="firstName"
                                                         id="firstName"
                                                         value={formData.firstName}
@@ -494,7 +496,7 @@ const RegisterPage = () => {
                                                         maxLength={30}       
                                                     />
                                                     <TextFieldComponent
-                                                        label="Last Name"
+                                                        label={t('RegisterPage_LastName')}
                                                         name="lastName"
                                                         id="lastName"
                                                         value={formData.lastName}
@@ -519,7 +521,7 @@ const RegisterPage = () => {
                                                 <ThemeProvider theme={theme}>
                                                     <PhoneNumberComponent
                                                         value={values.textmask}
-                                                        label="Phone Number"
+                                                        label={t('RegisterPage_PhoneNumber')}
                                                         id="textmark"
                                                         onChange={handleChangePhoneNumber}
                                                         error={errors.phoneNumber}
@@ -549,7 +551,7 @@ const RegisterPage = () => {
                                                             disabled={isDisabled}
                                                             onClick={sendSMS}
                                                         >
-                                                            {isDisabled ? `Send code (${countdown}s)` : 'Send code'}
+                                                            {isDisabled ? t('RegisterPage_SendCode') + ` (${countdown}s)` : t('RegisterPage_SendCode')}
                                                         </Button>
                                                     ) : (
                                                         <Button
@@ -560,7 +562,7 @@ const RegisterPage = () => {
                                                             color="primary"
                                                             disableElevation
                                                         >
-                                                            Register
+                                                            {t('RegisterPage_Register')}
                                                         </Button>
                                                     )}
 
@@ -572,7 +574,7 @@ const RegisterPage = () => {
                                                         color="primary"
                                                         onClick={() => { setIsChosen(false); setIsPhone(false); setIsDisabled(false); setIsTryToCode(false); }}
                                                     >
-                                                        Cancel
+                                                        {t('RegisterPage_Cancel')}
                                                     </Button>
                                                 </FormControl>
                                             </form>

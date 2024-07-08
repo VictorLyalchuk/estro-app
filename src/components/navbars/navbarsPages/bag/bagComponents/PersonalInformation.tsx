@@ -2,6 +2,7 @@ import { Theme, ThemeProvider } from '@material-ui/core/styles';
 import TextFieldComponent from '../../../../../ui/input-with-label/TextFieldComponent';
 import PhoneNumberComponent from '../../../../../ui/input-with-label/PhoneNumberComponent';
 import { ArrowDownIcon, ArrowLongRightIcon } from '@heroicons/react/24/outline';
+import {t} from "i18next";
 
 
 interface PersonalInformationProps {
@@ -39,7 +40,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
   return (
     <div className="bg-white p-5 rounded-md shadow-md mb-8">
       <div className="flex justify-between items-center mb-4" onClick={() => handleBlockClick('personal')}>
-        <h3 className="text-2xl font-semibold cursor-pointer" >Personal Information</h3>
+        <h3 className="text-2xl font-semibold cursor-pointer" >{t('Bag_PersonalInfo')}</h3>
         {activeBlock?.includes('personal') ? (
           <div className='group rounded-[50px] border border-gray-200 shadow-sm shadow-transparent p-2.5 flex items-center justify-center bg-white transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-100 hover:border-gray-300 focus-within:outline-gray-300'>
             <ArrowDownIcon className="h-5 w-5 cursor-pointer stroke-gray-900 transition-all duration-500 group-hover:stroke-black" />
@@ -55,7 +56,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
           <div className="pb-4">
             <ThemeProvider theme={theme}>
               <label htmlFor="firstName" className="block text-sm font-medium text-gray-700 mb-2">
-                First Name
+                {t('Bag_PersonalInfo_FirstName')}
               </label>
               <TextFieldComponent
                 label=""
@@ -68,7 +69,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
                 maxLength={30}       
               />
               <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
-                Last Name
+                {t('Bag_PersonalInfo_LastName')}
               </label>
               <TextFieldComponent
                 label=""
@@ -82,7 +83,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
               />
 
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-                Email
+                {t('Bag_PersonalInfo_Email')}
               </label>
               <TextFieldComponent
                 label=""
@@ -96,7 +97,7 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
               />
 
               <label htmlFor="textmask" className="block text-sm font-medium text-gray-700 mb-2">
-                Phone
+                {t('Bag_PersonalInfo_Phone')}
               </label>
               <PhoneNumberComponent
                 value={values.textmask}

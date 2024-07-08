@@ -14,7 +14,6 @@ import ProductQuickview from '../product/ProductQuickview.tsx';
 import { ISortOptions } from '../../../interfaces/Catalog/ISortOptions.ts';
 import { getMainCategories } from '../../../services/category/category-services.ts';
 import { getInfoList } from '../../../services/info/info-services.ts';
-import { initialSortOptions } from '../../../data/initialSortOptions'
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store.ts';
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer.ts';
@@ -22,12 +21,20 @@ import { addToFavorite, removeFromFavorite } from '../../../store/favourites/Fav
 import { HeartIcon } from '@heroicons/react/24/solid';
 import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/userFavoriteProducts/user-favorite-products-services.ts';
 import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts.ts';
+import i18next, {t} from "i18next";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
 export default function CatalogNavigation() {
+  const initialSortOptions: ISortOptions[] = [
+    { name: t('Sort_Newest'), url: 'newest', current: false },
+    { name: t('Sort_Popular'), url: 'most_popular', current: false },
+    { name: t('Sort_Rating'), url: 'best_rating', current: false },
+    { name: t('Sort_LowToHigh'), url: 'price_low_to_high', current: false },
+    { name: t('Sort_HighToLow'), url: 'price_high_to_low', current: false },
+  ];
   const baseUrl = APP_ENV.BASE_URL;
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -250,13 +257,13 @@ export default function CatalogNavigation() {
               >
                 <Dialog.Panel className="relative ml-auto flex h-full w-full max-w-xs flex-col overflow-y-auto bg-gray-100 py-4 pb-12 shadow-xl">
                   <div className="flex items-center justify-between px-4">
-                    <h2 className="text-lg font-medium text-gray-900">Filters</h2>
+                    <h2 className="text-lg font-medium text-gray-900">{t('CatalogNavigation_Filters')}</h2>
                     <button
                       type="button"
                       className="-mr-2 flex h-10 w-10 items-center justify-center rounded-md bg-gray-100 p-2 text-gray-400"
                       onClick={() => setMobileFiltersOpen(false)}
                     >
-                      <span className="sr-only">Close menu</span>
+                      <span className="sr-only">{t('CatalogNavigation_CloseMenu')}</span>
                       <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                     </button>
                   </div>
@@ -273,7 +280,10 @@ export default function CatalogNavigation() {
                                 to={`/catalog/${subCategory.urlName}`}
                                 className={`block ${subCategory.urlName === subName ? "font-bold text-gray-700 " : "text-gray-500 hover:text-indigo-500"}`}
                               >
-                                {subCategory.name}
+                                {i18next.language === 'uk' ? subCategory.name_uk : null}
+                                {i18next.language === 'en' ? subCategory.name_en : null}
+                                {i18next.language === 'es' ? subCategory.name_es : null}
+                                {i18next.language === 'fr' ? subCategory.name_fr : null}
                               </Link>
                             </div>
                             <div className="space-y-4 mb-5 border-b border-gray-200 pb-6 text-sm font-medium text-gray-500">
@@ -285,7 +295,10 @@ export default function CatalogNavigation() {
                                         to={`/catalog/${subCategory.urlName}/${category.urlName}`}
                                         className={`block ${category.urlName === urlName ? "font-bold text-gray-700" : "text-gray-400 hover:text-indigo-500"}`}
                                       >
-                                        {category.name}
+                                        {i18next.language === 'uk' ? category.name_uk : null}
+                                        {i18next.language === 'en' ? category.name_en : null}
+                                        {i18next.language === 'es' ? category.name_es : null}
+                                        {i18next.language === 'fr' ? category.name_fr : null}
                                       </Link>
                                     </li>
                                   ))}
@@ -299,7 +312,7 @@ export default function CatalogNavigation() {
                     <div className="space-y-6 px-3 py-4 pt-6 space-y-4 border-b border-gray-200 pb-6 text-lg font-medium">
                       <button type="button" className='rounded border-gray-300 hover:text-indigo-500 focus:ring-indigo-500'
                         onClick={resetFilters}>
-                        Reset filters
+                        {t('CatalogNavigation_ResetFilters')}
                       </button>
                     </div>
                     {filterOptionsList.map((section) => (
@@ -308,7 +321,12 @@ export default function CatalogNavigation() {
                           <>
                             <h3 className="-mx-2 -my-3 flow-root">
                               <Disclosure.Button className="flex w-full items-center justify-between bg-gray-100 px-2 py-3 text-gray-400 hover:text-gray-500">
-                                <span className="font-medium text-gray-900 hover:text-indigo-500">{section.name}</span>
+                                <span className="font-medium text-gray-900 hover:text-indigo-500">
+                                  {i18next.language === 'uk' ? section.name_uk : null}
+                                  {i18next.language === 'en' ? section.name_en : null}
+                                  {i18next.language === 'es' ? section.name_es : null}
+                                  {i18next.language === 'fr' ? section.name_fr : null}
+                                </span>
                                 <span className="ml-6 flex items-center">
                                   {open ? (
                                     <MinusIcon className="h-5 w-5" aria-hidden="true" />
@@ -327,9 +345,9 @@ export default function CatalogNavigation() {
                                       name={`${section.id}[]`}
                                       value={option.value}
                                       type="checkbox"
-                                      checked={filters.some((filter) => filter.name === section.name && filter.values.includes(option.value))}
+                                      checked={filters.some((filter) => filter.name === section.name_en && filter.values.includes(option.value))}
                                       onChange={() => {
-                                        createFilters(section.name, option.value);
+                                        createFilters(section.name_en, option.value);
                                       }}
 
                                       className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
@@ -356,13 +374,13 @@ export default function CatalogNavigation() {
         </Transition.Root>
         <main className="mx-auto max-w-7xl px-2 sm:px-2 lg:px-2 ">
           <div className="flex items-baseline justify-between border-b border-gray-200 pb-2 pt-4">
-            <h1 className="text-4xl font-bold tracking-tight text-gray-900 pb-4">Category</h1>
+            <h1 className="text-4xl font-bold tracking-tight text-gray-900 pb-4">{t('CatalogNavigation_Catalog')}</h1>
 
             <div className="flex items-center">
               <Menu as="div" className="relative inline-block text-left">
                 <div>
                   <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                    Sort
+                    {t('CatalogNavigation_Sort')}
                     <ChevronDownIcon
                       className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
@@ -405,7 +423,7 @@ export default function CatalogNavigation() {
               </Menu>
 
               <button type="button" onClick={onViewModeChange} className="-m-2 ml-5 p-2 text-gray-400 hover:text-indigo-600 sm:ml-7">
-                <span className="sr-only">View grid</span>
+                <span className="sr-only">{t('CatalogNavigation_ViewGrid')}</span>
                 <Squares2X2Icon className="h-5 w-5" aria-hidden="true" />
               </button>
               <button
@@ -413,21 +431,21 @@ export default function CatalogNavigation() {
                 className="-m-2 ml-4 p-2 text-gray-400 hover:text-gray-500 sm:ml-6 lg:hidden"
                 onClick={() => setMobileFiltersOpen(true)}
               >
-                <span className="sr-only">Filters</span>
+                <span className="sr-only">{t('CatalogNavigation_Filters')}</span>
                 <FunnelIcon className="h-5 w-5" aria-hidden="true" />
               </button>
             </div>
           </div>
 
           <h2 id="products-heading" className="sr-only">
-            Products
+            {t('CatalogNavigation_Products')}
           </h2>
 
           <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
             {/* Filters */}
             <form className="hidden lg:block">
               <div className=' px-2 py-8 ' style={{ minWidth: '280px' }}>
-                <h3 className="sr-only">Categories</h3>
+                <h3 className="sr-only">{t('CatalogNavigation_Categories')}</h3>
                 <ul role="list" className="space-y-4  text-sm font-medium text-gray-500">
                   {mainCategoryList.map((mainCategory) =>
                     mainCategory.subCategories.map((subCategory) => (
@@ -437,7 +455,10 @@ export default function CatalogNavigation() {
                             to={`/catalog/${subCategory.urlName}`}
                             className={`block ${subCategory.urlName === subName ? "font-bold text-gray-700" : "text-gray-500 hover:text-indigo-500"}`}
                           >
-                            {subCategory.name}
+                            {i18next.language === 'uk' ? subCategory.name_uk : null}
+                            {i18next.language === 'en' ? subCategory.name_en : null}
+                            {i18next.language === 'es' ? subCategory.name_es : null}
+                            {i18next.language === 'fr' ? subCategory.name_fr : null}
                           </Link>
                         </div>
                         <div className="space-y-4 mb-5 border-b border-gray-200 pb-6 text-sm font-medium text-gray-500">
@@ -449,7 +470,10 @@ export default function CatalogNavigation() {
                                     to={`/catalog/${subCategory.urlName}/${category.urlName}`}
                                     className={`block ${category.urlName === urlName ? "font-bold text-gray-700" : "text-gray-400 hover:text-indigo-500"}`}
                                   >
-                                    {category.name}
+                                    {i18next.language === 'uk' ? category.name_uk : null}
+                                    {i18next.language === 'en' ? category.name_en : null}
+                                    {i18next.language === 'es' ? category.name_es : null}
+                                    {i18next.language === 'fr' ? category.name_fr : null}
                                   </Link>
                                 </li>
                               ))}
@@ -463,7 +487,7 @@ export default function CatalogNavigation() {
                 <div className="pt-6 space-y-4 border-b border-gray-200 pb-6">
                   <button type="button" className='rounded border-gray-300 hover:text-indigo-500 focus:ring-indigo-500'
                     onClick={resetFilters}>
-                    Reset filters
+                    {t('CatalogNavigation_ResetFilters')}
                   </button>
                 </div>
                 {filterOptionsList.map((section) => (
@@ -474,7 +498,12 @@ export default function CatalogNavigation() {
                       <>
                         <h3 className="-my-3 flow-root">
                           <Disclosure.Button className="flex w-full items-center justify-between bg-gray-100 py-3 text-sm text-gray-400 hover:text-gray-500">
-                            <span className="font-medium text-gray-900 hover:text-indigo-500">{section.name}</span>
+                            <span className="font-medium text-gray-900 hover:text-indigo-500">
+                              {i18next.language === 'uk' ? section.name_uk : null}
+                              {i18next.language === 'en' ? section.name_en : null}
+                              {i18next.language === 'es' ? section.name_es : null}
+                              {i18next.language === 'fr' ? section.name_fr : null}
+                            </span>
                             <span className="ml-6 flex items-center">
                               {open ? (
                                 <MinusIcon className="h-5 w-5" aria-hidden="true" />
@@ -493,9 +522,9 @@ export default function CatalogNavigation() {
                                   name={`${section.id}[]`}
                                   value={option.value}
                                   type="checkbox"
-                                  checked={filters.some((filter) => filter.name === section.name && filter.values.includes(option.value))}
+                                  checked={filters.some((filter) => filter.name === section.name_en && filter.values.includes(option.value))}
                                   onChange={() => {
-                                    createFilters(section.name, option.value);
+                                    createFilters(section.name_en, option.value);
                                   }}
 
                                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 "
@@ -554,21 +583,26 @@ export default function CatalogNavigation() {
                         </Link>
 
                         <div className="flex items-end opacity-0 group-hover:opacity-100" aria-hidden="true">
-                          <ul className="mt-4 grid grid-cols-12 gap-2">
-                            <li className="text-xs border-transparent pointer-events-none -inset-px rounded-md">
-                              Size:
-                            </li>
-                            {product.storages?.map((size) => (
-                              size.inStock && (
-                                <li key={size.size}
-                                  onClick={() => handleQuickviewOpen(product, size)}
-                                  className="cursor-pointer text-xs border-transparent -inset-px rounded-md ml-2 hover:text-indigo-500">
-                                  {size.size}
-                                </li>
-                              )
-                            ))}
-                          </ul>
+                          <div className="mt-4 flex items-center gap-1">
+                            <p className=" text-xs border-transparent pointer-events-none -inset-px rounded-md">
+                              {t('CatalogHome_Size')}:
+                            </p>
+                            <div className="flex gap-1">
+                              {product.storages?.map((size) => (
+                                  size.inStock && (
+                                      <p
+                                          key={size.size}
+                                          onClick={() => handleQuickviewOpen(product, size)}
+                                          className="cursor-pointer text-xs border-transparent -inset-px rounded-md hover:text-indigo-500"
+                                      >
+                                        {size.size}
+                                      </p>
+                                  )
+                              ))}
+                            </div>
+                          </div>
                         </div>
+
 
                         <div className="flex items-end pt-2 opacity-0 group-hover:opacity-100" aria-hidden="true">
                         </div>
@@ -588,9 +622,9 @@ export default function CatalogNavigation() {
                     <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between ">
                       <div>
                         <p className="text-sm text-gray-700">
-                          Showing <span className="font-medium">{indexOfFirstItem + 1}</span> to{' '}
-                          <span className="font-medium">{Math.min(indexOfLastItem, countPage)}</span> of{' '}
-                          <span className="font-medium">{countPage}</span> results
+                          {t('CatalogHome_PaginationShowing')} <span className="font-medium">{indexOfFirstItem + 1}</span> {t('CatalogHome_PaginationTo')}{' '}
+                          <span className="font-medium">{Math.min(indexOfLastItem, countPage)}</span> {t('CatalogHome_PaginationOf')}{' '}
+                          <span className="font-medium">{countPage}</span> {t('CatalogHome_PaginationResults')}
                         </p>
                       </div>
                     </div>
@@ -608,7 +642,7 @@ export default function CatalogNavigation() {
                               }`}
                           >
                             <ArrowLongLeftIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-                            Previous
+                            {t('CatalogHome_Previous')}
                           </button>
                         </div>
 
@@ -638,7 +672,7 @@ export default function CatalogNavigation() {
                                 : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
                               }`}
                           >
-                            Next
+                            {t('CatalogHome_Next')}
                             <ArrowLongRightIcon className="ml-3 h-5 w-5 text-gray-400" aria-hidden="true" />
                           </button>
                         </div>

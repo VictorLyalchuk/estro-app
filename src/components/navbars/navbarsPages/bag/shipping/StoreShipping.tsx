@@ -3,6 +3,8 @@ import { IStore } from '../../../../../interfaces/Catalog/IStore';
 import '../../../../../satoshi.css';
 import { ICity } from '../../../../../interfaces/Address/ICity';
 import { ICountry } from '../../../../../interfaces/Address/ICountry';
+import {t} from "i18next";
+import i18next from "i18next";
 
 interface StoreShippingProps {
   countryOptions: ICountry[] | null;
@@ -14,12 +16,12 @@ interface StoreShippingProps {
 }
 
 const StoreShipping: React.FC<StoreShippingProps> = ({countryOptions, cityOptions, shippingData, handleChangeShipping, storeOptions, errors }) => {
-  const filteredCityOptions = cityOptions ? cityOptions.filter(city => city.countryName === shippingData.country) : [];
+  const filteredCityOptions = cityOptions ? cityOptions.filter(city => city.countryName_en === shippingData.country) : [];
   const filteredStoreOptions = storeOptions.filter(store => store.city === shippingData.city);
   return (
     <div className="mt-5">
       <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-2">
-        Country
+          {t('Bag_StoreShipping_Country')}
       </label>
       <FormControl fullWidth variant="outlined">
         <TextField
@@ -31,8 +33,11 @@ const StoreShipping: React.FC<StoreShippingProps> = ({countryOptions, cityOption
           error={!!errors.country}
         >
           {countryOptions && countryOptions.map((country, index) => (
-            <MenuItem key={index} value={country.countryName}>
-              {country.countryName}
+            <MenuItem key={index} value={country.countryName_en}>
+                {i18next.language === 'uk' && country.countryName_uk}
+                {i18next.language === 'en' && country.countryName_en}
+                {i18next.language === 'es' && country.countryName_es}
+                {i18next.language === 'fr' && country.countryName_fr}
             </MenuItem>
           ))}
         </TextField>
@@ -41,7 +46,7 @@ const StoreShipping: React.FC<StoreShippingProps> = ({countryOptions, cityOption
         ) : (<div className="h-6 text-xs "> </div>)}
       </FormControl>
       <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
-        City
+          {t('Bag_StoreShipping_City')}
       </label>
       <FormControl fullWidth variant="outlined">
         <TextField
@@ -54,8 +59,11 @@ const StoreShipping: React.FC<StoreShippingProps> = ({countryOptions, cityOption
           disabled={!shippingData.country}
         >
           {filteredCityOptions && filteredCityOptions.map((city, index) => (
-            <MenuItem key={index} value={city.cityName}>
-              {city.cityName}
+            <MenuItem key={index} value={city.cityName_en}>
+                {i18next.language === 'uk' && city.cityName_uk}
+                {i18next.language === 'en' && city.cityName_en}
+                {i18next.language === 'es' && city.cityName_es}
+                {i18next.language === 'fr' && city.cityName_fr}
             </MenuItem>
           ))}
         </TextField>
@@ -65,7 +73,7 @@ const StoreShipping: React.FC<StoreShippingProps> = ({countryOptions, cityOption
       </FormControl>
 
       <label htmlFor="street" className="block text-sm font-medium text-gray-700 mb-2">
-        Store
+          {t('Bag_StoreShipping_Store')}
       </label>
       <FormControl fullWidth variant="outlined">
         <TextField

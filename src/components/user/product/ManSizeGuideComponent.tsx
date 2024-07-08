@@ -4,6 +4,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import classNames from 'classnames';
 import foot from '../../../assets/foot.webp'
+import {t} from "i18next";
 
 interface SizeGuideProps {
     isOpen: boolean;
@@ -22,11 +23,11 @@ const ManSizeGuideComponent: React.FC<SizeGuideProps> = ({ isOpen, setOpen }) =>
 
     const tabs = [
         {
-            name: 'Table of sizes',
+            name: t('Product_TableOfSizes'),
             current: activeTab === 0,
         },
         {
-            name: 'How to measure',
+            name: t('Product_HowToMeasure'),
             current: activeTab === 1,
         },
     ]
@@ -62,7 +63,7 @@ const ManSizeGuideComponent: React.FC<SizeGuideProps> = ({ isOpen, setOpen }) =>
                                     className="absolute top-0 right-0 m-4 text-gray-500 hover:text-gray-600"
                                     onClick={handleClose}
                                 >
-                                    <span className="sr-only">Close</span>
+                                    <span className="sr-only">{t('Product_Close')}</span>
                                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                                 </button>
 
@@ -98,51 +99,51 @@ const ManSizeGuideComponent: React.FC<SizeGuideProps> = ({ isOpen, setOpen }) =>
                                             <table className="table-auto w-full">
                                                 <thead>
                                                     <tr className="bg-gray-200">
-                                                        <th className="px-4 py-4">Size EU</th>
-                                                        <th className="px-4 py-4">The length of the insole (cm)</th>
-                                                        <th className="px-4 py-4">Recommended foot length (to, cm)</th>
+                                                        <th className="px-4 py-4">{t('Product_SizeEU')}</th>
+                                                        <th className="px-4 py-4">{t('Product_LengthInsole')}</th>
+                                                        <th className="px-4 py-4">{t('Product_RecommendedFootLength')}</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody>
                                                     <tr>
                                                         <td className="border px-4 py-4 text-center">39</td>
                                                         <td className="border px-4 py-4 text-center">25</td>
-                                                        <td className="border px-4 py-4 text-center">to 24.8</td>
+                                                        <td className="border px-4 py-4 text-center">{t('Product_To')} 24.8</td>
                                                     </tr>
                                                     <tr>
                                                         <td className="border px-4 py-4 text-center">40</td>
                                                         <td className="border px-4 py-4 text-center">25.5</td>
-                                                        <td className="border px-4 py-4 text-center">to 25.3</td>
+                                                        <td className="border px-4 py-4 text-center">{t('Product_To')} 25.3</td>
                                                     </tr>
                                                     <tr>
                                                         <td className="border px-4 py-4 text-center">41</td>
                                                         <td className="border px-4 py-4 text-center">26</td>
-                                                        <td className="border px-4 py-4 text-center">to 25.8</td>
+                                                        <td className="border px-4 py-4 text-center">{t('Product_To')} 25.8</td>
                                                     </tr>
                                                     <tr>
                                                         <td className="border px-4 py-4 text-center">42</td>
                                                         <td className="border px-4 py-4 text-center">27</td>
-                                                        <td className="border px-4 py-4 text-center">to 26.8</td>
+                                                        <td className="border px-4 py-4 text-center">{t('Product_To')} 26.8</td>
                                                     </tr>
                                                     <tr>
                                                         <td className="border px-4 py-4 text-center">43</td>
                                                         <td className="border px-4 py-4 text-center">27.5</td>
-                                                        <td className="border px-4 py-4 text-center">to 27.3</td>
+                                                        <td className="border px-4 py-4 text-center">{t('Product_To')} 27.3</td>
                                                     </tr>
                                                     <tr>
                                                         <td className="border px-4 py-4 text-center">44</td>
                                                         <td className="border px-4 py-4 text-center">28.5</td>
-                                                        <td className="border px-4 py-4 text-center">to 28.3</td>
+                                                        <td className="border px-4 py-4 text-center">{t('Product_To')} 28.3</td>
                                                     </tr>
                                                     <tr>
                                                         <td className="border px-4 py-4 text-center">45</td>
                                                         <td className="border px-4 py-4 text-center">29</td>
-                                                        <td className="border px-4 py-4 text-center">to 28.8</td>
+                                                        <td className="border px-4 py-4 text-center">{t('Product_To')} 28.8</td>
                                                     </tr>
                                                     <tr>
                                                         <td className="border px-4 py-4 text-center">46</td>
                                                         <td className="border px-4 py-4 text-center">29.5</td>
-                                                        <td className="border px-4 py-4 text-center">to 29.3</td>
+                                                        <td className="border px-4 py-4 text-center">{t('Product_To')} 29.3</td>
                                                     </tr>
                                                 </tbody>
                                             </table>
@@ -152,13 +153,13 @@ const ManSizeGuideComponent: React.FC<SizeGuideProps> = ({ isOpen, setOpen }) =>
                                             <img src={foot}></img>
                                             <ol className="list-decimal list-inside mt-5 space-y-6">
                                                 <li className="mb-2 text-base text-gray-600">
-                                                Measure the leg at the end of the day or after physical activity, when the length of the foot is close to its maximum values.
+                                                    {t('Product_Measure1')}
                                                 </li>
                                                 <li className="mb-2 text-base text-gray-600">
-                                                Stand on the paper, circle its contour with a pencil and make a mark on the paper, in the place where the big toe and the heel end. The mark may go beyond the contour of the foot.
+                                                    {t('Product_Measure2')}
                                                 </li>
-                                                <li className="mb-2 text-base text-gray-600">Measure the distance between the marks - this will be your foot length.</li>
-                                                <li className="mb-2 text-base text-gray-600">After measurement, 3-5 mm should be added to the obtained result for more comfortable wearing.</li>
+                                                <li className="mb-2 text-base text-gray-600">{t('Product_Measure3')}</li>
+                                                <li className="mb-2 text-base text-gray-600">{t('Product_Measure4')}</li>
                                             </ol>
                                         </div>
                                     </div>
