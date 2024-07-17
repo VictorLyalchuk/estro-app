@@ -18,7 +18,7 @@ const StoreLocations = () => {
     ? storeOptions.filter(store => store.city === selectedCity)
     : storeOptions;
 
-  const getCityName = (city) => {
+  const getCityName = (city: any) => {
     switch (i18next.language) {
       case 'uk':
         return city.cityName_uk;

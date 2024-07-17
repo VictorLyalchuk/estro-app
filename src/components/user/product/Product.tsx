@@ -109,14 +109,14 @@ export default function Product() {
     }
 
     switch (product.mainCategoryName) {
-      case 'Woman':
+      case 'Women':
         return (
           <WomanSizeGuideComponent
             isOpen={isQuickviewOpen}
             setOpen={setQuickviewOpen}
           />
         );
-      case 'Man':
+      case 'Men':
         return (
           <ManSizeGuideComponent
             isOpen={isQuickviewOpen}

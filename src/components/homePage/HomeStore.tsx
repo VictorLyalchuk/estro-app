@@ -53,7 +53,7 @@ const HomeStore = () => {
                         />
                         <div className="relative flex w-full flex-col items-end justify-start bg-black bg-opacity-10 p-8 sm:p-12">
                           <h1 className="mt-2 text-5xl font-medium text-white text-opacity-75">{t('HomeStore_Women')}</h1>
-                          <Link to={"/catalog-home/woman"} className="mt-4 text-xl px-1 py-1 font-semibold leading-7 text-white text-opacity-75 hover:text-indigo-400">
+                          <Link to={"/catalog-home/women"} className="mt-4 text-xl px-1 py-1 font-semibold leading-7 text-white text-opacity-75 hover:text-indigo-400">
                             <span aria-hidden="true">&larr;</span> {t('HomeStore_ShopNow')}
                           </Link>
                         </div>
@@ -66,7 +66,7 @@ const HomeStore = () => {
                         />
                         <div className="relative flex w-full flex-col items-start justify-start bg-black bg-opacity-10 p-8 sm:p-12">
                           <h1 className="mt-2 text-5xl font-medium text-white text-opacity-75">{t('HomeStore_Men')}</h1>
-                          <Link to={"/catalog-home/man"} className="mt-4 text-xl px-1 py-1 font-semibold leading-7 text-white text-opacity-75 hover:text-indigo-400">
+                          <Link to={"/catalog-home/men"} className="mt-4 text-xl px-1 py-1 font-semibold leading-7 text-white text-opacity-75 hover:text-indigo-400">
                             {t('HomeStore_ShopNow')} <span aria-hidden="true">&rarr;</span>
                           </Link>
                         </div>

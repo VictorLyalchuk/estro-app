@@ -22,7 +22,7 @@ import { validateForm } from '../../../../../validations/account/login-validatio
 import { validatePhoneNumber } from '../../../../../validations/custom/login-phone-validations';
 import { login } from '../../../../../services/accounts/account-services';
 import { theme } from '../../../../../theme/theme';
-import { useStyles } from '../../../../../theme/Styles';
+import { useStyles } from '../../../../../theme/styles';
 import TextFieldComponent from '../../../../../ui/input-with-label/TextFieldComponent';
 import PasswordFieldComponent from '../../../../../ui/input-with-label/PasswordFieldComponent';
 import PhoneNumberComponent from '../../../../../ui/input-with-label/PhoneNumberComponent';
