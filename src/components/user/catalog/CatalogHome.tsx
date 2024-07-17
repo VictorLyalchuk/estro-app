@@ -106,6 +106,7 @@ export default function CatalogHome() {
         const queryParams = onPageChangeQueryParams(newPage, filters);
         const newQueryString = qs.stringify(queryParams, { encodeValuesOnly: true, delimiter: ';' });
         navigate({ search: newQueryString });
+        window.scrollTo(0, 0);
     };
 
     const createFilters = async (name: string, value: string) => {

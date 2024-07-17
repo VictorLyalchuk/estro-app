@@ -369,7 +369,7 @@ export const uk = {
 
     // NAVBARS
     "Navbars_SearchProducts": "Пошук товарів",
-    "Navbars_Store": "Магазин",
+    "Navbars_Store": "Магазини",
     "Navbars_NewArrivals": "Нові надходження",
     "Navbars_BasicTees": "Базові футболки",
     "Navbars_ShopNow": "Купуйте зараз",
@@ -397,7 +397,7 @@ export const uk = {
     "Product_Article": "Артикул",
     "Product_Color": "Колір",
     "Product_Material": "Матеріал",
-    "Product_Period": "Період",
+    "Product_Period": "Сезон",
     "Product_Description": "Опис",
     "Product_Highlights": "Особливості",
     "Product_Details": "Деталі",
