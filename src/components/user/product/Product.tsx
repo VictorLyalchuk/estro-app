@@ -22,7 +22,8 @@ import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavorit
 import Brightness1RoundedIcon from '@mui/icons-material/Brightness1Rounded';
 import WomanSizeGuideComponent from './WomanSizeGuideComponent';
 import ManSizeGuideComponent from './ManSizeGuideComponent';
-import { t } from "i18next";
+// import { t } from "i18next";
+import { useTranslation } from 'react-i18next';
 
 const reviews = { href: '#', average: 4, totalCount: 117 }
 
@@ -31,6 +32,8 @@ function classNames(...classes: string[]) {
 }
 
 export default function Product() {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const baseUrl = APP_ENV.BASE_URL;
   const { Id } = useParams();
   const { isAuth, user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
@@ -127,6 +130,11 @@ export default function Product() {
         return null;
     }
   };
+
+  const getLocalizedField = (product: IProduct, field: string, lang: string): string => {
+    return product[`${field}_${lang}` as keyof IProduct] as string;
+  };
+
   return (
     <div className="overflow-hidden rounded-sm border-stroke bg-gray-100 shadow-default dark:border-strokedark dark:bg-boxdark text-body">
 
@@ -342,13 +350,13 @@ export default function Product() {
               <h3 className="text-1xl text-gray-900">{t('Product_Article')}: {product.article}</h3>
             </div>
             <div className="mt-4">
-              <h3 className="text-1xl text-gray-900">{t('Product_Color')}: {product.color_en}</h3>
+              <h3 className="text-1xl text-gray-900">{t('Product_Color')}: {getLocalizedField(product, 'color', lang)}</h3>
             </div>
             <div className="mt-4">
-              <h3 className="text-1xl text-gray-900">{t('Product_Material')}: {product.material_en}</h3>
+              <h3 className="text-1xl text-gray-900">{t('Product_Material')}: {getLocalizedField(product, 'material', lang)}</h3>
             </div>
             <div className="mt-4">
-              <h3 className="text-1xl text-gray-900">{t('Product_Season')}: {product.season_en}</h3>
+              <h3 className="text-1xl text-gray-900">{t('Product_Season')}: {getLocalizedField(product, 'season', lang)}</h3>
             </div>
           </div>
         </div>
