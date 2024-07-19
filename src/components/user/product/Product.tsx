@@ -24,6 +24,7 @@ import WomanSizeGuideComponent from './WomanSizeGuideComponent';
 import ManSizeGuideComponent from './ManSizeGuideComponent';
 // import { t } from "i18next";
 import { useTranslation } from 'react-i18next';
+import { getLocalizedField } from '../../../utils/localized/localized';
 
 const reviews = { href: '#', average: 4, totalCount: 117 }
 
@@ -129,10 +130,6 @@ export default function Product() {
       default:
         return null;
     }
-  };
-
-  const getLocalizedField = (product: IProduct, field: string, lang: string): string => {
-    return product[`${field}_${lang}` as keyof IProduct] as string;
   };
 
   return (

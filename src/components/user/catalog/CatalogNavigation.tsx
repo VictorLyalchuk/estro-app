@@ -22,6 +22,8 @@ import { HeartIcon } from '@heroicons/react/24/solid';
 import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/userFavoriteProducts/user-favorite-products-services.ts';
 import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts.ts';
 import i18next, { t } from "i18next";
+import { getLocalizedField } from '../../../utils/localized/localized.ts';
+import { useTranslation } from 'react-i18next';
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -35,6 +37,8 @@ export default function CatalogNavigation() {
     { name: t('Sort_LowToHigh'), url: 'price_low_to_high', current: false },
     { name: t('Sort_HighToLow'), url: 'price_high_to_low', current: false },
   ];
+  const { i18n } = useTranslation();
+  const lang = i18n.language;
   const baseUrl = APP_ENV.BASE_URL;
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -631,7 +635,7 @@ export default function CatalogNavigation() {
                                 {product.name}
                               </h3>
                               <p className="mt-1 text-xs text-gray-500">{product.article}</p>
-                              <p className="mt-1 text-xs text-gray-500">{product.season_en}</p>
+                              <p className="mt-1 text-xs text-gray-500">{getLocalizedField(product, 'season', lang)}</p>
                             </div>
                             <p className="text-sm font-bold text-red-800 whitespace-nowrap" >{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
                           </div>
