@@ -397,7 +397,7 @@ export const fr = {
     "Product_Article": "Article",
     "Product_Color": "Couleur",
     "Product_Material": "Matériau",
-    "Product_Period": "Période",
+    "Product_Season": "Saison",
     "Product_Description": "Description",
     "Product_Highlights": "Points forts",
     "Product_Details": "Détails",

@@ -397,7 +397,7 @@ export const es = {
     "Product_Article": "Artículo",
     "Product_Color": "Color",
     "Product_Material": "Material",
-    "Product_Period": "Período",
+    "Product_Season": "Estación",
     "Product_Description": "Descripción",
     "Product_Highlights": "Aspectos destacados",
     "Product_Details": "Detalles",

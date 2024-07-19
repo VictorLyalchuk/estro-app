@@ -22,7 +22,7 @@ import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavorit
 import Brightness1RoundedIcon from '@mui/icons-material/Brightness1Rounded';
 import WomanSizeGuideComponent from './WomanSizeGuideComponent';
 import ManSizeGuideComponent from './ManSizeGuideComponent';
-import {t} from "i18next";
+import { t } from "i18next";
 
 const reviews = { href: '#', average: 4, totalCount: 117 }
 
@@ -323,16 +323,17 @@ export default function Product() {
                 </button>
 
                 <div className="cursor-pointer">
-                  {isFavorite(product.id) ? (
-                    <button className="shrink-0 hover:bg-gray-200 p-2 rounded-xl">
-                      <HeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                    </button>
+                  <div className={classNames(
+                    isFavorite(product.id) ? 'text-red-600' : 'text-gray-400 hover:text-gray-500',
+                    'ml-3 text-gray-400 hover:text-gray-500'
+                  )}>
 
-                  ) : (
-                    <button className="shrink-0 hover:bg-gray-200 p-2 rounded-xl">
+                    {isFavorite(product.id) ? (
+                      <HeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                    ) : (
                       <OutlineHeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                    </button>
-                  )}
+                    )}
+                  </div>
                 </div>
               </div>
             </form>
@@ -341,13 +342,13 @@ export default function Product() {
               <h3 className="text-1xl text-gray-900">{t('Product_Article')}: {product.article}</h3>
             </div>
             <div className="mt-4">
-              <h3 className="text-1xl text-gray-900">{t('Product_Color')}: {product.color}</h3>
+              <h3 className="text-1xl text-gray-900">{t('Product_Color')}: {product.color_en}</h3>
             </div>
             <div className="mt-4">
-              <h3 className="text-1xl text-gray-900">{t('Product_Material')}: {product.material}</h3>
+              <h3 className="text-1xl text-gray-900">{t('Product_Material')}: {product.material_en}</h3>
             </div>
             <div className="mt-4">
-              <h3 className="text-1xl text-gray-900">{t('Product_Period')}: {product.purpose}</h3>
+              <h3 className="text-1xl text-gray-900">{t('Product_Season')}: {product.season_en}</h3>
             </div>
           </div>
         </div>

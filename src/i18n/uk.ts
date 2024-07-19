@@ -397,7 +397,7 @@ export const uk = {
     "Product_Article": "Артикул",
     "Product_Color": "Колір",
     "Product_Material": "Матеріал",
-    "Product_Period": "Сезон",
+    "Product_Season": "Сезон",
     "Product_Description": "Опис",
     "Product_Highlights": "Особливості",
     "Product_Details": "Деталі",

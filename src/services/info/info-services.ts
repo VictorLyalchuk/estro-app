@@ -1,6 +1,6 @@
 import axios from "axios";
 import { APP_ENV } from "../../env/config";
-import { IInfo } from "../../interfaces/Info/IInfo";
+// import { IInfo } from "../../interfaces/Info/IInfo";
 
 const baseUrl = APP_ENV.BASE_URL;
 
@@ -14,7 +14,7 @@ const instance = axios.create({
 
 export async function getInfoList() {
     try {
-        const resp = await instance.get<IInfo[]>(`GetInfo`,);
+        const resp = await instance.get<any[]>(`GetInfo`,);
         return resp.data;
     } catch (error) {
         console.error('Failed to fetch product data:', error);

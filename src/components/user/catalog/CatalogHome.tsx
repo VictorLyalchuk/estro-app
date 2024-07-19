@@ -6,7 +6,7 @@ import { HeartIcon } from '@heroicons/react/24/solid'
 import { IProduct, IStorages } from '../../../interfaces/Product/IProduct'
 import { APP_ENV } from '../../../env/config'
 import { Link, useNavigate, useParams } from 'react-router-dom'
-import { IInfo } from '../../../interfaces/Info/IInfo'
+import { IInfo, IOptions } from '../../../interfaces/Info/IInfo'
 import { createQueryParams, onPageChangeQueryParams, onSortChangeQueryParams, updateFilters } from '../../../utils/catalog/filterUtils'
 import { ISortOptions } from '../../../interfaces/Catalog/ISortOptions'
 import qs, { ParsedQs } from 'qs'
@@ -20,7 +20,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavoritesReducer'
 import { RootState } from '../../../store/store'
 import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts'
-import i18next, {t} from "i18next";
+import i18next, { t } from "i18next";
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -163,6 +163,27 @@ export default function CatalogHome() {
         return urls;
     };
 
+    const transformToOptions = (options: any[], language: string): IOptions[] => {
+        return options.map(option => ({
+            id: option.id.toString(),
+            label: (() => {
+                switch (language) {
+                    case 'uk':
+                        return option.name_uk;
+                    case 'es':
+                        return option.name_es;
+                    case 'fr':
+                        return option.name_fr;
+                    case 'en':
+                        return option.name_en; 
+                    default:
+                        return option.name_en; 
+                }
+            })(),
+            value: option.value
+        }));
+    };
+    
     const getInfo = async () => {
         try {
             // Витягування категорій і фільтрів з бази даних
@@ -212,7 +233,28 @@ export default function CatalogHome() {
             });
 
             const infos = await getInfoList();
-            setFilterOptionsList(prevFilters => [...prevFilters, ...infos]);
+
+            const transformedInfos: IInfo[] = infos.map(info => {
+                const allOptions = [
+                    ...transformToOptions(info.colors || [], i18next.language),
+                    ...transformToOptions(info.season || [], i18next.language),
+                    ...transformToOptions(info.sizes || [], i18next.language),
+                    ...transformToOptions(info.materials || [], i18next.language),
+                ];
+    
+                return {
+                    id: info.id,
+                    name_en: info.name_en,
+                    name_es: info.name_es,
+                    name_fr: info.name_fr,
+                    name_uk: info.name_uk,
+                    value: info.value,
+                    options: allOptions.length > 0 ? allOptions : null
+                };
+            });
+    
+            setFilterOptionsList(prevFilters => [...prevFilters, ...transformedInfos]);
+            // setFilterOptionsList(prevFilters => [...prevFilters, ...infos]);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
@@ -228,7 +270,7 @@ export default function CatalogHome() {
                 Size: newFilters.find(f => f.name === 'size')?.values || undefined,
                 Material: newFilters.find(f => f.name === 'material')?.values || undefined,
                 Color: newFilters.find(f => f.name === 'color')?.values || undefined,
-                Purpose: newFilters.find(f => f.name === 'purpose')?.values || undefined,
+                Season: newFilters.find(f => f.name === 'season')?.values || undefined,
                 ItemsPerPage: newFilters.find(f => f.name === 'ItemsPerPage')?.values || itemsPerPage,
                 Sort: newFilters.find(f => f.name === 'Sort')?.values?.join('_') || undefined,
                 Page: newFilters.find(f => f.name === 'Page')?.values || page,
@@ -643,16 +685,23 @@ export default function CatalogHome() {
                                                 className="h-full w-full object-cover object-center " />
                                         </Link>
                                         <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
-                                            {isFavorite(product.id) ? (
-                                                <HeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                                            ) : (
-                                                <OutlineHeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                                            )}
+                                            <div className={classNames(
+                                                isFavorite(product.id) ? 'text-red-600' : 'text-gray-400 hover:text-gray-500',
+                                                'ml-3 text-gray-400 hover:text-gray-500'
+                                            )}>
+
+                                                {isFavorite(product.id) ? (
+                                                    <HeartIcon className="w-7 h-7 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                                ) : (
+                                                    <OutlineHeartIcon className="w-7 h-7 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                                )}
+                                            </div>
                                         </div>
+
                                     </div>
                                     <h3 className="mt-4 text-sm text-gray-700 line-clamp-2 break-words w-45">{product.name.split(' ').slice(0, 3).join(' ')}</h3>
                                     <p className="mt-1 text-xs text-gray-500">{product.article}</p>
-                                    <p className="mt-1 text-xs text-gray-500">{product.purpose}</p>
+                                    <p className="mt-1 text-xs text-gray-500">{product.season_en}</p>
                                     <p className="mt-1 text-lg font-medium text-red-900">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
                                     <div className="flex items-end opacity-0 group-hover:opacity-100" aria-hidden="true">
                                         <div className="mt-4 flex items-center gap-1">

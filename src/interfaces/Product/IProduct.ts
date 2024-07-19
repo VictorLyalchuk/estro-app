@@ -5,9 +5,22 @@ export interface IProduct {
     details: string; 
     highlights: string []; 
     price: number; 
-    material: string; 
-    purpose: string; 
-    color: string; 
+    
+    material_en: string; 
+    material_uk: string; 
+    material_es: string; 
+    material_fr: string; 
+    
+    season_en: string; 
+    season_uk: string; 
+    season_es: string; 
+    season_fr: string; 
+
+    color_en: string;
+    color_uk: string;
+    color_es: string;
+    color_fr: string;
+
     article: string; 
     images: IImage[] | null;  
     imagesPath: string [] | null;  

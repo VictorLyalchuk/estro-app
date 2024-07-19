@@ -17,7 +17,9 @@ import { RootState } from '../../../store/store';
 import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavoritesReducer';
 import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/userFavoriteProducts/user-favorite-products-services';
 import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts'
-import {t} from "i18next";
+import WomanSizeGuideComponent from './WomanSizeGuideComponent';
+import ManSizeGuideComponent from './ManSizeGuideComponent';
+import { t } from "i18next";
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -36,7 +38,7 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
     const navigate = useNavigate();
     const favoriteProducts = useSelector((state: RootState) => state.favorites.favoriteProducts);
     const isFavorite = (productId: number) => favoriteProducts.some((product: { productId: number }) => product.productId === productId);
-
+    const [isQuickviewOpen, setQuickviewOpen] = useState(false);
     const handleClose = () => {
         setOpen(true);
     };
@@ -88,6 +90,30 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
         }
     };
 
+    const renderSizeGuide = (isQuickviewOpen: boolean) => {
+        if (!isQuickviewOpen || typeof product.mainCategoryName !== 'string') {
+            return null;
+        }
+
+        switch (product.mainCategoryName) {
+            case 'Women':
+                return (
+                    <WomanSizeGuideComponent
+                        isOpen={isQuickviewOpen}
+                        setOpen={setQuickviewOpen}
+                    />
+                );
+            case 'Men':
+                return (
+                    <ManSizeGuideComponent
+                        isOpen={isQuickviewOpen}
+                        setOpen={setQuickviewOpen}
+                    />
+                );
+            default:
+                return null;
+        }
+    };
     return (
         <>
             <Transition.Root show={isOpen} as={Fragment}>
@@ -185,10 +211,13 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                                         <div className="mt-10">
                                                             <div className="flex items-center justify-between">
                                                                 <h4 className="text-sm font-medium text-gray-900">{t('Product_Size')}</h4>
-                                                                <a href="#" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                                                                <a onClick={() => setQuickviewOpen(true)} className="text-sm font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer">
                                                                     {t('Product_SizeGuide')}
                                                                 </a>
                                                             </div>
+
+
+
                                                             <RadioGroup
                                                                 value={selectedSize}
                                                                 onChange={setSelectedSize}
@@ -256,17 +285,19 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                                             </button>
 
                                                             <div className="cursor-pointer">
-                                                                {isFavorite(product.id) ? (
-                                                                    <button className="shrink-0 hover:bg-gray-200 p-2 rounded-xl">
-                                                                        <HeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                                                                    </button>
+                                                                <div className={classNames(
+                                                                    isFavorite(product.id) ? 'text-red-600' : 'text-gray-400 hover:text-gray-500',
+                                                                    'ml-3 text-gray-400 hover:text-gray-500'
+                                                                )}>
 
-                                                                ) : (
-                                                                    <button className="shrink-0 hover:bg-gray-200 p-2 rounded-xl">
+                                                                    {isFavorite(product.id) ? (
+                                                                        <HeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                                                    ) : (
                                                                         <OutlineHeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                                                                    </button>
-                                                                )}
+                                                                    )}
+                                                                </div>
                                                             </div>
+
                                                         </div>
                                                     </form>
                                                 </section>
@@ -279,6 +310,7 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                     </div>
                 </Dialog>
             </Transition.Root>
+            {renderSizeGuide(isQuickviewOpen)}
         </>
     )
 }

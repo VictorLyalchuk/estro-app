@@ -6,7 +6,7 @@ import { IProduct, IStorages } from '../../../interfaces/Product/IProduct.ts';
 import { Link, useParams, useNavigate } from "react-router-dom";
 import qs, { ParsedQs } from 'qs';
 import { IMainCategory } from '../../../interfaces/Catalog/IMainCategory.ts';
-import { IInfo } from '../../../interfaces/Info/IInfo.ts';
+import { IInfo, IOptions } from '../../../interfaces/Info/IInfo.ts';
 import { APP_ENV } from "../../../env/config.ts";
 import { getProductsist, getQuantityProducts } from '../../../services/product/product-services.ts';
 import { updateFilters, createQueryParams, onPageChangeQueryParams, onSortChangeQueryParams } from '../../../utils/catalog/filterUtils.ts';
@@ -21,7 +21,7 @@ import { addToFavorite, removeFromFavorite } from '../../../store/favourites/Fav
 import { HeartIcon } from '@heroicons/react/24/solid';
 import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/userFavoriteProducts/user-favorite-products-services.ts';
 import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts.ts';
-import i18next, {t} from "i18next";
+import i18next, { t } from "i18next";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
@@ -148,6 +148,7 @@ export default function CatalogNavigation() {
     return newFilters;
   };
 
+
   const loadFromURL = async () => {
     try {
       // створення і відправка даних на сервер
@@ -158,7 +159,7 @@ export default function CatalogNavigation() {
         Size: newFilters.find(f => f.name === 'Size')?.values || undefined,
         Material: newFilters.find(f => f.name === 'Material')?.values || undefined,
         Color: newFilters.find(f => f.name === 'Color')?.values || undefined,
-        Purpose: newFilters.find(f => f.name === 'Purpose')?.values || undefined,
+        Season: newFilters.find(f => f.name === 'Season')?.values || undefined,
         Page: newFilters.find(f => f.name === 'Page')?.values || page,
         ItemsPerPage: newFilters.find(f => f.name === 'ItemsPerPage')?.values || itemsPerPage,
         Sort: newFilters.find(f => f.name === 'Sort')?.values?.join('_') || undefined,
@@ -197,31 +198,78 @@ export default function CatalogNavigation() {
   const favoriteToggle = async (product: IProduct, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
     e.preventDefault();
     if (user) {
-        const favoriteProduct: IFavoriteProducts = {
-            userId: user?.Id,
-            productId: product.id,
-            productName: product.name,
-            productPrice: product.price,
-            productImage: product.imagesPath?.[0] ?? '',
-            storages: product.storages || null
-        };
-        if (!isFavorite(product.id)) {
-            dispatch(addToFavorite(favoriteProduct));
-            await addFavoriteProduct(favoriteProduct);
-        } else {
-            dispatch(removeFromFavorite(favoriteProduct));
-            await removeFavoriteProduct(favoriteProduct);
-        }
+      const favoriteProduct: IFavoriteProducts = {
+        userId: user?.Id,
+        productId: product.id,
+        productName: product.name,
+        productPrice: product.price,
+        productImage: product.imagesPath?.[0] ?? '',
+        storages: product.storages || null
+      };
+      if (!isFavorite(product.id)) {
+        dispatch(addToFavorite(favoriteProduct));
+        await addFavoriteProduct(favoriteProduct);
+      } else {
+        dispatch(removeFromFavorite(favoriteProduct));
+        await removeFavoriteProduct(favoriteProduct);
+      }
     }
-};
+  };
+
+  const transformToOptions = (options: any[], language: string): IOptions[] => {
+    return options.map(option => ({
+      id: option.id.toString(),
+      label: (() => {
+        switch (language) {
+          case 'uk':
+            return option.name_uk;
+          case 'es':
+            return option.name_es;
+          case 'fr':
+            return option.name_fr;
+          case 'en':
+            return option.name_en;
+          default:
+            return option.name_en;
+        }
+      })(),
+      value: option.value
+    }));
+  };
+
+  const getInfo = async () => {
+    try {
+      const infos = await getInfoList();
+
+      const transformedInfos: IInfo[] = infos.map(info => {
+        const allOptions = [
+          ...transformToOptions(info.colors || [], i18next.language),
+          ...transformToOptions(info.season || [], i18next.language),
+          ...transformToOptions(info.sizes || [], i18next.language),
+          ...transformToOptions(info.materials || [], i18next.language),
+        ];
+
+        return {
+          id: info.id,
+          name_en: info.name_en,
+          name_es: info.name_es,
+          name_fr: info.name_fr,
+          name_uk: info.name_uk,
+          value: info.value,
+          options: allOptions.length > 0 ? allOptions : null
+        };
+      });
+
+      setFilterOptionsList(prevFilters => [...prevFilters, ...transformedInfos]);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
 
   useEffect(() => {
     setPage(1);
     getMainCategory();
-    // Витягування категорій і фільтрів з бази даних
-    getInfoList()
-      .then(data => setFilterOptionsList(data))
-      .catch(error => console.error('Error fetching infos data:', error));
+    getInfo()
   }, []);
 
   useEffect(() => {
@@ -388,7 +436,7 @@ export default function CatalogNavigation() {
                     />
                   </Menu.Button>
                 </div>
-                
+
                 {/* Sort */}
                 <Transition
                   as={Fragment}
@@ -564,11 +612,17 @@ export default function CatalogNavigation() {
                               className="h-full w-full lg:h-full lg:w-full object-cover object-center"
                             />
                             <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
-                              {isFavorite(product.id) ? (
-                                <HeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                              ) : (
-                                <OutlineHeartIcon className="w-9 h-9 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                              )}
+                              <div className={classNames(
+                                isFavorite(product.id) ? 'text-red-600' : 'text-gray-400 hover:text-gray-500',
+                                'ml-3 text-gray-400 hover:text-gray-500'
+                              )}>
+
+                                {isFavorite(product.id) ? (
+                                  <HeartIcon className="w-7 h-7 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                ) : (
+                                  <OutlineHeartIcon className="w-7 h-7 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                )}
+                              </div>
                             </div>
                           </div>
                           <div className="mt-4 flex justify-between">
@@ -577,7 +631,7 @@ export default function CatalogNavigation() {
                                 {product.name}
                               </h3>
                               <p className="mt-1 text-xs text-gray-500">{product.article}</p>
-                              <p className="mt-1 text-xs text-gray-500">{product.purpose}</p>
+                              <p className="mt-1 text-xs text-gray-500">{product.season_en}</p>
                             </div>
                             <p className="text-sm font-bold text-red-800 whitespace-nowrap" >{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
                           </div>
@@ -590,15 +644,15 @@ export default function CatalogNavigation() {
                             </p>
                             <div className="flex gap-1">
                               {product.storages?.map((size) => (
-                                  size.inStock && (
-                                      <p
-                                          key={size.size}
-                                          onClick={() => handleQuickviewOpen(product, size)}
-                                          className="cursor-pointer text-xs border-transparent -inset-px rounded-md hover:text-indigo-500"
-                                      >
-                                        {size.size}
-                                      </p>
-                                  )
+                                size.inStock && (
+                                  <p
+                                    key={size.size}
+                                    onClick={() => handleQuickviewOpen(product, size)}
+                                    className="cursor-pointer text-xs border-transparent -inset-px rounded-md hover:text-indigo-500"
+                                  >
+                                    {size.size}
+                                  </p>
+                                )
                               ))}
                             </div>
                           </div>

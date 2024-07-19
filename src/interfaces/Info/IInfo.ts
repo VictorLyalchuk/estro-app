@@ -6,7 +6,6 @@ export interface IInfo {
     name_uk: string;
     value: string;
     options: IOptions [] | null;
-
 }
 export interface IOptions {
     id: string;
