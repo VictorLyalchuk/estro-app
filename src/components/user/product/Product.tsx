@@ -143,7 +143,7 @@ export default function Product() {
             <li key={`${product.id}-mainCategory`}>
               <div className="flex items-center">
                 <Link to={`/catalog-home/${product.urlMainCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
-                  {product.mainCategoryName}
+                  {getLocalizedField(product, 'mainCategoryName', lang)}
                 </Link>
                 <svg
                   width={16}
@@ -162,7 +162,7 @@ export default function Product() {
 
               <div className="flex items-center">
                 <Link to={`/catalog/${product.urlSubCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
-                  {product.subCategoryName}
+                  {getLocalizedField(product, 'subCategoryName', lang)}
                 </Link>
                 <svg
                   width={16}
@@ -180,6 +180,7 @@ export default function Product() {
               <div className="flex items-center">
                 <Link to={`/catalog/${product.urlSubCategoryName}/${product.urlCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
                   {product.categoryName}
+                  {getLocalizedField(product, 'categoryName', lang)}
                 </Link>
                 <svg
                   width={16}
@@ -380,7 +381,7 @@ export default function Product() {
 
               <div className="mt-4">
                 <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
-                {getLocalizedFieldArray(product, 'highlights', lang).map((highlight: string, index: number) => (
+                  {getLocalizedFieldArray(product, 'highlights', lang).map((highlight: string, index: number) => (
                     <li
                       key={index}
                       className="text-gray-400">

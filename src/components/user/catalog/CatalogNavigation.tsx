@@ -511,10 +511,7 @@ export default function CatalogNavigation() {
                             to={`/catalog/${subCategory.urlName}`}
                             className={`block ${subCategory.urlName === subName ? "font-bold text-gray-700" : "text-gray-500 hover:text-indigo-500"}`}
                           >
-                            {i18next.language === 'uk' ? subCategory.name_uk : null}
-                            {i18next.language === 'en' ? subCategory.name_en : null}
-                            {i18next.language === 'es' ? subCategory.name_es : null}
-                            {i18next.language === 'fr' ? subCategory.name_fr : null}
+                            {getLocalizedField(subCategory, 'name', lang)}
                           </Link>
                         </div>
                         <div className="space-y-4 mb-5 border-b border-gray-200 pb-6 text-sm font-medium text-gray-500">
@@ -635,7 +632,7 @@ export default function CatalogNavigation() {
                           <div className="mt-4 flex justify-between">
                             <div>
                               <h3 className="text-xs text-gray-700 meta-5 font-bold line-clamp-2 break-words w-30">
-                              {getLocalizedField(product, 'name', lang)}
+                                {getLocalizedField(product, 'name', lang)}
                               </h3>
                               <p className="mt-1 text-xs text-gray-500">{product.article}</p>
                               <p className="mt-1 text-xs text-gray-500">{getLocalizedField(product, 'season', lang)}</p>

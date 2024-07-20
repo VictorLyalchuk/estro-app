@@ -165,7 +165,7 @@ export default function CatalogHome() {
         }
         return urls;
     };
-    
+
     const getInfo = async () => {
         try {
             // Витягування категорій і фільтрів з бази даних
@@ -223,7 +223,7 @@ export default function CatalogHome() {
                     ...transformToOptions(info.sizes || [], i18next.language),
                     ...transformToOptions(info.materials || [], i18next.language),
                 ];
-    
+
                 return {
                     id: info.id,
                     name_en: info.name_en,
@@ -234,7 +234,7 @@ export default function CatalogHome() {
                     options: allOptions.length > 0 ? allOptions : null
                 };
             });
-    
+
             setFilterOptionsList(prevFilters => [...prevFilters, ...transformedInfos]);
             // setFilterOptionsList(prevFilters => [...prevFilters, ...infos]);
         } catch (error) {
@@ -549,10 +549,7 @@ export default function CatalogHome() {
                                                 <Popover key={section.name_en} className="relative inline-block px-4 text-left">
                                                     <Popover.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-indigo-500 ">
                                                         <span>
-                                                            {i18next.language === 'uk' && section.name_uk}
-                                                            {i18next.language === 'en' && section.name_en}
-                                                            {i18next.language === 'es' && section.name_es}
-                                                            {i18next.language === 'fr' && section.name_fr}
+                                                            {getLocalizedField(section, 'name', lang)}
                                                         </span>
                                                         {filterValueCounts[index] > 0 && (
                                                             <span className="ml-1.5 rounded bg-gray-200 px-1.5 py-0.5 text-xs font-semibold tabular-nums text-gray-700">
