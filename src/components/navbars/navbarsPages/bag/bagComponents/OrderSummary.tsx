@@ -54,10 +54,10 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
               <div key={index} className="border-b bg-white pt-4 p-6 rounded-md shadow-md mb-8">
                 <div className="flex justify-between">
                   <div className="flex justify-between items-center ">
-                    <h3 className="font-semibold mb-4 mr-14 ">{t('Bag_OrderSummary_Product')} {index + 1}</h3>
-                    <h3 className="font-semibold mb-4">{getLocalizedField(item, 'name', lang)}</h3>
+                    <h3 className="font-semibold mb-4 mr-14 whitespace-nowrap">{t('Bag_OrderSummary_Product')} {index + 1}</h3>
+                    <h3 className="font-semibold mb-4 whitespace-nowrap">{getLocalizedField(item, 'name', lang)}</h3>
                   </div>
-                  <button className="mb-3 group rounded-[50px] border border-gray-200 shadow-sm shadow-transparent p-2.5 flex items-center justify-center bg-white transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-100 hover:border-gray-300 focus-within:outline-gray-300"
+                  <button className="whitespace-nowrap mb-3 group rounded-[50px] border border-gray-200 shadow-sm shadow-transparent p-2.5 flex items-center justify-center bg-white transition-all duration-500 hover:shadow-gray-200 hover:bg-gray-100 hover:border-gray-300 focus-within:outline-gray-300"
                     onClick={() => deleteItems(item, email || '', dispatch)}>
                     <TrashIcon className="w-5 h-5 mb-4stroke-gray-900 transition-all duration-500 group-hover:stroke-black" />
                   </button>
