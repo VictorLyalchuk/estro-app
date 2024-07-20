@@ -2,7 +2,8 @@ import { BonusesUserProps } from "../../../../interfaces/ProfileUser/ProfileUser
 import { ArrowDownCircleIcon, ArrowUpCircleIcon } from '@heroicons/react/20/solid'
 import { formatDate } from "../../../../services/custom/format-data";
 import { useState } from "react";
-import {t} from "i18next";
+import { useTranslation } from "react-i18next";
+import { getLocalizedField } from "../../../../utils/localized/localized";
 
 // const bonuses = [
 //   {
@@ -24,8 +25,9 @@ import {t} from "i18next";
 // ]
 
 const Bonuses: React.FC<BonusesUserProps> = ({ userBonuses, bonusBalance }) => {
+  const { t,  i18n } = useTranslation();
+  const lang = i18n.language;
   const [showAllBonusess, setShowAllBonuses] = useState(false);
-
   const displayedBonuses = showAllBonusess ? userBonuses : userBonuses.slice(0, 6);
   const handleLoadAllProducts = () => {
     setShowAllBonuses((prevShowAllProducts) => !prevShowAllProducts);
@@ -79,16 +81,16 @@ const Bonuses: React.FC<BonusesUserProps> = ({ userBonuses, bonusBalance }) => {
                       {displayedBonuses.map((bonus) => (
                         <tr
                           key={bonus.id}
-                          className={`border-b border-gray-200 ${bonus.bonusesOperation === "Accrual" ? "bg-green-50" : "bg-red-50"}`}
+                          className={`border-b border-gray-200 ${bonus.bonusesOperation_en === "Accrual" ? "bg-green-50" : "bg-red-50"}`}
                         >
                           <td className="max-w-0 py-5 pl-6 pr-3 text-sm sm:pl-6">
                             <div className="font-medium text-gray-900">{t('Bonuses_Order')} #{bonus.name}</div>
-                            <div className="mt-1 truncate text-gray-500">{formatDate(bonus.orderDate)}</div>
+                            <div className="mt-1 truncate text-gray-500">{formatDate(bonus.orderDate, lang)}</div>
                           </td>
-                          <td className="hidden px-6 py-5 text-right text-sm text-gray-500 sm:table-cell">{bonus.bonusesOperation}</td>
-                          <td className="hidden px-6 py-5 text-right text-sm text-gray-500 sm:table-cell">{bonus.bonusesDescription}</td>
+                          <td className="hidden text-right text-sm text-gray-500 sm:table-cell">{getLocalizedField(bonus, 'bonusesOperation', lang)}</td>
+                          <td className="hidden text-right text-sm text-gray-500 sm:table-cell">{getLocalizedField(bonus, 'bonusesDescription', lang)}</td>
                           <td className="py-5 pl-3 pr-6 text-right text-sm text-gray-500 sm:pr-6 whitespace-nowrap">
-                            {bonus.bonusesOperation === "Accrual" ? (
+                            {bonus.bonusesOperation_en === "Accrual" ? (
                               <ArrowUpCircleIcon className="mr-2 h-5 w-5 text-green-700 inline-block align-middle" />
                             ) : (
                               <ArrowDownCircleIcon className="mr-2 h-5 w-5 text-red-700 inline-block align-middle" />

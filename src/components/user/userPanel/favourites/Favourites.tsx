@@ -8,9 +8,12 @@ import { IFavoriteProducts } from "../../../../interfaces/FavoriteProducts/IFavo
 import { removeFromFavorite } from "../../../../store/favourites/FavoritesReducer";
 import { removeFavoriteProduct } from "../../../../services/userFavoriteProducts/user-favorite-products-services";
 import useGetFavoritesEffect from "../../../../useGetFavoritesEffect";
-import {t} from "i18next";
+import { useTranslation } from "react-i18next";
+import { getLocalizedField } from "../../../../utils/localized/localized";
 
 const Favourites = () => {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const [showAllProducts, setShowAllProducts] = useState(false);
   const favoriteProducts = useSelector((state: RootState) => state.favorites.favoriteProducts);
   const baseUrl = APP_ENV.BASE_URL;
@@ -62,29 +65,27 @@ const Favourites = () => {
                         </div>
                         <h3 className="mt-4 text-base font-semibold text-gray-900">
                           <span className="inset-0" />
-                          {product.productName}
+                          {getLocalizedField(product, 'productName', lang)}
                         </h3>
                         <p className="mt-1 text-sm text-gray-500">{product.productPrice.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} ₴</p>
                       </Link>
                       <div className="flex items-end opacity-0 group-hover:opacity-100" aria-hidden="true">
                         {!product.storages?.every(storage => !storage.inStock) ? (
-                            <div className="mt-4 flex flex-wrap gap-2">
-                              <p className="mr-0.5 text-xs border-transparent pointer-events-none -inset-px rounded-md">
-                                {t('Favorites_Size')}
-                              </p>
-                              {product.storages?.map((size) => (
-                                  size.inStock && (
-                                      <p key={size.size}
-                                          // onClick={() => handleQuickviewOpen(product, size)}
-                                         className="cursor-pointer text-xs border-transparent -inset-px rounded-md hover:text-indigo-500">
-                                        {size.size}
-                                      </p>
-                                  )
-                              ))}
-                            </div>
+                          <div className="mt-4 flex flex-wrap gap-2">
+                            <p className="mr-0.5 text-xs border-transparent pointer-events-none -inset-px rounded-md">
+                              {t('Favorites_Size')}
+                            </p>
+                            {product.storages?.map((size) => (
+                              size.inStock && (
+                                <p key={size.size}
+                                  // onClick={() => handleQuickviewOpen(product, size)}
+                                  className="cursor-pointer text-xs border-transparent -inset-px rounded-md hover:text-indigo-500">
+                                  {size.size}
+                                </p>
+                              )
+                            ))}
+                          </div>
                         ) : null}
-
-
                       </div>
                     </div>
                   ))}

@@ -15,6 +15,7 @@ import { IUserProfile } from '../../interfaces/Auth/IUserProfile.ts';
 import { getUserData } from '../../services/accounts/account-services.ts';
 import LanguageSelector from './navbarsPages/language/LanguageSelector.tsx';
 import i18next, {t} from "i18next";
+import { CardReducerActionType } from '../../store/bag/CardReducer.tsx';
 
 
 function classNames(...classes: string[]) {
@@ -70,6 +71,7 @@ const NavbarsPage = () => {
         localStorage.removeItem("token");
         dispatch({ type: AuthReducerActionType.LOGOUT_USER });
         dispatch({ type: BagReducerActionType.DELETE_BAG_ALL });
+        dispatch({ type: CardReducerActionType.DELETE_CARD_ALL, });
         dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL })
         setUserProfile(undefined);
     };

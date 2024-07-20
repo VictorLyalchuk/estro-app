@@ -6,14 +6,16 @@ import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/react/20/solid
 import { OrdersProps } from "../../../../interfaces/ProfileUser/ProfileUserProps";
 import { ArrowsPointingInIcon } from "@heroicons/react/24/outline";
 import { formatDate } from "../../../../services/custom/format-data";
-import {t} from "i18next";
+import { useTranslation } from "react-i18next";
+import { getLocalizedField } from "../../../../utils/localized/localized";
 
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(' ')
 }
 
-
 const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPage, onPageChange }) => {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const baseUrl = APP_ENV.BASE_URL;
   const itemsPerPage = 1;
   const indexOfLastItem = page * itemsPerPage;
@@ -47,7 +49,7 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                         </span>
                       </dt>
                       <dd className="font-medium text-gray-900">
-                        <time>{formatDate(order.orderDate)}</time>
+                        <time>{formatDate(order.orderDate, lang)}</time>
                       </dd>
                     </dl>
                   </div>
@@ -80,13 +82,13 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                         </div>
                         <div className="px-4 py-6 mt-6 sm:col-span-7 sm:mt-0 md:row-end-1">
                           <h3 className="text-lg font-medium text-gray-900">
-                            <Link to={`/product/${product.productId}`}>{product.name}</Link>
+                            <Link to={`/product/${product.productId}`}>{getLocalizedField(product, 'name', lang)}</Link>
                           </h3>
                           <p className="mt-3 font-medium text-gray-900">{t('Order_Article')}: {product.article}</p>
                           <p className="mt-3 font-medium text-gray-900">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
                           <p className="mt-3 font-medium text-gray-900">{t('Order_Quantity')}: {product.quantity}</p>
                           <p className="mt-3 font-medium text-gray-900">{t('Order_Size')}: {product.size}</p>
-                          <p className="mt-3 text-gray-500">{product.description}</p>
+                          <p className="mt-3 text-gray-500">{getLocalizedField(product, 'description', lang)}</p>
                         </div>
                         <div className="px-4 py-6 sm:col-span-12 md:col-span-7">
                           <dl className="grid grid-cols-1 gap-y-8 border-b border-gray-200 py-8 sm:grid-cols-2 sm:gap-x-6 sm:py-6 md:py-10">

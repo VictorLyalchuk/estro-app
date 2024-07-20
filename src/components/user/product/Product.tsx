@@ -22,7 +22,6 @@ import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavorit
 import Brightness1RoundedIcon from '@mui/icons-material/Brightness1Rounded';
 import WomanSizeGuideComponent from './WomanSizeGuideComponent';
 import ManSizeGuideComponent from './ManSizeGuideComponent';
-// import { t } from "i18next";
 import { useTranslation } from 'react-i18next';
 import { getLocalizedField, getLocalizedFieldArray } from '../../../utils/localized/localized';
 
@@ -92,7 +91,10 @@ export default function Product() {
       const favoriteProduct: IFavoriteProducts = {
         userId: user?.Id,
         productId: product.id,
-        productName: product.name_en,
+        productName_en: product.name_en,
+        productName_uk: product.name_uk,
+        productName_es: product.name_es,
+        productName_fr: product.name_fr,
         productPrice: product.price,
         productImage: product.imagesPath?.[0] ?? '',
         storages: product.storages || null

@@ -5,6 +5,7 @@ import { AuthReducerActionType } from './store/accounts/AuthReducer';
 import { jwtDecode } from 'jwt-decode'
 import { BagReducerActionType } from './store/bag/BagReducer';
 import { FavoritesReducerActionType } from './store/favourites/FavoritesReducer';
+import { CardReducerActionType } from './store/bag/CardReducer';
 
 const useAuthTokenEffect = () => {
   const dispatch = useDispatch();
@@ -42,6 +43,7 @@ const useAuthTokenEffect = () => {
       } else {
         dispatch({ type: AuthReducerActionType.LOGOUT_USER });
         dispatch({ type: BagReducerActionType.DELETE_BAG_ALL });
+        dispatch({ type: CardReducerActionType.DELETE_CARD_ALL });
         dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL });
       }
     };

@@ -205,7 +205,10 @@ export default function CatalogNavigation() {
       const favoriteProduct: IFavoriteProducts = {
         userId: user?.Id,
         productId: product.id,
-        productName: product.name_en,
+        productName_en: product.name_en,
+        productName_uk: product.name_uk,
+        productName_es: product.name_es,
+        productName_fr: product.name_fr,
         productPrice: product.price,
         productImage: product.imagesPath?.[0] ?? '',
         storages: product.storages || null

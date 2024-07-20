@@ -7,6 +7,7 @@ import { BagReducerActionType } from '../../../../store/bag/BagReducer';
 import { ArrowLeftOnRectangleIcon, Cog6ToothIcon, CurrencyDollarIcon, DocumentChartBarIcon, HeartIcon, UserIcon } from '@heroicons/react/24/outline';
 import { FavoritesReducerActionType } from '../../../../store/favourites/FavoritesReducer';
 import {useTranslation} from "react-i18next";
+import { CardReducerActionType } from '../../../../store/bag/CardReducer';
 
 const DropdownUser = () => {
   const baseUrl = APP_ENV.BASE_URL;
@@ -26,6 +27,7 @@ const DropdownUser = () => {
     localStorage.removeItem("token");
     dispatch({ type: AuthReducerActionType.LOGOUT_USER, });
     dispatch({ type: BagReducerActionType.DELETE_BAG_ALL, });
+    dispatch({ type: CardReducerActionType.DELETE_CARD_ALL, });
     dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL, })
   };
 
