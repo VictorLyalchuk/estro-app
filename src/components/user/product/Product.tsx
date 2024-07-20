@@ -24,7 +24,7 @@ import WomanSizeGuideComponent from './WomanSizeGuideComponent';
 import ManSizeGuideComponent from './ManSizeGuideComponent';
 // import { t } from "i18next";
 import { useTranslation } from 'react-i18next';
-import { getLocalizedField } from '../../../utils/localized/localized';
+import { getLocalizedField, getLocalizedFieldArray } from '../../../utils/localized/localized';
 
 const reviews = { href: '#', average: 4, totalCount: 117 }
 
@@ -92,7 +92,7 @@ export default function Product() {
       const favoriteProduct: IFavoriteProducts = {
         userId: user?.Id,
         productId: product.id,
-        productName: product.name,
+        productName: product.name_en,
         productPrice: product.price,
         productImage: product.imagesPath?.[0] ?? '',
         storages: product.storages || null
@@ -206,7 +206,7 @@ export default function Product() {
                 <div key={index} className="aspect-h-4 aspect-w-3 rounded" >
                   <Image
                     src={`${baseUrl}/uploads/1200_${image?.imagePath || '/uploads/imagenot.webp'}`}
-                    alt={product.name}
+                    alt={getLocalizedField(product, 'name', lang)}
                     className="h-full w-full object-cover object-center cursor-pointer"
                   />
                 </div>
@@ -217,7 +217,7 @@ export default function Product() {
             {/* Options */}
             <div className="mt-9 lg:row-span-3 lg:mt-0">
               <h2 className="sr-only">Product information</h2>
-              <p className="text-3xl font-medium  text-gray-900">{product.name}</p>
+              <p className="text-3xl font-medium  text-gray-900">{getLocalizedField(product, 'name', lang)}</p>
             </div>
             <div className="lg:row-span-3 lg:mt-0">
               <div className="mt-4 flex items-center justify-between">
@@ -369,7 +369,7 @@ export default function Product() {
 
 
               <div className="mt-4 space-y-6">
-                <p className="text-sm text-gray-600">{product.description}</p>
+                <p className="text-sm text-gray-600">{getLocalizedField(product, 'description', lang)}</p>
               </div>
             </div>
 
@@ -378,7 +378,7 @@ export default function Product() {
 
               <div className="mt-4">
                 <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
-                  {product.highlights.map((highlight, index) => (
+                {getLocalizedFieldArray(product, 'highlights', lang).map((highlight: string, index: number) => (
                     <li
                       key={index}
                       className="text-gray-400">
@@ -393,7 +393,7 @@ export default function Product() {
               <h2 className="text-sm font-medium text-gray-900">{t('Product_Details')}</h2>
 
               <div className="mt-4 space-y-6">
-                <p className="text-sm text-gray-600">{product.details}</p>
+                <p className="text-sm text-gray-600">{getLocalizedField(product, 'details', lang)}</p>
               </div>
             </div>
           </div>

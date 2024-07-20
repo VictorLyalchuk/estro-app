@@ -205,7 +205,7 @@ export default function CatalogNavigation() {
       const favoriteProduct: IFavoriteProducts = {
         userId: user?.Id,
         productId: product.id,
-        productName: product.name,
+        productName: product.name_en,
         productPrice: product.price,
         productImage: product.imagesPath?.[0] ?? '',
         storages: product.storages || null
@@ -612,7 +612,7 @@ export default function CatalogNavigation() {
                           <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none lg:h-80 hover13">
                             <img
                               src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
-                              alt={product.name}
+                              alt={getLocalizedField(product, 'name', lang)}
                               className="h-full w-full lg:h-full lg:w-full object-cover object-center"
                             />
                             <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
@@ -632,7 +632,7 @@ export default function CatalogNavigation() {
                           <div className="mt-4 flex justify-between">
                             <div>
                               <h3 className="text-xs text-gray-700 meta-5 font-bold line-clamp-2 break-words w-30">
-                                {product.name}
+                              {getLocalizedField(product, 'name', lang)}
                               </h3>
                               <p className="mt-1 text-xs text-gray-500">{product.article}</p>
                               <p className="mt-1 text-xs text-gray-500">{getLocalizedField(product, 'season', lang)}</p>

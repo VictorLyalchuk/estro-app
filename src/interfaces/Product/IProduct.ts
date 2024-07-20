@@ -1,10 +1,24 @@
 export interface IProduct {
     id: number;
-    name: string;
-    description: string; 
-    details: string; 
-    highlights: string []; 
-    price: number; 
+    name_en: string;
+    name_uk: string;
+    name_es: string;
+    name_fr: string;
+
+    description_en: string; 
+    description_uk: string; 
+    description_es: string; 
+    description_fr: string; 
+
+    details_en: string; 
+    details_uk: string; 
+    details_es: string; 
+    details_fr: string; 
+
+    highlights_en: string []; 
+    highlights_uk: string []; 
+    highlights_es: string []; 
+    highlights_fr: string []; 
     
     material_en: string; 
     material_uk: string; 
@@ -15,12 +29,13 @@ export interface IProduct {
     season_uk: string; 
     season_es: string; 
     season_fr: string; 
-
+    
     color_en: string;
     color_uk: string;
     color_es: string;
     color_fr: string;
-
+    
+    price: number; 
     article: string; 
     images: IImage[] | null;  
     imagesPath: string [] | null;  

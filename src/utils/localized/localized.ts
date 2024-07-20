@@ -5,6 +5,10 @@ export const getLocalizedField = (product: IProduct, field: string, lang: string
   return product[`${field}_${lang}` as keyof IProduct] as string;
 };
 
+export const getLocalizedFieldArray = (product: IProduct, field: string, lang: string): string[] => {
+  return product[`${field}_${lang}` as keyof IProduct] as string[];
+};
+
 export const transformToOptions = (options: any[], language: string): IOptions[] => {
   return options.map(option => ({
     id: option.id.toString(),

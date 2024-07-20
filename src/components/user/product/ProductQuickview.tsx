@@ -20,6 +20,8 @@ import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavorit
 import WomanSizeGuideComponent from './WomanSizeGuideComponent';
 import ManSizeGuideComponent from './ManSizeGuideComponent';
 import { t } from "i18next";
+import { useTranslation } from 'react-i18next'
+import { getLocalizedField } from '../../../utils/localized/localized'
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -31,6 +33,8 @@ interface IProductQuickviewProps {
     size: IStorages | null;
 }
 const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, setOpen, size }) => {
+    const { i18n } = useTranslation();
+    const lang = i18n.language;
     const baseUrl = APP_ENV.BASE_URL;
     const [selectedSize, setSelectedSize] = useState<IStorages | null>(size);
     const { isAuth, user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
@@ -75,7 +79,7 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
             const favoriteProduct: IFavoriteProducts = {
                 userId: user?.Id,
                 productId: product.id,
-                productName: product.name,
+                productName: product.name_en,
                 productPrice: product.price,
                 productImage: product.imagesPath?.[0] ?? '',
                 storages: product.storages || null
@@ -114,6 +118,7 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                 return null;
         }
     };
+
     return (
         <>
             <Transition.Root show={isOpen} as={Fragment}>
@@ -160,14 +165,14 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                                             <Image
                                                                 src={`${baseUrl}/uploads/1200_${image.imagePath || '/uploads/imagenot.webp'}`}
                                                                 className="h-full w-full object-cover object-center"
-                                                                alt={product.name}
+                                                                alt={getLocalizedField(product, 'name', lang)}
                                                             />
                                                         </div>
                                                     ))}
                                                 </Carousel>
                                             </div>
                                             <div className="sm:col-span-8 lg:col-span-7">
-                                                <h2 className="text-2xl font-bold text-gray-900 sm:pr-12">{product.name}</h2>
+                                                <h2 className="text-2xl font-bold text-gray-900 sm:pr-12">{getLocalizedField(product, 'name', lang)}</h2>
 
                                                 <section aria-labelledby="information-heading" className="mt-2">
                                                     <h3 id="information-heading" className="sr-only">
