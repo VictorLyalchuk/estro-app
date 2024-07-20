@@ -270,6 +270,7 @@ export const uk = {
     "Bag_AddressShipping_Subtitle": "Платна доставка",
     "Bag_StoreShipping_Title": "Доставка до магазину",
     "Bag_StoreShipping_Subtitle": "Безкоштовна доставка",
+    "Bag_Payment": "Гроші не сплачені",
 
     // BONUSES
     "Bonuses_MyBonuses": "Мої бонуси",

@@ -270,6 +270,7 @@ export const es = {
     "Bag_AddressShipping_Subtitle": "Envío con costo",
     "Bag_StoreShipping_Title": "Envío a la tienda",
     "Bag_StoreShipping_Subtitle": "Envío gratuito",
+    "Bag_Payment": "El dinero no ha sido pagado",
 
     // BONUSES
     "Bonuses_MyBonuses": "Mis Bonos",

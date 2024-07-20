@@ -41,13 +41,13 @@ const Bag = () => {
   const [values, setValues] = useState<State>({
     textmask: '(   )    -  -  ',
   });
-
+  
   const [formData, setFormData] = useState({
     firstName: user?.FirstName || '',
     lastName: user?.LastName || '',
     email: user?.Email || '',
     phoneNumber: user?.PhoneNumber || '',
-    payment: 'The money has not been paid',
+    payment: t('Bag_Payment'),
     paymentMethod: '',
   });
 

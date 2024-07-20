@@ -90,7 +90,8 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
               </div>
               <div className="flex items-center justify-between py-4">
                 <dt className="text-gray-600">{t('Bag_PaymentInfo_Payment')}</dt>
-                <dd className={`font-medium ${formData.payment === 'The money has not been paid' ? 'text-red-500' : 'text-green-500'}`}>{formData.payment}</dd>
+                {/* <dd className={`font-medium ${formData.payment === 'The money has not been paid' ? 'text-red-500' : 'text-green-500'}`}>{formData.payment}</dd> */}
+                <dd className={`font-medium text-red-500`}>{formData.payment}</dd>
               </div>
               <div className="flex items-center justify-between pt-4">
                 <dt className="font-medium text-gray-900">{t('Bag_PaymentInfo_OrderTotal')}</dt>

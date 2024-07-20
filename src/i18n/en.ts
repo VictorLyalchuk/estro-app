@@ -271,7 +271,8 @@ export const en = {
     "Bag_AddressShipping_Subtitle": "Paid shipping",
     "Bag_StoreShipping_Title": "Shipping to the Store",
     "Bag_StoreShipping_Subtitle": "Free shipping",
-
+    "Bag_Payment": "The money has not been paid",
+    
     // BONUSES
     "Bonuses_MyBonuses": "My Bonuses",
     "Bonuses_ShowLess": "Show less",

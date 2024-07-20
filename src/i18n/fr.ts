@@ -270,6 +270,7 @@ export const fr = {
     "Bag_AddressShipping_Subtitle": "Livraison payante",
     "Bag_StoreShipping_Title": "Livraison en magasin",
     "Bag_StoreShipping_Subtitle": "Livraison gratuite",
+    "Bag_Payment": "L'argent n'a pas été payé",
 
     // BONUSES
     "Bonuses_MyBonuses": "Mes Bonus",
