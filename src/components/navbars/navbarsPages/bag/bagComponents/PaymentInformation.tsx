@@ -95,7 +95,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
                 <dd className="font-medium text-red-600">{discount.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</dd>
               </div>
                <div className="flex items-center justify-between mt-10 pb-4">
-                <CustomSlider max={bonusBalance} onChange={handleSliderChange} />
+                <CustomSlider max={Math.floor(bonusBalance)} onChange={handleSliderChange} />
                 </div>
               <div className="flex items-center justify-between py-4">
                 <dt className="text-gray-600">{t('Bag_PaymentInfo_Payment')}</dt>
