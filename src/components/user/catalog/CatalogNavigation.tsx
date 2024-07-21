@@ -24,10 +24,8 @@ import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavorit
 import i18next, { t } from "i18next";
 import { getLocalizedField } from '../../../utils/localized/localized.ts';
 import { useTranslation } from 'react-i18next';
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
-}
+import { Link as Scrollink } from 'react-scroll'
+import classNames from 'classnames';
 
 export default function CatalogNavigation() {
   const initialSortOptions: ISortOptions[] = [
@@ -108,7 +106,6 @@ export default function CatalogNavigation() {
     const queryParams = onPageChangeQueryParams(newPage, filters);
     const newQueryString = qs.stringify(queryParams, { encodeValuesOnly: true, delimiter: ';' });
     navigate({ search: newQueryString });
-    window.scrollTo(0, 0);
   };
 
   const createFilters = async (name: string, value: string) => {
@@ -428,7 +425,7 @@ export default function CatalogNavigation() {
             </div>
           </Dialog>
         </Transition.Root>
-        <main className="mx-auto max-w-7xl px-2 sm:px-2 lg:px-2 ">
+        <main className="mx-auto max-w-7xl px-2 sm:px-2 lg:px-2 product-start">
           <div className="flex items-baseline justify-between border-b border-gray-200 pb-2 pt-4">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 pb-4">{t('CatalogNavigation_Catalog')}</h1>
 
@@ -691,6 +688,7 @@ export default function CatalogNavigation() {
                     <div>
                       <nav className="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0">
                         <div className="flex flex-1 justify-between sm:justify-end">
+                        <Scrollink to="product-start" smooth={true}>
                           <button
                             onClick={() => onPageChange(page - 1)}
                             disabled={page === 1}
@@ -703,11 +701,14 @@ export default function CatalogNavigation() {
                             <ArrowLongLeftIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
                             {t('CatalogHome_Previous')}
                           </button>
+                          </Scrollink>
+
                         </div>
 
                         {[...Array(endPage - startPage + 1)].map((_, index) => {
                           const pageNumber = startPage + index;
                           return (
+                            <Scrollink to="product-start" smooth={true}>
                             <button
                               key={pageNumber}
                               onClick={() => onPageChange(pageNumber)}
@@ -718,10 +719,13 @@ export default function CatalogNavigation() {
                             >
                               {pageNumber}
                             </button>
+                            </Scrollink>
+
                           );
                         })}
 
                         <div className="flex flex-1 justify-between sm:justify-end">
+                        <Scrollink to="product-start" smooth={true}>
                           <button
                             onClick={() => onPageChange(page + 1)}
                             disabled={indexOfLastItem >= countPage}
@@ -734,6 +738,8 @@ export default function CatalogNavigation() {
                             {t('CatalogHome_Next')}
                             <ArrowLongRightIcon className="ml-3 h-5 w-5 text-gray-400" aria-hidden="true" />
                           </button>
+                          </Scrollink>
+
                         </div>
 
                       </nav>

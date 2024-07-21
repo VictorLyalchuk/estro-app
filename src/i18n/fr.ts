@@ -417,6 +417,18 @@ export const fr = {
     "Product_ProductInformation": "Informations sur le produit",
     "Product_ProductOptions": "Options du produit",
 
+    // REVIEW
+    "Reviews_Customer": "Avis des clients",
+    "Reviews_Based_on": "Basé sur",
+    "Reviews_reviews": "commentaires",
+    "Reviews_Share_your_thoughts": "Partage tes pensées",
+    "Reviews_text": "Si vous avez utilisé ce produit, partagez vos impressions avec d'autres clients",
+    "Reviews_button_Write": "Écrire une critique",
+    "Reviews_button_Cancel": "Annuler",
+    "Reviews_button_Submit": "Soumettre",
+    "Reviews_Rating": "Notation",
+    "Reviews_Review": "Revoir",
+
     // STORE LOCATIONS
     "Store_Locations": "Emplacements",
     "StoreLocations_Daily": "Quotidien",

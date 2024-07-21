@@ -387,7 +387,7 @@ export const uk = {
     "CatalogNavigation_CloseMenu": "Закрити меню",
 
     // PRODUCTS
-    "Product_Reviews": "Відгуки",
+    "Product_Reviews": "Відгуків",
     "Product_OutOf": "з",
     "Product_Stars": "зірок",
     "Product_Size": "Розмір",
@@ -417,6 +417,18 @@ export const uk = {
     "Product_ProductInformation": "Інформація про товар",
     "Product_ProductOptions": "Опції товару",
 
+    // REVIEW
+    "Reviews_Customer": "Відгуки покупців",
+    "Reviews_Based_on": "На основі",
+    "Reviews_reviews": "відгуків",
+    "Reviews_Share_your_thoughts": "Поділіться своїми думками",
+    "Reviews_text": "Якщо ви користувалися цим продуктом, поділіться своїми думками з іншими клієнтами",
+    "Reviews_button_Write": "Написати відгук",
+    "Reviews_button_Cancel": "Скасувати",
+    "Reviews_button_Submit": "Надіслати",
+    "Reviews_Rating": "Рейтинг",
+    "Reviews_Review": "Опис",
+    
     // STORE LOCATIONS
     "Store_Locations": "Локації",
     "StoreLocations_Daily": "Щодня",

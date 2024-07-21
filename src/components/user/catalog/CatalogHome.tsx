@@ -23,10 +23,8 @@ import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavorit
 import i18next, { t } from "i18next";
 import { getLocalizedField, transformToOptions } from '../../../utils/localized/localized'
 import { useTranslation } from 'react-i18next'
-
-function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(' ')
-}
+import { Link as Scrollink } from 'react-scroll'
+import classNames from 'classnames'
 
 export default function CatalogHome() {
     const initialSortOptions: ISortOptions[] = [
@@ -109,7 +107,6 @@ export default function CatalogHome() {
         const queryParams = onPageChangeQueryParams(newPage, filters);
         const newQueryString = qs.stringify(queryParams, { encodeValuesOnly: true, delimiter: ';' });
         navigate({ search: newQueryString });
-        window.scrollTo(0, 0);
     };
 
     const createFilters = async (name: string, value: string) => {
@@ -379,10 +376,7 @@ export default function CatalogHome() {
                                                         <h3 className="-mx-2 -my-3 flow-root">
                                                             <Disclosure.Button className="flex w-full items-center justify-between bg-gray-100 px-2 py-3 text-sm text-gray-400">
                                                                 <span className="font-medium text-gray-900 hover:text-indigo-500">
-                                                                    {i18next.language === 'uk' && section.name_uk}
-                                                                    {i18next.language === 'en' && section.name_en}
-                                                                    {i18next.language === 'es' && section.name_es}
-                                                                    {i18next.language === 'fr' && section.name_fr}
+                                                                    {getLocalizedField(section, 'name', lang)}
                                                                 </span>
                                                                 <span className="ml-6 flex items-center">
                                                                     <ChevronDownIcon
@@ -429,7 +423,7 @@ export default function CatalogHome() {
                 </Transition.Root>
 
                 <main>
-                    <div className="bg-gray-100">
+                    <div className="bg-gray-100 product-start">
                         <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
                             <div className="flex flex-col lg:flex-row">
                                 <div className="lg:mr-4 w-full lg:w-2/4 lg:border-r">
@@ -735,50 +729,57 @@ export default function CatalogHome() {
                             <div>
                                 <nav className="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0">
                                     <div className="flex flex-1 justify-between sm:justify-end">
-                                        <button
-                                            onClick={() => onPageChange(page - 1)}
-                                            disabled={page === 1}
-                                            className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
+                                        <Scrollink to="product-start" smooth={true}>
+                                            <button
+                                                onClick={() => onPageChange(page - 1)}
+                                                disabled={page === 1}
+                                                className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
                                              ${page === 1
-                                                    ? 'text-gray-300'
-                                                    : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
-                                                }`}
-                                        >
-                                            <ArrowLongLeftIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-                                            {t('CatalogHome_Previous')}
-
-                                        </button>
+                                                        ? 'text-gray-300'
+                                                        : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                                                    }`}
+                                            >
+                                                <ArrowLongLeftIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                                {t('CatalogHome_Previous')}
+                                            </button>
+                                        </Scrollink>
                                     </div>
 
                                     {[...Array(endPage - startPage + 1)].map((_, index) => {
                                         const pageNumber = startPage + index;
                                         return (
-                                            <button
-                                                key={pageNumber}
-                                                onClick={() => onPageChange(pageNumber)}
-                                                className={`inline-flex items-center border-t px-4 pt-4 text-sm font-medium text-gray-500 ${page === pageNumber
-                                                    ? 'border-t-2 border-indigo-500 text-indigo-600 font-semibold'
-                                                    : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                                                    }`}
-                                            >
-                                                {pageNumber}
-                                            </button>
+                                            <Scrollink to="product-start" smooth={true}>
+
+                                                <button
+                                                    key={pageNumber}
+                                                    onClick={() => onPageChange(pageNumber)}
+                                                    className={`inline-flex items-center border-t px-4 pt-4 text-sm font-medium text-gray-500 ${page === pageNumber
+                                                        ? 'border-t-2 border-indigo-500 text-indigo-600 font-semibold'
+                                                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                                                        }`}
+                                                >
+                                                    {pageNumber}
+                                                </button>
+                                            </Scrollink>
+
                                         );
                                     })}
 
                                     <div className="flex flex-1 justify-between sm:justify-end">
-                                        <button
-                                            onClick={() => onPageChange(page + 1)}
-                                            disabled={indexOfLastItem >= countPage}
-                                            className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
+                                        <Scrollink to="product-start" smooth={true}>
+                                            <button
+                                                onClick={() => onPageChange(page + 1)}
+                                                disabled={indexOfLastItem >= countPage}
+                                                className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
                                              ${indexOfLastItem >= countPage
-                                                    ? 'text-gray-300'
-                                                    : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
-                                                }`}
-                                        >
-                                            {t('CatalogHome_Next')}
-                                            <ArrowLongRightIcon className="ml-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-                                        </button>
+                                                        ? 'text-gray-300'
+                                                        : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                                                    }`}
+                                            >
+                                                {t('CatalogHome_Next')}
+                                                <ArrowLongRightIcon className="ml-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                            </button>
+                                        </Scrollink>
                                     </div>
 
                                 </nav>

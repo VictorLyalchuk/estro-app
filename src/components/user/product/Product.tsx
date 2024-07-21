@@ -24,13 +24,11 @@ import WomanSizeGuideComponent from './WomanSizeGuideComponent';
 import ManSizeGuideComponent from './ManSizeGuideComponent';
 import { useTranslation } from 'react-i18next';
 import { getLocalizedField, getLocalizedFieldArray } from '../../../utils/localized/localized';
-import ProductReview from './ProductReview';
+import ProductReview from './UserProductReview';
+import classNames from 'classnames';
+import { getUserProductRating, getUserProductReview } from '../../../services/userProductReview/user-product-review-services';
+import {Link as Scrollink} from 'react-scroll'
 
-const reviews = { href: '#', average: 4, totalCount: 117 }
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
-}
 
 export default function Product() {
   const { t, i18n } = useTranslation();
@@ -45,12 +43,18 @@ export default function Product() {
   const favoriteProducts = useSelector((state: RootState) => state.favorites.favoriteProducts);
   const isFavorite = (productId: number) => favoriteProducts.some((product: { productId: number }) => product.productId === productId);
   const [isQuickviewOpen, setQuickviewOpen] = useState(false);
+  const [reviews, setReviews] = useState<IUserProductReview[]>([]);
+  const [ratings, setRatings] = useState<IUserProductRating>();
 
+  const loadReviews = async () => {
+    await getUserProductReview(Id).then(data => setReviews(data)).catch(error => console.error('Error fetching reviews data:', error));
+    await getUserProductRating(Id).then(data => setRatings(data)).catch(error => console.error('Error fetching ratings data:', error));
+  }
+  
   useEffect(() => {
     if (Id) {
-      getProductById(Id)
-        .then(data => setProduct(data))
-        .catch(error => console.error('Error fetching product data:', error));
+      getProductById(Id).then(data => setProduct(data)).catch(error => console.error('Error fetching product data:', error));
+      loadReviews();
     }
   }, [Id]);
 
@@ -238,18 +242,17 @@ export default function Product() {
                     <StarIcon
                       key={index}
                       className={classNames(
-                        reviews.average > rating ? 'text-yellow-400' : 'text-gray-300',
-                        // reviews.average > rating ? 'text-gray-900' : 'text-gray-200',
+                        ratings && ratings?.averageRating > rating ? 'text-yellow-400' : 'text-gray-300',
                         'h-5 w-5 flex-shrink-0'
                       )}
                       aria-hidden="true"
                     />
                   ))}
                 </div>
-                <p className="sr-only">{reviews.average} {t('Product_OutOf')} 5 {t('Product_Stars')}</p>
-                <a href={reviews.href} className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                  {reviews.totalCount} {t('Product_Reviews')}
-                </a>
+                <p className="sr-only">{ratings?.averageRating} {t('Product_OutOf')} 5 {t('Product_Stars')}</p>
+                <Scrollink to="product-reviews" smooth={true} className="cursor-pointer ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                  {ratings?.totalCount} {t('Product_Reviews')}
+                </Scrollink>
               </div>
             </div>
 
@@ -401,7 +404,16 @@ export default function Product() {
               </div>
             </div>
           </div>
-          <ProductReview></ProductReview>
+          <div id="product-reviews">
+
+          <ProductReview
+            userId={user?.Id}
+            productId={product.id}
+            reviews={reviews}
+            ratings={ratings}
+            loadReviews={loadReviews}
+          />
+        </div>
         </div>
       </div>
     </div>
