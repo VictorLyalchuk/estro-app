@@ -22,13 +22,16 @@ import OrderSummary from "./bagComponents/OrderSummary";
 import VisaCreditCard from "./creditCard/VisaCreditCard";
 import { ICity } from "../../../../interfaces/Address/ICity";
 import { ICountry } from "../../../../interfaces/Address/ICountry";
-import {t} from "i18next";
+import { t } from "i18next";
+import { IUserProfile } from "../../../../interfaces/Auth/IUserProfile";
+import { getUserData } from "../../../../services/accounts/account-services";
 
 const Bag = () => {
   const dispatch = useDispatch();
   const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
   const { count } = useSelector((redux: any) => redux.bag as IBagReducerState);
   const bagItems = useSelector((state: { card: ICardReducerState }) => state.card.items) || [];
+  const { discount } = useSelector((redux: any) => redux.card as ICardReducerState);
   const [bagUser, setBagUser] = useState<IBagUser>();
   const [orderModel, setOrderModel] = useState<IOrderCreate | null>(null);
   const [selectedPayment, setSelectedPayment] = useState<string | ''>('');
@@ -38,10 +41,11 @@ const Bag = () => {
   const [storeOptions, setStoreOptions] = useState<IStore[]>([]);
   const [activeBlocks, setActiveBlocks] = useState<string[]>(['personal', 'delivery', 'payment']);
   const [isQuickviewOpen, setQuickviewOpen] = useState(false);
+  const [userProfile, setUserProfile] = useState<IUserProfile>();
   const [values, setValues] = useState<State>({
     textmask: '(   )    -  -  ',
   });
-  
+
   const [formData, setFormData] = useState({
     firstName: user?.FirstName || '',
     lastName: user?.LastName || '',
@@ -70,7 +74,7 @@ const Bag = () => {
     paymentMethod: '',
     shipping: '',
   });
- 
+
   useEffect(() => {
     if (user) {
       getBagByEmail(user?.Email).then(data => setBagUser(data));
@@ -79,8 +83,11 @@ const Bag = () => {
         ...prevValues,
         textmask: user?.PhoneNumber,
       }));
+      getUserData(user.Email)
+        .then(data => setUserProfile(data))
+        .catch(error => console.error('Error fetching user data:', error));
     }
-    
+
     getCountry().then(resp => setCountryOptions(resp));
     getCity().then(resp => setCityOptions(resp));
     getStore().then(resp => setStoreOptions(resp));
@@ -100,12 +107,12 @@ const Bag = () => {
       emailUser: user?.Email || "",
       payment: formData.payment,
       paymentMethod: selectedPayment,
-
+      discount: discount,
       country: shippingData.country,
       city: shippingData?.city || "",
       state: shippingData.state || "",
       street: shippingData.street || "",
-     
+
       cardHolderName: "",
       cardNumber: "",
       cardMonthExpires: "",
@@ -212,8 +219,8 @@ const Bag = () => {
                   cityOptions={cityOptions}
                   storeOptions={storeOptions}
                   //Address Shipping
-                  shippingData={shippingData} 
-                       />
+                  shippingData={shippingData}
+                />
                 {/* Payment */}
                 <PaymentInformation
                   theme={theme}
@@ -223,6 +230,7 @@ const Bag = () => {
                   handleBlockClick={handleBlockClick}
                   selectedPayment={selectedPayment}
                   setSelectedPayment={setSelectedPayment}
+                  bonusBalance={userProfile?.bonusBalance || 0}
                 />
 
                 {/* Checkout Button */}
@@ -237,13 +245,13 @@ const Bag = () => {
                   </FormControl>
                 </div>
               </form>
-              
+
               {isQuickviewOpen && orderModel && (
-                <VisaCreditCard 
-                theme={theme}
-                isOpen={isQuickviewOpen}
-                setOpen={setQuickviewOpen}
-                model={orderModel}
+                <VisaCreditCard
+                  theme={theme}
+                  isOpen={isQuickviewOpen}
+                  setOpen={setQuickviewOpen}
+                  model={orderModel}
                 />
               )}
             </div>

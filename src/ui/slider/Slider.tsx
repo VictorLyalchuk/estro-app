@@ -46,7 +46,7 @@ const CustomSlider: React.FC<SliderProps> = ({ max, onChange }) => {
           style={{ left: `${(value / max) * 100}%`, transform: 'translateX(-50%) translateY(-150%)' }}
         >
           <div className="bg-white text-black rounded px-2 py-1 text-sm shadow-md">
-            {value}
+            {value} €
           </div>
         </div>
       </div>

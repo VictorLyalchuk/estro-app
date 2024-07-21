@@ -16,4 +16,5 @@ export interface IOrderCreate{
     city: string;
     state: string;
     street: string;
+    discount: number;
 }

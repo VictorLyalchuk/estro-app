@@ -15,6 +15,7 @@ interface PaymentInformationProps {
   handleBlockClick: (block: string) => void;
   selectedPayment: string | '';
   setSelectedPayment: (value: string) => void;
+  bonusBalance : number | 0;
 }
 
 const PaymentInformation: React.FC<PaymentInformationProps> = ({
@@ -25,6 +26,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
   handleBlockClick,
   selectedPayment,
   setSelectedPayment,
+  bonusBalance,
 }) => {
   const dispatch = useDispatch();
   const { total, taxes, totalWithOutTax, discount } = useSelector((redux: any) => redux.card as ICardReducerState);
@@ -93,7 +95,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
                 <dd className="font-medium text-red-600">{discount.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</dd>
               </div>
                <div className="flex items-center justify-between mt-10 pb-4">
-                <CustomSlider max={100} onChange={handleSliderChange} />
+                <CustomSlider max={bonusBalance} onChange={handleSliderChange} />
                 </div>
               <div className="flex items-center justify-between py-4">
                 <dt className="text-gray-600">{t('Bag_PaymentInfo_Payment')}</dt>

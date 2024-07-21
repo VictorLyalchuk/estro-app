@@ -5,25 +5,6 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { getLocalizedField } from "../../../../utils/localized/localized";
 
-// const bonuses = [
-//   {
-//     id: 1,
-//     name: 'Order #00012',
-//     date: '16 June 2024',
-//     bonusesOperation: 'Accrual',
-//     bonusesDescription: 'Purchase bonus',
-//     bonusesAccrued: '$7.00',
-//   },
-//   {
-//     id: 2,
-//     name: 'Order #00013',
-//     date: '16 June 2024',
-//     bonusesOperation: 'Redeemed',
-//     bonusesDescription: 'Purchase of goods',
-//     bonusesAccrued: '$7.00',
-//   },
-// ]
-
 const Bonuses: React.FC<BonusesUserProps> = ({ userBonuses, bonusBalance }) => {
   const { t,  i18n } = useTranslation();
   const lang = i18n.language;
