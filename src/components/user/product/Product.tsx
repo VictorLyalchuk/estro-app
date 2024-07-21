@@ -24,6 +24,7 @@ import WomanSizeGuideComponent from './WomanSizeGuideComponent';
 import ManSizeGuideComponent from './ManSizeGuideComponent';
 import { useTranslation } from 'react-i18next';
 import { getLocalizedField, getLocalizedFieldArray } from '../../../utils/localized/localized';
+import ProductReview from './ProductReview';
 
 const reviews = { href: '#', average: 4, totalCount: 117 }
 
@@ -110,11 +111,11 @@ export default function Product() {
   };
 
   const renderSizeGuide = (isQuickviewOpen: boolean) => {
-    if (!isQuickviewOpen || typeof product.mainCategoryName !== 'string') {
+    if (!isQuickviewOpen || typeof product.mainCategoryName_en !== 'string') {
       return null;
     }
 
-    switch (product.mainCategoryName) {
+    switch (product.mainCategoryName_en) {
       case 'Women':
         return (
           <WomanSizeGuideComponent
@@ -179,7 +180,6 @@ export default function Product() {
             <li key={`${product.id}-category`}>
               <div className="flex items-center">
                 <Link to={`/catalog/${product.urlSubCategoryName}/${product.urlCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
-                  {product.categoryName}
                   {getLocalizedField(product, 'categoryName', lang)}
                 </Link>
                 <svg
@@ -238,7 +238,8 @@ export default function Product() {
                     <StarIcon
                       key={index}
                       className={classNames(
-                        reviews.average > rating ? 'text-gray-900' : 'text-gray-200',
+                        reviews.average > rating ? 'text-yellow-400' : 'text-gray-300',
+                        // reviews.average > rating ? 'text-gray-900' : 'text-gray-200',
                         'h-5 w-5 flex-shrink-0'
                       )}
                       aria-hidden="true"
@@ -400,6 +401,7 @@ export default function Product() {
               </div>
             </div>
           </div>
+          <ProductReview></ProductReview>
         </div>
       </div>
     </div>

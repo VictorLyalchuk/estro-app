@@ -41,9 +41,9 @@ export interface IProduct {
     imagesPath: string [] | null;  
     subCategoryId: number;
     categoryId: number;
-    categoryName: string;
-    subCategoryName: string [] | null; 
-    mainCategoryName: string [] | null; 
+    categoryName_en: string;
+    subCategoryName_en: string [] | null; 
+    mainCategoryName_en: string [] | null; 
 
     storages: IStorages[] | null;
     storageQuantity: number;
