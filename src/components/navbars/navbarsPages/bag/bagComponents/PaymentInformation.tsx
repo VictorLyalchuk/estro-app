@@ -1,10 +1,11 @@
 import { RadioGroup } from '@headlessui/react';
 import { ThemeProvider } from "@material-ui/core/styles";
 import { paymentList } from '../../../../../data/paymentList';
-import { useSelector } from 'react-redux';
-import { ICardReducerState } from '../../../../../store/bag/CardReducer';
+import { useDispatch, useSelector } from 'react-redux';
+import { ICardReducerState, updateDiscount } from '../../../../../store/bag/CardReducer';
 import { ArrowDownIcon, ArrowLongRightIcon } from '@heroicons/react/24/outline';
 import {t} from "i18next";
+import CustomSlider from '../../../../../ui/slider/Slider';
 
 interface PaymentInformationProps {
   theme: any;
@@ -25,8 +26,11 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
   selectedPayment,
   setSelectedPayment,
 }) => {
-  const { total, taxes, totalWithOutTax } = useSelector((redux: any) => redux.card as ICardReducerState);
-
+  const dispatch = useDispatch();
+  const { total, taxes, totalWithOutTax, discount } = useSelector((redux: any) => redux.card as ICardReducerState);
+  const handleSliderChange = (value: number) => {
+    dispatch(updateDiscount(value));
+  };
   return (
     <div className={`bg-white p-5 rounded-md shadow-md mb-4`}>
       <div className="flex justify-between items-center mb-4" onClick={() => handleBlockClick('payment')}>
@@ -46,7 +50,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
           <div className="mb-5 border-b pb-4">
             <div className="pb-4">
               <ThemeProvider theme={theme}>
-                {formData.payment === 'The money has not been paid' && (
+                {/* {formData.payment === 'The money has not been paid' && ( */}
                   <>
                     <div>
                       <RadioGroup value={selectedPayment} onChange={setSelectedPayment}>
@@ -72,7 +76,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
                       </RadioGroup>
                     </div>
                   </>
-                )}
+                {/* )} */}
               </ThemeProvider>
             </div>
             <dl className="pt-2 mt-8 divide-y divide-gray-200 text-sm ">
@@ -86,8 +90,11 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
               </div>
               <div className="flex items-center justify-between py-4">
                 <dt className="text-gray-600">{t('Bag_PaymentInfo_Discount')}</dt>
-                <dd className="font-medium text-red-600">0 €</dd>
+                <dd className="font-medium text-red-600">{discount.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</dd>
               </div>
+               <div className="flex items-center justify-between mt-10 pb-4">
+                <CustomSlider max={100} onChange={handleSliderChange} />
+                </div>
               <div className="flex items-center justify-between py-4">
                 <dt className="text-gray-600">{t('Bag_PaymentInfo_Payment')}</dt>
                 {/* <dd className={`font-medium ${formData.payment === 'The money has not been paid' ? 'text-red-500' : 'text-green-500'}`}>{formData.payment}</dd> */}

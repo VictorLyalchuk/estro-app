@@ -5,6 +5,7 @@ export enum CardReducerActionType {
     DELETE = "DELETE_ITEM",
     UPDATE_TOTAL = "UPDATE_TOTAL",
     DELETE_CARD_ALL = "DELETE_CARD_ALL",
+    UPDATE_DISCOUNT = "UPDATE_DISCOUNT",
 }
 
 export interface ICardReducerState {
@@ -12,19 +13,33 @@ export interface ICardReducerState {
     total: number,
     taxes: number,
     totalWithOutTax: number,
+    discount: number,
     initialIndividualItemPrice: { [itemId: number]: number };
 }
 
-interface ICardReducerAction {
+export interface ICardReducerAction {
     type: CardReducerActionType;
-    payload?: { items?: BagItems[]; itemId?: number; total?: number; taxes: number; totalWithOutTax: number };
+    payload?: {
+        items?: BagItems[];
+        itemId?: number;
+        total?: number;
+        taxes?: number;
+        totalWithOutTax?: number,
+        discount?: number
+    };
 }
+
+export const updateDiscount = (discount: number): ICardReducerAction => ({
+    type: CardReducerActionType.UPDATE_DISCOUNT,
+    payload: { discount },
+});
 
 const initState: ICardReducerState = {
     items: null,
     total: 0,
     taxes: 0,
     totalWithOutTax: 0,
+    discount: 0,
     initialIndividualItemPrice: {},
 }
 
@@ -32,6 +47,8 @@ const cardReducer = (state = initState, action: ICardReducerAction): ICardReduce
     switch (action.type) {
         case CardReducerActionType.SET:
             const items = action.payload?.items || null;
+            const discount = action.payload?.discount || 0;
+
             if (!items) {
                 return state;
             }
@@ -44,9 +61,10 @@ const cardReducer = (state = initState, action: ICardReducerAction): ICardReduce
             return {
                 ...state,
                 items: items,
-                total: initialTotal,
+                total: initialTotal - discount,
                 taxes: (initialTaxes),
                 totalWithOutTax: (initialTotalWithOutTax),
+                discount: discount,
                 initialIndividualItemPrice: initialIndividualItemPrice,
             };
         case CardReducerActionType.DELETE:
@@ -68,8 +86,16 @@ const cardReducer = (state = initState, action: ICardReducerAction): ICardReduce
                 totalWithOutTax: 0,
                 initialIndividualItemPrice: {},
                 taxes: 0,
+                discount: 0,
             };
-
+        case CardReducerActionType.UPDATE_DISCOUNT:
+            const newDiscount = action.payload?.discount ?? state.discount;
+            const updatedTotal = state.total + state.discount - newDiscount;
+            return {
+                ...state,
+                discount: newDiscount,
+                total: updatedTotal,
+            };
         default:
             return state;
     }
