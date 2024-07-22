@@ -254,6 +254,7 @@ export default function CatalogHome() {
                 Sort: newFilters.find(f => f.name === 'Sort')?.values?.join('_') || undefined,
                 Page: newFilters.find(f => f.name === 'Page')?.values || page,
                 Search: text || '',
+                Language: lang,
                 MainCategory: main,
                 SubName: newFilters.find(f => f.name === 'SubName')?.values || undefined,
                 UrlName: await getFilterCategory(),
@@ -743,19 +744,18 @@ export default function CatalogHome() {
                                                 {t('CatalogHome_Previous')}
                                             </button>
                                         </Scrollink>
-                                    </div>
 
                                     {[...Array(endPage - startPage + 1)].map((_, index) => {
                                         const pageNumber = startPage + index;
                                         return (
-                                            <Scrollink to="product-start" smooth={true}>
+                                            <Scrollink to="product-start" smooth={true} key={pageNumber}>
 
                                                 <button
                                                     key={pageNumber}
                                                     onClick={() => onPageChange(pageNumber)}
-                                                    className={`inline-flex items-center border-t px-4 pt-4 text-sm font-medium text-gray-500 ${page === pageNumber
+                                                    className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium text-gray-500 ${page === pageNumber
                                                         ? 'border-t-2 border-indigo-500 text-indigo-600 font-semibold'
-                                                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                                                        : 'border-transparent text-gray-500 hover:border-indigo-500 hover:text-gray-700'
                                                         }`}
                                                 >
                                                     {pageNumber}
@@ -765,7 +765,6 @@ export default function CatalogHome() {
                                         );
                                     })}
 
-                                    <div className="flex flex-1 justify-between sm:justify-end">
                                         <Scrollink to="product-start" smooth={true}>
                                             <button
                                                 onClick={() => onPageChange(page + 1)}

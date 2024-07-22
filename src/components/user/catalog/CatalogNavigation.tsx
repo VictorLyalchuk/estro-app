@@ -149,7 +149,6 @@ export default function CatalogNavigation() {
     return newFilters;
   };
 
-
   const loadFromURL = async () => {
     try {
       // створення і відправка даних на сервер
@@ -688,58 +687,54 @@ export default function CatalogNavigation() {
                     <div>
                       <nav className="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0">
                         <div className="flex flex-1 justify-between sm:justify-end">
-                        <Scrollink to="product-start" smooth={true}>
-                          <button
-                            onClick={() => onPageChange(page - 1)}
-                            disabled={page === 1}
-                            className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
+                          <Scrollink to="product-start" smooth={true}>
+                            <button
+                              onClick={() => onPageChange(page - 1)}
+                              disabled={page === 1}
+                              className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
                             ${page === 1
-                                ? 'text-gray-300'
-                                : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
-                              }`}
-                          >
-                            <ArrowLongLeftIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-                            {t('CatalogHome_Previous')}
-                          </button>
+                                  ? 'text-gray-300'
+                                  : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                                }`}
+                            >
+                              <ArrowLongLeftIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                              {t('CatalogHome_Previous')}
+                            </button>
                           </Scrollink>
-
-                        </div>
-
+                        
                         {[...Array(endPage - startPage + 1)].map((_, index) => {
                           const pageNumber = startPage + index;
                           return (
-                            <Scrollink to="product-start" smooth={true}>
-                            <button
-                              key={pageNumber}
-                              onClick={() => onPageChange(pageNumber)}
-                              className={`inline-flex items-center border-t px-4 pt-4 text-sm font-medium text-gray-500 ${page === pageNumber
-                                ? 'border-t-2 border-indigo-500 text-indigo-600 font-semibold'
-                                : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
-                                }`}
-                            >
-                              {pageNumber}
-                            </button>
+                            <Scrollink to="product-start" smooth={true} key={pageNumber}>
+                              <button
+                                key={pageNumber}
+                                onClick={() => onPageChange(pageNumber)}
+                                className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium text-gray-500 ${page === pageNumber
+                                  ? 'border-t-2 border-indigo-500 text-indigo-600 font-semibold'
+                                  : 'border-transparent text-gray-500 hover:border-indigo-500 hover:text-gray-700'
+                                  }`}
+                              >
+                                {pageNumber}
+                              </button>
                             </Scrollink>
 
                           );
                         })}
 
-                        <div className="flex flex-1 justify-between sm:justify-end">
-                        <Scrollink to="product-start" smooth={true}>
-                          <button
-                            onClick={() => onPageChange(page + 1)}
-                            disabled={indexOfLastItem >= countPage}
-                            className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
-                    ${indexOfLastItem >= countPage
-                                ? 'text-gray-300'
-                                : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
-                              }`}
-                          >
-                            {t('CatalogHome_Next')}
-                            <ArrowLongRightIcon className="ml-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-                          </button>
+                          <Scrollink to="product-start" smooth={true}>
+                            <button
+                              onClick={() => onPageChange(page + 1)}
+                              disabled={indexOfLastItem >= countPage}
+                              className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
+                              ${indexOfLastItem >= countPage
+                                  ? 'text-gray-300'
+                                  : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                                }`}
+                            >
+                              {t('CatalogHome_Next')}
+                              <ArrowLongRightIcon className="ml-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                            </button>
                           </Scrollink>
-
                         </div>
 
                       </nav>

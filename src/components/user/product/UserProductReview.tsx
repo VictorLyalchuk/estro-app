@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { addUserProductReview } from '../../../services/userProductReview/user-product-review-services';
 import { APP_ENV } from '../../../env/config';
 import { useTranslation } from 'react-i18next';
+import { formatDate } from '../../../services/custom/format-data';
 
 interface UserProductReviewProps {
     userId?: string;
@@ -14,7 +15,8 @@ interface UserProductReviewProps {
 }
 const UserProductReview: React.FC<UserProductReviewProps> = ({ userId, productId, reviews, ratings, loadReviews }) => {
     const baseUrl = APP_ENV.BASE_URL;
-    const { t } = useTranslation();
+    const { t, i18n } = useTranslation();
+    const lang = i18n.language;
     const [showForm, setShowForm] = useState(false)
     const [rating, setRating] = useState(0)
     const [content, setContent] = useState('')
@@ -183,6 +185,9 @@ const UserProductReview: React.FC<UserProductReviewProps> = ({ userId, productId
                                             alt={`${review.author}.`} className="h-12 w-12 rounded-full" />
                                         <div className="ml-4">
                                             <h4 className="text-sm font-bold text-gray-900">{review.author}</h4>
+                                            <div className="text-xs font-medium text-gray-900">
+                                                <h5>{formatDate(review.orderDate, lang)}</h5>
+                                            </div>
                                             <div className="mt-1 flex items-center">
                                                 {[0, 1, 2, 3, 4].map((rating) => (
                                                     <StarIcon
