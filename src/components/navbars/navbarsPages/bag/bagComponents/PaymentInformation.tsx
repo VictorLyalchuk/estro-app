@@ -6,6 +6,7 @@ import { ICardReducerState, updateDiscount } from '../../../../../store/bag/Card
 import { ArrowDownIcon, ArrowLongRightIcon } from '@heroicons/react/24/outline';
 import {t} from "i18next";
 import CustomSlider from '../../../../../ui/slider/Slider';
+import { useEffect, useState } from 'react';
 
 interface PaymentInformationProps {
   theme: any;
@@ -30,9 +31,17 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
 }) => {
   const dispatch = useDispatch();
   const { total, taxes, totalWithOutTax, discount } = useSelector((redux: any) => redux.card as ICardReducerState);
+  const [maxSliderValue, setMaxSliderValue] = useState<number>(0);
   const handleSliderChange = (value: number) => {
     dispatch(updateDiscount(value));
   };
+  
+  useEffect(() => {
+    if (total > 0 && bonusBalance >= 0) {
+      setMaxSliderValue(Math.min(total, bonusBalance));
+    }
+  }, [bonusBalance]);
+
   return (
     <div className={`bg-white p-5 rounded-md shadow-md mb-4`}>
       <div className="flex justify-between items-center mb-4" onClick={() => handleBlockClick('payment')}>
@@ -95,7 +104,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
                 <dd className="font-medium text-red-600">{discount.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</dd>
               </div>
                <div className="flex items-center justify-between mt-10 pb-4">
-                <CustomSlider max={Math.floor(bonusBalance)} onChange={handleSliderChange} />
+                <CustomSlider max={Math.floor(maxSliderValue)} onChange={handleSliderChange} />
                 </div>
               <div className="flex items-center justify-between py-4">
                 <dt className="text-gray-600">{t('Bag_PaymentInfo_Payment')}</dt>

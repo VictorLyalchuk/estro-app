@@ -57,7 +57,7 @@ const cardReducer = (state = initState, action: ICardReducerAction): ICardReduce
             const initialTotalWithOutTax = initialTotal - initialTaxes;
             const initialIndividualItemPrice: { [itemId: number]: number } = {};
             items.forEach(item => { initialIndividualItemPrice[item.id] = item.price * item.quantity; });
-
+            
             return {
                 ...state,
                 items: items,
@@ -91,6 +91,7 @@ const cardReducer = (state = initState, action: ICardReducerAction): ICardReduce
         case CardReducerActionType.UPDATE_DISCOUNT:
             const newDiscount = action.payload?.discount ?? state.discount;
             const updatedTotal = state.total + state.discount - newDiscount;
+
             return {
                 ...state,
                 discount: newDiscount,
