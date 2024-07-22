@@ -30,9 +30,19 @@ export async function getUserProductRating(productId: any,) {
     }
 }
 
-export async function getUserProductReview(productId: any,) {
+export async function getUserProductReview(productId: any, page: number) {
     try {
-        const response = await instance.get<IUserProductReview[]>(`getReview`, { params: { productId } } );
+        const response = await instance.get<IUserProductReview[]>(`getReview/${productId}`, { params: { page } } );
+        return response.data;
+    } catch (error) {
+        console.error('Failed to fetch product data:', error);
+        throw error;
+    }
+}
+
+export async function getQuantityUserProductReview(productId: any) {
+    try {
+        const response = await instance.get<number>(`getQuantityReview`, { params: { productId } } );
         return response.data;
     } catch (error) {
         console.error('Failed to fetch product data:', error);

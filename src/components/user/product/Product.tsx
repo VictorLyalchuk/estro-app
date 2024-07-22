@@ -26,7 +26,7 @@ import { useTranslation } from 'react-i18next';
 import { getLocalizedField, getLocalizedFieldArray } from '../../../utils/localized/localized';
 import ProductReview from './UserProductReview';
 import classNames from 'classnames';
-import { getUserProductRating, getUserProductReview } from '../../../services/userProductReview/user-product-review-services';
+import { getQuantityUserProductReview, getUserProductRating, getUserProductReview } from '../../../services/userProductReview/user-product-review-services';
 import {Link as Scrollink} from 'react-scroll'
 
 
@@ -45,18 +45,21 @@ export default function Product() {
   const [isQuickviewOpen, setQuickviewOpen] = useState(false);
   const [reviews, setReviews] = useState<IUserProductReview[]>([]);
   const [ratings, setRatings] = useState<IUserProductRating>();
+  const [page, setPage] = useState(1); 
+  const [countPage, setCountPage] = useState(0);
 
-  const loadReviews = async () => {
-    await getUserProductReview(Id).then(data => setReviews(data)).catch(error => console.error('Error fetching reviews data:', error));
+  const loadReviews = async (page: number) => {
+    await getUserProductReview(Id, page).then(data => setReviews(data)).catch(error => console.error('Error fetching reviews data:', error));
     await getUserProductRating(Id).then(data => setRatings(data)).catch(error => console.error('Error fetching ratings data:', error));
+    await getQuantityUserProductReview(Id).then(data => setCountPage(data)).catch(error => console.error('Error fetching count data:', error));
   }
   
   useEffect(() => {
     if (Id) {
       getProductById(Id).then(data => setProduct(data)).catch(error => console.error('Error fetching product data:', error));
-      loadReviews();
+      loadReviews(page);
     }
-  }, [Id]);
+  }, [Id, page]);
 
   if (!product) {
     return <p></p>
@@ -411,7 +414,10 @@ export default function Product() {
             productId={product.id}
             reviews={reviews}
             ratings={ratings}
-            loadReviews={loadReviews}
+            loadReviews={() => loadReviews(page)}
+            page={page}
+            setPage={setPage} 
+            countPage={countPage}
           />
         </div>
         </div>

@@ -1,25 +1,39 @@
 import { StarIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import { useState } from 'react'
+import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/react/24/outline'
 import { addUserProductReview } from '../../../services/userProductReview/user-product-review-services';
 import { APP_ENV } from '../../../env/config';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '../../../services/custom/format-data';
+import { Link as Scrollink } from 'react-scroll'
 
 interface UserProductReviewProps {
     userId?: string;
     productId: number;
     reviews: IUserProductReview[];
     ratings?: IUserProductRating;
-    loadReviews: () => Promise<void>;
+    loadReviews: (page: number) => Promise<void>;
+    page: number;
+    setPage: (page: number) => void;
+    countPage: number
 }
-const UserProductReview: React.FC<UserProductReviewProps> = ({ userId, productId, reviews, ratings, loadReviews }) => {
+const UserProductReview: React.FC<UserProductReviewProps> = ({ userId, productId, reviews, ratings, loadReviews, page, setPage, countPage }) => {
     const baseUrl = APP_ENV.BASE_URL;
     const { t, i18n } = useTranslation();
     const lang = i18n.language;
     const [showForm, setShowForm] = useState(false)
     const [rating, setRating] = useState(0)
     const [content, setContent] = useState('')
+
+    const [itemsPerPage] = useState<number>(5);
+    const indexOfLastItem = page * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const totalPages = Math.ceil(countPage / itemsPerPage);
+    const visiblePages = 5;
+    let startPage = Math.max(1, page - Math.floor(visiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + visiblePages - 1);
+
     const handleFormSubmit = async (e: { preventDefault: () => void }) => {
         e.preventDefault()
         if (!userId) {
@@ -37,12 +51,16 @@ const UserProductReview: React.FC<UserProductReviewProps> = ({ userId, productId
         setRating(0)
         setContent('')
         if (loadReviews) {
-            await loadReviews();
+            await loadReviews(1);
         }
     }
 
+    const onPageChange = (newPage: number) => {
+        setPage(newPage);
+        loadReviews(newPage);
+    };
     return (
-        <div className="border-t">
+        <div className="border-t review-start">
             <div className="mx-auto max-w-2xl px-4 py-4 sm:px-6 sm:py-8 lg:grid lg:max-w-7xl lg:grid-cols-12 lg:gap-x-8 lg:px-8 lg:py-12">
                 <div className="lg:col-span-6">
                     <h2 className="text-2xl font-bold tracking-tight text-gray-900">{t('Reviews_Customer')}</h2>
@@ -179,7 +197,7 @@ const UserProductReview: React.FC<UserProductReviewProps> = ({ userId, productId
                     <div className="flow-root">
                         <div className="-my-12 divide-y divide-gray-200">
                             {reviews.map((review, index) => (
-                                <div key={index} className="py-12">
+                                <div key={index} className="py-8">
                                     <div className="flex items-center">
                                         <img src={`${baseUrl}/uploads/${review?.avatar || "user404.webp"}`}
                                             alt={`${review.author}.`} className="h-12 w-12 rounded-full" />
@@ -215,6 +233,77 @@ const UserProductReview: React.FC<UserProductReviewProps> = ({ userId, productId
 
                 </div>
             </div>
+            {/* Pagination */}
+            {countPage > 5 &&
+                <div className="container mx-auto mt-20 p-4 flex relative max-w-7xl lg:flex-row justify-between">
+                    <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between ">
+                        <div>
+                            <p className="text-sm text-gray-700">
+                                {t('CatalogHome_PaginationShowing')} <span className="font-medium">{indexOfFirstItem + 1}</span> {t('CatalogHome_PaginationTo')}{' '}
+                                <span className="font-medium">{Math.min(indexOfLastItem, countPage)}</span> {t('CatalogHome_PaginationOf')}{' '}
+                                <span className="font-medium">{countPage}</span> {t('CatalogHome_PaginationResults')}
+                            </p>
+                        </div>
+                    </div>
+
+                    <div>
+                        <nav className="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0">
+                            <div className="flex flex-1 justify-between sm:justify-end">
+                                <Scrollink to="review-start" smooth={true}>
+                                    <button
+                                        onClick={() => onPageChange(page - 1)}
+                                        disabled={page === 1}
+                                        className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
+                                             ${page === 1
+                                                ? 'text-gray-300'
+                                                : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                                            }`}
+                                    >
+                                        <ArrowLongLeftIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                        {t('CatalogHome_Previous')}
+                                    </button>
+                                </Scrollink>
+
+                                {[...Array(endPage - startPage + 1)].map((_, index) => {
+                                    const pageNumber = startPage + index;
+                                    return (
+                                        <Scrollink to="review-start" smooth={true} key={pageNumber}>
+
+                                            <button
+                                                key={pageNumber}
+                                                onClick={() => onPageChange(pageNumber)}
+                                                className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium text-gray-500 ${page === pageNumber
+                                                    ? 'border-t-2 border-indigo-500 text-indigo-600 font-semibold'
+                                                    : 'border-transparent text-gray-500 hover:border-indigo-500 hover:text-gray-700'
+                                                    }`}
+                                            >
+                                                {pageNumber}
+                                            </button>
+                                        </Scrollink>
+
+                                    );
+                                })}
+
+                                <Scrollink to="review-start" smooth={true}>
+                                    <button
+                                        onClick={() => onPageChange(page + 1)}
+                                        disabled={indexOfLastItem >= countPage}
+                                        className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
+                                             ${indexOfLastItem >= countPage
+                                                ? 'text-gray-300'
+                                                : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                                            }`}
+                                    >
+                                        {t('CatalogHome_Next')}
+                                        <ArrowLongRightIcon className="ml-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                    </button>
+                                </Scrollink>
+                            </div>
+
+                        </nav>
+                    </div>
+                </div>
+            }
         </div>
     )
 }
