@@ -373,7 +373,8 @@ export const en = {
     "Navbars_SearchProducts": "Search products",
     "Navbars_Store": "Store",
     "Navbars_NewArrivals": "New Arrivals",
-    "Navbars_BasicTees": "Basic Tees",
+    "Navbars_Season_Autumn_Winter": "Autumn/Winter",
+    "Navbars_Season_Spring_Summer": "Spring/Summer",
     "Navbars_ShopNow": "Shop now",
 
     // CATALOG NAVIGATION

@@ -372,7 +372,8 @@ export const uk = {
     "Navbars_SearchProducts": "Пошук товарів",
     "Navbars_Store": "Магазини",
     "Navbars_NewArrivals": "Нові надходження",
-    "Navbars_BasicTees": "Базові футболки",
+    "Navbars_Season_Autumn_Winter": "Осінь/Зима",
+    "Navbars_Season_Spring_Summer": "Весна/Літо",
     "Navbars_ShopNow": "Купуйте зараз",
 
     // CATALOG NAVIGATION

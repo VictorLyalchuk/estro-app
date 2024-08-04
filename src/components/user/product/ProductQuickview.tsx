@@ -98,11 +98,11 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
     };
 
     const renderSizeGuide = (isQuickviewOpen: boolean) => {
-        if (!isQuickviewOpen || typeof product.mainCategoryName !== 'string') {
+        if (!isQuickviewOpen || typeof product.mainCategoryName_en !== 'string') {
             return null;
         }
 
-        switch (product.mainCategoryName) {
+        switch (product.mainCategoryName_en) {
             case 'Women':
                 return (
                     <WomanSizeGuideComponent

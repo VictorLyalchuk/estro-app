@@ -372,7 +372,8 @@ export const fr = {
     "Navbars_SearchProducts": "Rechercher des produits",
     "Navbars_Store": "Magasin",
     "Navbars_NewArrivals": "Nouveautés",
-    "Navbars_BasicTees": "T-shirts basiques",
+    "Navbars_Season_Autumn_Winter": "Automne/Hiver",
+    "Navbars_Season_Spring_Summer": "Printemps/Été",
     "Navbars_ShopNow": "Achetez maintenant",
 
     // CATALOG NAVIGATION

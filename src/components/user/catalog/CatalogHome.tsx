@@ -43,7 +43,7 @@ export default function CatalogHome() {
     const baseUrl = APP_ENV.BASE_URL;
     const navigate = useNavigate();
     const dispatch = useDispatch();
-    const { main } = useParams();
+    const { gender } = useParams();
     const { text } = useParams();
     const [productList, setProduct] = useState<IProduct[]>([]);
     const [filterOptionsList, setFilterOptionsList] = useState<IInfo[]>([]);
@@ -165,10 +165,12 @@ export default function CatalogHome() {
 
     const getInfo = async () => {
         try {
+            setFilterOptionsList([]);
+
             // Витягування категорій і фільтрів з бази даних
             const mainCategories = await getMainCategories();
             setFilterOptionsList(prevFilters => {
-                const mainCategory = mainCategories.find(mainCategory => mainCategory.urlName === main);
+                const mainCategory = mainCategories.find(mainCategory => mainCategory.urlName === gender);
                 const subCategoryWithOptions: IInfo[] = [];
 
                 if (mainCategory) {
@@ -255,7 +257,7 @@ export default function CatalogHome() {
                 Page: newFilters.find(f => f.name === 'Page')?.values || page,
                 Search: text || '',
                 Language: lang,
-                MainCategory: main,
+                MainCategory: gender,
                 SubName: newFilters.find(f => f.name === 'SubName')?.values || undefined,
                 UrlName: await getFilterCategory(),
             };
@@ -282,14 +284,14 @@ export default function CatalogHome() {
     useEffect(() => {
         setPage(1);
         getInfo();
-    }, []);
+    }, [gender]);
 
     useEffect(() => {
         // if (categoriesLoaded) {
         loadFromURL();
         setSearchValue(text?.replace(/_/g, " ") || '');
         // }
-    }, [categoriesLoaded, location.search, page, itemsPerPage, text]);
+    }, [categoriesLoaded, location.search, page, itemsPerPage, text, gender ]);
 
     const favoriteToggle = async (product: IProduct, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
         e.preventDefault();

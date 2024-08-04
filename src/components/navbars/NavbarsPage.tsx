@@ -14,11 +14,15 @@ import { FavoritesReducerActionType } from '../../store/favourites/FavoritesRedu
 import { IUserProfile } from '../../interfaces/Auth/IUserProfile.ts';
 import { getUserData } from '../../services/accounts/account-services.ts';
 import LanguageSelector from './navbarsPages/language/LanguageSelector.tsx';
-import i18next, {t} from "i18next";
 import { CardReducerActionType } from '../../store/bag/CardReducer.tsx';
 import classNames from 'classnames';
+import { getLocalizedField } from '../../utils/localized/localized.ts';
+import { useTranslation } from 'react-i18next';
+import { useCollections } from '../../data/collectionsList.tsx';
 
 const NavbarsPage = () => {
+    const { t, i18n } = useTranslation();
+    const lang = i18n.language;
     const { isAuth, user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
     const { count } = useSelector((redux: any) => redux.bag as IBagReducerState);
     const [categoryList, setCategoryList] = useState<IMainCategory[]>([]);
@@ -29,23 +33,7 @@ const NavbarsPage = () => {
     const [viewSearch, setViewSearch] = useState('hidden');
     const [searchValue, setSearchValue] = useState('');
     const navigate = useNavigate();
-
-    const navigation = {
-        featured: [
-            {
-                name: t('Navbars_NewArrivals'),
-                href: '#',
-                imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-01.jpg',
-                imageAlt: 'Models sitting back to back, wearing Basic Tee in black and bone.',
-            },
-            {
-                name: t('Navbars_BasicTees'),
-                href: '#',
-                imageSrc: 'https://tailwindui.com/img/ecommerce-images/mega-menu-category-02.jpg',
-                imageAlt: 'Close up of Basic Tee fall bundle with off-white, ochre, olive, and black tees.',
-            },],
-    }
-
+    const collections = useCollections();
 
     useEffect(() => {
         if (user?.Email) {
@@ -75,7 +63,7 @@ const NavbarsPage = () => {
     const changeVisibleSearch = () => {
         setViewSearch(prevMode => (prevMode === 'show' ? 'hidden' : 'show'));
     }
-    
+
     const handaleSearch = (event: { key: string; }) => {
         if (event.key === 'Enter') {
             if (searchValue.trim() !== "") {
@@ -146,10 +134,7 @@ const NavbarsPage = () => {
                                                             )
                                                         }
                                                     >
-                                                        {i18next.language === 'uk' ? category.name_uk : null}
-                                                        {i18next.language === 'en' ? category.name_en : null}
-                                                        {i18next.language === 'es' ? category.name_es : null}
-                                                        {i18next.language === 'fr' ? category.name_fr : null}
+                                                        {getLocalizedField(category, 'name', lang)}
                                                     </Tab>
                                                 ))}
                                             </Tab.List>
@@ -175,12 +160,9 @@ const NavbarsPage = () => {
                                                     </div>
                                                     {category.subCategories.map((section) => (
                                                         <div key={section.name_en}>
-                                                            <p id={`${category.id}-${section.id}-heading-mobile`} className="font-medium text-gray-900">
-                                                                {i18next.language === 'uk' ? section.name_uk : null}
-                                                                {i18next.language === 'en' ? section.name_en : null}
-                                                                {i18next.language === 'es' ? section.name_es : null}
-                                                                {i18next.language === 'fr' ? section.name_fr : null}
-                                                            </p>
+                                                            <Link id={`${category.id}-${section.id}-heading-mobile`} to={`/catalog/${section.urlName}`} onClick={() => close()} className="font-bold text-gray-900">
+                                                                {getLocalizedField(section, 'name', lang)}
+                                                            </Link>
                                                             <ul
                                                                 role="list"
                                                                 aria-labelledby={`${category.id}-${section.id}-heading-mobile`}
@@ -189,10 +171,7 @@ const NavbarsPage = () => {
                                                                 {section.categories.map((item) => (
                                                                     <li key={item.name_en} className="flow-root">
                                                                         <Link to={`/catalog/${section.urlName}/${item.urlName}`} onClick={() => setOpen(false)}>
-                                                                            {i18next.language === 'uk' ? item.name_uk : null}
-                                                                            {i18next.language === 'en' ? item.name_en : null}
-                                                                            {i18next.language === 'es' ? item.name_es : null}
-                                                                            {i18next.language === 'fr' ? item.name_fr : null}
+                                                                            {getLocalizedField(item, 'name', lang)}
                                                                         </Link>
                                                                     </li>
                                                                 ))}
@@ -282,10 +261,7 @@ const NavbarsPage = () => {
                                                                         'relative z-10 -mb-px flex items-center pt-px text-sm font-medium transition-colors duration-200 ease-out hover:text-indigo-500'
                                                                     )}
                                                                 >
-                                                                    {i18next.language === 'uk' && category.name_uk}
-                                                                    {i18next.language === 'en' && category.name_en}
-                                                                    {i18next.language === 'es' && category.name_es}
-                                                                    {i18next.language === 'fr' && category.name_fr}
+                                                                    {getLocalizedField(category, 'name', lang)}
                                                                 </Popover.Button>
                                                             </div>
 
@@ -306,23 +282,27 @@ const NavbarsPage = () => {
                                                                         <div className="mx-auto max-w-7xl px-8">
                                                                             <div className="grid grid-cols-2 gap-x-8 gap-y-10 py-16">
                                                                                 <div className="col-start-2 grid grid-cols-2 gap-x-8">
-                                                                                    {navigation.featured.map((item) => (
-                                                                                        <div key={item.name} className="group relative text-base sm:text-sm">
-                                                                                            <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
-                                                                                                <img
-                                                                                                    src={item.imageSrc}
-                                                                                                    alt={item.imageAlt}
-                                                                                                    className="object-cover object-center"
-                                                                                                />
+                                                                                    {collections.map((item) => (
+                                                                                        item.gender === category.name_en && (
+                                                                                            <div key={item.id} className="group relative text-base sm:text-sm">
+                                                                                                <Popover.Panel>
+                                                                                                    {({ close }) => (
+                                                                                                        <Link to={item.href} className='hover:text-indigo-500' onClick={() => close()}>
+                                                                                                            <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-lg bg-gray-100 group-hover:opacity-75">
+                                                                                                                <img
+                                                                                                                    src={item.imageSrc}
+                                                                                                                    alt={item.imageAlt}
+                                                                                                                    className="object-cover object-center"
+                                                                                                                />
+                                                                                                            </div>
+                                                                                                            <div className="mt-5 block text-center">
+                                                                                                                {item.name}
+                                                                                                            </div>
+                                                                                                        </Link>
+                                                                                                    )}
+                                                                                                </Popover.Panel>
                                                                                             </div>
-                                                                                            <a href={item.href} className="mt-6 block font-medium text-gray-900">
-                                                                                                {/* <span className="absolute inset-0 z-10" aria-hidden="true" /> */}
-                                                                                                {item.name}
-                                                                                            </a>
-                                                                                            <Link to={"/"} aria-hidden="true" className="mt-1">
-                                                                                                {t('Navbars_ShopNow')}
-                                                                                            </Link>
-                                                                                        </div>
+                                                                                        )
                                                                                     ))}
                                                                                 </div>
                                                                                 <div className="row-start-1 grid grid-cols-3 gap-x-8 gap-y-10 text-sm">
@@ -332,10 +312,7 @@ const NavbarsPage = () => {
                                                                                             <Popover.Panel>
                                                                                                 {({ close }) => (
                                                                                                     <Link id={`${section.name_en}-heading`} to={`/catalog/${section.urlName}`} onClick={() => close()} className="font-bold text-gray-900">
-                                                                                                        {i18next.language === 'uk' ? section.name_uk : null}
-                                                                                                        {i18next.language === 'en' ? section.name_en : null}
-                                                                                                        {i18next.language === 'es' ? section.name_es : null}
-                                                                                                        {i18next.language === 'fr' ? section.name_fr : null}
+                                                                                                        {getLocalizedField(section, 'name', lang)}
                                                                                                     </Link>
                                                                                                 )}
                                                                                             </Popover.Panel>
@@ -349,10 +326,7 @@ const NavbarsPage = () => {
                                                                                                         <Popover.Panel>
                                                                                                             {({ close }) => (
                                                                                                                 <Link to={`/catalog/${section.urlName}/${item.urlName}`} onClick={() => close()}>
-                                                                                                                    {i18next.language === 'uk' ? item.name_uk : null}
-                                                                                                                    {i18next.language === 'en' ? item.name_en : null}
-                                                                                                                    {i18next.language === 'es' ? item.name_es : null}
-                                                                                                                    {i18next.language === 'fr' ? item.name_fr : null}
+                                                                                                                    {getLocalizedField(item, 'name', lang)}
                                                                                                                 </Link>
                                                                                                             )}
                                                                                                         </Popover.Panel>
