@@ -7,6 +7,7 @@ import { ArrowDownIcon, ArrowLongRightIcon } from '@heroicons/react/24/outline';
 import {t} from "i18next";
 import CustomSlider from '../../../../../ui/slider/Slider';
 import { useEffect, useState } from 'react';
+// import { IBagReducerState } from '../../../../../store/bag/BagReducer';
 
 interface PaymentInformationProps {
   theme: any;
@@ -32,6 +33,7 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
   const dispatch = useDispatch();
   const { total, taxes, totalWithOutTax, discount } = useSelector((redux: any) => redux.card as ICardReducerState);
   const [maxSliderValue, setMaxSliderValue] = useState<number>(0);
+  // const { count } = useSelector((redux: any) => redux.bag as IBagReducerState);
   const handleSliderChange = (value: number) => {
     dispatch(updateDiscount(value));
   };

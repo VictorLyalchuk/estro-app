@@ -47,7 +47,7 @@ const cardReducer = (state = initState, action: ICardReducerAction): ICardReduce
     switch (action.type) {
         case CardReducerActionType.SET:
             const items = action.payload?.items || null;
-            const discount = action.payload?.discount || 0;
+            const discount = action.payload?.discount || state.discount;
 
             if (!items) {
                 return state;
