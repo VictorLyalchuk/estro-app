@@ -4,10 +4,10 @@ import { paymentList } from '../../../../../data/paymentList';
 import { useDispatch, useSelector } from 'react-redux';
 import { ICardReducerState, updateDiscount } from '../../../../../store/bag/CardReducer';
 import { ArrowDownIcon, ArrowLongRightIcon } from '@heroicons/react/24/outline';
-import {t} from "i18next";
+import { t } from "i18next";
 import CustomSlider from '../../../../../ui/slider/Slider';
 import { useEffect, useState } from 'react';
-// import { IBagReducerState } from '../../../../../store/bag/BagReducer';
+import { IBagReducerState } from '../../../../../store/bag/BagReducer';
 
 interface PaymentInformationProps {
   theme: any;
@@ -17,13 +17,13 @@ interface PaymentInformationProps {
   handleBlockClick: (block: string) => void;
   selectedPayment: string | '';
   setSelectedPayment: (value: string) => void;
-  bonusBalance : number | 0;
+  bonusBalance: number | 0;
 }
 
 const PaymentInformation: React.FC<PaymentInformationProps> = ({
   theme,
   errors,
-  formData,  
+  formData,
   activeBlock,
   handleBlockClick,
   selectedPayment,
@@ -31,18 +31,19 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
   bonusBalance,
 }) => {
   const dispatch = useDispatch();
-  const { total, taxes, totalWithOutTax, discount } = useSelector((redux: any) => redux.card as ICardReducerState);
-  const [maxSliderValue, setMaxSliderValue] = useState<number>(0);
-  // const { count } = useSelector((redux: any) => redux.bag as IBagReducerState);
+  const { total, taxes, totalWithOutTax, discount, totalPure } = useSelector((redux: any) => redux.card as ICardReducerState);
+  const [maxSliderValue, setMaxSliderValue] = useState<number>(bonusBalance);
+  const { count } = useSelector((redux: any) => redux.bag as IBagReducerState);
   const handleSliderChange = (value: number) => {
     dispatch(updateDiscount(value));
   };
-  
+
   useEffect(() => {
     if (total > 0 && bonusBalance >= 0) {
-      setMaxSliderValue(Math.min(total, bonusBalance));
+      dispatch(updateDiscount(0));
+      setMaxSliderValue(Math.min(totalPure, bonusBalance));
     }
-  }, [bonusBalance]);
+  }, [count, totalPure, bonusBalance]);
 
   return (
     <div className={`bg-white p-5 rounded-md shadow-md mb-4`}>
@@ -64,31 +65,31 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
             <div className="pb-4">
               <ThemeProvider theme={theme}>
                 {/* {formData.payment === 'The money has not been paid' && ( */}
-                  <>
-                    <div>
-                      <RadioGroup value={selectedPayment} onChange={setSelectedPayment}>
-                        <RadioGroup.Label className="sr-only">Payment Information</RadioGroup.Label>
-                        <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                          {paymentList.map((payment) => (
-                            <RadioGroup.Option
-                              key={payment.id}
-                              value={payment.id}
-                              className={({ active, checked }) =>
-                                `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer hover:border-indigo-600 ${active ? 'ring-2 ring-indigo-600 border-2 border-indigo-600 ' : ''
-                                } ${checked ? 'ring-2 ring-indigo-600 border-2 border-indigo-600' : 'border-2 border-gray-200'} ${errors.paymentMethod ? ' border-red-600' : ''}`}>
-                              <div className="px-4 py-1 flex-1 ">
-                                <div className="flex justify-center item-center">
-                                  <RadioGroup.Label as="div">
-                                    {payment.logo}
-                                  </RadioGroup.Label>
-                                </div>
+                <>
+                  <div>
+                    <RadioGroup value={selectedPayment} onChange={setSelectedPayment}>
+                      <RadioGroup.Label className="sr-only">Payment Information</RadioGroup.Label>
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                        {paymentList.map((payment) => (
+                          <RadioGroup.Option
+                            key={payment.id}
+                            value={payment.id}
+                            className={({ active, checked }) =>
+                              `max-w-sm rounded overflow-hidden shadow-lg cursor-pointer hover:border-indigo-600 ${active ? 'ring-2 ring-indigo-600 border-2 border-indigo-600 ' : ''
+                              } ${checked ? 'ring-2 ring-indigo-600 border-2 border-indigo-600' : 'border-2 border-gray-200'} ${errors.paymentMethod ? ' border-red-600' : ''}`}>
+                            <div className="px-4 py-1 flex-1 ">
+                              <div className="flex justify-center item-center">
+                                <RadioGroup.Label as="div">
+                                  {payment.logo}
+                                </RadioGroup.Label>
                               </div>
-                            </RadioGroup.Option>
-                          ))}
-                        </div>
-                      </RadioGroup>
-                    </div>
-                  </>
+                            </div>
+                          </RadioGroup.Option>
+                        ))}
+                      </div>
+                    </RadioGroup>
+                  </div>
+                </>
                 {/* )} */}
               </ThemeProvider>
             </div>
@@ -105,9 +106,9 @@ const PaymentInformation: React.FC<PaymentInformationProps> = ({
                 <dt className="text-gray-600">{t('Bag_PaymentInfo_Discount')}</dt>
                 <dd className="font-medium text-red-600">{discount.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</dd>
               </div>
-               <div className="flex items-center justify-between mt-10 pb-4">
-                <CustomSlider max={Math.floor(maxSliderValue)} onChange={handleSliderChange} />
-                </div>
+              <div className="flex items-center justify-between mt-10 pb-4">
+                <CustomSlider max={Math.floor(maxSliderValue)} discount={discount} onChange={handleSliderChange} />
+              </div>
               <div className="flex items-center justify-between py-4">
                 <dt className="text-gray-600">{t('Bag_PaymentInfo_Payment')}</dt>
                 {/* <dd className={`font-medium ${formData.payment === 'The money has not been paid' ? 'text-red-500' : 'text-green-500'}`}>{formData.payment}</dd> */}

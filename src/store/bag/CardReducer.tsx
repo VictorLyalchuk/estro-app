@@ -11,6 +11,7 @@ export enum CardReducerActionType {
 export interface ICardReducerState {
     items: BagItems[] | null,
     total: number,
+    totalPure: number,
     taxes: number,
     totalWithOutTax: number,
     discount: number,
@@ -23,6 +24,7 @@ export interface ICardReducerAction {
         items?: BagItems[];
         itemId?: number;
         total?: number;
+        totalPure?: number,
         taxes?: number;
         totalWithOutTax?: number,
         discount?: number
@@ -37,6 +39,7 @@ export const updateDiscount = (discount: number): ICardReducerAction => ({
 const initState: ICardReducerState = {
     items: null,
     total: 0,
+    totalPure: 0,
     taxes: 0,
     totalWithOutTax: 0,
     discount: 0,
@@ -57,11 +60,12 @@ const cardReducer = (state = initState, action: ICardReducerAction): ICardReduce
             const initialTotalWithOutTax = initialTotal - initialTaxes;
             const initialIndividualItemPrice: { [itemId: number]: number } = {};
             items.forEach(item => { initialIndividualItemPrice[item.id] = item.price * item.quantity; });
-            
+
             return {
                 ...state,
                 items: items,
                 total: initialTotal - discount,
+                totalPure: initialTotal,
                 taxes: (initialTaxes),
                 totalWithOutTax: (initialTotalWithOutTax),
                 discount: discount,
@@ -83,6 +87,7 @@ const cardReducer = (state = initState, action: ICardReducerAction): ICardReduce
             return {
                 items: [],
                 total: 0,
+                totalPure: 0,
                 totalWithOutTax: 0,
                 initialIndividualItemPrice: {},
                 taxes: 0,

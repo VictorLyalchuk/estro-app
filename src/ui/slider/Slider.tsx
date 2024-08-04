@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './slider.css'
 
 interface SliderProps {
   max: number;
+  discount: number;
   onChange?: (value: number) => void;
 }
 
-const CustomSlider: React.FC<SliderProps> = ({ max, onChange }) => {
-  const [value, setValue] = useState<number>(0);
+const CustomSlider: React.FC<SliderProps> = ({ max, discount, onChange }) => {
+  const [value, setValue] = useState<number>(discount);
+
+  useEffect(() => {
+    setValue(discount); 
+  }, [discount]);
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const newValue = parseFloat(event.target.value);
