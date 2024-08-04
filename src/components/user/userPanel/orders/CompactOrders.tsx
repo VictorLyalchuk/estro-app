@@ -7,10 +7,9 @@ import { ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
 import { formatDate } from "../../../../services/custom/format-data";
 import { useTranslation } from "react-i18next";
 import { getLocalizedField } from "../../../../utils/localized/localized";
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(' ')
-}
+import classNames from "classnames";
+import { infoPaymentList } from "../../../../data/infoPaymentList";
+import { Link as Scrollink } from 'react-scroll'
 
 const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange, page, countPage, onPageChange }) => {
   const { t, i18n } = useTranslation();
@@ -33,7 +32,7 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
       {orders && orders.length > 0 ? (
         <>
           {orders.map((order, index) => (
-            <div key={index} className="bg-white rounded-md shadow-md mb-8 mt-8">
+            <div key={index} className="bg-white rounded-md shadow-md mb-8 mt-8 order-start">
               <div className="mx-auto max-w-2xl pb-8 pt-8 sm:px-6 sm:pt-8 lg:max-w-7xl lg:px-8">
                 <div className="flex justify-between space-y-2 px-4 sm:flex sm:items-baseline sm:justify-between sm:space-y-0 sm:px-0">
                   <div className="sm:items-baseline px-4 py-6 sm:p-6 lg:pb-8">
@@ -41,7 +40,7 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
                     <p className="text-sm text-gray-600 mt-2">
                       {t('Order_PlacedOn')}{' '}
                       <time dateTime={order.orderDate} className="font-medium text-gray-900">
-                        {formatDate(order.orderDate, lang )}
+                        {formatDate(order.orderDate, lang)}
                       </time>
                     </p>
                   </div>
@@ -163,18 +162,16 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
                         <dt className="font-medium text-gray-900">{t('Order_PaymentInformation')}</dt>
                         <dd className="-ml-4 -mt-1 flex flex-wrap">
                           <div className="ml-4 mt-4 flex-shrink-0">
-                            <svg aria-hidden="true" width={36} height={24} viewBox="0 0 36 24" className="h-6 w-auto">
-                              <rect width={36} height={24} rx={4} fill="#224DBA" />
-                              <path
-                                d="M10.925 15.673H8.874l-1.538-6c-.073-.276-.228-.52-.456-.635A6.575 6.575 0 005 8.403v-.231h3.304c.456 0 .798.347.855.75l.798 4.328 2.05-5.078h1.994l-3.076 7.5zm4.216 0h-1.937L14.8 8.172h1.937l-1.595 7.5zm4.101-5.422c.057-.404.399-.635.798-.635a3.54 3.54 0 011.88.346l.342-1.615A4.808 4.808 0 0020.496 8c-1.88 0-3.248 1.039-3.248 2.481 0 1.097.969 1.673 1.653 2.02.74.346 1.025.577.968.923 0 .519-.57.75-1.139.75a4.795 4.795 0 01-1.994-.462l-.342 1.616a5.48 5.48 0 002.108.404c2.108.057 3.418-.981 3.418-2.539 0-1.962-2.678-2.077-2.678-2.942zm9.457 5.422L27.16 8.172h-1.652a.858.858 0 00-.798.577l-2.848 6.924h1.994l.398-1.096h2.45l.228 1.096h1.766zm-2.905-5.482l.57 2.827h-1.596l1.026-2.827z"
-                                fill="#fff"
-                              />
-                            </svg>
-                            <p className="sr-only">Visa</p>
+
+                            {infoPaymentList.find(info => info.id === order.orderPayment.paymentMethod)?.logo || null}
+
+                            <p className="sr-only">{order.orderPayment.paymentMethod}</p>
                           </div>
                           <div className="ml-4 mt-4">
-                            <p className="text-gray-900">{t('Order_EndingWith')} 4242</p>
-                            <p className="text-gray-600">{t('Order_Expires')} 02 / 24</p>
+                            <p> <span className="text-gray-600"> {t('Order_EndingWith')} </span>
+                              <span className="text-gray-900 font-medium ">{order.orderPayment.cardNumber.slice(-4)}</span></p>
+                            <p> <span className="text-gray-600"> {t('Order_Expires')} </span>
+                              <span className="text-gray-900 font-medium ">{order.orderPayment.cardMonthExpires} / {order.orderPayment.cardYearExpires.slice(-2)}</span></p>
                           </div>
                         </dd>
                       </div>
@@ -204,7 +201,7 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
 
             </div>
           ))}
-                    <nav className="flex items-center justify-between bg-white rounded-md shadow-md bg-white px-4 py-3 sm:px-6">
+          <nav className="flex items-center justify-between bg-white rounded-md shadow-md bg-white px-4 py-3 sm:px-6">
             <div className="container mx-auto p-4 flex relative max-w-7xl lg:flex-row justify-between ">
               <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between ">
                 <div>
@@ -218,49 +215,53 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
               <div>
                 <nav className="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0">
                   <div className="flex flex-1 justify-between sm:justify-end">
-                    <button
-                      onClick={() => onPageChange(page - 1)}
-                      disabled={page === 1}
-                      className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
-                    ${page === 1
-                          ? 'text-gray-300'
-                          : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
-                        }`}
-                    >
-                      <ArrowLongLeftIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-                      {t('Order_Previous')}
-                    </button>
-                  </div>
-
-                  {[...Array(endPage - startPage + 1)].map((_, index) => {
-                    const pageNumber = startPage + index;
-                    return (
+                    <Scrollink to="order-start" smooth={true}>
                       <button
-                        key={pageNumber}
-                        onClick={() => onPageChange(pageNumber)}
-                        className={`inline-flex items-center border-t px-4 pt-4 text-sm font-medium text-gray-500 ${page === pageNumber
-                          ? 'border-t-2 border-indigo-500 text-indigo-600 font-semibold'
-                          : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                        onClick={() => onPageChange(page - 1)}
+                        disabled={page === 1}
+                        className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
+                    ${page === 1
+                            ? 'text-gray-300'
+                            : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
                           }`}
                       >
-                        {pageNumber}
+                        <ArrowLongLeftIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                        {t('Order_Previous')}
                       </button>
-                    );
-                  })}
+                    </Scrollink>
 
-                  <div className="flex flex-1 justify-between sm:justify-end">
-                    <button
-                      onClick={() => onPageChange(page + 1)}
-                      disabled={indexOfLastItem >= countPage}
-                      className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
-                    ${indexOfLastItem >= countPage
-                          ? 'text-gray-300'
-                          : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
-                        }`}
-                    >
-                      {t('Order_Next')}
-                      <ArrowLongRightIcon className="ml-3 h-5 w-5 text-gray-400" aria-hidden="true" />
-                    </button>
+                    {[...Array(endPage - startPage + 1)].map((_, index) => {
+                      const pageNumber = startPage + index;
+                      return (
+                        <Scrollink to="order-start" smooth={true} key={pageNumber}>
+                          <button
+                            key={pageNumber}
+                            onClick={() => onPageChange(pageNumber)}
+                            className={`inline-flex items-center border-t px-4 pt-4 text-sm font-medium text-gray-500 ${page === pageNumber
+                              ? 'border-t-2 border-indigo-500 text-indigo-600 font-semibold'
+                              : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                              }`}
+                          >
+                            {pageNumber}
+                          </button>
+                        </Scrollink>
+                      );
+                    })}
+                    <Scrollink to="order-start" smooth={true}>
+
+                      <button
+                        onClick={() => onPageChange(page + 1)}
+                        disabled={indexOfLastItem >= countPage}
+                        className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
+                        ${indexOfLastItem >= countPage
+                            ? 'text-gray-300'
+                            : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                          }`}
+                      >
+                        {t('Order_Next')}
+                        <ArrowLongRightIcon className="ml-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                      </button>
+                    </Scrollink>
                   </div>
 
                 </nav>

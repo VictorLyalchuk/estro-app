@@ -745,25 +745,25 @@ export default function CatalogHome() {
                                             </button>
                                         </Scrollink>
 
-                                    {[...Array(endPage - startPage + 1)].map((_, index) => {
-                                        const pageNumber = startPage + index;
-                                        return (
-                                            <Scrollink to="product-start" smooth={true} key={pageNumber}>
+                                        {[...Array(endPage - startPage + 1)].map((_, index) => {
+                                            const pageNumber = startPage + index;
+                                            return (
+                                                <Scrollink to="product-start" smooth={true} key={pageNumber}>
 
-                                                <button
-                                                    key={pageNumber}
-                                                    onClick={() => onPageChange(pageNumber)}
-                                                    className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium text-gray-500 ${page === pageNumber
-                                                        ? 'border-t-2 border-indigo-500 text-indigo-600 font-semibold'
-                                                        : 'border-transparent text-gray-500 hover:border-indigo-500 hover:text-gray-700'
-                                                        }`}
-                                                >
-                                                    {pageNumber}
-                                                </button>
-                                            </Scrollink>
+                                                    <button
+                                                        key={pageNumber}
+                                                        onClick={() => onPageChange(pageNumber)}
+                                                        className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium text-gray-500 ${page === pageNumber
+                                                            ? 'border-t-2 border-indigo-500 text-indigo-600 font-semibold'
+                                                            : 'border-transparent text-gray-500 hover:border-indigo-500 hover:text-gray-700'
+                                                            }`}
+                                                    >
+                                                        {pageNumber}
+                                                    </button>
+                                                </Scrollink>
 
-                                        );
-                                    })}
+                                            );
+                                        })}
 
                                         <Scrollink to="product-start" smooth={true}>
                                             <button

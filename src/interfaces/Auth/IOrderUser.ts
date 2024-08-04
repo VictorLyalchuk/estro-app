@@ -12,4 +12,14 @@ interface IOrderUser {
     tax: number;
     subtotal: number;
     discount: number;
+    orderPayment: IOrderPayment
+  }
+
+  interface IOrderPayment {
+    payment: string;
+    paymentMethod: string;
+    cardNumber: string;
+    cardMonthExpires: string;
+    cardYearExpires: string;
+    cardHolderName: string;
   }

@@ -16,11 +16,7 @@ import { getUserData } from '../../services/accounts/account-services.ts';
 import LanguageSelector from './navbarsPages/language/LanguageSelector.tsx';
 import i18next, {t} from "i18next";
 import { CardReducerActionType } from '../../store/bag/CardReducer.tsx';
-
-
-function classNames(...classes: string[]) {
-    return classes.filter(Boolean).join(' ')
-}
+import classNames from 'classnames';
 
 const NavbarsPage = () => {
     const { isAuth, user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
