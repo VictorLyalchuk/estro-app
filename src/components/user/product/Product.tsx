@@ -27,8 +27,7 @@ import { getLocalizedField, getLocalizedFieldArray } from '../../../utils/locali
 import ProductReview from './UserProductReview';
 import classNames from 'classnames';
 import { getQuantityUserProductReview, getUserProductRating, getUserProductReview } from '../../../services/userProductReview/user-product-review-services';
-import {Link as Scrollink} from 'react-scroll'
-
+import { Link as Scrollink } from 'react-scroll'
 
 export default function Product() {
   const { t, i18n } = useTranslation();
@@ -45,7 +44,7 @@ export default function Product() {
   const [isQuickviewOpen, setQuickviewOpen] = useState(false);
   const [reviews, setReviews] = useState<IUserProductReview[]>([]);
   const [ratings, setRatings] = useState<IUserProductRating>();
-  const [page, setPage] = useState(1); 
+  const [page, setPage] = useState(1);
   const [countPage, setCountPage] = useState(0);
 
   const loadReviews = async (page: number) => {
@@ -53,7 +52,7 @@ export default function Product() {
     await getUserProductRating(Id).then(data => setRatings(data)).catch(error => console.error('Error fetching ratings data:', error));
     await getQuantityUserProductReview(Id).then(data => setCountPage(data)).catch(error => console.error('Error fetching count data:', error));
   }
-  
+
   useEffect(() => {
     if (Id) {
       getProductById(Id).then(data => setProduct(data)).catch(error => console.error('Error fetching product data:', error));
@@ -145,97 +144,100 @@ export default function Product() {
   return (
     <div className="overflow-hidden rounded-sm border-stroke bg-gray-100 shadow-default dark:border-strokedark dark:bg-boxdark text-body">
 
-      <div className="pt-6">
-        <nav aria-label="Breadcrumb" >
-          <ol role="list" className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-            <li key={`${product.id}-mainCategory`}>
-              <div className="flex items-center">
-                <Link to={`/catalog-home/${product.urlMainCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
-                  {getLocalizedField(product, 'mainCategoryName', lang)}
-                </Link>
-                <svg
-                  width={16}
-                  height={20}
-                  viewBox="0 0 16 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  className="h-5 w-4 text-gray-300"
-                >
-                  <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-                </svg>
-              </div>
-            </li>
+      <nav aria-label="Breadcrumb" className="pt-6">
+        <ol role="list" className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+          <li key={`${product.id}-mainCategory`}>
+            <div className="flex items-center">
+              <Link to={`/catalog-home/${product.urlMainCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
+                {getLocalizedField(product, 'mainCategoryName', lang)}
+              </Link>
+              <svg
+                width={16}
+                height={20}
+                viewBox="0 0 16 20"
+                fill="currentColor"
+                aria-hidden="true"
+                className="h-5 w-4 text-gray-300"
+              >
+                <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
+              </svg>
+            </div>
+          </li>
 
-            <li key={`${product.id}-subCategory`}>
+          <li key={`${product.id}-subCategory`}>
 
-              <div className="flex items-center">
-                <Link to={`/catalog/${product.urlSubCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
-                  {getLocalizedField(product, 'subCategoryName', lang)}
-                </Link>
-                <svg
-                  width={16}
-                  height={20}
-                  viewBox="0 0 16 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  className="h-5 w-4 text-gray-300"
-                >
-                  <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-                </svg>
-              </div>
-            </li>
-            <li key={`${product.id}-category`}>
-              <div className="flex items-center">
-                <Link to={`/catalog/${product.urlSubCategoryName}/${product.urlCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
-                  {getLocalizedField(product, 'categoryName', lang)}
-                </Link>
-                <svg
-                  width={16}
-                  height={20}
-                  viewBox="0 0 16 20"
-                  fill="currentColor"
-                  aria-hidden="true"
-                  className="h-5 w-4 text-gray-300"
-                >
-                  <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
-                </svg>
-              </div>
+            <div className="flex items-center">
+              <Link to={`/catalog/${product.urlSubCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
+                {getLocalizedField(product, 'subCategoryName', lang)}
+              </Link>
+              <svg
+                width={16}
+                height={20}
+                viewBox="0 0 16 20"
+                fill="currentColor"
+                aria-hidden="true"
+                className="h-5 w-4 text-gray-300"
+              >
+                <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
+              </svg>
+            </div>
+          </li>
+          <li key={`${product.id}-category`}>
+            <div className="flex items-center">
+              <Link to={`/catalog/${product.urlSubCategoryName}/${product.urlCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
+                {getLocalizedField(product, 'categoryName', lang)}
+              </Link>
+              <svg
+                width={16}
+                height={20}
+                viewBox="0 0 16 20"
+                fill="currentColor"
+                aria-hidden="true"
+                className="h-5 w-4 text-gray-300"
+              >
+                <path d="M5.697 4.34L8.98 16.532h1.327L7.025 4.341H5.697z" />
+              </svg>
+            </div>
 
-            </li>
-            <li className="text-sm">
-            </li>
-          </ol>
-        </nav>
-        {/* Image gallery */}
-        <div className="mx-auto mt-6 max-w-2xl px-6 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-1 lg:gap-x-8 lg:px-8">
-          <Slider>
-            <Carousel swipe animation="fade" duration={1500} autoPlay={true} indicatorIconButtonProps={{ style: { width: '35px', height: '35px', }, }}
-              IndicatorIcon={<Brightness1RoundedIcon fontSize='small' />}
-              indicators={true} className="h-full w-full" >
-              {product.images?.map((image, index) => (
-                <div key={index} className="aspect-h-4 aspect-w-3 rounded" >
-                  <Image
-                    src={`${baseUrl}/uploads/1200_${image?.imagePath || '/uploads/imagenot.webp'}`}
-                    alt={getLocalizedField(product, 'name', lang)}
-                    className="h-full w-full object-cover object-center cursor-pointer"
-                  />
-                </div>
-              ))}
-            </Carousel>
-          </Slider >
-          <div className="mt-4 lg:row-span-3 lg:mt-0 lg:col-start-3">
+          </li>
+          <li className="text-sm">
+          </li>
+        </ol>
+      </nav>
+
+      <main className="mx-auto mt-8 max-w-2xl px-4 pb-4  lg:max-w-7xl lg:px-8">
+
+        <div className="lg:grid lg:grid-cols-12 lg:gap-x-8 mb-8">
+
+          {/* Image gallery */}
+          <div className="mt-8 lg:col-span-7 lg:col-start-1 lg:row-span-3 lg:row-start-1 lg:mt-0">
+            <div className="grid grid-cols-1 lg:grid-cols-1 lg:gap-8">
+              <Slider>
+                <Carousel swipe animation="fade" duration={1500} autoPlay={true} indicatorIconButtonProps={{ style: { width: '35px', height: '35px', }, }}
+                  IndicatorIcon={<Brightness1RoundedIcon fontSize='small' />}
+                  indicators={true} className="h-full w-full rounded-lg overflow-hidden" >
+                  {product.images?.map((image, index) => (
+                    <div key={index} className="w-full h-full flex items-center justify-center rounded-lg overflow-hidden">
+                      <Image
+                        src={`${baseUrl}/uploads/1200_${image?.imagePath || '/uploads/imagenot.webp'}`}
+                        alt={getLocalizedField(product, 'name', lang)}
+                        className="w-full h-full object-contain cursor-pointer rounded-lg"
+                      />
+                    </div>
+                  ))}
+                </Carousel>
+              </Slider >
+            </div>
+          </div>
+
+          {/* Product */}
+          <div className="lg:col-span-5 lg:col-start-8">
             {/* Options */}
-            <div className="mt-9 lg:row-span-3 lg:mt-0">
-              <h2 className="sr-only">Product information</h2>
-              <p className="text-3xl font-medium  text-gray-900">{getLocalizedField(product, 'name', lang)}</p>
+            <div className="flex justify-between">
+              <h1 className="text-xl font-medium text-gray-900">{getLocalizedField(product, 'name', lang)}</h1>
+              <p className="text-xl font-medium text-gray-900">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
             </div>
-            <div className="lg:row-span-3 lg:mt-0">
-              <div className="mt-4 flex items-center justify-between">
-                <h2 className="sr-only">Product information</h2>
-                <p className="text-3xl tracking-tight text-red-800">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
 
-              </div>
-            </div>
             {/* Reviews */}
             <div className="mt-6">
               <h3 className="sr-only">{t('Product_Reviews')}</h3>
@@ -258,12 +260,15 @@ export default function Product() {
                 </Scrollink>
               </div>
             </div>
+          </div>
 
-            <form className="mt-10">
-              {/* Sizes */}
-              <div className="mt-10">
+          <div className="mt-8 lg:col-span-5">
+            <form>
+
+              {/* Size picker */}
+              <div className="mt-4">
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-medium text-gray-900">{t('Product_Size')}</h3>
+                  <h2 className="text-sm font-medium text-gray-900">{t('Product_Size')}</h2>
                   <a onClick={() => setQuickviewOpen(true)} className="text-sm font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer">
                     {t('Product_SizeGuide')}
                   </a>
@@ -271,11 +276,9 @@ export default function Product() {
 
                 {renderSizeGuide(isQuickviewOpen)}
 
-                <RadioGroup value={selectedSize}
-                  onChange={setSelectedSize}
-                  className="mt-4">
+                <RadioGroup value={selectedSize} onChange={setSelectedSize} className="mt-2">
                   <RadioGroup.Label className="sr-only">{t('Product_ChooseASize')}</RadioGroup.Label>
-                  <div className="grid grid-cols-4 gap-4 sm:grid-cols-8 lg:grid-cols-4">
+                  <div className="grid grid-cols-3 gap-3 sm:grid-cols-6">
                     {product.storages?.map((size) => (
                       <RadioGroup.Option
                         key={size.size}
@@ -284,11 +287,11 @@ export default function Product() {
                         className={({ active, checked }) =>
                           classNames(
                             size.inStock
-                              ? 'cursor-pointer bg-gray-100 text-gray-900 shadow-sm '
+                              ? 'cursor-pointer bg-gray-100 text-gray-900 shadow-sm'
                               : 'cursor-not-allowed bg-gray-50 text-gray-200',
-                            active ? 'bg-indigo-600 text-white ' : '',
+                            active ? 'bg-indigo-600 text-white' : '',
                             checked ? 'bg-indigo-600 text-white' : '',
-                            'group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-indigo-600 hover:text-white focus:outline-none sm:flex-1 sm:py-6'
+                            'group relative flex items-center justify-center rounded-md border py-3 px-4 text-sm font-medium uppercase hover:bg-indigo-600 hover:text-white focus:outline-none sm:flex-1 '
                           )
                         }
                       >
@@ -326,6 +329,7 @@ export default function Product() {
                   </div>
                 </RadioGroup>
               </div>
+
               <div className="mt-8 flex items-center justify-between">
                 <button
                   type="button"
@@ -353,62 +357,55 @@ export default function Product() {
               </div>
             </form>
 
+            {/* Product details */}
+
             <div className="mt-8">
-              <h3 className="text-1xl text-gray-900">{t('Product_Article')}: {product.article}</h3>
+              <h3 className="text-sm font-medium text-gray-900 inline">{t('Product_Article')}: </h3>
+              <span className='prose prose-sm text-sm text-gray-500'>{product.article}</span>
             </div>
-            <div className="mt-4">
-              <h3 className="text-1xl text-gray-900">{t('Product_Color')}: {getLocalizedField(product, 'color', lang)}</h3>
-            </div>
-            <div className="mt-4">
-              <h3 className="text-1xl text-gray-900">{t('Product_Material')}: {getLocalizedField(product, 'material', lang)}</h3>
-            </div>
-            <div className="mt-4">
-              <h3 className="text-1xl text-gray-900">{t('Product_Season')}: {getLocalizedField(product, 'season', lang)}</h3>
-            </div>
-          </div>
-        </div>
 
-        {/* Product info */}
-        <div className=" mx-auto max-w-2xl px-4 pb-16 pt-10 sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-1 lg:grid-rows-[auto,auto,1fr] lg:gap-x-8 lg:px-8 lg:pb-24 lg:pt-16">
-          {/* lg:border-r */}
+            <div className="mt-4">
+              <h3 className="text-sm font-medium text-gray-900 inline">{t('Product_Color')}: </h3>
+              <span className='prose prose-sm text-sm text-gray-500'>{getLocalizedField(product, 'color', lang)}</span>
+            </div>
 
-          <div className="py-10 lg:col-span-3 lg:col-start-1 lg:border-gray-200 lg:pb-16 lg:pr-8 lg:pt-6">
-            {/* Description and details */}
-            <div>
+            <div className="mt-4">
+              <h3 className="text-sm font-medium text-gray-900 inline">{t('Product_Material')}: </h3>
+              <span className='prose prose-sm text-sm text-gray-500'>{getLocalizedField(product, 'material', lang)}</span>
+            </div>
+
+            <div className="mt-4">
+              <h3 className="text-sm font-medium text-gray-900 inline">{t('Product_Season')}: </h3>
+              <span className='prose prose-sm text-sm text-gray-500'>{getLocalizedField(product, 'season', lang)}</span>
+            </div>
+
+            <div className="mt-8 border-t border-gray-200 pt-8">
               <h2 className="text-sm font-medium text-gray-900">{t('Product_Description')}</h2>
-
-
-              <div className="mt-4 space-y-6">
-                <p className="text-sm text-gray-600">{getLocalizedField(product, 'description', lang)}</p>
-              </div>
+              <div
+                className="prose prose-sm mt-4 text-gray-500"
+                dangerouslySetInnerHTML={{ __html: getLocalizedField(product, 'description', lang) }}
+              />
             </div>
 
-            <div className="mt-10">
-              <h3 className="text-sm font-medium text-gray-900">{t('Product_Highlights')}</h3>
+            <div className="mt-8 border-t border-gray-200 pt-8">
+              <h2 className="text-sm font-medium text-gray-900">{t('Product_Highlights')}</h2>
 
-              <div className="mt-4">
-                <ul role="list" className="list-disc space-y-2 pl-4 text-sm">
+              <div className="prose prose-sm mt-4 text-gray-500">
+                <ul role="list" className="list-disc space-y-2 pl-4 ">
                   {getLocalizedFieldArray(product, 'highlights', lang).map((highlight: string, index: number) => (
                     <li
                       key={index}
                       className="text-gray-400">
-                      <span className="text-sm text-gray-600">{highlight}</span>
+                      <span className="text-sm text-gray-500">{highlight}</span>
                     </li>
                   ))}
                 </ul>
               </div>
             </div>
-
-            <div className="mt-10">
-              <h2 className="text-sm font-medium text-gray-900">{t('Product_Details')}</h2>
-
-              <div className="mt-4 space-y-6">
-                <p className="text-sm text-gray-600">{getLocalizedField(product, 'details', lang)}</p>
-              </div>
-            </div>
           </div>
-          <div id="product-reviews">
+        </div>
 
+        <div id="product-reviews">
           <ProductReview
             userId={user?.Id}
             productId={product.id}
@@ -416,12 +413,12 @@ export default function Product() {
             ratings={ratings}
             loadReviews={() => loadReviews(page)}
             page={page}
-            setPage={setPage} 
+            setPage={setPage}
             countPage={countPage}
           />
         </div>
-        </div>
-      </div>
+
+      </main>
     </div>
   )
 }

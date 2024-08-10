@@ -2,7 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import Page404 from "./components/notFound/Page404";
 import Logo from "./components/logo/Logo";
 import Bag from "./components/navbars/navbarsPages/bag/Bag";
-import Product from "./components/user/product/Product";
+import Product from "./components/user/product/Product.tsx";
 import CatalogNavigation from "./components/user/catalog/CatalogNavigation";
 import NavbarsPage from "./components/navbars/NavbarsPage";
 import { useEffect, useState } from "react";
@@ -27,11 +27,12 @@ import GuestLayout from "./components/layout/GuestLayout";
 import HomeStore from "./components/homePage/HomeStore";
 import CatalogHome from "./components/user/catalog/CatalogHome";
 import Tables from "./components/Dashboard/pages/Tables";
+import AdminPanelPage from "./components/admin/adminPanel/AdminPanelPage.tsx";
 
 import useAuthTokenEffect from "./useAuthTokenEffect";
 import useGetFavoritesEffect from "./useGetFavoritesEffect";
-
 import './i18n/i18n.ts';
+
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
@@ -78,12 +79,6 @@ function App() {
           <Route path='account/bonuses' element={<UserPanelPage />} />
         </Route>
 
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route path="tables" element={<Tables />} />
-          <Route path="add-product" element={<AddProduct />} />
-          <Route path="edit-product/:Id" element={<EditProduct />} />
-          <Route path="add-storage/:Id" element={<AddStorage />} />
-        </Route>
 
         <Route path='*' element={<Page404 />} />
         <Route path="/delivery-and-payment" element={<DeliveryandPayment />} />
@@ -94,6 +89,13 @@ function App() {
         <Route path="/about" element={<About />} />
         <Route path="/store-locations" element={<StoreLocations />} />
 
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="tables" element={<Tables />} />
+          <Route path="admin-panel-page" element={<AdminPanelPage/>} />
+          <Route path="add-product" element={<AddProduct />} />
+          <Route path="edit-product/:Id" element={<EditProduct />} />
+          <Route path="add-storage/:Id" element={<AddStorage />} />
+        </Route>
       </Routes>
       <Footer />
     </>
