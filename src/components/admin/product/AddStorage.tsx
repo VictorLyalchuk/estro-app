@@ -14,7 +14,7 @@ export default function Product() {
     const [form] = Form.useForm();
 
     const handleCancel = () => {
-        navigate('/dashBoard/tables');
+        navigate('/admin/product/product-list');
     }
     useEffect(() => {
         axios.get<IProduct>(`${baseUrl}/api/Product/ProductByID/${Id}`)
@@ -32,7 +32,7 @@ export default function Product() {
 
             form.setFieldsValue({
                 id: resp.data.id,
-                name: resp.data?.name,
+                name: resp.data?.name_en,
                 storages: updatedStoragesList, 
             });
         });
@@ -65,7 +65,7 @@ export default function Product() {
                     "Content-Type": "application/json"
                 }
             });
-            navigate('/dashBoard/tables');
+            navigate('/admin/product/product-list');
         }
         catch (ex) {
             message.error('Error editing product!');
@@ -85,7 +85,7 @@ export default function Product() {
                                     </div>
 
                                     <div className="mt-8">
-                                        <h3 className="text-1xl text-gray-900">Name: {product.name}</h3>
+                                        <h3 className="text-1xl text-gray-900">Name: {product.name_en}</h3>
                                     </div>
                                     <div className="mt-4">
                                         <h3 className="text-1xl text-gray-900">Price: {product.price} ₴</h3>
@@ -94,13 +94,13 @@ export default function Product() {
                                         <h3 className="text-1xl text-gray-900">Article: {product.article}</h3>
                                     </div>
                                     <div className="mt-4">
-                                        <h3 className="text-1xl text-gray-900">Color: {product.color}</h3>
+                                        <h3 className="text-1xl text-gray-900">Color: {product.color_en}</h3>
                                     </div>
                                     <div className="mt-4">
-                                        <h3 className="text-1xl text-gray-900">Material: {product.material}</h3>
+                                        <h3 className="text-1xl text-gray-900">Material: {product.material_en}</h3>
                                     </div>
                                     <div className="mt-4">
-                                        <h3 className="text-1xl text-gray-900">Period: {product.purpose}</h3>
+                                        <h3 className="text-1xl text-gray-900">Period: {product.season_en}</h3>
                                     </div>
                                 </div>
                             </div>

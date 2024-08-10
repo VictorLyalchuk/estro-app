@@ -26,12 +26,14 @@ import UserLayout from "./components/layout/UserLayout";
 import GuestLayout from "./components/layout/GuestLayout";
 import HomeStore from "./components/homePage/HomeStore";
 import CatalogHome from "./components/user/catalog/CatalogHome";
-import Tables from "./components/Dashboard/pages/Tables";
 import AdminPanelPage from "./components/admin/adminPanel/AdminPanelPage.tsx";
 
 import useAuthTokenEffect from "./useAuthTokenEffect";
 import useGetFavoritesEffect from "./useGetFavoritesEffect";
 import './i18n/i18n.ts';
+import GeneralLayout from "./components/layout/GeneralLayout.tsx";
+import ProductList from "./components/admin/product/ProductList.tsx";
+import AdminHeader from "./components/admin/adminPanel/AdminHeader.tsx";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -48,30 +50,26 @@ function App() {
     </>
   ) : (
     <>
-      <Toaster
-        position="top-right"
-        reverseOrder={false}
-        containerClassName="overflow-auto"
-      />
-      <Logo />
-      <NavbarsPage />
+      <Toaster position="top-right" reverseOrder={false} containerClassName="overflow-auto" />
       <Routes>
-        <Route element={<GuestLayout />}>
+        {/* Гостьові маршрути */}
+        <Route element={<><Logo /><NavbarsPage /><GuestLayout /><Footer/></>}>
           <Route path='/auth' element={<AuthPanelPage />} />
+          <Route path="/auth/:email/:token" element={<AuthPanelPage />} />
         </Route>
-        <Route path="/auth/:email/:token" element={<AuthPanelPage />} />
 
-        <Route path="/" element={<HomeStore />}></Route>
-        <Route path="/:email/:token" element={<HomeStore />}></Route>
-        <Route path="catalog/:subName/:urlName" element={<CatalogNavigation />} />
-        <Route path="catalog/:subName" element={<CatalogNavigation />} />
-        <Route path="catalog-home" element={<CatalogHome />} />
-        <Route path="catalog-home/:gender" element={<CatalogHome />} />
-        <Route path="catalog-home/search/:text" element={<CatalogHome />} />
-        <Route path="product/:Id" element={<Product />} />
-        <Route path='/bag' element={<Bag />} />
+        {/* Адміністраторські маршрути без Logo, NavbarsPage і Footer */}
+        <Route path="/admin" element={<><AdminHeader/><AdminLayout /></>}>
+          <Route path="admin-panel-page" element={<AdminPanelPage />} />
+          
+          <Route path="product/product-list" element={<ProductList/>}/>
+          <Route path="product/add-product" element={<AddProduct />} />
+          <Route path="product/edit-product/:Id" element={<EditProduct />} />
+          <Route path="product/add-storage/:Id" element={<AddStorage />} />
+        </Route>
 
-        <Route element={<UserLayout />}>
+        {/* Маршрути для користувачів з Logo, NavbarsPage і Footer */}
+        <Route element={<><Logo /><NavbarsPage /><UserLayout /><Footer/></>}>
           <Route path="account/orders" element={<UserPanelPage />} />
           <Route path='account/profile' element={<UserPanelPage />} />
           <Route path='account/settings' element={<UserPanelPage />} />
@@ -79,25 +77,27 @@ function App() {
           <Route path='account/bonuses' element={<UserPanelPage />} />
         </Route>
 
-
-        <Route path='*' element={<Page404 />} />
-        <Route path="/delivery-and-payment" element={<DeliveryandPayment />} />
-        <Route path="/return-exchange" element={<ReturnExchange />} />
-        <Route path="/warranty-product-care" element={<WarrantyProductCare />} />
-        <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-        <Route path="/our-brand" element={<OurBrand />}></Route>
-        <Route path="/about" element={<About />} />
-        <Route path="/store-locations" element={<StoreLocations />} />
-
-        <Route path="/admin" element={<AdminLayout />}>
-          <Route path="tables" element={<Tables />} />
-          <Route path="admin-panel-page" element={<AdminPanelPage/>} />
-          <Route path="add-product" element={<AddProduct />} />
-          <Route path="edit-product/:Id" element={<EditProduct />} />
-          <Route path="add-storage/:Id" element={<AddStorage />} />
+        {/* Загальні маршрути з Logo, NavbarsPage і Footer */}
+        <Route element={<><GeneralLayout /><Footer/></>}>
+          <Route path="/" element={<HomeStore />} />
+          <Route path="/:email/:token" element={<HomeStore />} />
+          <Route path="catalog/:subName/:urlName" element={<CatalogNavigation />} />
+          <Route path="catalog/:subName" element={<CatalogNavigation />} />
+          <Route path="catalog-home" element={<CatalogHome />} />
+          <Route path="catalog-home/:gender" element={<CatalogHome />} />
+          <Route path="catalog-home/search/:text" element={<CatalogHome />} />
+          <Route path="product/:Id" element={<Product />} />
+          <Route path='/bag' element={<Bag />} />
+          <Route path="/delivery-and-payment" element={<DeliveryandPayment />} />
+          <Route path="/return-exchange" element={<ReturnExchange />} />
+          <Route path="/warranty-product-care" element={<WarrantyProductCare />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/our-brand" element={<OurBrand />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/store-locations" element={<StoreLocations />} />
+          <Route path="*" element={<Page404 />} />
         </Route>
       </Routes>
-      <Footer />
     </>
   );
 }

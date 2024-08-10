@@ -416,28 +416,32 @@ const NavbarsPage = () => {
                                                         </Link>
                                                     </div>
                                                 )}
-
+                                                
                                                 {/* Bonuses */}
+                                                {isAuth ? (
                                                 <div className="ml-4 flow-root lg:ml-6">
                                                     <Link to={"/account/bonuses"} className={`group -m-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-10 flex items-center hover:text-gray-500 ${user ? "mr-12" : "mr-2"}`}>
                                                         <CurrencyDollarIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
                                                         {user ? userProfile?.bonusBalance?.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1) : 0}</Link>
                                                 </div>
-
+                                                ) : (null)}
+                                                
                                                 {/* Search */}
                                                 <div className="ml-4 flow-root lg:ml-6">
                                                     <a onClick={changeVisibleSearch} className="p-2 group text-gray-400 hover:text-gray-500 cursor-pointer">
                                                         <div className="sr-only">Search</div>
-                                                        <MagnifyingGlassIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
+                                                        <MagnifyingGlassIcon className={`h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 ${isAuth ? "mr-2" : ""}`}  aria-hidden="true" />
                                                     </a>
                                                 </div>
 
                                                 {/* Favorites */}
+                                                {isAuth ? (
                                                 <div className="ml-4 flow-root lg:ml-6">
                                                     <Link to={"/account/favorites"} className="group -m-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-10 flex items-center hover:text-gray-500">
                                                         <HeartIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
                                                         {favoriteCount}</Link>
                                                 </div>
+                                                ) : (null)}
 
                                                 {/* Cart */}
                                                 <div className="ml-4 flow-root lg:ml-6">

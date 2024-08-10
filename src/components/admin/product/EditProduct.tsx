@@ -117,7 +117,7 @@ const EditProduct = () => {
     };
 
     const handleCancel = () => {
-        navigate('/dashBoard/tables');
+        navigate('/admin/product/product-list');
     }
 
     const handleRemove = async (ImagePath: string, e: React.MouseEvent<HTMLButtonElement>) => {
@@ -173,7 +173,7 @@ const EditProduct = () => {
                     "Content-Type": "application/json"
                 }
             });
-            navigate('/dashBoard/tables');
+            navigate('/admin/product/product-list');
         }
         catch (ex) {
             message.error('Error editing product!');
@@ -403,7 +403,7 @@ const EditProduct = () => {
                                         >
                                             {mainCategory.map((mainCategory) => (
                                                 <Select.Option key={mainCategory.id} value={mainCategory.id}>
-                                                    {mainCategory.name}
+                                                    {mainCategory.name_en}
                                                 </Select.Option>
                                             ))}
                                         </Select>
@@ -426,7 +426,7 @@ const EditProduct = () => {
                                                 .filter((subCat) => !selectedMainCategory || selectedMainCategory?.id === subCat.mainCategoryId)
                                                 .map((subCat) => (
                                                     <Select.Option key={subCat.id} value={subCat.id}>
-                                                        {subCat.name}
+                                                        {subCat.name_en}
                                                     </Select.Option>
                                                 ))}
                                         </Select>
@@ -448,7 +448,7 @@ const EditProduct = () => {
                                                 .filter((cat) => !selectedSubCategory || selectedSubCategory?.id === cat.subCategoryId)
                                                 .map((category) => (
                                                     <Select.Option key={category.id} value={category.id}>
-                                                        {category.name}
+                                                        {category.name_en}
                                                     </Select.Option>
                                                 ))}
                                         </Select>

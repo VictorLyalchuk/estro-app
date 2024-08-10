@@ -161,6 +161,7 @@ export const en = {
     "Sort_HighToLow": "Price: High to Low",
 
     // DROPDOWN USER
+    "DropdownUser_AdminPanel" : "Admin Panel",
     "DropdownUser_MyOrders": "My Orders",
     "DropdownUser_Profile": "Profile",
     "DropdownUser_AccountSettings": "Account Settings",

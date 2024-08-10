@@ -126,7 +126,7 @@ const AddProduct = () => {
     };
 
     const handleCancel = () => {
-        navigate('/dashBoard/tables');
+        navigate('/admin/product/product-list');
     }
 
     const onSubmit = async (values: any) => {
@@ -154,7 +154,7 @@ const AddProduct = () => {
                     "Content-Type": "application/json"
                 }
             });
-            navigate("/dashBoard/tables");
+            navigate("/admin/product/product-list");
         }
         catch (ex) {
             message.error('Error adding product!');
@@ -346,7 +346,7 @@ const AddProduct = () => {
                                         >
                                             {mainCategory.map((mainCategory) => (
                                                 <Select.Option key={mainCategory.id} value={mainCategory.id}>
-                                                    {mainCategory.name}
+                                                    {mainCategory.name_en}
                                                 </Select.Option>
                                             ))}
                                         </Select>
@@ -369,7 +369,7 @@ const AddProduct = () => {
                                                 .filter((subCat) => !selectedMainCategory || selectedMainCategory?.id === subCat.mainCategoryId)
                                                 .map((subCat) => (
                                                     <Select.Option key={subCat.id} value={subCat.id}>
-                                                        {subCat.name}
+                                                        {subCat.name_en}
                                                     </Select.Option>
                                                 ))}
                                         </Select>
@@ -392,7 +392,7 @@ const AddProduct = () => {
                                                 .filter((cat) => !selectedSubCategory || selectedSubCategory?.id === cat.subCategoryId)
                                                 .map((category) => (
                                                     <Select.Option key={category.id} value={category.id}>
-                                                        {category.name}
+                                                        {category.name_en}
                                                     </Select.Option>
                                                 ))}
                                         </Select>

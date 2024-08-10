@@ -4,9 +4,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import { AuthReducerActionType, IAuthReducerState } from '../../../../store/accounts/AuthReducer';
 import { APP_ENV } from "../../../../env/config";
 import { BagReducerActionType } from '../../../../store/bag/BagReducer';
-import { ArrowLeftOnRectangleIcon, Cog6ToothIcon, CurrencyDollarIcon, DocumentChartBarIcon, HeartIcon, UserIcon } from '@heroicons/react/24/outline';
+import { ArrowLeftOnRectangleIcon, ChevronDoubleRightIcon, Cog6ToothIcon, CurrencyDollarIcon, DocumentChartBarIcon, HeartIcon, UserIcon } from '@heroicons/react/24/outline';
 import { FavoritesReducerActionType } from '../../../../store/favourites/FavoritesReducer';
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import { CardReducerActionType } from '../../../../store/bag/CardReducer';
 
 const DropdownUser = () => {
@@ -16,13 +16,13 @@ const DropdownUser = () => {
   const dispatch = useDispatch();
   const trigger = useRef<any>(null);
   const dropdown = useRef<any>(null);
-  const {t} = useTranslation();
+  const { t } = useTranslation();
 
   const handleDropdownClick = (event: { preventDefault: () => void; }) => {
-    event.preventDefault(); 
+    event.preventDefault();
     setDropdownOpen(!dropdownOpen);
   };
-  
+
   const handleLogout = () => {
     localStorage.removeItem("token");
     dispatch({ type: AuthReducerActionType.LOGOUT_USER, });
@@ -85,6 +85,14 @@ const DropdownUser = () => {
         className={`absolute left mt-4 flex w-62.5 flex-col rounded-sm border border-stroke bg-gray-100 shadow-default dark:border-strokedark dark:bg-boxdark ${dropdownOpen === true ? 'block' : 'hidden'
           }`}
       >
+        {user?.Role === "Administrator" &&
+          <Link className="border-b border-stroke flex items-center gap-3.5 py-4 px-6 text-sm font-medium duration-300 ease-in-out text-gray-900 hover:text-indigo-500"
+            to="/admin/admin-panel-page"
+            onClick={() => setDropdownOpen(false)}>
+            <ChevronDoubleRightIcon className="h-5 w-5" aria-hidden="true" />
+            {t('DropdownUser_AdminPanel')}
+          </Link>
+        }
         <ul className="flex flex-col gap-5 border-b border-stroke px-6 py-4 dark:border-strokedark">
           <li>
             <Link

@@ -120,13 +120,13 @@ const TableTwo = () => {
                                         <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`} alt="Product" />
                                     </div>
                                 </div>
-                                    <p className="text-sm dark:text-white">{product.name}</p>
+                                    <p className="text-sm dark:text-white">{product.name_en}</p>
                             </div>
                             <div className="col-span-1 hidden items-center sm:flex">
                                 <p className="text-sm ">{product.article}</p>
                             </div>
                             <div className="col-span-2 hidden items-center sm:flex">
-                                <p className="text-sm dark:text-white">{product.categoryName}</p>
+                                <p className="text-sm dark:text-white">{product.categoryName_en}</p>
                             </div>
                             <div className="col-span-1 flex items-center">
                                 <p className="text-sm dark:text-white">{product.price} ₴</p>
@@ -158,7 +158,6 @@ const TableTwo = () => {
                                 <Link to={`/admin/edit-product/${product.id}`} className="text-sm text-black dark:text-white mb-2 hover:text-white">Edit Product
                                 </Link>
                                 <button className="text-sm text-black dark:text-white mb-2 hover:text-white"
-                                    // onClick={() => handleDeleteProduct(product.id)}>
                                     onClick={() => showDeleteConfirm(product)}>
                                     Delete Product
                                 </button>

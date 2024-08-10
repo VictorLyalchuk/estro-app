@@ -160,6 +160,7 @@ export const es = {
     "Sort_HighToLow": "Precio: de mayor a menor",
 
     // DROPDOWN USER
+    "DropdownUser_AdminPanel" : "Panel de administración",
     "DropdownUser_MyOrders": "Mis pedidos",
     "DropdownUser_Profile": "Perfil",
     "DropdownUser_AccountSettings": "Configuración de la cuenta",

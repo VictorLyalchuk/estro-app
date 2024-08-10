@@ -160,6 +160,7 @@ export const uk = {
     "Sort_HighToLow": "Ціна: від найвищої",
 
     // DROPDOWN USER
+    "DropdownUser_AdminPanel" : "Адмін Панель",
     "DropdownUser_MyOrders": "Мої замовлення",
     "DropdownUser_Profile": "Профіль",
     "DropdownUser_AccountSettings": "Налаштування",
