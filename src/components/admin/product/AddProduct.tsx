@@ -577,7 +577,6 @@ const AddProduct = () => {
                                     </button>
                                 </div>
                             </form>
-                            {/* </Form> */}
                         </div>
                     </div>
                 </div>
