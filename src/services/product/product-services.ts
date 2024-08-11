@@ -2,6 +2,7 @@ import axios from "axios";
 import { APP_ENV } from "../../env/config";
 import qs from "qs";
 import { IProduct } from "../../interfaces/Product/IProduct";
+import { IProductCreate } from "../../interfaces/Product/IProductCreate";
 
 const baseUrl = APP_ENV.BASE_URL;
 
@@ -77,6 +78,15 @@ export async function getProductQuantity() {
 export async function deleteProductByID(id: number) {
     try {
         await instance.delete(`DeleteProductByID/${id}`)
+    } catch (error) {
+        console.error('Failed to fetch product data:', error);
+        throw error;
+    }
+}
+
+export async function createProduct(model: IProductCreate) {
+    try {
+        await instance.post(`CreateProduct`, model,)
     } catch (error) {
         console.error('Failed to fetch product data:', error);
         throw error;

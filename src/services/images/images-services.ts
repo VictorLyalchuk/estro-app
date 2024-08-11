@@ -1,6 +1,7 @@
 import axios from "axios";
 import { APP_ENV } from "../../env/config";
 import { IIUserImageEdit } from "../../interfaces/Auth/IIUserImageEdit";
+import { IImageItem } from "../../interfaces/Product/IProduct";
 
 const baseUrl = APP_ENV.BASE_URL;
 
@@ -78,5 +79,28 @@ export async function GetAllImage() {
         return resp.data;
     } catch (error) {
         console.error('Error gett all images:', error);
+    }
+}
+
+export async function createImage(file: File) {
+    try {
+        const response = await instance.post(`CreateImage`, { ImageFile: file }, {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Failed to create image user:', error);
+        throw error;
+    }
+}
+
+export async function deleteImage(model: IImageItem) {
+    try {
+        await instance.post(`DeleteImage`, model);
+    } catch (error) {
+        console.error('Failed to delete image user:', error);
+        throw error;
     }
 }

@@ -61,7 +61,37 @@ export async function getCategoryList(subName: string) {
         });
         return resp.data;
     } catch (error) {
-        console.error('Failed to fetch product data:', error);
+        console.error('Failed to fetch category data:', error);
+        throw error;
+    }
+}
+
+export async function getCategory() {
+    try {
+        const resp = await instance.get<ICategory[]>(`CategoryGetAsync`);
+        return resp.data;
+    } catch (error) {
+        console.error('Failed to fetch category data:', error);
+        throw error;
+    }
+}
+
+export async function getSubCategory() {
+    try {
+        const resp = await instance.get<ISubCategory[]>(`SubCategoryGetAsync`);
+        return resp.data;
+    } catch (error) {
+        console.error('Failed to fetch category data:', error);
+        throw error;
+    }
+}
+
+export async function getMainCategory() {
+    try {
+        const resp = await instance.get<IMainCategory[]>(`MainCategoryGetAsync`);
+        return resp.data;
+    } catch (error) {
+        console.error('Failed to fetch main category data:', error);
         throw error;
     }
 }

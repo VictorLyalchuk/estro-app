@@ -1,12 +1,10 @@
 import { ThemeProvider } from '@material-ui/core/styles';
-import axios from "axios";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { message } from 'antd';
 import { ICategory, IMainCategory, ISubCategory } from "../../../interfaces/Catalog/IMainCategory";
 import { IImageItem } from "../../../interfaces/Product/IProduct";
 import { IProductCreate } from "../../../interfaces/Product/IProductCreate";
-import { APP_ENV } from "../../../env/config";
 import { theme } from '../../../theme/theme';
 import TextFieldComponent from '../../../ui/input-with-label/TextFieldComponent';
 import PriceTextFieldNoLableComponent from '../../../ui/input-with-label/PriceTextFieldNoLableComponent';
@@ -22,6 +20,9 @@ import SubCategorySelect from '../../../ui/input-with-label/SubCategorySelect';
 import MainCategorySelect from '../../../ui/input-with-label/MainCategorySelect';
 import HighlightsInput from '../../../ui/input-with-label/HighlightsInput';
 import { validateForm } from '../../../validations/add-product/add-product-validations';
+import { getCategory, getMainCategory, getSubCategory } from '../../../services/category/category-services';
+import { beforeUpload, createImage, deleteImage } from '../../../services/images/images-services';
+import { createProduct } from '../../../services/product/product-services';
 
 interface FormData {
     name: string;
@@ -41,7 +42,6 @@ interface FormData {
 const AddProduct = () => {
     const { t, i18n } = useTranslation();
     const lang = i18n.language;
-    const baseUrl = APP_ENV.BASE_URL;
     const navigate = useNavigate();
     const [season, setSeason] = useState<IProductFilters[]>([]);
     const [colors, setColors] = useState<IProductFilters[]>([]);
@@ -126,21 +126,15 @@ const AddProduct = () => {
             .then(data => setSizes(data))
             .catch(error => console.error('Error fetching sizes data:', error));
 
-
-
-        axios.get<ICategory[]>(`${baseUrl}/api/CategoryControllers/CategoryGetAsync`)
-            .then((resp) => {
-                setCategoryList(resp.data);
-            });
-
-        axios.get<ISubCategory[]>(`${baseUrl}/api/CategoryControllers/SubCategoryGetAsync`)
-            .then((respos) => {
-                setSubCategory(respos.data);
-            });
-        axios.get<IMainCategory[]>(`${baseUrl}/api/CategoryControllers/MainCategoryGetAsync`)
-            .then((respos) => {
-                setMainCategory(respos.data);
-            });
+        getCategory()
+            .then(data => setCategoryList(data))
+            .catch(error => console.error('Error fetching category data:', error));
+        getSubCategory()
+            .then(data => setSubCategory(data))
+            .catch(error => console.error('Error fetching sub category data:', error));
+        getMainCategory()
+            .then(data => setMainCategory(data))
+            .catch(error => console.error('Error fetching sub category data:', error));
     }, []);
 
     const handleMainCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -164,19 +158,6 @@ const AddProduct = () => {
         setSelectedCategory(selectedCat || null);
     };
 
-    const beforeUpload = (file: File) => {
-        const isImage = /^image\/\w+/.test(file.type);
-        if (!isImage) {
-            message.error('Оберіть файл зображення!');
-        }
-        const isLt2M = file.size / 1200 / 1200 < 10;
-        if (!isLt2M) {
-            message.error('Розмір файлу не повинен перевищувать 10MB!');
-        }
-        // console.log("is select", isImage && isLt2M);
-        return isImage && isLt2M;
-    };
-
     const handleFileChange: ChangeEventHandler<HTMLInputElement> = async (e) => {
         const files = e.target.files;
 
@@ -191,12 +172,8 @@ const AddProduct = () => {
         formData.append('ImageFile', file);
 
         try {
-            const response = await axios.post(`${baseUrl}/api/Image/CreateImage`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            });
-            setImages((prevPaths) => [...prevPaths, response.data]);
+            const response = await createImage(file);
+            setImages((prevPaths) => [...prevPaths, response]);
         } catch (error) {
             console.error('Error uploading file:', error);
         }
@@ -217,11 +194,7 @@ const AddProduct = () => {
                 imagePath: ImagePath
             }
             try {
-                await axios.post(`${baseUrl}/api/Image/DeleteImage`, model, {
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
+                await deleteImage(model);
             } catch (error) {
                 console.error('Error uploading file:', error);
             }
@@ -264,11 +237,7 @@ const AddProduct = () => {
             };
 
             try {
-                await axios.post(`${baseUrl}/api/Product/CreateProduct`, model, {
-                    headers: {
-                        "Content-Type": "application/json"
-                    }
-                });
+                await createProduct(model);
                 navigate("/admin/product/product-list");
             }
             catch (ex) {
@@ -510,7 +479,7 @@ const AddProduct = () => {
                                         {Images && Images.length > 0 ? (
                                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                                                 {Images.map((image, index) => (
-                                                    <div className="relative bg-white dark:bg-boxdark rounded-lg overflow-hidden shadow-md">
+                                                    <div key={index} className="relative bg-white dark:bg-boxdark rounded-lg overflow-hidden shadow-md">
                                                         <img
                                                             key={index}
                                                             src={`http://localhost:5169/uploads/1200_${image.imagePath}`}
