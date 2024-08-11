@@ -10,11 +10,6 @@ export interface IProduct {
     description_es: string; 
     description_fr: string; 
 
-    details_en: string; 
-    details_uk: string; 
-    details_es: string; 
-    details_fr: string; 
-
     highlights_en: string []; 
     highlights_uk: string []; 
     highlights_es: string []; 

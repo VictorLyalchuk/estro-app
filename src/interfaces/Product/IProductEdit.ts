@@ -7,7 +7,7 @@ export interface IProductEdit {
     description: string; 
     price: number; 
     material: string; 
-    purpose: string; 
+    season: string; 
     color: string; 
     article: string; 
     ImagesFile : IImageItem [] | null;  

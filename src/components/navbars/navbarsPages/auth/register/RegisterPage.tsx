@@ -16,7 +16,7 @@ import { State } from '../../../../../interfaces/Custom/Phone/State';
 import { validatePhoneNumber } from '../../../../../validations/custom/register-phone-validations';
 import { register } from '../../../../../services/accounts/account-services';
 import { theme } from '../../../../../theme/theme';
-import { useStyles } from '../../../../../theme/Styles';
+import { useStyles } from '../../../../../theme/styles';
 import TextFieldComponent from '../../../../../ui/input-with-label/TextFieldComponent';
 import FileInputComponent from '../../../../../ui/input-with-label/FileInputComponent';
 import PhoneNumberComponent from '../../../../../ui/input-with-label/PhoneNumberComponent';

@@ -445,4 +445,19 @@ export const fr = {
     "404_Sorry": "Désolé, nous n'avons pas pu trouver la page que vous recherchez.",
     "404_Back": "Retour à l'accueil",
 
+        // Product List
+        "Products_Products" : "Produits",
+        "Products_CreateProduct" : "Créer un produit",
+        "Products_Id" : "Id",
+        "Products_Product_Name" : "Nom du produit",
+        "Products_Article" : "Article",
+        "Products_Category" : "Catégorie",
+        "Products_Price" : "Prix",
+        "Products_Size" : "Taille",
+        "Products_Count" : "Compter",
+        "Products_Actions" : "Actes",
+        "Products_Add_Storage" : "Ajouter du stockage",
+        "Products_Edit_Product" : "Modifier le produit",
+        "Products_Delete_Product" : "Supprimer le produit",
+        "Products_Model" : "Êtes-vous sûr de vouloir supprimer ce produit ?",
 }

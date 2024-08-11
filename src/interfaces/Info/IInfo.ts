@@ -12,3 +12,13 @@ export interface IOptions {
     label: string; 
     value: string;
 }
+
+export interface IProductFilters {
+    id: string;
+    name_en: string;
+    name_es: string;
+    name_fr: string;
+    name_uk: string; 
+    value: string;
+    infoId: string;
+}

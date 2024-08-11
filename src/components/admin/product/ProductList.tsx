@@ -1,32 +1,53 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import { IProduct } from '../../../interfaces/Product/IProduct';
-import axios from 'axios';
 import { ProductReducerActionType } from '../../../store/product/productReducer';
 import { useDispatch, useSelector } from 'react-redux';
 import { Modal } from 'antd';
 import { APP_ENV } from "../../../env/config";
-
+import { useTranslation } from "react-i18next";
+import { Link as Scrollink } from 'react-scroll'
+import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/react/20/solid';
+import { deleteProductByID, getProductByPage, getProductQuantity } from "../../../services/product/product-services";
+import { getLocalizedField } from "../../../utils/localized/localized";
 
 export default function ProductList() {
+    const { t, i18n } = useTranslation();
+    const lang = i18n.language;
     const baseUrl = APP_ENV.BASE_URL;
     const dispatch = useDispatch();
     const productList = useSelector((state: { products: { products: IProduct[] } }) => state.products.products) || [];
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [SelectedProduct, setSelectedProduct] = useState<IProduct | null>(null);
+    const [page, setPage] = useState(1);
+    const [countPage, setCountPage] = useState(0);
+    const itemsPerPage = 10;
+    const indexOfLastItem = page * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const totalPages = Math.ceil(countPage / itemsPerPage);
+    const visiblePages = 5;
+    let startPage = Math.max(1, page - Math.floor(visiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + visiblePages - 1);
+
+    if (endPage - startPage + 1 < visiblePages) {
+        startPage = Math.max(1, endPage - visiblePages + 1);
+    }
+
+    const onPageChange = (newPage: number) => {
+        setPage(newPage);
+    };
 
     useEffect(() => {
-        axios.get<IProduct[]>(`${baseUrl}/api/Product/ProductByPage/${1}`)
-            .then(resp => {
-                // setProduct(resp.data);
-                dispatch({
-                    type: ProductReducerActionType.SET,
-                    payload: {
-                        products: resp.data
-                    }
-                });
-            });
-    }, [dispatch]);
+        getProductByPage(page)
+            .then(data => dispatch({
+                type: ProductReducerActionType.SET,
+                payload: { products: data }
+            }))
+            .catch(error => console.error('Error fetching product data:', error));
+        getProductQuantity()
+            .then(data => setCountPage(data))
+            .catch(error => console.error('Error fetching product quantity data:', error));
+    }, [dispatch, page]);
 
 
     const showDeleteConfirm = (product: IProduct) => {
@@ -35,19 +56,21 @@ export default function ProductList() {
     };
 
     const handleDeleteProduct = () => {
-        axios.delete(`${baseUrl}/api/Product/DeleteProductByID/${SelectedProduct?.id}`)
-            .then(() => {
-                dispatch({
-                    type: ProductReducerActionType.DELETE,
-                    payload: {
-                        productId: SelectedProduct?.id
-                    }
+        if (SelectedProduct) {
+            deleteProductByID(SelectedProduct?.id)
+                .then(() => {
+                    dispatch({
+                        type: ProductReducerActionType.DELETE,
+                        payload: {
+                            productId: SelectedProduct?.id
+                        }
+                    });
+                })
+                .catch(error => {
+                    console.error('Error deleting product:', error);
                 });
-            })
-            .catch(error => {
-                console.error('Error deleting product:', error);
-            });
-        setModalVisible(false);
+            setModalVisible(false);
+        }
     };
 
     const handleCancel = () => {
@@ -55,16 +78,16 @@ export default function ProductList() {
     };
 
     return (
-        <div className="bg-gray-100 py-10 px-4 sm:px-6 lg:px-8">
+        <div className="bg-gray-100 py-10 px-4 sm:px-6 lg:px-8 product-start">
             <div className="sm:flex sm:items-center">
                 <div className="sm:flex-auto">
-                    <h2 className="px-4 text-base font-semibold leading-7 text-gray-900 sm:px-6 lg:px-8">Products</h2>
+                    <h2 className="px-4 text-base font-semibold leading-7 text-gray-900 sm:px-6 lg:px-8">{t('Products_Products')}</h2>
                 </div>
-                <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none">
+                <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none px-8">
                     <Link to={"/admin/product/add-product"}
-                        className="block rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                        className="block rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
-                        Create Product
+                        {t('Products_CreateProduct')}
                     </Link>
                 </div>
             </div>
@@ -84,55 +107,55 @@ export default function ProductList() {
                     <thead className="border-b border-white/10 text-sm leading-6 text-gray-900">
                         <tr>
                             <th scope="col" className="py-2 pl-8 pr-8 font-semibold sm:table-cell">
-                                Id
+                                {t('Products_Id')}
                             </th>
                             <th scope="col" className="py-2 pl-8 pr-8 font-semibold sm:table-cell">
-                                Product Name
+                                {t('Products_Product_Name')}
                             </th>
                             <th scope="col" className="py-2 pl-8 pr-4 font-semibold sm:pr-8 sm:text-left lg:pr-20">
-                                Article
+                                {t('Products_Article')}
                             </th>
                             <th scope="col" className="py-2 pl-8 pr-8 font-semibold sm:table-cell lg:pr-20">
-                                Category
+                                {t('Products_Category')}
                             </th>
                             <th scope="col" className="py-2 pl-8 pr-4 font-semibold sm:table-cell sm:pr-6 lg:pr-8">
-                                Price
+                                {t('Products_Price')}
                             </th>
                             <th scope="col" className="py-2 pl-8 pr-4 font-semibold sm:table-cell sm:pr-6 lg:pr-8">
-                                Size
+                                {t('Products_Size')}
                             </th>
                             <th scope="col" className="py-2 pl-8 pr-4 font-semibold sm:table-cell sm:pr-6 lg:pr-8">
-                                Count
+                                {t('Products_Count')}
                             </th>
                             <th scope="col" className="py-2 pl-8 pr-4 font-semibold sm:table-cell sm:pr-6 lg:pr-8">
-                                Actions
+                                {t('Products_Actions')}
                             </th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
                         {productList.map((product) => (
-                            <tr key={product.id} className="text-gray-700 hover:bg-gray-200 divide-x divide-gray-200 hover:divide-gray-100">
-                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-gray-200 hover:border-gray-100">
+                            <tr key={product.id} className="text-gray-700 hover:bg-gray-200 ">
+                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
                                     <div className="font-mono text-sm leading-6">{product.id}</div>
                                 </td>
-                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-gray-200">
+                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 ">
                                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                                         <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`} alt="" className="w-30 rounded-lg" />
                                         <Link to={`/product/${product.id}`} className="hover:text-indigo-500">
-                                            <div className="font-mono text-sm leading-6">{product.name_en}</div>
+                                            <div className="font-mono text-sm leading-6">{getLocalizedField(product, 'name', lang)}</div>
                                         </Link>
                                     </div>
                                 </td>
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20 border-t border-gray-200">
+                                <td className="py-4 pl-8 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
                                     {product.article}
                                 </td>
-                                <td className="py-4 pl-8 pr-8 text-sm leading-6 sm:table-cell lg:pr-20 border-t border-gray-200">
-                                    {product.categoryName_en}
+                                <td className="py-4 pl-8 pr-8 text-sm leading-6 sm:table-cell lg:pr-20 border-t border-b border-gray-200">
+                                    {getLocalizedField(product, 'categoryName', lang)}
                                 </td>
-                                <td className="py-4 pl-8 pr-8 text-sm leading-6 md:table-cell lg:pr-20 border-t border-gray-200">
-                                    {product.price}
+                                <td className="py-4 pl-8 pr-8 text-sm leading-6 md:table-cell lg:pr-20 border-t border-b border-gray-200">
+                                    {product.price} €
                                 </td>
-                                <td className="py-4 pl-8 pr-8 text-sm leading-6 md:table-cell lg:pr-20 border-t border-gray-200">
+                                <td className="py-4 pl-8 pr-8 text-sm leading-6 md:table-cell lg:pr-20 border-t border-b border-gray-200">
                                     <div className="col-span-1">
                                         {product.storages?.map((storage, index) => (
                                             <p key={index} className="text-sm mb-2">
@@ -141,7 +164,7 @@ export default function ProductList() {
                                         ))}
                                     </div>
                                 </td>
-                                <td className="py-4 pl-8 pr-8 text-sm leading-6 md:table-cell lg:pr-20 border-t border-gray-200">
+                                <td className="py-4 pl-8 pr-8 text-sm leading-6 md:table-cell lg:pr-20 border-t border-b border-gray-200">
                                     <div className="col-span-1">
                                         {product.storages?.map((storage, index) => (
                                             <p key={index} className="text-sm mb-2">
@@ -150,33 +173,104 @@ export default function ProductList() {
                                         ))}
                                     </div>
                                 </td>
-                                <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-gray-200">
-                                    <Link to={`/admin/product/add-storage/${product.id}`} className="mb-2 block mx-auto w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                        Add Storage
+                                <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-b border-gray-200">
+                                    <Link to={`/admin/product/add-storage/${product.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                        {t('Products_Add_Storage')}
                                     </Link>
-                                    <Link to={`/admin/product/edit-product/${product.id}`} className="mb-2 block mx-auto w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
-                                        Edit Product
+                                    <Link to={`/admin/product/edit-product/${product.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                        {t('Products_Edit_Product')}
                                     </Link>
-                                    <button className="block mx-auto w-full rounded-md bg-indigo-600 px-3 py-2 text-center text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                    <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                         onClick={() => showDeleteConfirm(product)}>
-                                        Delete Product
+                                        {t('Products_Delete_Product')}
                                     </button>
                                 </td>
                             </tr>
                         ))}
                     </tbody>
                 </table>
+
+                {/* Pagination */}
+                <nav className="flex items-center justify-between bg-white rounded-md shadow-md bg-white px-4 py-3 sm:px-6">
+                    <div className="container mx-auto p-4 flex relative max-w-7xl lg:flex-row justify-between ">
+                        <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between ">
+                            <div>
+                                <p className="text-sm text-gray-700">
+                                    {t('Order_Showing')} <span className="font-medium">{indexOfFirstItem + 1}</span> {t('Order_To')}{' '}
+                                    <span className="font-medium">{Math.min(indexOfLastItem, countPage)}</span> {t('Order_Of')}{' '}
+                                    <span className="font-medium">{countPage}</span> {t('Order_Results')}
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <nav className="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0">
+                                <div className="flex flex-1 justify-between sm:justify-end">
+                                    <Scrollink to="product-start" smooth={true}>
+                                        <button
+                                            onClick={() => onPageChange(page - 1)}
+                                            disabled={page === 1}
+                                            className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
+                                                ${page === 1
+                                                    ? 'text-gray-300'
+                                                    : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                                                }`}
+                                        >
+                                            <ArrowLongLeftIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                            {t('Order_Previous')}
+                                        </button>
+                                    </Scrollink>
+
+                                    {[...Array(endPage - startPage + 1)].map((_, index) => {
+                                        const pageNumber = startPage + index;
+                                        return (
+                                            <Scrollink to="product-start" smooth={true} key={pageNumber}>
+                                                <button
+                                                    key={pageNumber}
+                                                    onClick={() => onPageChange(pageNumber)}
+                                                    className={`inline-flex items-center border-t px-4 pt-4 text-sm font-medium text-gray-500 ${page === pageNumber
+                                                        ? 'border-t-2 border-indigo-500 text-indigo-600 font-semibold'
+                                                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                                                        }`}
+                                                >
+                                                    {pageNumber}
+                                                </button>
+                                            </Scrollink>
+                                        );
+                                    })}
+
+                                    <Scrollink to="product-start" smooth={true}>
+                                        <button
+                                            onClick={() => onPageChange(page + 1)}
+                                            disabled={indexOfLastItem >= countPage}
+                                            className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
+                                                 ${indexOfLastItem >= countPage
+                                                    ? 'text-gray-300'
+                                                    : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                                                }`}
+                                        >
+                                            {t('Order_Next')}
+                                            <ArrowLongRightIcon className="ml-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                        </button>
+                                    </Scrollink>
+
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </nav>
+
             </div>
+
             <Modal
                 title="Delete Category"
-                visible={modalVisible}
+                open={modalVisible}
                 onOk={handleDeleteProduct}
                 onCancel={handleCancel}
                 okText="Delete"
                 cancelText="Cancel"
                 className="custom-modal"
             >
-                <p>Are you sure you want to delete this product?</p>
+                <p>{t('Products_Model')}</p>
             </Modal>
         </div>
     );

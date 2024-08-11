@@ -446,5 +446,32 @@ export const en = {
     "404_Sorry": "Sorry, we couldn’t find the page you’re looking for.",
     "404_Back": "Back to home",
 
+    // Product List
+    "Products_Products" : "Products",
+    "Products_CreateProduct" : "Create Product",
+    "Products_Id" : "Id",
+    "Products_Product_Name" : "Product Name",
+    "Products_Article" : "Article",
+    "Products_Category" : "Category",
+    "Products_Price" : "Price",
+    "Products_Size" : "Size",
+    "Products_Count" : "Count",
+    "Products_Actions" : "Actions",
+    "Products_Add_Storage" : "Add Storage",
+    "Products_Edit_Product" : "Edit Product",
+    "Products_Delete_Product" : "Delete Product",
+    "Products_Model" : "Are you sure you want to delete this product?",
 
+    // Add Product
+    "Add_Product_Name" : "Name",
+    "Add_Product_Article" : "Article",
+    "Add_Product_Price" : "Price",
+    "Add_Product_Season" : "Season",
+    "Add_Product_Color" : "Color",
+    "Add_Product_Material" : "Material",
+    "Add_Product_Sizes" : "Sizes",
+    "Add_Product_MainCategory" : "Main Category",
+    "Add_Product_SubCategory" : "Sub Category",
+    "Add_Product_Category" : "Category",
+    "Add_Product_Description" : "Description",
 }

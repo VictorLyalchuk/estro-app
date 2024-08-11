@@ -287,10 +287,8 @@ export default function CatalogHome() {
     }, [gender]);
 
     useEffect(() => {
-        // if (categoriesLoaded) {
         loadFromURL();
         setSearchValue(text?.replace(/_/g, " ") || '');
-        // }
     }, [categoriesLoaded, location.search, page, itemsPerPage, text, gender ]);
 
     const favoriteToggle = async (product: IProduct, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {

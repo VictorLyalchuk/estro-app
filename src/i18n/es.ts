@@ -160,7 +160,7 @@ export const es = {
     "Sort_HighToLow": "Precio: de mayor a menor",
 
     // DROPDOWN USER
-    "DropdownUser_AdminPanel" : "Panel de administración",
+    "DropdownUser_AdminPanel": "Panel de administración",
     "DropdownUser_MyOrders": "Mis pedidos",
     "DropdownUser_Profile": "Perfil",
     "DropdownUser_AccountSettings": "Configuración de la cuenta",
@@ -444,4 +444,20 @@ export const es = {
     "404_PageNotFound": "Página no encontrada",
     "404_Sorry": "Lo siento, no pudimos encontrar la página que estás buscando.",
     "404_Back": "Volver a inicio",
+
+    // Product List
+    "Products_Products": "Productos",
+    "Products_CreateProduct": "Crear producto",
+    "Products_Id": "Id",
+    "Products_Product_Name": "Nombre del producto",
+    "Products_Article": "Artículo",
+    "Products_Category": "Categoría",
+    "Products_Price": "Precio",
+    "Products_Size": "Tamaño",
+    "Products_Count": "Contar",
+    "Products_Actions": "Comportamiento",
+    "Products_Add_Storage": "Agregar almacenamiento",
+    "Products_Edit_Product": "Editar producto",
+    "Products_Delete_Product": "Eliminar producto",
+    "Products_Model": "Estás seguro de que deseas eliminar este producto?",
 }

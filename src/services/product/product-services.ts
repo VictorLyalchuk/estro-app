@@ -51,3 +51,34 @@ export async function getProductById(id: string) {
         throw error;
     }
 }
+
+
+//admin panel
+export async function getProductByPage(page: number) {
+    try {
+        const response = await instance.get<IProduct[]>(`ProductByPage/${page}`)
+        return response.data;
+    } catch (error) {
+        console.error('Failed to fetch product data:', error);
+        throw error;
+    }
+}
+
+export async function getProductQuantity() {
+    try {
+        const response = await instance.get<number>(`ProductQuantity`)
+        return response.data;
+    } catch (error) {
+        console.error('Failed to fetch product quantity data:', error);
+        throw error;
+    }
+}
+
+export async function deleteProductByID(id: number) {
+    try {
+        await instance.delete(`DeleteProductByID/${id}`)
+    } catch (error) {
+        console.error('Failed to fetch product data:', error);
+        throw error;
+    }
+}

@@ -256,12 +256,12 @@ export default function AdminPanelPage() {
                   </div>
                 </section>
 
-                {/* Recent Hires */}
+                {/* Recent Orders */}
                 <section aria-labelledby="recent-hires-title">
                   <div className="overflow-hidden rounded-lg bg-white shadow">
                     <div className="p-6">
                       <h2 className="text-base font-medium text-gray-900" id="recent-hires-title">
-                        Recent Hires
+                        Recent Orders
                       </h2>
                       <div className="mt-6 flow-root">
                         <ul role="list" className="-my-5 divide-y divide-gray-200">

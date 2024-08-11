@@ -445,4 +445,20 @@ export const uk = {
     "404_Sorry": "Вибачте, ми не змогли знайти сторінку, яку ви шукаєте.",
     "404_Back": "Повернутися додому",
 
+    // Product List
+    "Products_Products" : "Продукти",
+    "Products_CreateProduct" : "Створити Продукт",
+    "Products_Id" : "Ід",
+    "Products_Product_Name" : "Назва Продукту",
+    "Products_Article" : "Артикул",
+    "Products_Category" : "Категорія",
+    "Products_Price" : "Ціна",
+    "Products_Size" : "Розмір",
+    "Products_Count" : "Кількість",
+    "Products_Actions" : "Дії",
+    "Products_Add_Storage" : "Надходження товару",
+    "Products_Edit_Product" : "Редагування Товару",
+    "Products_Delete_Product" : "Видалення Товару",
+    "Products_Model" : "Ви впевнені, що хочете видалити цей товар?",
+
 }
