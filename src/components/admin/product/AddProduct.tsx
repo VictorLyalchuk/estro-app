@@ -54,6 +54,7 @@ const AddProduct = () => {
     const [selectedMainCategory, setSelectedMainCategory] = useState<IMainCategory | null>(null);
     const [selectedSubCategory, setSelectedSubCategory] = useState<ISubCategory | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
+    const [isUploading, setIsUploading] = useState(false);
 
     const [formData, setFormData] = useState<FormData>({
         name: '',
@@ -85,6 +86,31 @@ const AddProduct = () => {
         highlights_en: '',
     });
 
+    useEffect(() => {
+        getSeasonList()
+            .then(data => setSeason(data))
+            .catch(error => console.error('Error fetching season data:', error));
+        getColorsList()
+            .then(data => setColors(data))
+            .catch(error => console.error('Error fetching colors data:', error));
+        getMaterialsList()
+            .then(data => setMaterials(data))
+            .catch(error => console.error('Error fetching materials data:', error));
+        getSizesList()
+            .then(data => setSizes(data))
+            .catch(error => console.error('Error fetching sizes data:', error));
+
+        getCategory()
+            .then(data => setCategoryList(data))
+            .catch(error => console.error('Error fetching category data:', error));
+        getSubCategory()
+            .then(data => setSubCategory(data))
+            .catch(error => console.error('Error fetching sub category data:', error));
+        getMainCategory()
+            .then(data => setMainCategory(data))
+            .catch(error => console.error('Error fetching sub category data:', error));
+    }, []);
+
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
 
@@ -112,30 +138,6 @@ const AddProduct = () => {
             highlights_en: highlights,
         }));
     };
-    useEffect(() => {
-        getSeasonList()
-            .then(data => setSeason(data))
-            .catch(error => console.error('Error fetching season data:', error));
-        getColorsList()
-            .then(data => setColors(data))
-            .catch(error => console.error('Error fetching colors data:', error));
-        getMaterialsList()
-            .then(data => setMaterials(data))
-            .catch(error => console.error('Error fetching materials data:', error));
-        getSizesList()
-            .then(data => setSizes(data))
-            .catch(error => console.error('Error fetching sizes data:', error));
-
-        getCategory()
-            .then(data => setCategoryList(data))
-            .catch(error => console.error('Error fetching category data:', error));
-        getSubCategory()
-            .then(data => setSubCategory(data))
-            .catch(error => console.error('Error fetching sub category data:', error));
-        getMainCategory()
-            .then(data => setMainCategory(data))
-            .catch(error => console.error('Error fetching sub category data:', error));
-    }, []);
 
     const handleMainCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value as unknown as number;
@@ -159,6 +161,7 @@ const AddProduct = () => {
     };
 
     const handleFileChange: ChangeEventHandler<HTMLInputElement> = async (e) => {
+        setIsUploading(true);
         const files = e.target.files;
 
         if (!files || files.length === 0) {
@@ -168,14 +171,16 @@ const AddProduct = () => {
         if (!beforeUpload(file)) {
             return;
         }
-        const formData = new FormData();
-        formData.append('ImageFile', file);
-
+        // const formData = new FormData();
+        // formData.append('ImageFile', file);
         try {
             const response = await createImage(file);
             setImages((prevPaths) => [...prevPaths, response]);
         } catch (error) {
             console.error('Error uploading file:', error);
+        }
+        finally {
+            setIsUploading(false);
         }
     };
 
@@ -511,6 +516,12 @@ const AddProduct = () => {
                                         ) : (
                                             <div className="flex flex-col items-center justify-center space-y-3">
                                                 <span className="flex h-10 w-10 items-center justify-center rounded-full border border-stroke bg-white dark:border-strokedark dark:bg-boxdark">
+                                                    <input
+                                                        onChange={handleFileChange}
+                                                        type="file"
+                                                        accept="image/*"
+                                                        className="absolute inset-0 z-50 m-0 h-full w-full cursor-pointer p-0 opacity-0 outline-none"
+                                                    />
                                                     <svg
                                                         width="16"
                                                         height="16"
@@ -571,7 +582,8 @@ const AddProduct = () => {
                                     </button>
                                     <button
                                         type="submit"
-                                        className="p-2 mr-3 flex items-center justify-center rounded-md border bg-indigo-600 hover:bg-indigo-700 px-8 py-2 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                        disabled={isUploading}
+                                        className={`p-2 mr-3 flex items-center justify-center rounded-md border ${isUploading ? 'bg-gray-300' : "bg-indigo-600 hover:bg-indigo-700"} px-8 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
                                     >
                                         Save
                                     </button>
