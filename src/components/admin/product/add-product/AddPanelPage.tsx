@@ -210,7 +210,7 @@ const UserPanelPage = () => {
 
     const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        const { isValid, newErrors } = validateForm(formData, selectedMainCategory, selectedSubCategory, selectedCategory);
+        const { isValid, newErrors } = validateForm(formData, selectedMainCategory, selectedSubCategory, selectedCategory, setActiveTab);
         setErrors(newErrors);
         if (isValid) {
             const model: IProductCreate = {

@@ -1,3 +1,4 @@
+import { Dispatch, SetStateAction } from "react";
 import { ICategory, IMainCategory, ISubCategory } from "../../interfaces/Catalog/IMainCategory";
 import { IAddProductData } from "../../interfaces/Product/IAddProductData";
 
@@ -25,7 +26,7 @@ interface Errors {
     highlights_fr: string;
 }
 
-export const validateForm = (formData: IAddProductData, selectedMainCategory: IMainCategory | null, selectedSubCategory: ISubCategory | null, selectedCategory: ICategory | null): { isValid: boolean; newErrors: Errors } => {
+export const validateForm = (formData: IAddProductData, selectedMainCategory: IMainCategory | null, selectedSubCategory: ISubCategory | null, selectedCategory: ICategory | null, setActiveTab: Dispatch<SetStateAction<number>>): { isValid: boolean; newErrors: Errors } => {
     let isValid = true;
     const newErrors: Errors = {
         name_en: '',
@@ -54,18 +55,22 @@ export const validateForm = (formData: IAddProductData, selectedMainCategory: IM
     if (formData.name_en.trim() === '') {
         newErrors.name_en = 'Name is required';
         isValid = false;
+        setActiveTab(0);
     }
     if (formData.name_uk.trim() === '') {
         newErrors.name_uk = 'Name is required';
         isValid = false;
+        setActiveTab(1);
     }
     if (formData.name_es.trim() === '') {
         newErrors.name_es = 'Name is required';
         isValid = false;
+        setActiveTab(2);
     }
     if (formData.name_fr.trim() === '') {
         newErrors.name_fr = 'Name is required';
         isValid = false;
+        setActiveTab(3);
     }
 
     if (formData.article.trim() === '') {
@@ -116,51 +121,63 @@ export const validateForm = (formData: IAddProductData, selectedMainCategory: IM
     if (formData.description_en.trim() === '') {
         newErrors.description_en = 'Description is required';
         isValid = false;
+        setActiveTab(0);
     }
     if (formData.description_uk.trim() === '') {
         newErrors.description_uk = 'Description is required';
         isValid = false;
+        setActiveTab(1);
     }
     if (formData.description_es.trim() === '') {
         newErrors.description_es = 'Description is required';
         isValid = false;
+        setActiveTab(2);
     }
     if (formData.description_fr.trim() === '') {
         newErrors.description_fr = 'Description is required';
         isValid = false;
+        setActiveTab(3);
     }
 
     if (formData.highlights_en.length === 0) {
         newErrors.highlights_en = 'At least one highlights is required';
         isValid = false;
+        setActiveTab(0);
     }
     else if (formData.highlights_en[0] === '') {
         newErrors.highlights_en = 'Highlights is required';
         isValid = false;
+        setActiveTab(0);
     }
     if (formData.highlights_uk.length === 0) {
         newErrors.highlights_uk = 'At least one highlights is required';
         isValid = false;
+        setActiveTab(1);
     }
     else if (formData.highlights_uk[0] === '') {
         newErrors.highlights_uk = 'Highlights is required';
         isValid = false;
+        setActiveTab(1);
     }
     if (formData.highlights_es.length === 0) {
         newErrors.highlights_es = 'At least one highlights is required';
         isValid = false;
+        setActiveTab(2);
     }
     else if (formData.highlights_es[0] === '') {
         newErrors.highlights_es = 'Highlights is required';
         isValid = false;
+        setActiveTab(2);
     }
     if (formData.highlights_fr.length === 0) {
         newErrors.highlights_fr = 'At least one highlights is required';
         isValid = false;
+        setActiveTab(3);
     }
     else if (formData.highlights_fr[0] === '') {
         newErrors.highlights_fr = 'Highlights is required';
         isValid = false;
+        setActiveTab(3);
     }
     return { isValid, newErrors };
 };
