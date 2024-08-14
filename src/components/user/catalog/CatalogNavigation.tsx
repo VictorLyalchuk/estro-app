@@ -606,11 +606,19 @@ export default function CatalogNavigation() {
                       <div key={product.id} className="group relative">
                         <Link to={`/product/${product.id}`}>
                           <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none lg:h-80 hover13">
-                            <img
-                              src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
-                              alt={getLocalizedField(product, 'name', lang)}
-                              className="h-full w-full lg:h-full lg:w-full object-cover object-center"
-                            />
+                            {product.images && product.images.length > 0 ? (
+                              <img
+                                src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
+                                alt={getLocalizedField(product, 'name', lang)}
+                                className="h-full w-full lg:h-full lg:w-full object-cover object-center"
+                              />
+                            ) : (
+                              <img
+                                src={`${baseUrl}/uploads/imagenot.webp`}
+                                alt="Image Not Available"
+                                className="h-full w-full lg:h-full lg:w-full object-cover object-center"
+                              />
+                            )}
                             <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
                               <div className={classNames(
                                 isFavorite(product.id) ? 'text-red-600' : 'text-gray-400 hover:text-gray-500',
@@ -701,25 +709,25 @@ export default function CatalogNavigation() {
                               {t('CatalogHome_Previous')}
                             </button>
                           </Scrollink>
-                        
-                        {[...Array(endPage - startPage + 1)].map((_, index) => {
-                          const pageNumber = startPage + index;
-                          return (
-                            <Scrollink to="product-start" smooth={true} key={pageNumber}>
-                              <button
-                                key={pageNumber}
-                                onClick={() => onPageChange(pageNumber)}
-                                className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium text-gray-500 ${page === pageNumber
-                                  ? 'border-t-2 border-indigo-500 text-indigo-600 font-semibold'
-                                  : 'border-transparent text-gray-500 hover:border-indigo-500 hover:text-gray-700'
-                                  }`}
-                              >
-                                {pageNumber}
-                              </button>
-                            </Scrollink>
 
-                          );
-                        })}
+                          {[...Array(endPage - startPage + 1)].map((_, index) => {
+                            const pageNumber = startPage + index;
+                            return (
+                              <Scrollink to="product-start" smooth={true} key={pageNumber}>
+                                <button
+                                  key={pageNumber}
+                                  onClick={() => onPageChange(pageNumber)}
+                                  className={`inline-flex items-center border-t-2 px-4 pt-4 text-sm font-medium text-gray-500 ${page === pageNumber
+                                    ? 'border-t-2 border-indigo-500 text-indigo-600 font-semibold'
+                                    : 'border-transparent text-gray-500 hover:border-indigo-500 hover:text-gray-700'
+                                    }`}
+                                >
+                                  {pageNumber}
+                                </button>
+                              </Scrollink>
+
+                            );
+                          })}
 
                           <Scrollink to="product-start" smooth={true}>
                             <button

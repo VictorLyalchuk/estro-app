@@ -1,6 +1,6 @@
 export interface IBag{
     UserId: string;
     productId: number;
-    size: number;
+    size: string;
     UserEmail: string;
 }

@@ -1,39 +1,37 @@
 import { ICategory, IMainCategory, ISubCategory } from "../../interfaces/Catalog/IMainCategory";
-
-interface FormData {
-    name: string;
-    article: string;
-    price: string;
-    season: string;
-    color: string;
-    material: string;
-    sizes: string[]; 
-    mainCategory: string;
-    subCategory: string;
-    category: string;
-    description_en: string;
-    highlights_en: string[]; 
-}
+import { IAddProductData } from "../../interfaces/Product/IAddProductData";
 
 interface Errors {
-    name: string;
+    name_en: string;
+    name_uk: string;
+    name_es: string;
+    name_fr: string;
     article: string;
     price: string;
     season: string;
     color: string;
     material: string;
-    size: string; 
+    size: string;
     mainCategory: string;
     subCategory: string;
     category: string;
     description_en: string;
-    highlights_en: string; 
+    description_uk: string;
+    description_es: string;
+    description_fr: string;
+    highlights_en: string;
+    highlights_uk: string;
+    highlights_es: string;
+    highlights_fr: string;
 }
 
-export const validateForm = (formData: FormData, selectedMainCategory: IMainCategory | null, selectedSubCategory: ISubCategory | null, selectedCategory: ICategory | null): { isValid: boolean; newErrors: Errors } => {
+export const validateForm = (formData: IAddProductData, selectedMainCategory: IMainCategory | null, selectedSubCategory: ISubCategory | null, selectedCategory: ICategory | null): { isValid: boolean; newErrors: Errors } => {
     let isValid = true;
     const newErrors: Errors = {
-        name: '',
+        name_en: '',
+        name_uk: '',
+        name_es: '',
+        name_fr: '',
         article: '',
         price: '',
         season: '',
@@ -44,11 +42,29 @@ export const validateForm = (formData: FormData, selectedMainCategory: IMainCate
         subCategory: '',
         category: '',
         description_en: '',
+        description_uk: '',
+        description_es: '',
+        description_fr: '',
         highlights_en: '',
+        highlights_uk: '',
+        highlights_es: '',
+        highlights_fr: '',
     };
 
-    if (formData.name.trim() === '') {
-        newErrors.name = 'Name is required';
+    if (formData.name_en.trim() === '') {
+        newErrors.name_en = 'Name is required';
+        isValid = false;
+    }
+    if (formData.name_uk.trim() === '') {
+        newErrors.name_uk = 'Name is required';
+        isValid = false;
+    }
+    if (formData.name_es.trim() === '') {
+        newErrors.name_es = 'Name is required';
+        isValid = false;
+    }
+    if (formData.name_fr.trim() === '') {
+        newErrors.name_fr = 'Name is required';
         isValid = false;
     }
 
@@ -101,13 +117,49 @@ export const validateForm = (formData: FormData, selectedMainCategory: IMainCate
         newErrors.description_en = 'Description is required';
         isValid = false;
     }
+    if (formData.description_uk.trim() === '') {
+        newErrors.description_uk = 'Description is required';
+        isValid = false;
+    }
+    if (formData.description_es.trim() === '') {
+        newErrors.description_es = 'Description is required';
+        isValid = false;
+    }
+    if (formData.description_fr.trim() === '') {
+        newErrors.description_fr = 'Description is required';
+        isValid = false;
+    }
 
     if (formData.highlights_en.length === 0) {
         newErrors.highlights_en = 'At least one highlights is required';
         isValid = false;
     }
-    else if (formData.highlights_en[0]  === '') {
+    else if (formData.highlights_en[0] === '') {
         newErrors.highlights_en = 'Highlights is required';
+        isValid = false;
+    }
+    if (formData.highlights_uk.length === 0) {
+        newErrors.highlights_uk = 'At least one highlights is required';
+        isValid = false;
+    }
+    else if (formData.highlights_uk[0] === '') {
+        newErrors.highlights_uk = 'Highlights is required';
+        isValid = false;
+    }
+    if (formData.highlights_es.length === 0) {
+        newErrors.highlights_es = 'At least one highlights is required';
+        isValid = false;
+    }
+    else if (formData.highlights_es[0] === '') {
+        newErrors.highlights_es = 'Highlights is required';
+        isValid = false;
+    }
+    if (formData.highlights_fr.length === 0) {
+        newErrors.highlights_fr = 'At least one highlights is required';
+        isValid = false;
+    }
+    else if (formData.highlights_fr[0] === '') {
+        newErrors.highlights_fr = 'Highlights is required';
         isValid = false;
     }
     return { isValid, newErrors };

@@ -1,30 +1,33 @@
 import React from 'react';
 import { TextField, IconButton } from '@material-ui/core';
 import { Add as AddIcon, Remove as RemoveIcon } from '@material-ui/icons';
+import { useTranslation } from 'react-i18next';
 
 interface HighlightsInputProps {
+    name: string;
     highlights: string[];
-    setHighlights: (highlights: string[]) => void;
+    setHighlights: (name: string, highlights: string[]) => void;
     error: string | null;
 }
 
-const HighlightsInput: React.FC<HighlightsInputProps> = ({ highlights, setHighlights, error }) => {
+const HighlightsInput: React.FC<HighlightsInputProps> = ({name, highlights, setHighlights, error }) => {
+    const { t } = useTranslation();
     const handleChange = (index: number, value: string) => {
         const newHighlights = [...highlights];
         newHighlights[index] = value;
-        setHighlights(newHighlights);
+        setHighlights(name, newHighlights);
     };
 
     const handleAdd: React.MouseEventHandler<HTMLButtonElement> = (event) => {
         event.preventDefault();
         if (highlights.length === 0 || highlights[highlights.length - 1] !== '') {
-            setHighlights([...highlights, '']);
+            setHighlights(name, [...highlights, '']);
         }
     };
 
     const handleRemove = (index: number) => {
         const newHighlights = highlights.filter((_, i) => i !== index);
-        setHighlights(newHighlights);
+        setHighlights(name, newHighlights);
     };
 
     return (
@@ -33,8 +36,10 @@ const HighlightsInput: React.FC<HighlightsInputProps> = ({ highlights, setHighli
                 <div key={index} className="flex items-center mb-2">
                     <TextField
                         value={highlight}
+                        name="dsa"
                         onChange={(e) => handleChange(index, e.target.value)}
-                        label={`Highlight ${index + 1}`}
+                        label={`${t('Add_Product_Features')} ${index + 1}`}
+
                         fullWidth
                         error={!!error}
                     />
@@ -54,7 +59,7 @@ const HighlightsInput: React.FC<HighlightsInputProps> = ({ highlights, setHighli
                 className="p-2 mr-3 flex items-center justify-center rounded-md border px-8 py-2 text-base font-medium text-white   bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
             >
                 <AddIcon className="mr-2" />
-                Add Highlight
+                {t('Add_Product_Add_Features')}
             </button>
         </div>
     );

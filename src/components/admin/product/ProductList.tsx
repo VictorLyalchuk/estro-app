@@ -84,7 +84,7 @@ export default function ProductList() {
                     <h2 className="px-4 text-base font-semibold leading-7 text-gray-900 sm:px-6 lg:px-8">{t('Products_Products')}</h2>
                 </div>
                 <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none px-8">
-                    <Link to={"/admin/product/add-product"}
+                    <Link to={"/admin/product/add-product-en"}
                         className="block rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                     >
                         {t('Products_CreateProduct')}
@@ -140,7 +140,15 @@ export default function ProductList() {
                                 </td>
                                 <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 ">
                                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                                        <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`} alt="" className="w-30 rounded-lg" />
+                                        {product.images && product.images.length > 0 ? (
+                                            <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`} className="w-30 rounded-lg" />
+                                        ) : (
+                                                <img
+                                                    src={`${baseUrl}/uploads/imagenot.webp`}
+                                                    alt="Image Not Available"
+                                                    className="w-30 rounded-lg"
+                                                />
+                                        )}
                                         <Link to={`/product/${product.id}`} className="hover:text-indigo-500">
                                             <div className="font-mono text-sm leading-6">{getLocalizedField(product, 'name', lang)}</div>
                                         </Link>

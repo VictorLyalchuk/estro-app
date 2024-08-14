@@ -289,7 +289,7 @@ export default function CatalogHome() {
     useEffect(() => {
         loadFromURL();
         setSearchValue(text?.replace(/_/g, " ") || '');
-    }, [categoriesLoaded, location.search, page, itemsPerPage, text, gender ]);
+    }, [categoriesLoaded, location.search, page, itemsPerPage, text, gender]);
 
     const favoriteToggle = async (product: IProduct, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
         e.preventDefault();
@@ -658,8 +658,16 @@ export default function CatalogHome() {
                                 <div key={product.id} className="group relative">
                                     <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7  hover13">
                                         <Link to={`/product/${product.id}`} className="group">
-                                            <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
-                                                className="h-full w-full object-cover object-center " />
+                                            {product.images && product.images.length > 0 ? (
+                                                <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
+                                                    className="h-full w-full object-cover object-center " />
+                                            ) : (
+                                                <img
+                                                    src={`${baseUrl}/uploads/imagenot.webp`}
+                                                    alt="Image Not Available"
+                                                    className="h-full w-full object-cover object-center "
+                                                />
+                                            )}
                                         </Link>
                                         <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
                                             <div className={classNames(

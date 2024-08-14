@@ -68,10 +68,18 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
                         <div className="px-4 py-6 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">
                           <div className="sm:flex lg:col-span-7">
                             <div className="aspect-h-1 aspect-w-1 w-full flex-shrink-0 overflow-hidden rounded-lg sm:aspect-none sm:h-80 sm:w-60">
-                              <img
-                                src={`${baseUrl}/uploads/1200_${product?.imagePath || '/uploads/default.jpg'}`}
-                                className="h-full w-full object-cover object-center sm:h-full sm:w-full"
-                              />
+                              {product.imagePath && product.imagePath.length > 0 ? (
+                                <img
+                                  src={`${baseUrl}/uploads/1200_${product?.imagePath || '/uploads/default.jpg'}`}
+                                  className="h-full w-full object-cover object-center sm:h-full sm:w-full"
+                                />
+                              ) : (
+                                <img
+                                  src={`${baseUrl}/uploads/imagenot.webp`}
+                                  alt="Image Not Available"
+                                  className="h-full w-full object-cover object-center sm:h-full sm:w-full"
+                                />
+                              )}
                             </div>
 
                             <div className="mt-6 sm:ml-6 sm:mt-0">

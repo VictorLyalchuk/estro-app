@@ -73,7 +73,7 @@ export default function Product() {
         UserId: user?.Id || "",
         UserEmail: user?.Email || "",
         productId: selectedSize?.productId || 0,
-        size: selectedSize?.size || 0,
+        size: selectedSize?.size || "",
       };
 
       try {
@@ -213,19 +213,29 @@ export default function Product() {
           <div className="mt-8 lg:col-span-7 lg:col-start-1 lg:row-span-3 lg:row-start-1 lg:mt-0">
             <div className="grid grid-cols-1 lg:grid-cols-1 lg:gap-8">
               <Slider>
-                <Carousel swipe animation="fade" duration={1500} autoPlay={true} indicatorIconButtonProps={{ style: { width: '35px', height: '35px', }, }}
-                  IndicatorIcon={<Brightness1RoundedIcon fontSize='small' />}
-                  indicators={true} className="h-full w-full rounded-lg overflow-hidden" >
-                  {product.images?.map((image, index) => (
-                    <div key={index} className="w-full h-full flex items-center justify-center rounded-lg overflow-hidden">
-                      <Image
-                        src={`${baseUrl}/uploads/1200_${image?.imagePath || '/uploads/imagenot.webp'}`}
-                        alt={getLocalizedField(product, 'name', lang)}
-                        className="w-full h-full object-contain cursor-pointer rounded-lg"
-                      />
-                    </div>
-                  ))}
-                </Carousel>
+                {product.images && product.images.length > 0 ? (
+                  <Carousel swipe animation="fade" duration={1500} autoPlay={true} indicatorIconButtonProps={{ style: { width: '35px', height: '35px', }, }}
+                    IndicatorIcon={<Brightness1RoundedIcon fontSize='small' />}
+                    indicators={true} className="h-full w-full rounded-lg overflow-hidden" >
+                    {product.images?.map((image, index) => (
+                      <div key={index} className="w-full h-full flex items-center justify-center rounded-lg overflow-hidden">
+                        <Image
+                          src={`${baseUrl}/uploads/1200_${image?.imagePath || '/uploads/imagenot.webp'}`}
+                          alt={getLocalizedField(product, 'name', lang)}
+                          className="w-full h-full object-contain cursor-pointer rounded-lg"
+                        />
+                      </div>
+                    ))}
+                  </Carousel>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center rounded-lg overflow-hidden">
+                    <Image
+                      src={`${baseUrl}/uploads/imagenot.webp`}
+                      alt="Image Not Available"
+                      className="w-full h-full object-contain cursor-pointer rounded-lg"
+                    />
+                  </div>
+                )}
               </Slider >
             </div>
           </div>

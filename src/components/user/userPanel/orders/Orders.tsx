@@ -74,9 +74,17 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                       >
                         <div className="px-4 py-6 sm:col-span-4 md:col-span-5 md:row-span-2 md:row-end-2">
                           <div className="aspect-h-1 aspect-w-1 overflow-hidden rounded-lg bg-gray-50">
-                            <img
-                              src={`${baseUrl}/uploads/1200_${product?.imagePath || '/uploads/default.jpg'}`}
-                              className="object-cover object-center" />
+                            {product.imagePath && product.imagePath.length > 0 ? (
+                              <img
+                                src={`${baseUrl}/uploads/1200_${product?.imagePath || '/uploads/default.jpg'}`}
+                                className="object-cover object-center" />
+                            ) : (
+                              <img
+                                src={`${baseUrl}/uploads/imagenot.webp`}
+                                alt="Image Not Available"
+                                className="object-cover object-center"
+                              />
+                            )}
                           </div>
                         </div>
                         <div className="px-4 py-6 mt-6 sm:col-span-7 sm:mt-0 md:row-end-1">

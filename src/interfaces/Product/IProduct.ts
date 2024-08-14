@@ -51,7 +51,7 @@ export interface IStorages{
     id: number;
     productId: number;
     productQuantity : number;
-    size: number;
+    size: string;
     inStock: boolean;
 }
 

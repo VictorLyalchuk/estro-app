@@ -55,7 +55,7 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                 UserId: user?.Id || "",
                 UserEmail: user?.Email || "",
                 productId: selectedSize?.productId || 0,
-                size: selectedSize?.size || 0,
+                size: selectedSize?.size || "",
             };
 
             try {
@@ -162,17 +162,27 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                         </button>
                                         <div className="grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:gap-x-8">
                                             <div className="aspect-h-3 aspect-w-2 overflow-hidden sm:col-span-4 lg:col-span-5">
-                                                <Carousel swipe animation="fade" duration={1500} autoPlay={true} indicators={false} className="absolute ">
-                                                    {product.images?.map((image, index) => (
-                                                        <div key={index} className="">
-                                                            <Image
-                                                                src={`${baseUrl}/uploads/1200_${image.imagePath || '/uploads/imagenot.webp'}`}
-                                                                className="h-full w-full object-cover object-center"
-                                                                alt={getLocalizedField(product, 'name', lang)}
-                                                            />
-                                                        </div>
-                                                    ))}
-                                                </Carousel>
+                                                {product.images && product.images.length > 0 ? (
+                                                    <Carousel swipe animation="fade" duration={1500} autoPlay={true} indicators={false} className="absolute ">
+                                                        {product.images?.map((image, index) => (
+                                                            <div key={index}>
+                                                                <Image
+                                                                    src={`${baseUrl}/uploads/1200_${image.imagePath || '/uploads/imagenot.webp'}`}
+                                                                    className="h-full w-full object-cover object-center"
+                                                                    alt={getLocalizedField(product, 'name', lang)}
+                                                                />
+                                                            </div>
+                                                        ))}
+                                                    </Carousel>
+                                                ) : (
+                                                    <div >
+                                                        <Image
+                                                            src={`${baseUrl}/uploads/imagenot.webp`}
+                                                            alt="Image Not Available"
+                                                            className="h-full w-full object-cover object-center"
+                                                        />
+                                                    </div>
+                                                )}
                                             </div>
                                             <div className="sm:col-span-8 lg:col-span-7">
                                                 <h2 className="text-2xl font-bold text-gray-900 sm:pr-12">{getLocalizedField(product, 'name', lang)}</h2>

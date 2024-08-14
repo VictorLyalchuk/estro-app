@@ -8,7 +8,7 @@ import NavbarsPage from "./components/navbars/NavbarsPage";
 import { useEffect, useState } from "react";
 import Loader from "./components/Dashboard/common/Loader";
 import { Toaster } from 'react-hot-toast';
-import AddProduct from "./components/admin/product/AddProduct";
+import AdminPanelPage from "./components/admin/adminPanel/AdminPanelPage.tsx";
 import EditProduct from "./components/admin/product/EditProduct";
 import AddStorage from "./components/admin/product/AddStorage";
 import OurBrand from "./components/footer/footerPages/OurBrand";
@@ -26,7 +26,6 @@ import UserLayout from "./components/layout/UserLayout";
 import GuestLayout from "./components/layout/GuestLayout";
 import HomeStore from "./components/homePage/HomeStore";
 import CatalogHome from "./components/user/catalog/CatalogHome";
-import AdminPanelPage from "./components/admin/adminPanel/AdminPanelPage.tsx";
 
 import useAuthTokenEffect from "./useAuthTokenEffect";
 import useGetFavoritesEffect from "./useGetFavoritesEffect";
@@ -34,6 +33,7 @@ import './i18n/i18n.ts';
 import GeneralLayout from "./components/layout/GeneralLayout.tsx";
 import ProductList from "./components/admin/product/ProductList.tsx";
 import AdminHeader from "./components/admin/adminPanel/AdminHeader.tsx";
+import AddPanelPage from "./components/admin/product/add-product/AddPanelPage.tsx";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -60,16 +60,22 @@ function App() {
 
         {/* Адміністраторські маршрути без Logo, NavbarsPage і Footer */}
         <Route path="/admin" element={<><AdminHeader/><AdminLayout /></>}>
+          <Route path="/admin/*" element={<Page404 />} />
           <Route path="admin-panel-page" element={<AdminPanelPage />} />
           
           <Route path="product/product-list" element={<ProductList/>}/>
-          <Route path="product/add-product" element={<AddProduct />} />
+          <Route path="product/add-product-en" element={<AddPanelPage />} />
+          <Route path="product/add-product-uk" element={<AddPanelPage />} />
+          <Route path="product/add-product-es" element={<AddPanelPage />} />
+          <Route path="product/add-product-fr" element={<AddPanelPage />} />
+
           <Route path="product/edit-product/:Id" element={<EditProduct />} />
           <Route path="product/add-storage/:Id" element={<AddStorage />} />
         </Route>
 
         {/* Маршрути для користувачів з Logo, NavbarsPage і Footer */}
         <Route element={<><Logo /><NavbarsPage /><UserLayout /><Footer/></>}>
+          <Route path="/account/*" element={<Page404 />} />
           <Route path="account/orders" element={<UserPanelPage />} />
           <Route path='account/profile' element={<UserPanelPage />} />
           <Route path='account/settings' element={<UserPanelPage />} />

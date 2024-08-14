@@ -6,7 +6,7 @@ import { useSelector } from "react-redux";
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer';
 import { IUserProfile } from '../../../interfaces/Auth/IUserProfile';
 import { getUserData } from '../../../services/accounts/account-services';
-import TabsOrdersComponent from './TabsUserComponent';
+import TabsUserComponent from './TabsUserComponent';
 import Profile from './profile/Profile';
 import Settings from './settings/Settings';
 import Bonuses from './bonuses/Bonuses';
@@ -118,7 +118,7 @@ const UserPanelPage = () => {
                 <div className="container mx-auto p-8 flex relative max-w-7xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row justify-between">
                     <div className="sm:mx-auto sm:w-full">
                         <div className="w-full ">
-                            <TabsOrdersComponent tabs={tabs} onTabChange={handleTabChange} />
+                            <TabsUserComponent tabs={tabs} onTabChange={handleTabChange} />
                             <div className="mt-4">
                                 {tabs.find(tab => tab.current)?.component}
                             </div>

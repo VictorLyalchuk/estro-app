@@ -63,11 +63,19 @@ const OrderSummary: React.FC<OrderSummaryProps> = ({
                   </button>
                 </div>
                 <div className="border-t pt-4 flex">
-                  <img
-                    src={`${baseUrl}/uploads/1200_${item?.image || '/uploads/default.jpg'}`}
-                    alt={item?.image}
-                    className="w-24 h-36 object-cover rounded-md mr-4"
-                  />
+                  {item.image && item.image.length > 0 ? (
+                    <img
+                      src={`${baseUrl}/uploads/1200_${item?.image || '/uploads/default.jpg'}`}
+                      alt={item?.image}
+                      className="w-24 h-36 object-cover rounded-md mr-4"
+                    />
+                  ) : (
+                    <img
+                      src={`${baseUrl}/uploads/imagenot.webp`}
+                      alt="Image Not Available"
+                      className="w-24 h-36 object-cover rounded-md mr-4"
+                    />
+                  )}
                   <div className="w-1/2 ml-4 mx-auto">
                     <h3 className="text-lg font-semibold mb-2 mr-auto whitespace-nowrap">{t('Bag_OrderSummary_TotalProductPrice')} {initialIndividualItemPrice[item.id].toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</h3>
                     <p className="text-gray-600 mb-2">{t('Bag_OrderSummary_Size')}: {item.size}</p>
