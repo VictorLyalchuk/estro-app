@@ -458,8 +458,10 @@ export const uk = {
     "Products_Actions" : "Дії",
     "Products_Add_Storage" : "Надходження товару",
     "Products_Edit_Product" : "Редагування Товару",
-    "Products_Delete_Product" : "Видалення Товару",
     "Products_Model" : "Ви впевнені, що хочете видалити цей товар?",
+    "Products_Delete_Product" : "Видалення Товару",
+    "Products_Delete": "Видалити",
+    "Products_Cancel": "Скасувати",
 
     // Add Product
     "Add_Product_Name" : "Назва",

@@ -11,7 +11,7 @@ const UserLayout = () => {
 
   const isUser = isAuth && user?.Role === "User" || user?.Role === "Administrator";
   useEffect(() => {
-    if (!isAuth) navigate("/login");
+    if (!isAuth) navigate("/auth");
     if (isAuth) {
       if (!isUser) {
         navigate("/404")

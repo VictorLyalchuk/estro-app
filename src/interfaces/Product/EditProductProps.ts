@@ -1,12 +1,12 @@
 import { ChangeEventHandler } from "react";
 import { ICategory, IMainCategory, ISubCategory } from "../Catalog/IMainCategory";
 import { IProductFilters } from "../Info/IInfo";
-import { IAddProductData } from "./IAddProductData";
 import { IImageItem } from "./IProduct";
+import { IEditProductData } from "./IEditProductData";
 
-export interface AddProductProps {
+export interface EditProductProps {
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
-    formData: IAddProductData;
+    formData: IEditProductData;
     handleChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     errors: {
         name_en: string;

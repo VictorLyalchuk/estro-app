@@ -459,8 +459,10 @@ export const en = {
     "Products_Actions": "Actions",
     "Products_Add_Storage": "Add Storage",
     "Products_Edit_Product": "Edit Product",
-    "Products_Delete_Product": "Delete Product",
     "Products_Model": "Are you sure you want to delete this product?",
+    "Products_Delete_Product": "Delete Product",
+    "Products_Delete": "Delete",
+    "Products_Cancel": "Cancel",
 
     // Add Product
     "Add_Product_Name": "Name",
@@ -488,4 +490,7 @@ export const en = {
     "Add_Product_By_Uk" : "In Ukrainian",
     "Add_Product_By_Es" : "In Spanish",
     "Add_Product_By_Fr" : "In French",
+
+    //Edit Product
+    "Edit_Product" : "Edit Product",
 }

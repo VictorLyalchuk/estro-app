@@ -6,9 +6,9 @@ import { FormControl, MenuItem, TextField } from '@material-ui/core';
 import { getLocalizedField } from '../../../../utils/localized/localized';
 import LongTextFieldComponents from '../../../../ui/input-with-label/LongTextFieldComponents';
 import CheckboxGroup from '../../../../ui/input-with-label/CheckboxGroup';
-import CategorySelect from '../../../../ui/input-with-label/CategorySelect';
-import SubCategorySelect from '../../../../ui/input-with-label/SubCategorySelect';
-import MainCategorySelect from '../../../../ui/input-with-label/MainCategorySelect';
+import CategorySelect from '../../../../ui/category-select/CategorySelect';
+import SubCategorySelect from '../../../../ui/category-select/SubCategorySelect';
+import MainCategorySelect from '../../../../ui/category-select/MainCategorySelect';
 import HighlightsInput from '../../../../ui/input-with-label/HighlightsInput';
 import { useTranslation } from 'react-i18next';
 import { AddProductProps } from '../../../../interfaces/Product/AddProductProps';
@@ -198,6 +198,7 @@ const AddProduct_es: React.FC<AddProductProps> = (
                                             categoryList={categoryList}
                                             selectedCategory={selectedCategory}
                                             selectedSubCategory={selectedSubCategory}
+                                            selectedMainCategory={selectedMainCategory}
                                             handleCategoryChange={handleCategoryChange}
                                             errors={errors}
                                             lang={lang}
@@ -210,6 +211,7 @@ const AddProduct_es: React.FC<AddProductProps> = (
                                         </label>
                                         <CheckboxGroup
                                             sizes={sizes}
+                                            selectedSizes={formData.sizes}
                                             handleCheckboxChange={handleCheckboxChange}
                                             lang={lang}
                                             error={errors.size ?? null}
@@ -345,15 +347,15 @@ const AddProduct_es: React.FC<AddProductProps> = (
 
                     </div>
                     <div className="mt-6 flex items-center justify-end gap-x-6">
-                        <button type="button" className="text-sm font-semibold leading-6 text-gray-900" onClick={handleCancel}>
-                            {t('Add_Product_Cancel')}
-                        </button>
                         <button
                             type="submit"
                             disabled={isUploading}
-                            className={`p-2 mr-3 flex items-center justify-center rounded-md border ${isUploading ? 'bg-gray-300' : "bg-indigo-600 hover:bg-indigo-700"} px-8 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+                            className={`p-2 flex items-center justify-center rounded-md border ${isUploading ? 'bg-gray-300' : "bg-indigo-600 hover:bg-indigo-700"} px-8 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
                         >
                             {t('Add_Product_Save')}
+                        </button>
+                        <button type="button" className="p-2 mr-3 flex items-center rounded-md border bg-gray-200 hover:bg-gray-300 justify-center px-8 py-2 text-sm font-semibold leading-6 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onClick={handleCancel}>
+                            {t('Add_Product_Cancel')}
                         </button>
                     </div>
                 </form>

@@ -9,7 +9,6 @@ import { useEffect, useState } from "react";
 import Loader from "./components/Dashboard/common/Loader";
 import { Toaster } from 'react-hot-toast';
 import AdminPanelPage from "./components/admin/adminPanel/AdminPanelPage.tsx";
-import EditProduct from "./components/admin/product/EditProduct";
 import AddStorage from "./components/admin/product/AddStorage";
 import OurBrand from "./components/footer/footerPages/OurBrand";
 import Footer from "./components/footer/FooterPage";
@@ -34,6 +33,7 @@ import GeneralLayout from "./components/layout/GeneralLayout.tsx";
 import ProductList from "./components/admin/product/ProductList.tsx";
 import AdminHeader from "./components/admin/adminPanel/AdminHeader.tsx";
 import AddPanelPage from "./components/admin/product/add-product/AddPanelPage.tsx";
+import EditPanelPage from "./components/admin/product/edit-product/EditPanelPage.tsx";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -68,8 +68,11 @@ function App() {
           <Route path="product/add-product-uk" element={<AddPanelPage />} />
           <Route path="product/add-product-es" element={<AddPanelPage />} />
           <Route path="product/add-product-fr" element={<AddPanelPage />} />
+          <Route path="product/edit-product-en/:Id" element={<EditPanelPage />} />
+          <Route path="product/edit-product-uk/:Id" element={<EditPanelPage />} />
+          <Route path="product/edit-product-es/:Id" element={<EditPanelPage />} />
+          <Route path="product/edit-product-fr/:Id" element={<EditPanelPage />} />
 
-          <Route path="product/edit-product/:Id" element={<EditProduct />} />
           <Route path="product/add-storage/:Id" element={<AddStorage />} />
         </Route>
 

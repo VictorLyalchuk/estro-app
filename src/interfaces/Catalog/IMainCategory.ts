@@ -31,5 +31,6 @@ export interface ICategory {
     description: string | null; 
     imagePath: string | null;        
     subCategoryId: number;
+    mainCategoryId:number;
     urlName: string;
 }

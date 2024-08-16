@@ -14,11 +14,12 @@ export interface IOptions {
 }
 
 export interface IProductFilters {
-    id: string;
+    id: number;
     name_en: string;
     name_es: string;
     name_fr: string;
     name_uk: string; 
     value: string;
     infoId: string;
+    sortOrder: number;
 }

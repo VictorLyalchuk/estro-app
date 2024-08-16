@@ -3,6 +3,8 @@ import { APP_ENV } from "../../env/config";
 import qs from "qs";
 import { IProduct } from "../../interfaces/Product/IProduct";
 import { IProductCreate } from "../../interfaces/Product/IProductCreate";
+import { IEditProductData } from "../../interfaces/Product/IEditProductData";
+import { IProductEdit } from "../../interfaces/Product/IProductEdit";
 
 const baseUrl = APP_ENV.BASE_URL;
 
@@ -56,8 +58,13 @@ export async function getProductById(id: string) {
 
 //admin panel
 export async function getProductByPage(page: number) {
+    const token = localStorage.getItem('token');
     try {
-        const response = await instance.get<IProduct[]>(`ProductByPage/${page}`)
+        const response = await instance.get<IProduct[]>(`ProductByPage/${page}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
         return response.data;
     } catch (error) {
         console.error('Failed to fetch product data:', error);
@@ -66,8 +73,14 @@ export async function getProductByPage(page: number) {
 }
 
 export async function getProductQuantity() {
+    const token = localStorage.getItem('token');
+
     try {
-        const response = await instance.get<number>(`ProductQuantity`)
+        const response = await instance.get<number>(`ProductQuantity`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
         return response.data;
     } catch (error) {
         console.error('Failed to fetch product quantity data:', error);
@@ -76,8 +89,13 @@ export async function getProductQuantity() {
 }
 
 export async function deleteProductByID(id: number) {
+    const token = localStorage.getItem('token');
     try {
-        await instance.delete(`DeleteProductByID/${id}`)
+        await instance.delete(`DeleteProductByID/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
     } catch (error) {
         console.error('Failed to fetch product data:', error);
         throw error;
@@ -85,10 +103,44 @@ export async function deleteProductByID(id: number) {
 }
 
 export async function createProduct(model: IProductCreate) {
+    const token = localStorage.getItem('token');
     try {
-        await instance.post(`CreateProduct`, model,)
+        await instance.post(`CreateProduct`, model, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+    } catch (error) {
+        console.error('Failed to create product data:', error);
+        throw error;
+    }
+}
+
+export async function getEditProductById(id: string) {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await instance.get<IEditProductData>(`getEditProductById/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        return response.data;
     } catch (error) {
         console.error('Failed to fetch product data:', error);
+        throw error;
+    }
+}
+
+export async function editProduct(model: IProductEdit) {
+    const token = localStorage.getItem('token');
+    try {
+        await instance.post(`EditProduct`, model, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+    } catch (error) {
+        console.error('Failed to edit product data:', error);
         throw error;
     }
 }

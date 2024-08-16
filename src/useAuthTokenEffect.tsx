@@ -48,8 +48,6 @@ const useAuthTokenEffect = () => {
       }
     };
 
-
-
     // const checkTokenExpiration = () => {
     //   const tokenExpiration = localStorage.getItem('tokenExpiration');
     //   if (tokenExpiration && new Date().getTime() > parseInt(tokenExpiration)) {
@@ -62,10 +60,6 @@ const useAuthTokenEffect = () => {
 
     // // Перевірка часу токену кожні 5 секунд
     // const tokenCheckInterval = setInterval(checkTokenExpiration, 5000);
-
-
-
-
 
     window.addEventListener('storage', handleTokenChange);
 

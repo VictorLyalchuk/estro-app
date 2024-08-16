@@ -65,6 +65,10 @@ export default function ProductList() {
                             productId: SelectedProduct?.id
                         }
                     });
+                    return getProductQuantity();
+                })
+                .then(data => {
+                    setCountPage(data);
                 })
                 .catch(error => {
                     console.error('Error deleting product:', error);
@@ -185,7 +189,7 @@ export default function ProductList() {
                                     <Link to={`/admin/product/add-storage/${product.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                                         {t('Products_Add_Storage')}
                                     </Link>
-                                    <Link to={`/admin/product/edit-product/${product.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                    <Link to={`/admin/product/edit-product-en/${product.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
                                         {t('Products_Edit_Product')}
                                     </Link>
                                     <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
@@ -270,15 +274,30 @@ export default function ProductList() {
             </div>
 
             <Modal
-                title="Delete Category"
+                title={t('Products_Delete_Product')}
                 open={modalVisible}
-                onOk={handleDeleteProduct}
                 onCancel={handleCancel}
-                okText="Delete"
-                cancelText="Cancel"
+                footer={null}
                 className="custom-modal"
             >
                 <p>{t('Products_Model')}</p>
+                <div className="flex justify-end gap-4 mt-4">
+                <button
+                    key="delete"
+                    type="button"
+                    onClick={handleDeleteProduct}
+                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                    {t('Products_Delete')}
+                </button>
+                <button
+                    key="cancel"
+                    onClick={handleCancel}
+                    className="bg-gray-200 hover:bg-gray-300 text-gray-900 font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                >
+                    {t('Products_Cancel')}
+                </button>
+            </div>
             </Modal>
         </div>
     );

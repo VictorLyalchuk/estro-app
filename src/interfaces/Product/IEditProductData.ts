@@ -1,14 +1,16 @@
 import { IProductFilters } from "../Info/IInfo";
+import { IImageItem } from "./IProduct";
 
-export interface IAddProductData {
+export interface IEditProductData {
+    id: number;
     name_en: string;
     name_uk: string;
     name_es: string;
     name_fr: string;
     article: string;
-    price: string;
+    price: number;
     season: string;
-    color: string;
+    color : string;
     material: string;
     sizes: IProductFilters[]; 
     mainCategory: string;
@@ -22,4 +24,5 @@ export interface IAddProductData {
     highlights_uk: string[];
     highlights_es: string[];
     highlights_fr: string[];
+    images: IImageItem[] | null; 
 }

@@ -17,7 +17,7 @@ const AdminLayout = () => {
     const handleAuth = async () => {
       try {
         await refreshToken();
-        if (!isAuth) navigate("/login");
+        if (!isAuth) navigate("/auth");
         if (isAuth) {
           if (user?.Role != "Administrator") {
             navigate("/404")

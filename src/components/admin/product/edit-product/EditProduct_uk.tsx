@@ -11,9 +11,9 @@ import SubCategorySelect from '../../../../ui/category-select/SubCategorySelect'
 import MainCategorySelect from '../../../../ui/category-select/MainCategorySelect';
 import HighlightsInput from '../../../../ui/input-with-label/HighlightsInput';
 import { useTranslation } from 'react-i18next';
-import { AddProductProps } from '../../../../interfaces/Product/AddProductProps';
+import { EditProductProps } from '../../../../interfaces/Product/EditProductProps';
 
-const AddProduct_en: React.FC<AddProductProps> = (
+const EditProduct_uk: React.FC<EditProductProps> = (
     { formData, Images, isUploading,
         errors, season, colors, materials, sizes,
         mainCategory, subCategory, categoryList,
@@ -29,7 +29,7 @@ const AddProduct_en: React.FC<AddProductProps> = (
 
             <div className="sm:mx-auto sm:w-full sm:max-w-sm flex justify-center ">
                 <div className="pb-6 mt-6">
-                    <h2 className="text-base font-semibold leading-7 text-gray-900">{t('Add_Product')}</h2>
+                    <h2 className="text-base font-semibold leading-7 text-gray-900">{t('Edit_Product')}</h2>
                 </div>
             </div>
             <div className="border-t">
@@ -40,17 +40,17 @@ const AddProduct_en: React.FC<AddProductProps> = (
                                 <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
 
                                     <div className="sm:col-span-2">
-                                        <label htmlFor="name_en" className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label htmlFor="name_uk" className="block text-sm font-medium text-gray-700 mb-2">
                                             {t('Add_Product_Name')}
                                         </label>
                                         <TextFieldComponent
                                             label=""
-                                            name="name_en"
-                                            id="name_en"
-                                            value={formData.name_en}
+                                            name="name_uk"
+                                            id="name_uk"
+                                            value={formData.name_uk}
                                             onChange={handleChange}
-                                            error={errors.name_en ?? null}
-                                            autoComplete="name_en"
+                                            error={errors.name_uk ?? null}
+                                            autoComplete="name_uk"
                                             maxLength={30}
                                         />
                                     </div>
@@ -219,26 +219,26 @@ const AddProduct_en: React.FC<AddProductProps> = (
                                     </div>
 
                                     <div className="col-span-full">
-                                        <label htmlFor="description_en" className="block text-sm font-medium text-gray-700 mb-2">
+                                        <label htmlFor="description_uk" className="block text-sm font-medium text-gray-700 mb-2">
                                             {t('Add_Product_Description')}
                                         </label>
                                         <LongTextFieldComponents
                                             label=""
-                                            name="description_en"
-                                            id="description_en"
-                                            value={formData.description_en}
+                                            name="description_uk"
+                                            id="description_uk"
+                                            value={formData.description_uk}
                                             onChange={handleChange}
-                                            error={errors.description_en ?? null}
-                                            autoComplete="description_en"
+                                            error={errors.description_uk ?? null}
+                                            autoComplete="description_uk"
                                         />
                                     </div>
 
                                     <div className="col-span-full">
                                         <HighlightsInput
-                                            name="highlights_en"
-                                            highlights={formData.highlights_en}
+                                            name="highlights_uk"
+                                            highlights={formData.highlights_uk}
                                             setHighlights={handleHighlightsChange}
-                                            error={errors.highlights_en}
+                                            error={errors.highlights_uk}
                                         />
                                     </div>
                                 </div>
@@ -363,4 +363,4 @@ const AddProduct_en: React.FC<AddProductProps> = (
         </div>
     );
 }
-export default AddProduct_en;
+export default EditProduct_uk;

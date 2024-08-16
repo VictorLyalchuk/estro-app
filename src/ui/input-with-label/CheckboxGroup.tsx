@@ -5,12 +5,13 @@ import { IProductFilters } from '../../interfaces/Info/IInfo';
 
 interface CheckboxGroupProps {
     sizes: IProductFilters[];
+    selectedSizes: IProductFilters[]; 
     lang: string;
     handleCheckboxChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     error: string | null;
 }
 
-const CheckboxGroup: React.FC<CheckboxGroupProps> = ({ sizes, handleCheckboxChange, lang, error }) => (
+const CheckboxGroup: React.FC<CheckboxGroupProps> = ({ sizes, selectedSizes, handleCheckboxChange, lang, error }) => (
     <div>
         <FormGroup row>
             {sizes.map((size) => (
@@ -22,6 +23,7 @@ const CheckboxGroup: React.FC<CheckboxGroupProps> = ({ sizes, handleCheckboxChan
                         onChange={handleCheckboxChange}
                         value={size.name_en}
                         color="primary"
+                        checked={selectedSizes.some(selected => selected.id === size.id)}
                         />
                     }
                 />

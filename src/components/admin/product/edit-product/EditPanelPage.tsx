@@ -1,26 +1,28 @@
 import 'tailwindcss/tailwind.css';
 import '../../../../index.css';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import { message } from 'antd';
 import { ICategory, IMainCategory, ISubCategory } from "../../../../interfaces/Catalog/IMainCategory";
 import { IImageItem } from "../../../../interfaces/Product/IProduct";
-import { IProductCreate } from "../../../../interfaces/Product/IProductCreate";
 import { IProductFilters } from '../../../../interfaces/Info/IInfo';
 import { getCategory, getMainCategory, getSubCategory } from '../../../../services/category/category-services';
 import { beforeUpload, createImage, deleteImage } from '../../../../services/images/images-services';
-import { createProduct } from '../../../../services/product/product-services';
+import { editProduct, getEditProductById } from '../../../../services/product/product-services';
 import { getColorsList, getMaterialsList, getSeasonList, getSizesList } from '../../../../services/info/info-services';
-import { validateForm } from '../../../../validations/add-product/add-product-validations';
+import { validateForm } from '../../../../validations/edit-product/edit-product-validations';
 import TabProductComponent from '../TabProductComponent';
-import { IAddProductData } from '../../../../interfaces/Product/IAddProductData';
-import AddProduct_en from './AddProduct_en';
-import AddProduct_uk from './AddProduct_uk';
-import AddProduct_es from './AddProduct_es';
-import AddProduct_fr from './AddProduct_fr';
+import EditProduct_en from './EditProduct_en';
+import { IEditProductData } from '../../../../interfaces/Product/IEditProductData';
+import { IProductEdit } from '../../../../interfaces/Product/IProductEdit';
+import EditProduct_uk from './EditProduct_uk';
+import EditProduct_es from './EditProduct_es';
+import EditProduct_fr from './EditProduct_fr';
 
-const UserPanelPage = () => {
+
+const EditPanelPage = () => {
+    const { Id } = useParams();
     const location = useLocation();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(0);
@@ -37,14 +39,17 @@ const UserPanelPage = () => {
     const [selectedSubCategory, setSelectedSubCategory] = useState<ISubCategory | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
     const [isUploading, setIsUploading] = useState(false);
+    
+    const idNumber = Id ? parseInt(Id, 10) : 0;
 
-    const [formData, setFormData] = useState<IAddProductData>({
+    const [formData, setFormData] = useState<IEditProductData>({
+        id: idNumber,
         name_en: '',
         name_uk: '',
         name_es: '',
         name_fr: '',
         article: '',
-        price: '',
+        price: 0,
         season: '',
         color: '',
         material: '',
@@ -60,6 +65,7 @@ const UserPanelPage = () => {
         highlights_uk: [],
         highlights_es: [],
         highlights_fr: [],
+        images: [],
     });
 
     const [errors, setErrors] = useState({
@@ -87,29 +93,41 @@ const UserPanelPage = () => {
     });
 
     useEffect(() => {
-        getSeasonList()
-            .then(data => setSeason(data))
-            .catch(error => console.error('Error fetching season data:', error));
-        getColorsList()
-            .then(data => setColors(data))
-            .catch(error => console.error('Error fetching colors data:', error));
-        getMaterialsList()
-            .then(data => setMaterials(data))
-            .catch(error => console.error('Error fetching materials data:', error));
-        getSizesList()
-            .then(data => setSizes(data))
-            .catch(error => console.error('Error fetching sizes data:', error));
+        const loadData = async () => {
+            try {
+                const [categoryList, subCategory, mainCategory, season, colors, materials, sizes
+                ] = await Promise.all([getCategory(), getSubCategory(), getMainCategory(), getSeasonList(), getColorsList(), getMaterialsList(), getSizesList()
+                ]);
+                setCategoryList(categoryList);
+                setSubCategory(subCategory);
+                setMainCategory(mainCategory);
+                setSeason(season);
+                setColors(colors);
+                setMaterials(materials);
+                setSizes(sizes);
 
-        getCategory()
-            .then(data => setCategoryList(data))
-            .catch(error => console.error('Error fetching category data:', error));
-        getSubCategory()
-            .then(data => setSubCategory(data))
-            .catch(error => console.error('Error fetching sub category data:', error));
-        getMainCategory()
-            .then(data => setMainCategory(data))
-            .catch(error => console.error('Error fetching sub category data:', error));
-    }, []);
+                if (Id) {
+                    const productData = await getEditProductById(Id);
+
+                    setFormData({
+                        ...productData,
+                        price: Number(productData.price) || 0,
+                    });
+
+                    setImages(productData.images ?? []);
+                    const selectedCat = categoryList.find(cat => cat.id === parseInt(productData.category)) || null;
+                    setSelectedCategory(selectedCat);
+                    const selectedSubCat = subCategory.find(sub => sub.id === selectedCat?.subCategoryId) || null;
+                    setSelectedSubCategory(selectedSubCat);
+                    setSelectedMainCategory(mainCategory.find(main => main.id === selectedSubCat?.mainCategoryId) || null);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        loadData();
+    }, [Id]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -233,7 +251,8 @@ const UserPanelPage = () => {
         const { isValid, newErrors } = validateForm(formData, selectedMainCategory, selectedSubCategory, selectedCategory, setActiveTab);
         setErrors(newErrors);
         if (isValid) {
-            const model: IProductCreate = {
+            const model: IProductEdit = {
+                id: formData.id,
                 name_en: formData.name_en,
                 name_uk: formData.name_uk,
                 name_es: formData.name_es,
@@ -249,26 +268,25 @@ const UserPanelPage = () => {
                 highlights_es: formData.highlights_es,
                 highlights_fr: formData.highlights_fr,
 
-                price: formData.price,
+                price: formData.price?.toString() || '',
                 materialId: parseInt(formData.material),
                 seasonId: parseInt(formData.season),
                 colorId: parseInt(formData.color),
                 article: formData.article,
-                ImagesFile: Images,
-                CategoryId: selectedCategory?.id,
+                categoryId: selectedCategory?.id,
+                imagesFile: Images,
                 sizes: formData.sizes,
-
             };
 
             try {
-                await createProduct(model);
+                await editProduct(model);
                 navigate("/admin/product/product-list");
             }
             catch (ex) {
                 message.error('Error adding product!');
             }
         } else {
-            message.error('Error validate form product!');
+            console.log(formData);
         }
     };
 
@@ -277,7 +295,7 @@ const UserPanelPage = () => {
             name: t('Add_Product_By_En'),
             current: activeTab === 0,
             component:
-                <AddProduct_en
+                <EditProduct_en
                     onSubmit={onSubmit}
                     formData={formData}
                     handleChange={handleChange}
@@ -308,7 +326,7 @@ const UserPanelPage = () => {
             name: t('Add_Product_By_Uk'),
             current: activeTab === 1,
             component:
-                <AddProduct_uk
+                <EditProduct_uk
                     onSubmit={onSubmit}
                     formData={formData}
                     handleChange={handleChange}
@@ -339,7 +357,7 @@ const UserPanelPage = () => {
             name: t('Add_Product_By_Es'),
             current: activeTab === 2,
             component:
-                <AddProduct_es
+                <EditProduct_es
                     onSubmit={onSubmit}
                     formData={formData}
                     handleChange={handleChange}
@@ -370,7 +388,7 @@ const UserPanelPage = () => {
             name: t('Add_Product_By_Fr'),
             current: activeTab === 3,
             component:
-                <AddProduct_fr
+                <EditProduct_fr
                     onSubmit={onSubmit}
                     formData={formData}
                     handleChange={handleChange}
@@ -401,21 +419,21 @@ const UserPanelPage = () => {
 
     const handleTabChange = (index: number) => {
         setActiveTab(index);
-        const routes = ['/admin/product/add-product-en', '/admin/product/add-product-uk', '/admin/product/add-product-es', '/admin/product/add-product-fr'];
+        const routes = [`/admin/product/edit-product-en/${Id}`, `/admin/product/edit-product-uk/${Id}`, `/admin/product/edit-product-es/${Id}`, `/admin/product/edit-product-fr/${Id}`];
         navigate(routes[index]);
     };
 
     useEffect(() => {
-        if (location.pathname.startsWith('/admin/product/add-product-en')) {
+        if (location.pathname.startsWith(`/admin/product/edit-product-en/${Id}`)) {
             setActiveTab(0);
         }
-        else if (location.pathname.startsWith('/admin/product/add-product-uk')) {
+        else if (location.pathname.startsWith(`/admin/product/edit-product-uk/${Id}`)) {
             setActiveTab(1);
         }
-        else if (location.pathname.startsWith('/admin/product/add-product-es')) {
+        else if (location.pathname.startsWith(`/admin/product/edit-product-es/${Id}`)) {
             setActiveTab(2);
         }
-        else if (location.pathname.startsWith('/admin/product/add-product-fr')) {
+        else if (location.pathname.startsWith(`/admin/product/edit-product-fr/${Id}`)) {
             setActiveTab(3);
         }
     }, [location.pathname]);
@@ -438,4 +456,4 @@ const UserPanelPage = () => {
     )
 }
 
-export default UserPanelPage;
+export default EditPanelPage;

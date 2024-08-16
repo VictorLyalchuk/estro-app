@@ -1,3 +1,4 @@
+import { IProductFilters } from "../Info/IInfo";
 import { IImageItem } from "./IProduct";
 
 export interface IProductCreate {
@@ -23,5 +24,5 @@ export interface IProductCreate {
     article: string; 
     ImagesFile: IImageItem [] | null;  
     CategoryId?: number;
-    sizes: string[] | null;
+    sizes: IProductFilters[] | null;
 }

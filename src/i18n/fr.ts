@@ -458,8 +458,10 @@ export const fr = {
     "Products_Actions": "Actes",
     "Products_Add_Storage": "Ajouter du stockage",
     "Products_Edit_Product": "Modifier le produit",
-    "Products_Delete_Product": "Supprimer le produit",
     "Products_Model": "Êtes-vous sûr de vouloir supprimer ce produit ?",
+    "Products_Delete_Product": "Supprimer le produit",    
+    "Products_Delete": "Supprimer",
+    "Products_Cancel": "Annuler",
 
     // Add Product
     "Add_Product_Name": "Nom",

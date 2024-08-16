@@ -11,9 +11,9 @@ import SubCategorySelect from '../../../../ui/category-select/SubCategorySelect'
 import MainCategorySelect from '../../../../ui/category-select/MainCategorySelect';
 import HighlightsInput from '../../../../ui/input-with-label/HighlightsInput';
 import { useTranslation } from 'react-i18next';
-import { AddProductProps } from '../../../../interfaces/Product/AddProductProps';
+import { EditProductProps } from '../../../../interfaces/Product/EditProductProps';
 
-const AddProduct_en: React.FC<AddProductProps> = (
+const EditProduct_en: React.FC<EditProductProps> = (
     { formData, Images, isUploading,
         errors, season, colors, materials, sizes,
         mainCategory, subCategory, categoryList,
@@ -29,7 +29,7 @@ const AddProduct_en: React.FC<AddProductProps> = (
 
             <div className="sm:mx-auto sm:w-full sm:max-w-sm flex justify-center ">
                 <div className="pb-6 mt-6">
-                    <h2 className="text-base font-semibold leading-7 text-gray-900">{t('Add_Product')}</h2>
+                    <h2 className="text-base font-semibold leading-7 text-gray-900">{t('Edit_Product')}</h2>
                 </div>
             </div>
             <div className="border-t">
@@ -363,4 +363,4 @@ const AddProduct_en: React.FC<AddProductProps> = (
         </div>
     );
 }
-export default AddProduct_en;
+export default EditProduct_en;

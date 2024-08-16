@@ -1,6 +1,6 @@
 import React from 'react';
 import { FormControl, MenuItem, TextField } from '@material-ui/core';
-import { IMainCategory } from '../../interfaces/Catalog/IMainCategory'; // Переконайтеся, що шлях правильний
+import { IMainCategory } from '../../interfaces/Catalog/IMainCategory'; 
 import { getLocalizedField } from '../../utils/localized/localized';
 
 interface MainCategorySelectProps {

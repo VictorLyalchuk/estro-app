@@ -1,12 +1,14 @@
 import React from 'react';
 import { FormControl, MenuItem, TextField } from '@material-ui/core';
-import { ICategory, ISubCategory } from '../../interfaces/Catalog/IMainCategory';
 import { getLocalizedField } from '../../utils/localized/localized';
+import { ICategory, IMainCategory, ISubCategory } from '../../interfaces/Catalog/IMainCategory';
+
 
 interface CategorySelectProps {
     categoryList: ICategory[];
     selectedCategory: ICategory | null;
     selectedSubCategory: ISubCategory | null;
+    selectedMainCategory: IMainCategory | null;
     handleCategoryChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
     errors: { category?: string };
     lang: string;
@@ -16,10 +18,21 @@ const CategorySelect: React.FC<CategorySelectProps> = ({
     categoryList,
     selectedCategory,
     selectedSubCategory,
+    selectedMainCategory,
     handleCategoryChange,
     errors,
     lang
 }) => {
+
+    const filteredCategories = categoryList.filter(cat => {
+        if (selectedSubCategory) {
+            return cat.subCategoryId === selectedSubCategory.id;
+        }
+        if (selectedMainCategory) {
+            return cat.mainCategoryId === selectedMainCategory.id;
+        }
+        return true;
+    });
 
     return (
         <FormControl fullWidth variant="outlined">
@@ -31,13 +44,11 @@ const CategorySelect: React.FC<CategorySelectProps> = ({
                 onChange={handleCategoryChange}
                 error={!!errors.category}
             >
-                {categoryList
-                    .filter(cat => !selectedSubCategory || selectedSubCategory?.id === cat.subCategoryId)
-                    .map(category => (
-                        <MenuItem key={category.id} value={category.id}>
-                            {getLocalizedField(category, 'name', lang)}
-                        </MenuItem>
-                    ))}
+                {filteredCategories.map(category => (
+                    <MenuItem key={category.id} value={category.id}>
+                        {getLocalizedField(category, 'name', lang)}
+                    </MenuItem>
+                ))}
             </TextField>
             {errors.category ? (
                 <div className="h-6 text-xs text-red-500">Error: {errors.category}</div>

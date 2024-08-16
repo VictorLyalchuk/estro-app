@@ -5,9 +5,12 @@ import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom'
-import { useSelector } from 'react-redux'
-import { IAuthReducerState } from '../../../store/accounts/AuthReducer'
+import { useDispatch, useSelector } from 'react-redux'
+import { AuthReducerActionType, IAuthReducerState } from '../../../store/accounts/AuthReducer'
 import { APP_ENV } from '../../../env/config'
+import { BagReducerActionType } from '../../../store/bag/BagReducer'
+import { CardReducerActionType } from '../../../store/bag/CardReducer'
+import { FavoritesReducerActionType } from '../../../store/favourites/FavoritesReducer'
 
 const navigation = [
     { name: 'Home', link: '/admin/admin-panel-page', current: false },
@@ -19,14 +22,23 @@ const navigation = [
     { name: 'Stores', link: '#', current: false },
 ]
 const userNavigation = [
-    { name: 'Your Profile', href: '#' },
-    { name: 'Settings', href: '#' },
-    { name: 'Sign out', href: '#' },
+    { name: 'Your Profile', to: '/account/profile' },
+    { name: 'Settings', to: '/account/settings' },
+    { name: 'Sign out', to: '/', action: 'logout' },
 ]
 export default function AdminHeader() {
     const { t } = useTranslation();
     const baseUrl = APP_ENV.BASE_URL;
     const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
+    const dispatch = useDispatch();
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        dispatch({ type: AuthReducerActionType.LOGOUT_USER, });
+        dispatch({ type: BagReducerActionType.DELETE_BAG_ALL, });
+        dispatch({ type: CardReducerActionType.DELETE_CARD_ALL, });
+        dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL, })
+    };
     return (
         <div className="min-h-full">
             <Popover as="header" className="bg-gradient-to-r pb-24 bg-white-container-header">
@@ -72,15 +84,28 @@ export default function AdminHeader() {
                                                 {userNavigation.map((item) => (
                                                     <Menu.Item key={item.name}>
                                                         {({ active }) => (
-                                                            <a
-                                                                href={item.href}
-                                                                className={classNames(
-                                                                    active ? 'bg-gray-100' : '',
-                                                                    'block px-4 py-2 text-sm text-gray-700'
-                                                                )}
-                                                            >
-                                                                {item.name}
-                                                            </a>
+                                                            item.action === 'logout' ? (
+                                                                <Link
+                                                                    to={item.to}
+                                                                    onClick={handleLogout}
+                                                                    className={classNames(
+                                                                        active ? 'bg-gray-100' : '',
+                                                                        'block px-4 py-2 text-sm text-gray-700 w-full text-left'
+                                                                    )}
+                                                                >
+                                                                    {item.name}
+                                                                </Link>
+                                                            ) : (
+                                                                <Link
+                                                                    to={item.to}
+                                                                    className={classNames(
+                                                                        active ? 'bg-gray-100' : '',
+                                                                        'block px-4 py-2 text-sm text-gray-700'
+                                                                    )}
+                                                                >
+                                                                    {item.name}
+                                                                </Link>
+                                                            )
                                                         )}
                                                     </Menu.Item>
                                                 ))}
@@ -223,13 +248,24 @@ export default function AdminHeader() {
                                                 </div>
                                                 <div className="mt-3 space-y-1 px-2">
                                                     {userNavigation.map((item) => (
-                                                        <a
-                                                            key={item.name}
-                                                            href={item.href}
-                                                            className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-800"
-                                                        >
-                                                            {item.name}
-                                                        </a>
+                                                        item.action === 'logout' ? (
+                                                            <Link
+                                                                to={item.to}
+                                                                key={item.name}
+                                                                onClick={handleLogout}
+                                                                className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-800 w-full text-left"
+                                                            >
+                                                                {item.name}
+                                                            </Link>
+                                                        ) : (
+                                                            <Link
+                                                                key={item.name}
+                                                                to={item.to}
+                                                                className="block rounded-md px-3 py-2 text-base font-medium text-gray-900 hover:bg-gray-100 hover:text-gray-800"
+                                                            >
+                                                                {item.name}
+                                                            </Link>
+                                                        )
                                                     ))}
                                                 </div>
                                             </div>
