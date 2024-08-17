@@ -5,7 +5,7 @@ import { ChevronDownIcon, FunnelIcon, MinusIcon, PlusIcon, Squares2X2Icon } from
 import { IProduct, IStorages } from '../../../interfaces/Product/IProduct.ts';
 import { Link, useParams, useNavigate } from "react-router-dom";
 import qs, { ParsedQs } from 'qs';
-import { IMainCategory } from '../../../interfaces/Catalog/IMainCategory.ts';
+import { IMainCategory } from '../../../interfaces/Category/Main-Category/IMainCategory.ts';
 import { IInfo, IOptions } from '../../../interfaces/Info/IInfo.ts';
 import { APP_ENV } from "../../../env/config.ts";
 import { getProductsist, getQuantityProducts } from '../../../services/product/product-services.ts';

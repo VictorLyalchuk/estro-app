@@ -4,7 +4,7 @@ import { Bars3Icon, MagnifyingGlassIcon, ShoppingBagIcon, XMarkIcon, UserIcon, H
 import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { AuthReducerActionType, IAuthReducerState } from "../../store/accounts/AuthReducer.ts";
-import { IMainCategory } from '../../interfaces/Catalog/IMainCategory.ts';
+import { IMainCategory } from '../../interfaces/Category/Main-Category/IMainCategory.ts';
 import DropdownUser from './navbarsPages/dropdownUser/DropdownUser.tsx';
 import { BagReducerActionType, IBagReducerState } from '../../store/bag/BagReducer.tsx';
 import { getMainCategories } from '../../services/category/category-services.ts';

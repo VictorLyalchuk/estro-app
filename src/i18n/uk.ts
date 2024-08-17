@@ -489,4 +489,20 @@ export const uk = {
     "Add_Product_By_Uk" : "Українською",
     "Add_Product_By_Es" : "Іспанською",
     "Add_Product_By_Fr" : "Французькою",
+ 
+    //Category
+    "Category_AddMainCategory" : "Додати Головну Категорію",
+    "Main_Category" : "Головні Категорії ",
+    "Category_Id" : "Id",
+    "Category_Name" : "Назва",
+    "Category_Description" : "Опис",
+    "Category_URLName" : "URL-назва",
+    "Category_MainCategoryCreate" : "Створити Головну Категорію",
+    "Category_Delete" : "Видалити",
+    "Category_Cancel" : "Відміна",
+    "Category_Delete_MainCategory" : "Видалити Головну Категорію",
+    "Category_Model" : "Ви впевнені, що хочете видалити Головну Категорію?",
+    "Category_Edit_MainCategory" : "Редагувати Головну Категорію",
+    "Category_CoverPhoto" : "Фото Обкладинки",
+    "Category_EditMainCategory" : "Редагувати Головну Категорію",
 }

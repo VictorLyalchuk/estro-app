@@ -1,5 +1,5 @@
 import { ChangeEventHandler } from "react";
-import { ICategory, IMainCategory, ISubCategory } from "../Catalog/IMainCategory";
+import { ICategory, IMainCategory, ISubCategory } from "../Category/Main-Category/IMainCategory";
 import { IProductFilters } from "../Info/IInfo";
 import { IImageItem } from "./IProduct";
 import { IEditProductData } from "./IEditProductData";

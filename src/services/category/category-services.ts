@@ -1,7 +1,12 @@
 import axios from "axios";
 import { APP_ENV } from "../../env/config";
 
-import { ICategory, IMainCategory, ISubCategory } from "../../interfaces/Catalog/IMainCategory";
+import { IMainCategory } from "../../interfaces/Category/Main-Category/IMainCategory";
+import { ISubCategory } from "../../interfaces/Category/Sub-Category/ISubCategory";
+import { ICategory } from "../../interfaces/Category/Category/ICategory";
+import { IMainCategoryCreate } from "../../interfaces/Category/Main-Category/IMainCategoryCreate";
+import { IEditMainCategoryData } from "../../interfaces/Category/Main-Category/IEditMainCategoryData";
+import { IMainCategoryEdit } from "../../interfaces/Category/Main-Category/IMainCategoryEdit";
 
 const baseUrl = APP_ENV.BASE_URL;
 
@@ -22,7 +27,10 @@ export async function getMainCategories() {
             name_es: mainCategory.name_es,
             name_fr: mainCategory.name_fr,
             name_uk: mainCategory.name_uk,
-            description: mainCategory.description,
+            description_en: mainCategory.description_en,
+            description_uk: mainCategory.description_uk,
+            description_es: mainCategory.description_es,
+            description_fr: mainCategory.description_fr,
             imagePath: mainCategory.imagePath,
             urlName: mainCategory.urlName,
             subCategories: mainCategory.subCategories?.map((subCategory: ISubCategory) => ({
@@ -45,6 +53,7 @@ export async function getMainCategories() {
                     imagePath: category.imagePath,
                     subCategoryId: category.subCategoryId,
                     urlName: category.urlName,
+                    mainCategoryId: subCategory.mainCategoryId,
                 })) || [],
             })) || [],
         }));
@@ -89,6 +98,94 @@ export async function getSubCategory() {
 export async function getMainCategory() {
     try {
         const resp = await instance.get<IMainCategory[]>(`MainCategoryGetAsync`);
+        return resp.data;
+    } catch (error) {
+        console.error('Failed to fetch main category data:', error);
+        throw error;
+    }
+}
+
+//admin panel
+export async function getMainCategoryQuantity() {
+    const token = localStorage.getItem('token');
+    try {
+        const resp = await instance.get<number>(`MainCategoryQuantity`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        return resp.data;
+    } catch (error) {
+        console.error('Failed to fetch quantity main category data:', error);
+        throw error;
+    }
+}
+
+export async function getMainCategoryByPage(page: number) {
+    const token = localStorage.getItem('token');
+    try {
+        const resp = await instance.get<IMainCategory[]>(`MainCategoryByPage/${page}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        return resp.data;
+    } catch (error) {
+        console.error('Failed to fetch main category data:', error);
+        throw error;
+    }
+}
+
+export async function createMainCategory(model: IMainCategoryCreate) {
+    const token = localStorage.getItem('token');
+    try {
+        await instance.post(`CreateMainCategory`, model, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+    } catch (error) {
+        console.error('Failed to fetch main category data:', error);
+        throw error;
+    }
+}
+
+export async function editMainCategory(model: IMainCategoryEdit) {
+    const token = localStorage.getItem('token');
+    try {
+        await instance.post(`EditMainCategory`, model, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+    } catch (error) {
+        console.error('Failed to fetch main category data:', error);
+        throw error;
+    }
+}
+
+export async function deleteMainCategoryByID(id: number) {
+    const token = localStorage.getItem('token');
+    try {
+        await instance.delete<IMainCategory[]>(`DeleteMainCategoryByID/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+    } catch (error) {
+        console.error('Failed to fetch main category data:', error);
+        throw error;
+    }
+}
+
+export async function getMainCategoryById(id: number) {
+    const token = localStorage.getItem('token');
+    try {
+        const resp = await instance.get<IEditMainCategoryData>(`GetMainCategoryById/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
         return resp.data;
     } catch (error) {
         console.error('Failed to fetch main category data:', error);

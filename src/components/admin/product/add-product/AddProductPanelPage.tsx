@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import { message } from 'antd';
-import { ICategory, IMainCategory, ISubCategory } from "../../../../interfaces/Catalog/IMainCategory";
+import { IMainCategory } from "../../../../interfaces/Category/Main-Category/IMainCategory";
 import { IImageItem } from "../../../../interfaces/Product/IProduct";
 import { IProductCreate } from "../../../../interfaces/Product/IProductCreate";
 import { IProductFilters } from '../../../../interfaces/Info/IInfo';
@@ -19,8 +19,10 @@ import AddProduct_en from './AddProduct_en';
 import AddProduct_uk from './AddProduct_uk';
 import AddProduct_es from './AddProduct_es';
 import AddProduct_fr from './AddProduct_fr';
+import { ISubCategory } from '../../../../interfaces/Category/Sub-Category/ISubCategory';
+import { ICategory } from '../../../../interfaces/Category/Category/ICategory';
 
-const UserPanelPage = () => {
+const AddProductPanelPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(0);
@@ -438,4 +440,4 @@ const UserPanelPage = () => {
     )
 }
 
-export default UserPanelPage;
+export default AddProductPanelPage;

@@ -14,8 +14,8 @@ import { FavoritesReducerActionType } from '../../../store/favourites/FavoritesR
 
 const navigation = [
     { name: 'Home', link: '/admin/admin-panel-page', current: false },
-    { name: 'Products', link: '/admin/product/product-list', current: true },
-    { name: 'Main Categories', link: '#', current: false },
+    { name: 'Products', link: '/admin/product/product-list', current: false },
+    { name: 'Main Categories', link: '/admin/main-category/main-category-list', current: false },
     { name: 'Sub Categories', link: '#', current: false },
     { name: 'Categories', link: '#', current: false },
     { name: 'Users', link: '#', current: false },

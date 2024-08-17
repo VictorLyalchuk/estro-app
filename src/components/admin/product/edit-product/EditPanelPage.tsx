@@ -4,7 +4,7 @@ import { useNavigate, useLocation, useParams } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { ChangeEventHandler, useEffect, useState } from "react";
 import { message } from 'antd';
-import { ICategory, IMainCategory, ISubCategory } from "../../../../interfaces/Catalog/IMainCategory";
+import { IMainCategory } from "../../../../interfaces/Category/Main-Category/IMainCategory";
 import { IImageItem } from "../../../../interfaces/Product/IProduct";
 import { IProductFilters } from '../../../../interfaces/Info/IInfo';
 import { getCategory, getMainCategory, getSubCategory } from '../../../../services/category/category-services';
@@ -19,6 +19,8 @@ import { IProductEdit } from '../../../../interfaces/Product/IProductEdit';
 import EditProduct_uk from './EditProduct_uk';
 import EditProduct_es from './EditProduct_es';
 import EditProduct_fr from './EditProduct_fr';
+import { ISubCategory } from '../../../../interfaces/Category/Sub-Category/ISubCategory';
+import { ICategory } from '../../../../interfaces/Category/Category/ICategory';
 
 
 const EditPanelPage = () => {

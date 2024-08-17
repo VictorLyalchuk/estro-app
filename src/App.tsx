@@ -25,15 +25,17 @@ import UserLayout from "./components/layout/UserLayout";
 import GuestLayout from "./components/layout/GuestLayout";
 import HomeStore from "./components/homePage/HomeStore";
 import CatalogHome from "./components/user/catalog/CatalogHome";
-
 import useAuthTokenEffect from "./useAuthTokenEffect";
 import useGetFavoritesEffect from "./useGetFavoritesEffect";
 import './i18n/i18n.ts';
 import GeneralLayout from "./components/layout/GeneralLayout.tsx";
 import ProductList from "./components/admin/product/ProductList.tsx";
 import AdminHeader from "./components/admin/adminPanel/AdminHeader.tsx";
-import AddPanelPage from "./components/admin/product/add-product/AddPanelPage.tsx";
+import AddProductPanelPage from "./components/admin/product/add-product/AddProductPanelPage.tsx";
 import EditPanelPage from "./components/admin/product/edit-product/EditPanelPage.tsx";
+import MainCategoryList from "./components/admin/main-category/MainCategoryList.tsx";
+import AddMainCategoryPanelPage from "./components/admin/main-category/add-main-category/AddMainCategoryPanelPage.tsx";
+import EditMainCategoryPanelPage from "./components/admin/main-category/edit-main-category/EditMainCategoryPanelPage.tsx";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -64,16 +66,26 @@ function App() {
           <Route path="admin-panel-page" element={<AdminPanelPage />} />
           
           <Route path="product/product-list" element={<ProductList/>}/>
-          <Route path="product/add-product-en" element={<AddPanelPage />} />
-          <Route path="product/add-product-uk" element={<AddPanelPage />} />
-          <Route path="product/add-product-es" element={<AddPanelPage />} />
-          <Route path="product/add-product-fr" element={<AddPanelPage />} />
+          <Route path="product/add-product-en" element={<AddProductPanelPage />} />
+          <Route path="product/add-product-uk" element={<AddProductPanelPage />} />
+          <Route path="product/add-product-es" element={<AddProductPanelPage />} />
+          <Route path="product/add-product-fr" element={<AddProductPanelPage />} />
           <Route path="product/edit-product-en/:Id" element={<EditPanelPage />} />
           <Route path="product/edit-product-uk/:Id" element={<EditPanelPage />} />
           <Route path="product/edit-product-es/:Id" element={<EditPanelPage />} />
           <Route path="product/edit-product-fr/:Id" element={<EditPanelPage />} />
-
           <Route path="product/add-storage/:Id" element={<AddStorage />} />
+
+          <Route path="main-category/main-category-list" element={<MainCategoryList/>}/>
+          <Route path="main-category/add-main-category-en" element={<AddMainCategoryPanelPage/>}/>
+          <Route path="main-category/add-main-category-uk" element={<AddMainCategoryPanelPage/>}/>
+          <Route path="main-category/add-main-category-es" element={<AddMainCategoryPanelPage/>}/>
+          <Route path="main-category/add-main-category-fr" element={<AddMainCategoryPanelPage/>}/>
+          <Route path="main-category/edit-main-category-en/:Id" element={<EditMainCategoryPanelPage/>}/>
+          <Route path="main-category/edit-main-category-uk/:Id" element={<EditMainCategoryPanelPage/>}/>
+          <Route path="main-category/edit-main-category-es/:Id" element={<EditMainCategoryPanelPage/>}/>
+          <Route path="main-category/edit-main-category-fr/:Id" element={<EditMainCategoryPanelPage/>}/>
+
         </Route>
 
         {/* Маршрути для користувачів з Logo, NavbarsPage і Footer */}

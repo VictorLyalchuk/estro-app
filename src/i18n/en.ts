@@ -493,4 +493,20 @@ export const en = {
 
     //Edit Product
     "Edit_Product" : "Edit Product",
+
+    //Category
+    "Category_AddMainCategory" : "Add Main Category",
+    "Main_Category" : "Main Categories",
+    "Category_Id" : "Id",
+    "Category_Name" : "Name",
+    "Category_Description" : "Description",
+    "Category_URLName" : "URL-Name",
+    "Category_MainCategoryCreate" : "Create Main Category",
+    "Category_Delete" : "Delete",
+    "Category_Cancel" : "Cancel",
+    "Category_Delete_MainCategory" : "Delete Main Category",
+    "Category_Model" : "Are you sure you want to delete this category?",
+    "Category_Edit_MainCategory" : "Edit Main Category",
+    "Category_CoverPhoto" : "Cover Photo",
+    "Category_EditMainCategory" : "Edit Main Category",
 }

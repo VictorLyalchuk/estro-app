@@ -119,7 +119,7 @@ export async function createProduct(model: IProductCreate) {
 export async function getEditProductById(id: string) {
     const token = localStorage.getItem('token');
     try {
-        const response = await instance.get<IEditProductData>(`getEditProductById/${id}`, {
+        const response = await instance.get<IEditProductData>(`GetEditProductById/${id}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
             },

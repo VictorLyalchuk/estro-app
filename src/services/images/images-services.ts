@@ -104,3 +104,30 @@ export async function deleteImage(model: IImageItem) {
         throw error;
     }
 }
+
+export async function createCategoryImage(file: File) {
+    try {
+        const response = await instance.post(`CreateCategoryImage`, { ImageFile: file }, {
+            headers: {
+              "Content-Type": "multipart/form-data"
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Failed to create image user:', error);
+        throw error;
+    }
+}
+
+export async function deleteCategoryImage(image: string) {
+    try {
+        await instance.post(`DeleteCategoryImage`, {ImagePath: image} , {
+            headers: {
+                "Content-Type": "multipart/form-data"
+            }
+        });
+    } catch (error) {
+        console.error('Failed to delete image user:', error);
+        throw error;
+    }
+}

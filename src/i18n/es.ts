@@ -489,4 +489,20 @@ export const es = {
     "Add_Product_By_Uk": "En Ucraniano",
     "Add_Product_By_Es": "En Español",
     "Add_Product_By_Fr": "En Francés",
+
+    //Category
+    "Category_AddMainCategory" : "Agregar categoría principal",
+    "Main_Category" : "Categorías principales",
+    "Category_Id" : "Id",
+    "Category_Name" : "Nombre",
+    "Category_Description" : "Descripción",
+    "Category_URLName" : "URL-Nombre",
+    "Category_MainCategoryCreate" : "Crear categoría principal",
+    "Category_Delete" : "Borrar",
+    "Category_Cancel" : "Cancelar",
+    "Category_Delete_MainCategory" : "Eliminar categoría principal",
+    "Category_Model" : "Estás seguro de que deseas eliminar esta categoría?",
+    "Category_Edit_MainCategory" : "Editar categoría principal",
+    "Category_CoverPhoto": "Foto de portada",
+    "Category_EditMainCategory" : "Editar categoría principal",
 }

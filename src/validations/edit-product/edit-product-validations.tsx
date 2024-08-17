@@ -1,6 +1,8 @@
 import { Dispatch, SetStateAction } from "react";
-import { ICategory, IMainCategory, ISubCategory } from "../../interfaces/Catalog/IMainCategory";
+import { IMainCategory } from "../../interfaces/Category/Main-Category/IMainCategory";
 import { IEditProductData } from "../../interfaces/Product/IEditProductData";
+import { ISubCategory } from "../../interfaces/Category/Sub-Category/ISubCategory";
+import { ICategory } from "../../interfaces/Category/Category/ICategory";
 
 interface Errors {
     name_en: string;
