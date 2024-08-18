@@ -1,18 +1,7 @@
 import { ProfileUserProps } from "../../../../interfaces/ProfileUser/ProfileUserProps";
 import { emailConfirm } from "../../../../services/accounts/account-services";
 import {t} from "i18next";
-
-
-const formatDate = (date?: Date | string) => {
-  if (!date) return 'N/A';
-  const validDate = typeof date === 'string' ? new Date(date) : date;
-  if (isNaN(validDate.getTime())) return 'N/A';
-  return validDate.toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'long',
-    year: 'numeric'
-  });
-};
+import { formatDateFromDate } from "../../../../services/custom/format-data";
 
 const Profile: React.FC<ProfileUserProps> = ({ userProfile, countPage }) => {
   const confirm = async () => {
@@ -44,7 +33,7 @@ const Profile: React.FC<ProfileUserProps> = ({ userProfile, countPage }) => {
                 <div className="pt-6 sm:flex">
                   <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">{t('Profile_Birthday')}</dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900">{formatDate(userProfile?.birthday)}</div>
+                    <div className="text-gray-900">{formatDateFromDate(userProfile?.birthday)}</div>
                   </dd>
                 </div>
                 <div className="pt-6 sm:flex">

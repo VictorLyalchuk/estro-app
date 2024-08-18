@@ -7,7 +7,7 @@ import 'tailwindcss/tailwind.css';
 import { forgotPassword } from '../../../../../services/accounts/account-services';
 import { validateForm } from '../../../../../validations/account/forgot-validations';
 import { theme } from '../../../../../theme/theme';
-import { useStyles } from '../../../../../theme/Styles';
+import { useStyles } from '../../../../../theme/styles';
 import TextFieldComponent from '../../../../../ui/input-with-label/TextFieldComponent';
 import {useTranslation} from "react-i18next";
 

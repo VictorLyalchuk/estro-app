@@ -1,4 +1,4 @@
-import { IProduct } from '../../interfaces/Catalog/IProduct';
+import { IProduct } from "../../interfaces/Product/IProduct";
 
 export enum ProductReducerActionType {
     SET = "SET_PRODUCT",

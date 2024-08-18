@@ -1,9 +1,10 @@
-import { AcademicCapIcon, BanknotesIcon,  CheckBadgeIcon, ClockIcon, ReceiptRefundIcon, UsersIcon} from '@heroicons/react/24/outline'
+import { AcademicCapIcon, BanknotesIcon, CheckBadgeIcon, ClockIcon, ReceiptRefundIcon, UsersIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 import { useSelector } from 'react-redux'
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer'
 import { APP_ENV } from '../../../env/config'
 import { Link } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 const stats = [
   { label: 'Vacation days left', value: 12 },
@@ -109,15 +110,14 @@ const announcements = [
 ]
 export default function AdminPanelPage() {
   const baseUrl = APP_ENV.BASE_URL;
+  const { t } = useTranslation();
   const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
   return (
     <>
       <div className="min-h-full">
-
-        
         <main className="-mt-24 pb-8">
           <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
-            <h1 className="sr-only">Profile</h1>
+            <h1 className="sr-only">{t('Admin_Profile')}</h1>
             {/* Main 3 column grid */}
             <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-3 lg:gap-8">
               {/* Left column */}
@@ -126,7 +126,7 @@ export default function AdminPanelPage() {
                 <section aria-labelledby="profile-overview-title">
                   <div className="overflow-hidden rounded-lg bg-white shadow">
                     <h2 className="sr-only" id="profile-overview-title">
-                      Profile Overview
+                      {t('Admin_Profile_Overview')}
                     </h2>
                     <div className="bg-white p-6">
                       <div className="sm:flex sm:items-center sm:justify-between">
@@ -135,7 +135,7 @@ export default function AdminPanelPage() {
                             <img className="mx-auto h-20 w-20 rounded-full" src={`${baseUrl}/uploads/${user?.ImagePath || "user404.webp"}`} alt="" />
                           </div>
                           <div className="mt-4 text-center sm:mt-0 sm:pt-1 sm:text-left">
-                            <p className="text-sm font-medium text-gray-600">Welcome back,</p>
+                            <p className="text-sm font-medium text-gray-600">{t('Admin_Welcome_back')}</p>
                             <p className="text-xl font-bold text-gray-900 sm:text-2xl">{user?.FirstName} {user?.LastName}</p>
                             <p className="text-sm font-medium text-gray-600">{user?.Role}</p>
                           </div>
@@ -145,7 +145,7 @@ export default function AdminPanelPage() {
                             to={'/account/profile'}
                             className="flex items-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                           >
-                            View profile
+                            {t('Admin_View_profile')}
                           </Link>
                         </div>
                       </div>
@@ -165,7 +165,7 @@ export default function AdminPanelPage() {
                 <section aria-labelledby="quick-links-title">
                   <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-200 shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0">
                     <h2 className="sr-only" id="quick-links-title">
-                      Quick links
+                      {t('Admin_Quick_links')}
                     </h2>
                     {actions.map((action, actionIdx) => (
                       <div
@@ -175,7 +175,7 @@ export default function AdminPanelPage() {
                           actionIdx === 1 ? 'sm:rounded-tr-lg' : '',
                           actionIdx === actions.length - 2 ? 'sm:rounded-bl-lg' : '',
                           actionIdx === actions.length - 1 ? 'rounded-bl-lg rounded-br-lg sm:rounded-bl-none' : '',
-                          'group relative bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-cyan-500'
+                          'group relative bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-500'
                         )}
                       >
                         <div>
@@ -229,7 +229,7 @@ export default function AdminPanelPage() {
                         <ul role="list" className="-my-5 divide-y divide-gray-200">
                           {announcements.map((announcement) => (
                             <li key={announcement.id} className="py-5">
-                              <div className="relative focus-within:ring-2 focus-within:ring-cyan-500">
+                              <div className="relative focus-within:ring-2 focus-within:ring-indigo-500">
                                 <h3 className="text-sm font-semibold text-gray-800">
                                   <a href={announcement.href} className="hover:underline focus:outline-none">
                                     {/* Extend touch target to entire panel */}
@@ -260,7 +260,7 @@ export default function AdminPanelPage() {
                   <div className="overflow-hidden rounded-lg bg-white shadow">
                     <div className="p-6">
                       <h2 className="text-base font-medium text-gray-900" id="recent-hires-title">
-                        Recent Orders
+                        {t('Admin_Recent_Orders')}
                       </h2>
                       <div className="mt-6 flow-root">
                         <ul role="list" className="-my-5 divide-y divide-gray-200">
@@ -279,7 +279,7 @@ export default function AdminPanelPage() {
                                     href={person.href}
                                     className="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                                   >
-                                    View
+                                    {t('Admin_View')}
                                   </a>
                                 </div>
                               </div>
@@ -292,7 +292,7 @@ export default function AdminPanelPage() {
                           href="#"
                           className="flex w-full items-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                         >
-                          View all
+                          {t('Admin_View_all')}
                         </a>
                       </div>
                     </div>

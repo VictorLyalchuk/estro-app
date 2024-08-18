@@ -7,7 +7,7 @@ import '../../../../../satoshi.css';
 import { validateForm } from '../../../../../validations/account/reset-validations';
 import { resetPassword } from '../../../../../services/accounts/account-services';
 import { theme } from '../../../../../theme/theme';
-import { useStyles } from '../../../../../theme/Styles';
+import { useStyles } from '../../../../../theme/styles';
 import PasswordFieldComponent from '../../../../../ui/input-with-label/PasswordFieldComponent';
 
 const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {

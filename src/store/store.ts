@@ -3,7 +3,6 @@ import {configureStore} from "@reduxjs/toolkit";
 import thunk from "redux-thunk";
 import AuthReducer from "./accounts/AuthReducer";
 import productReducer from './product/productReducer';
-// import TableProductsReducer from "../components/Dashboard/pages/TableProductsReducer";
 import bagReducer from "./bag/BagReducer";
 import cardReducer from "./bag/CardReducer";
 import favoritesReducer from "./favourites/FavoritesReducer";
@@ -14,7 +13,6 @@ export const rootReducer = combineReducers({
     card: cardReducer,
     favorites: favoritesReducer,
     products: productReducer,
-    // paginationProdDashboard: TableProductsReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

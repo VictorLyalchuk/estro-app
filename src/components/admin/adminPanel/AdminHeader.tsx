@@ -12,25 +12,27 @@ import { BagReducerActionType } from '../../../store/bag/BagReducer'
 import { CardReducerActionType } from '../../../store/bag/CardReducer'
 import { FavoritesReducerActionType } from '../../../store/favourites/FavoritesReducer'
 
-const navigation = [
-    { name: 'Home', link: '/admin/admin-panel-page', current: false },
-    { name: 'Products', link: '/admin/product/product-list', current: false },
-    { name: 'Main Categories', link: '/admin/main-category/main-category-list', current: false },
-    { name: 'Sub Categories', link: '#', current: false },
-    { name: 'Categories', link: '#', current: false },
-    { name: 'Users', link: '#', current: false },
-    { name: 'Stores', link: '#', current: false },
-]
-const userNavigation = [
-    { name: 'Your Profile', to: '/account/profile' },
-    { name: 'Settings', to: '/account/settings' },
-    { name: 'Sign out', to: '/', action: 'logout' },
-]
 export default function AdminHeader() {
-    const { t } = useTranslation();
     const baseUrl = APP_ENV.BASE_URL;
+    const { t } = useTranslation();
     const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
     const dispatch = useDispatch();
+
+    const navigation = [
+        { name: t('Admin_Home'), link: '/admin/admin-panel-page', current: false },
+        { name: t('Products_Products'), link: '/admin/product/product-list', current: false },
+        { name: t('Main_Category'), link: '/admin/main-category/main-category-list', current: false },
+        { name: t('Sub_Category'), link: '/admin/sub-category/sub-category-list', current: false },
+        { name: t('Category'), link: '/admin/category/category-list', current: false },
+        { name: t('User_Users'), link: '/admin/user/user-list', current: false },
+        { name: t('Stores'), link: '#', current: false },
+    ]
+    
+    const userNavigation = [
+        { name: t('Admin_Your_Profile'), to: '/account/profile' },
+        { name: t('Admin_Settings'), to: '/account/settings' },
+        { name: t('Admin_Sign_out'), to: '/', action: 'logout' },
+    ]
 
     const handleLogout = () => {
         localStorage.removeItem("token");
@@ -61,7 +63,7 @@ export default function AdminHeader() {
                                         className="relative flex-shrink-0 rounded-full p-1 text-indigo-200 hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
                                     >
                                         <span className="absolute -inset-1.5" />
-                                        <span className="sr-only">View notifications</span>
+                                        <span className="sr-only">{t('Admin_View_notifications')}</span>
                                         <BellIcon className="h-6 w-6" aria-hidden="true" />
                                     </button>
 
@@ -70,7 +72,7 @@ export default function AdminHeader() {
                                         <div>
                                             <Menu.Button className="relative flex rounded-full bg-white text-sm ring-2 ring-white ring-opacity-20 focus:outline-none focus:ring-opacity-100">
                                                 <span className="absolute -inset-1.5" />
-                                                <span className="sr-only">Open user menu</span>
+                                                <span className="sr-only">{t('Admin_Open_user_menu')}</span>
                                                 <img className="h-8 w-8 rounded-full" src={`${baseUrl}/uploads/${user?.ImagePath || "user404.webp"}`} alt="" />
                                             </Menu.Button>
                                         </div>
@@ -137,7 +139,7 @@ export default function AdminHeader() {
                                             {/* Search */}
                                             <div className="mx-auto w-full max-w-xs lg:max-w-md">
                                                 <label htmlFor="search" className="sr-only">
-                                                    Search
+                                                    {t('Admin_Search')}
                                                 </label>
                                                 <div className="relative text-white focus-within:text-gray-600">
                                                     <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
@@ -146,7 +148,7 @@ export default function AdminHeader() {
                                                     <input
                                                         id="search"
                                                         className="block w-full rounded-md border-0 bg-white/20 py-1.5 pl-10 pr-3 text-white placeholder:text-white focus:bg-white focus:text-gray-900 focus:ring-0 focus:placeholder:text-gray-500 sm:text-sm sm:leading-6"
-                                                        placeholder="Search"
+                                                        placeholder={t('Admin_Search')}
                                                         type="search"
                                                         name="search"
                                                     />
@@ -161,7 +163,7 @@ export default function AdminHeader() {
                                     {/* Mobile menu button */}
                                     <Popover.Button className="relative inline-flex items-center justify-center rounded-md bg-transparent p-2 text-indigo-200 hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none focus:ring-2 focus:ring-white">
                                         <span className="absolute -inset-0.5" />
-                                        <span className="sr-only">Open main menu</span>
+                                        <span className="sr-only">{t('Admin_Open_main_menu')}</span>
                                         {open ? (
                                             <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
                                         ) : (
@@ -211,7 +213,7 @@ export default function AdminHeader() {
                                                     <div className="-mr-2">
                                                         <Popover.Button className="relative inline-flex items-center justify-center rounded-md bg-white p-2 text-gray-400 hover:bg-gray-100 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500">
                                                             <span className="absolute -inset-0.5" />
-                                                            <span className="sr-only">Close menu</span>
+                                                            <span className="sr-only">{t('Admin_Close_menu')}</span>
                                                             <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                                                         </Popover.Button>
                                                     </div>
@@ -242,7 +244,7 @@ export default function AdminHeader() {
                                                         className="relative ml-auto flex-shrink-0 rounded-full bg-white p-1 text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                                                     >
                                                         <span className="absolute -inset-1.5" />
-                                                        <span className="sr-only">View notifications</span>
+                                                        <span className="sr-only">{t('Admin_View_notifications')}</span>
                                                         <BellIcon className="h-6 w-6" aria-hidden="true" />
                                                     </button>
                                                 </div>

@@ -57,6 +57,7 @@ export default function ProductList() {
 
     const handleDeleteProduct = () => {
         if (SelectedProduct) {
+            onPageChange(1);
             deleteProductByID(SelectedProduct?.id)
                 .then(() => {
                     dispatch({

@@ -1,6 +1,4 @@
 import { Fragment, useEffect, useState } from "react";
-import { GetAllImage } from "../../services/images/images-services";
-import { IHomeImage } from "../../interfaces/Catalog/IHomeImage";
 import { APP_ENV } from "../../env/config";
 import { Link, useParams } from "react-router-dom";
 import { ConfirmEmail } from "../../services/accounts/account-services";
@@ -11,7 +9,6 @@ import {useTranslation} from "react-i18next";
 const HomeStore = () => {
   const {t} = useTranslation();
   const baseUrl = APP_ENV.BASE_URL;
-  const [images, setImages] = useState<IHomeImage[]>([]);
   const { email, token } = useParams<{ email: string, token: string }>();
   const [emailConfirm, setEmailConfirm] = useState(false);
   const [open, setOpen] = useState(true)
@@ -30,9 +27,6 @@ const HomeStore = () => {
         }
       });
     }
-    await GetAllImage()
-      .then(data => setImages(data))
-      .catch(error => console.error('Error fetching images data:', error));
   }
 
   return (
@@ -43,11 +37,10 @@ const HomeStore = () => {
             <div className="w-full ">
               <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-7xl lg:px-8">
                 <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none ">
-                  {images.length >= 1 && (
                     <div className="sm:min-h-[1800px] md:min-h-[1800px] lg:min-h-[1000px] min-h-[1300px] grid grid-cols-1 grid-rows-2 lg:grid-cols-2 lg:grid-rows-1">
                       <div className="relative flex group hover13 h-full">
                         <img
-                          src={`${baseUrl}/uploads/${images[15].imagePath}`}
+                          src={`${baseUrl}/uploads/800_home_page_16.webp`}
                           alt=""
                           className="absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-300 ease-in-out saturate-[.77] group-hover:saturate-150"
                         />
@@ -60,7 +53,7 @@ const HomeStore = () => {
                       </div>
                       <div className="relative flex group hover13">
                         <img
-                          src={`${baseUrl}/uploads/${images[16].imagePath}`}
+                          src={`${baseUrl}/uploads/800_home_page_17.webp`}
                           alt=""
                           className="absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-300 ease-in-out saturate-[.77] group-hover:saturate-150"
                         />
@@ -72,7 +65,6 @@ const HomeStore = () => {
                         </div>
                       </div>
                     </div>
-                  )}
                   {emailConfirm && (
                     <div className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50 w-96">
                       <Transition.Root show={open} as={Fragment}>

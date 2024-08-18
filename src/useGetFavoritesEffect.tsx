@@ -11,7 +11,6 @@ const useGetFavoritesEffect = () => {
     useEffect(() => {
         const fetchFavoriteProducts = async () => {
             if (user) {
-
                 try {
                     const data = await getFavoriteProductById(user?.Id);
                     dispatch(setFavoriteProducts(data));

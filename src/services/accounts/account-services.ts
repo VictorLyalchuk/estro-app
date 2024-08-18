@@ -209,3 +209,47 @@ export async function resetPassword(user: any) {
         throw error;
     }
 }
+
+export async function getUsersByPage(page: number) {
+    const token = localStorage.getItem('token');
+    try {
+        const resp = await instance.get<IUserProfile[]>(`UsersByPage/${page}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        return resp.data;
+    } catch (error) {
+        console.error('Failed to fetch users data:', error);
+        throw error;
+    }
+}
+
+export async function getUsersQuantity() {
+    const token = localStorage.getItem('token');
+    try {
+        const resp = await instance.get<number>(`UsersQuantity`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        return resp.data;
+    } catch (error) {
+        console.error('Failed to fetch quantity users data:', error);
+        throw error;
+    }
+}
+
+export async function deleteUserByID(id: string) {
+    const token = localStorage.getItem('token');
+    try {
+        await instance.delete(`DeleteUserByID/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+    } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        throw error;
+    }
+}

@@ -39,10 +39,10 @@ export default function MainCategoryList() {
     useEffect(() => {
         getMainCategoryByPage(page)
             .then(data => setMainCategoryList(data))
-            .catch(error => console.error('Error fetching product data:', error));
+            .catch(error => console.error('Error fetching  main category data:', error));
         getMainCategoryQuantity()
             .then(data => setCountPage(data))
-            .catch(error => console.error('Error fetching product quantity data:', error));
+            .catch(error => console.error('Error fetching main category quantity data:', error));
     }, [dispatch, page]);
 
 
@@ -51,8 +51,9 @@ export default function MainCategoryList() {
         setModalVisible(true);
     };
 
-    const handleDeleteProduct = () => {
+    const handleDeleteMainCategory = () => {
         if (SelectedMainCategory) {
+            onPageChange(1);
             deleteMainCategoryByID(SelectedMainCategory?.id)
                 .then(() => {
                     return getMainCategoryQuantity();
@@ -61,7 +62,7 @@ export default function MainCategoryList() {
                     setCountPage(data);
                 })
                 .then(() => {
-                    return getMainCategoryByPage(page);
+                    return getMainCategoryByPage(1);
                 })
                 .then(data => {
                     setMainCategoryList(data);
@@ -137,7 +138,7 @@ export default function MainCategoryList() {
                                                     className="w-30 rounded-lg"
                                                 />
                                         )}
-                                        <Link to={`/product/${mainCategory.id}`} className="hover:text-indigo-500 ">
+                                        <Link to={`/catalog-home/${mainCategory.urlName}`} className="hover:text-indigo-500 ">
                                             <div className="font-mono text-sm leading-6">{getLocalizedField(mainCategory, 'name', lang)}</div>
                                         </Link>
                                     </div>
@@ -246,7 +247,7 @@ export default function MainCategoryList() {
                 <button
                     key="delete"
                     type="button"
-                    onClick={handleDeleteProduct}
+                    onClick={handleDeleteMainCategory}
                     className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
                 >
                     {t('Category_Delete')}

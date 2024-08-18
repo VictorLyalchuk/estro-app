@@ -6,7 +6,7 @@ import Product from "./components/user/product/Product.tsx";
 import CatalogNavigation from "./components/user/catalog/CatalogNavigation";
 import NavbarsPage from "./components/navbars/NavbarsPage";
 import { useEffect, useState } from "react";
-import Loader from "./components/Dashboard/common/Loader";
+import Loader from "./common/Loader";
 import { Toaster } from 'react-hot-toast';
 import AdminPanelPage from "./components/admin/adminPanel/AdminPanelPage.tsx";
 import AddStorage from "./components/admin/product/AddStorage";
@@ -36,6 +36,13 @@ import EditPanelPage from "./components/admin/product/edit-product/EditPanelPage
 import MainCategoryList from "./components/admin/main-category/MainCategoryList.tsx";
 import AddMainCategoryPanelPage from "./components/admin/main-category/add-main-category/AddMainCategoryPanelPage.tsx";
 import EditMainCategoryPanelPage from "./components/admin/main-category/edit-main-category/EditMainCategoryPanelPage.tsx";
+import SubCategoryList from "./components/admin/sub-category/SubCategoryList.tsx";
+import AddSubCategoryPanelPage from "./components/admin/sub-category/add-sub-category/AddSubCategoryPanelPage.tsx";
+import EditSubCategoryPanelPage from "./components/admin/sub-category/edit-sub-category/EditSubCategoryPanelPage.tsx";
+import CategoryList from "./components/admin/category/CategoryList.tsx";
+import AddCategoryPanelPage from "./components/admin/category/add-category/AddCategoryPanelPage.tsx";
+import EditCategoryPanelPage from "./components/admin/category/edit-category/EditCategoryPanelPage.tsx";
+import UserList from "./components/admin/user/UserList.tsx";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -85,6 +92,29 @@ function App() {
           <Route path="main-category/edit-main-category-uk/:Id" element={<EditMainCategoryPanelPage/>}/>
           <Route path="main-category/edit-main-category-es/:Id" element={<EditMainCategoryPanelPage/>}/>
           <Route path="main-category/edit-main-category-fr/:Id" element={<EditMainCategoryPanelPage/>}/>
+
+          <Route path="sub-category/sub-category-list" element={<SubCategoryList/>}/>
+          <Route path="sub-category/add-sub-category-en" element={<AddSubCategoryPanelPage/>}/>
+          <Route path="sub-category/add-sub-category-uk" element={<AddSubCategoryPanelPage/>}/>
+          <Route path="sub-category/add-sub-category-es" element={<AddSubCategoryPanelPage/>}/>
+          <Route path="sub-category/add-sub-category-fr" element={<AddSubCategoryPanelPage/>}/>
+          <Route path="sub-category/edit-sub-category-en/:Id" element={<EditSubCategoryPanelPage/>}/>
+          <Route path="sub-category/edit-sub-category-uk/:Id" element={<EditSubCategoryPanelPage/>}/>
+          <Route path="sub-category/edit-sub-category-es/:Id" element={<EditSubCategoryPanelPage/>}/>
+          <Route path="sub-category/edit-sub-category-fr/:Id" element={<EditSubCategoryPanelPage/>}/>
+          
+          <Route path="category/category-list" element={<CategoryList/>}/>
+          <Route path="category/add-category-en" element={<AddCategoryPanelPage/>}/>
+          <Route path="category/add-category-uk" element={<AddCategoryPanelPage/>}/>
+          <Route path="category/add-category-es" element={<AddCategoryPanelPage/>}/>
+          <Route path="category/add-category-fr" element={<AddCategoryPanelPage/>}/>
+          <Route path="category/edit-category-en/:Id" element={<EditCategoryPanelPage/>}/>
+          <Route path="category/edit-category-uk/:Id" element={<EditCategoryPanelPage/>}/>
+          <Route path="category/edit-category-es/:Id" element={<EditCategoryPanelPage/>}/>
+          <Route path="category/edit-category-fr/:Id" element={<EditCategoryPanelPage/>}/>
+
+          <Route path="user/user-list" element={<UserList/>}/>
+
 
         </Route>
 

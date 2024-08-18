@@ -12,7 +12,6 @@ import { useTranslation } from 'react-i18next';
 import { BuildingStorefrontIcon, EnvelopeIcon } from "@heroicons/react/24/outline";
 
 interface DeliveryInformationProps {
-  // errors: { shipping: string };
   errors: { country?: string; city?: string; state?: string; street?: string; shipping?: string };
 
   activeBlock: string[] | null;

@@ -1,8 +1,10 @@
 import { ChangeEventHandler } from "react";
-import { ICategory, IMainCategory, ISubCategory } from "../Category/Main-Category/IMainCategory";
+import { IMainCategory } from "../Category/Main-Category/IMainCategory";
 import { IProductFilters } from "../Info/IInfo";
 import { IImageItem } from "./IProduct";
 import { IEditProductData } from "./IEditProductData";
+import { ISubCategory } from "../Category/Sub-Category/ISubCategory";
+import { ICategory } from "../Category/Category/ICategory";
 
 export interface EditProductProps {
     onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;

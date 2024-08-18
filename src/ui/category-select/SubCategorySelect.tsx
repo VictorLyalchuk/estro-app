@@ -1,7 +1,8 @@
 import React from 'react';
 import { FormControl, MenuItem, TextField } from '@material-ui/core';
-import { IMainCategory, ISubCategory } from '../../interfaces/Category/Main-Category/IMainCategory';
+import { IMainCategory } from '../../interfaces/Category/Main-Category/IMainCategory';
 import { getLocalizedField } from '../../utils/localized/localized';
+import { ISubCategory } from '../../interfaces/Category/Sub-Category/ISubCategory';
 
 interface SubCategorySelectProps {
     subCategory: ISubCategory[];

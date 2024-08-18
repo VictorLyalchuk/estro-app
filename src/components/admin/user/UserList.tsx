@@ -1,197 +1,312 @@
-import classNames from "classnames"
+import { Link } from "react-router-dom";
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+import { Modal } from 'antd';
+import { APP_ENV } from "../../../env/config";
+import { useTranslation } from "react-i18next";
+import { Link as Scrollink } from 'react-scroll'
+import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/react/20/solid';
+import { deleteUserByID, getUsersByPage, getUsersQuantity } from "../../../services/accounts/account-services";
+import { IUserProfile } from "../../../interfaces/Auth/IUserProfile";
+import classNames from "classnames";
 
-type Status = 'Completed' | 'Error';
-
-const statuses: Record<Status, string> ={ Completed: 'text-green-400 bg-green-400/10', Error: 'text-rose-400 bg-rose-400/10' }
-
-type ActivityItem = {
-    user: {
-      name: string;
-      imageUrl: string;
-    };
-    commit: string;
-    branch: string;
-    status: keyof typeof statuses; 
-    duration: string;
-    date: string;
-    dateTime: string;
-  };
-
-const activityItems: ActivityItem[] = [  {
-    user: {
-      name: 'Michael Foster',
-      imageUrl:
-        'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    commit: '2d89f0c8',
-    branch: 'main',
-    status: 'Completed' as Status,
-    duration: '25s',
-    date: '45 minutes ago',
-    dateTime: '2023-01-23T11:00',
-  },
-  {
-    user: {
-      name: 'Lindsay Walton',
-      imageUrl:
-        'https://images.unsplash.com/photo-1517841905240-472988babdf9?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    commit: '249df660',
-    branch: 'main',
-    status: 'Completed',
-    duration: '1m 32s',
-    date: '3 hours ago',
-    dateTime: '2023-01-23T09:00',
-  },
-  {
-    user: {
-      name: 'Courtney Henry',
-      imageUrl:
-        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    commit: '11464223',
-    branch: 'main',
-    status: 'Error',
-    duration: '1m 4s',
-    date: '12 hours ago',
-    dateTime: '2023-01-23T00:00',
-  },
-  {
-    user: {
-      name: 'Courtney Henry',
-      imageUrl:
-        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    commit: 'dad28e95',
-    branch: 'main',
-    status: 'Completed',
-    duration: '2m 15s',
-    date: '2 days ago',
-    dateTime: '2023-01-21T13:00',
-  },
-  {
-    user: {
-      name: 'Michael Foster',
-      imageUrl:
-        'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    commit: '624bc94c',
-    branch: 'main',
-    status: 'Completed',
-    duration: '1m 12s',
-    date: '5 days ago',
-    dateTime: '2023-01-18T12:34',
-  },
-  {
-    user: {
-      name: 'Courtney Henry',
-      imageUrl:
-        'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    commit: 'e111f80e',
-    branch: 'main',
-    status: 'Completed',
-    duration: '1m 56s',
-    date: '1 week ago',
-    dateTime: '2023-01-16T15:54',
-  },
-  {
-    user: {
-      name: 'Michael Foster',
-      imageUrl:
-        'https://images.unsplash.com/photo-1519244703995-f4e0f30006d5?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    commit: '5e136005',
-    branch: 'main',
-    status: 'Completed',
-    duration: '3m 45s',
-    date: '1 week ago',
-    dateTime: '2023-01-16T11:31',
-  },
-  {
-    user: {
-      name: 'Whitney Francis',
-      imageUrl:
-        'https://images.unsplash.com/photo-1517365830460-955ce3ccd263?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    },
-    commit: '5c1fd07f',
-    branch: 'main',
-    status: 'Completed',
-    duration: '37s',
-    date: '2 weeks ago',
-    dateTime: '2023-01-09T08:45',
-  },
-]
+type Status = 'True' | 'False';
+const statuses: Record<Status, string> = { True: 'text-green-400 bg-green-400/10', False: 'text-rose-400 bg-rose-400/10' }
 
 export default function UserList() {
-  return (
-    <div className="bg-gray-900 py-10">
-      <h2 className="px-4 text-base font-semibold leading-7 text-white sm:px-6 lg:px-8">Latest activity</h2>
-      <table className="mt-6 w-full whitespace-nowrap text-left">
-        <colgroup>
-          <col className="w-full sm:w-4/12" />
-          <col className="lg:w-4/12" />
-          <col className="lg:w-2/12" />
-          <col className="lg:w-1/12" />
-          <col className="lg:w-1/12" />
-        </colgroup>
-        <thead className="border-b border-white/10 text-sm leading-6 text-white">
-          <tr>
-            <th scope="col" className="py-2 pl-4 pr-8 font-semibold sm:pl-6 lg:pl-8">
-              User
-            </th>
-            <th scope="col" className="hidden py-2 pl-0 pr-8 font-semibold sm:table-cell">
-              Commit
-            </th>
-            <th scope="col" className="py-2 pl-0 pr-4 text-right font-semibold sm:pr-8 sm:text-left lg:pr-20">
-              Status
-            </th>
-            <th scope="col" className="hidden py-2 pl-0 pr-8 font-semibold md:table-cell lg:pr-20">
-              Duration
-            </th>
-            <th scope="col" className="hidden py-2 pl-0 pr-4 text-right font-semibold sm:table-cell sm:pr-6 lg:pr-8">
-              Deployed at
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-white/5">
-          {activityItems.map((item) => (
-            <tr key={item.commit}>
-              <td className="py-4 pl-4 pr-8 sm:pl-6 lg:pl-8">
-                <div className="flex items-center gap-x-4">
-                  <img src={item.user.imageUrl} alt="" className="h-8 w-8 rounded-full bg-gray-800" />
-                  <div className="truncate text-sm font-medium leading-6 text-white">{item.user.name}</div>
+    const { t } = useTranslation();
+    const baseUrl = APP_ENV.BASE_URL;
+    const dispatch = useDispatch();
+    const [usersList, setUsersList] = useState<IUserProfile[]>([]);
+    const [modalVisible, setModalVisible] = useState<boolean>(false);
+    const [selectedUser, setSelectedUser] = useState<IUserProfile | null>(null);
+    const [page, setPage] = useState(1);
+    const [countPage, setCountPage] = useState(0);
+    const itemsPerPage = 10;
+    const indexOfLastItem = page * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const totalPages = Math.ceil(countPage / itemsPerPage);
+    const visiblePages = 5;
+    let startPage = Math.max(1, page - Math.floor(visiblePages / 2));
+    let endPage = Math.min(totalPages, startPage + visiblePages - 1);
+
+    if (endPage - startPage + 1 < visiblePages) {
+        startPage = Math.max(1, endPage - visiblePages + 1);
+    }
+
+    const onPageChange = (newPage: number) => {
+        setPage(newPage);
+    };
+
+    useEffect(() => {
+        getUsersByPage(page)
+            .then(data => setUsersList(data))
+            .catch(error => console.error('Error fetching users data:', error));
+        getUsersQuantity()
+            .then(data => setCountPage(data))
+            .catch(error => console.error('Error fetching user quantity data:', error));
+    }, [dispatch, page]);
+
+    const showDeleteConfirm = (user: IUserProfile) => {
+        setSelectedUser(user);
+        setModalVisible(true);
+    };
+
+    const handleDeleteUser = () => {
+        if (selectedUser) {
+            onPageChange(1);
+            deleteUserByID(selectedUser?.id)
+                .then(() => {
+                    return getUsersQuantity();
+                })
+                .then(data => {
+                    setCountPage(data);
+                })
+                .then(() => {
+                    return getUsersByPage(1);
+                })
+                .then(data => {
+                    setUsersList(data);
+                })
+                .catch(error => {
+                    console.error('Error deleting user:', error);
+                });
+            setModalVisible(false);
+        }
+    };
+
+    const handleCancel = () => {
+        setModalVisible(false);
+    };
+
+    return (
+        <div className="bg-gray-100 py-10 px-4 sm:px-6 lg:px-8 product-start">
+            <div className="sm:flex sm:items-center">
+                <div className="sm:flex-auto">
+                    <h2 className="px-4 text-base font-semibold leading-7 text-gray-900 sm:px-6 lg:px-8">{t('User_Users')}</h2>
                 </div>
-              </td>
-              <td className="hidden py-4 pl-0 pr-4 sm:table-cell sm:pr-8">
-                <div className="flex gap-x-3">
-                  <div className="font-mono text-sm leading-6 text-gray-400">{item.commit}</div>
-                  <div className="rounded-md bg-gray-700/40 px-2 py-1 text-xs font-medium text-gray-400 ring-1 ring-inset ring-white/10">
-                    {item.branch}
-                  </div>
+                <div className="mt-4 sm:ml-16 sm:mt-0 sm:flex-none px-8">
+                    <Link to={"/admin/user/add-user"}
+                        className="block rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    >
+                        {t('User_Create')}
+                    </Link>
                 </div>
-              </td>
-              <td className="py-4 pl-0 pr-4 text-sm leading-6 sm:pr-8 lg:pr-20">
-                <div className="flex items-center justify-end gap-x-2 sm:justify-start">
-                  <time className="text-gray-400 sm:hidden" dateTime={item.dateTime}>
-                    {item.date}
-                  </time>
-                  <div className={classNames(statuses[item.status], 'flex-none rounded-full p-1')}>
-                    <div className="h-1.5 w-1.5 rounded-full bg-current" />
-                  </div>
-                  <div className="hidden text-white sm:block">{item.status}</div>
+            </div>
+
+            <div className="-mx-4 mt-10 ring-1 ring-gray-200 sm:mx-0 sm:rounded-lg">
+                <table className="mt-6 w-full whitespace-nowrap text-left">
+                    <colgroup>
+                        <col className="xl:w-1/12" />
+                        <col className="xl:w-1/12" />
+                        <col className="xl:w-1/12" />
+                        <col className="xl:w-1/12" />
+                        {/* <col className="xl:w-1/12" /> */}
+                        <col className="xl:w-1/12" />
+                        <col className="xl:w-1/12" />
+                        <col className="xl:w-1/12" />
+                        <col className="xl:w-1/12" />
+                        <col className="xl:w-1/12" />
+                    </colgroup>
+                    <thead className="border-b border-white/10 text-sm leading-6 text-gray-900">
+                        <tr>
+                            <th scope="col" className="py-2 pl-8 pr-8 font-semibold hidden sm:table-cell">
+                                {t('User_Index')}
+                            </th>
+                            <th scope="col" className="py-2 pl-8 pr-8 font-semibold sm:table-cell">
+                                {t('User_Name')}
+                            </th>
+                            <th scope="col" className="py-2 pl-8 pr-4 font-semibold hidden md:table-cell sm:pr-6 lg:pr-8">
+                                {t('User_Role')}
+                            </th>
+                            {/* <th scope="col" className="py-2 pl-8 pr-4 font-semibold hidden xl:table-cell sm:pr-8 sm:text-left lg:pr-20">
+                                {t('User_Birthday')}
+                            </th> */}
+                            <th scope="col" className="py-2 pl-8 pr-4 font-semibold hidden 2xl:table-cell sm:pr-8 sm:text-left lg:pr-20">
+                                {t('User_Balance')}
+                            </th>
+                            <th scope="col" className="py-2 pl-8 pr-4 font-semibold hidden sm:table-cell sm:pr-8 sm:text-left lg:pr-20">
+                                {t('User_Email')}
+                            </th>
+                            <th scope="col" style={{ whiteSpace: 'pre-line' }} className="py-2 pl-8 pr-8 font-semibold hidden 2xl:table-cell lg:pr-20">
+                                {t('User_EmailConfirmed')}
+                            </th>
+                            <th scope="col" className="py-2 pl-8 pr-4 font-semibold hidden xl:table-cell sm:pr-6 lg:pr-8">
+                                {t('User_Phone')}
+                            </th>
+                            <th scope="col" style={{ whiteSpace: 'pre-line' }} className="py-2 pl-8 pr-4 font-semibold hidden 2xl:table-cell sm:pr-6 lg:pr-8">
+                                {t('User_phoneNumberConfirmed')}
+                            </th>
+                            <th scope="col" className="py-2 pl-8 pr-4 font-semibold sm:table-cell sm:pr-6 lg:pr-8">
+                                {t('User_Actions')}
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody className="divide-y divide-white/5">
+                        {usersList.map((user, index) => (
+                            <tr key={user.id} className="text-gray-700 hover:bg-gray-200 ">
+                                <td className="py-4 pl-8 pr-4 hidden sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
+                                    <div className="font-mono text-sm leading-6">{index+1}</div>
+                                </td>
+                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 ">
+                                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                                        {user.imagePath && user.imagePath.length > 0 ? (
+                                            <img src={`${baseUrl}/uploads/${user.imagePath || '/uploads/default.jpg'}`} className="h-8 w-8 rounded-full" />
+                                        ) : (
+                                            <img
+                                                src={`${baseUrl}/uploads/user404.webp`}
+                                                alt="Image Not Available"
+                                                className="h-8 w-8 rounded-full"
+                                            />
+                                        )}
+                                        <div className="hover:text-indigo-500 md:table-cell">
+                                            <div className="font-medium text-sm leading-6">{user.firstName} {user.lastName}</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden md:table-cell lg:pr-20 border-t border-b border-gray-200">
+                                    {user.role}
+                                </td>
+                                {/* <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                    {formatDateFromDate(user?.birthday)}
+                                </td> */}
+                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden 2xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                    {user.bonusBalance}
+                                </td>
+                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden sm:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                    {user.email}
+                                </td>
+                                <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden 2xl:table-cell lg:pr-20 border-t border-b border-gray-200">
+                                    <div className="flex items-center justify-end gap-x-2 sm:justify-start">
+                                        <div className={classNames(statuses[user.emailConfirmed ? 'True' : 'False'], 'flex-none rounded-full p-1')}>
+                                            <div className="h-1.5 w-1.5 rounded-full bg-current" />
+                                        </div>
+                                        <div className="hidden font-medium sm:block">{user.emailConfirmed ? 'True' : 'False'}</div>
+                                    </div>
+                                </td>
+                                <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden xl:table-cell lg:pr-20 border-t border-b border-gray-200">
+                                    {user.phoneNumber}
+                                </td>
+                                <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden 2xl:table-cell lg:pr-20 border-t border-b border-gray-200">
+                                    <div className="flex items-center justify-end gap-x-2 sm:justify-start">
+                                        <div className={classNames(statuses[user.phoneNumberConfirmed ? 'True' : 'False'], 'flex-none rounded-full p-1')}>
+                                            <div className="h-1.5 w-1.5 rounded-full bg-current" />
+                                        </div>
+                                        <div className="hidden font-medium sm:block">{user.phoneNumberConfirmed ? 'True' : 'False'}</div>
+                                    </div>
+                                </td>
+                                <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-b border-gray-200">
+                                    <Link to={`/admin/user/edit-user/${user.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                        {t('User_Edit_User')}
+                                    </Link>
+                                    <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                        onClick={() => showDeleteConfirm(user)}>
+                                        {t('User_Delete_User')}
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                {/* Pagination */}
+                <nav className="flex items-center justify-between bg-white rounded-md shadow-md bg-white px-4 py-3 sm:px-6">
+                    <div className="container mx-auto p-4 flex relative max-w-7xl lg:flex-row justify-between ">
+                        <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between ">
+                            <div>
+                                <p className="text-sm text-gray-700">
+                                    {t('Order_Showing')} <span className="font-medium">{indexOfFirstItem + 1}</span> {t('Order_To')}{' '}
+                                    <span className="font-medium">{Math.min(indexOfLastItem, countPage)}</span> {t('Order_Of')}{' '}
+                                    <span className="font-medium">{countPage}</span> {t('Order_Results')}
+                                </p>
+                            </div>
+                        </div>
+                        <div>
+                            <nav className="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0">
+                                <div className="flex flex-1 justify-between sm:justify-end">
+                                    <Scrollink to="product-start" smooth={true}>
+                                        <button
+                                            onClick={() => onPageChange(page - 1)}
+                                            disabled={page === 1}
+                                            className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
+                                                ${page === 1
+                                                    ? 'text-gray-300'
+                                                    : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                                                }`}
+                                        >
+                                            <ArrowLongLeftIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                            {t('Order_Previous')}
+                                        </button>
+                                    </Scrollink>
+
+                                    {[...Array(endPage - startPage + 1)].map((_, index) => {
+                                        const pageNumber = startPage + index;
+                                        return (
+                                            <Scrollink to="product-start" smooth={true} key={pageNumber}>
+                                                <button
+                                                    key={pageNumber}
+                                                    onClick={() => onPageChange(pageNumber)}
+                                                    className={`inline-flex items-center border-t px-4 pt-4 text-sm font-medium text-gray-500 ${page === pageNumber
+                                                        ? 'border-t-2 border-indigo-500 text-indigo-600 font-semibold'
+                                                        : 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'
+                                                        }`}
+                                                >
+                                                    {pageNumber}
+                                                </button>
+                                            </Scrollink>
+                                        );
+                                    })}
+
+                                    <Scrollink to="product-start" smooth={true}>
+                                        <button
+                                            onClick={() => onPageChange(page + 1)}
+                                            disabled={indexOfLastItem >= countPage}
+                                            className={`inline-flex items-center border-t-2 border-transparent pr-1 pt-4 text-sm font-medium 
+                                                 ${indexOfLastItem >= countPage
+                                                    ? 'text-gray-300'
+                                                    : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                                                }`}
+                                        >
+                                            {t('Order_Next')}
+                                            <ArrowLongRightIcon className="ml-3 h-5 w-5 text-gray-400" aria-hidden="true" />
+                                        </button>
+                                    </Scrollink>
+
+                                </div>
+                            </nav>
+                        </div>
+                    </div>
+                </nav>
+
+            </div>
+
+            <Modal
+                title={t('User_Delete_User')}
+                open={modalVisible}
+                onCancel={handleCancel}
+                footer={null}
+                className="custom-modal"
+            >
+                <p>{t('User_Model')}</p>
+                <div className="flex justify-end gap-4 mt-4">
+                    <button
+                        key="delete"
+                        type="button"
+                        onClick={handleDeleteUser}
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                        {t('Products_Delete')}
+                    </button>
+                    <button
+                        key="cancel"
+                        onClick={handleCancel}
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-900 font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                        {t('Products_Cancel')}
+                    </button>
                 </div>
-              </td>
-              <td className="hidden py-4 pl-0 pr-8 text-sm leading-6 text-gray-400 md:table-cell lg:pr-20">
-                {item.duration}
-              </td>
-              <td className="hidden py-4 pl-0 pr-4 text-right text-sm leading-6 text-gray-400 sm:table-cell sm:pr-6 lg:pr-8">
-                <time dateTime={item.dateTime}>{item.date}</time>
-              </td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
+            </Modal>
+        </div>
+    );
+
 }

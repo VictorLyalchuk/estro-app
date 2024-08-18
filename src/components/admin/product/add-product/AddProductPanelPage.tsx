@@ -110,7 +110,7 @@ const AddProductPanelPage = () => {
             .catch(error => console.error('Error fetching sub category data:', error));
         getMainCategory()
             .then(data => setMainCategory(data))
-            .catch(error => console.error('Error fetching sub category data:', error));
+            .catch(error => console.error('Error fetching main category data:', error));
     }, []);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
