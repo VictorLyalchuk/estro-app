@@ -425,6 +425,7 @@ export default function Product() {
             page={page}
             setPage={setPage}
             countPage={countPage}
+            isAuth={isAuth}
           />
         </div>
 

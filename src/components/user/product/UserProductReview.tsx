@@ -7,6 +7,7 @@ import { APP_ENV } from '../../../env/config';
 import { useTranslation } from 'react-i18next';
 import { formatDate } from '../../../services/custom/format-data';
 import { Link as Scrollink } from 'react-scroll'
+import { Link } from 'react-router-dom';
 
 interface UserProductReviewProps {
     userId?: string;
@@ -17,15 +18,15 @@ interface UserProductReviewProps {
     page: number;
     setPage: (page: number) => void;
     countPage: number
+    isAuth: boolean;
 }
-const UserProductReview: React.FC<UserProductReviewProps> = ({ userId, productId, reviews, ratings, loadReviews, page, setPage, countPage }) => {
+const UserProductReview: React.FC<UserProductReviewProps> = ({ userId, productId, reviews, ratings, loadReviews, page, setPage, countPage, isAuth }) => {
     const baseUrl = APP_ENV.BASE_URL;
     const { t, i18n } = useTranslation();
     const lang = i18n.language;
     const [showForm, setShowForm] = useState(false)
     const [rating, setRating] = useState(0)
     const [content, setContent] = useState('')
-
     const [itemsPerPage] = useState<number>(5);
     const indexOfLastItem = page * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
@@ -129,12 +130,22 @@ const UserProductReview: React.FC<UserProductReviewProps> = ({ userId, productId
                             {t('Reviews_text')}
                         </p>
 
-                        <button
-                            onClick={() => setShowForm(true)}
-                            className="mt-6 inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-8 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full"
-                        >
-                            {t('Reviews_button_Write')}
-                        </button>
+                        {isAuth ? (
+                            <button
+                                onClick={() => setShowForm(true)}
+                                className="mt-6 inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-8 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full"
+                            >
+                                {t('Reviews_button_Write')}
+                            </button>
+                        ) : (
+                            <Link
+                                to={'/auth'}
+                                className="mt-6 inline-flex w-full items-center justify-center rounded-md border border-gray-300 bg-white px-8 py-2 text-sm font-medium text-gray-900 hover:bg-gray-50 sm:w-auto lg:w-full"
+                            >
+                                {t('AuthPanelPage_Login')}
+                            </Link>
+                        )
+                        }
 
                         {showForm && (
                             <form onSubmit={handleFormSubmit} className="border-t mt-6 space-y-4 pt-4">
