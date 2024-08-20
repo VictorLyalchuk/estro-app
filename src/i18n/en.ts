@@ -563,4 +563,5 @@ export const en = {
 
     //User
     "User_AuthType" : "Auth Type",
+    "ProfileSettings_BlockUser": "Block User"
 }

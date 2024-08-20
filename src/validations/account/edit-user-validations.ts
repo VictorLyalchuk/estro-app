@@ -8,6 +8,7 @@ interface FormData {
     role: string,
     authType: string;
     password: string;
+    isBlocked: boolean,
 }
 
 interface Errors {

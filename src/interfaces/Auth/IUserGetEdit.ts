@@ -9,4 +9,5 @@ export interface IUserGetEdit {
     authType: string;
     password: string,
     imagePath: string | null,
+    isBlocked: boolean;
 }

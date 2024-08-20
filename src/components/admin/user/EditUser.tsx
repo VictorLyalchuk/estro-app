@@ -1,5 +1,5 @@
 import { useState, ChangeEvent, useEffect } from 'react';
-import { FormControl, ThemeProvider } from '@material-ui/core';
+import { Checkbox, FormControl, FormControlLabel, FormGroup, ThemeProvider } from '@material-ui/core';
 import { t } from "i18next";
 import moment from 'moment/moment';
 import { State } from '../../../interfaces/Custom/Phone/State';
@@ -61,6 +61,7 @@ const EditUser = () => {
         role: '',
         authType: '',
         password: '',
+        isBlocked: false,
     });
 
     const [errors, setErrors] = useState({
@@ -77,37 +78,38 @@ const EditUser = () => {
     useEffect(() => {
         const loadData = async () => {
             try {
-        if (Id) {
-          const userData =  await GetUserById(Id);
-          const birthdayDate = moment(userData.birthday, 'YYYY-MM-DD').format('YYYY-MM-DD');
-          setFormData({
-            ...formData,
-            id: userData.id,
-            birthday: birthdayDate,
-            firstName: userData.firstName,
-            lastName: userData.lastName,
-            email: userData.email,
-            phoneNumber: userData.phoneNumber,
-            role: userData.role,
-            authType: userData.authType,
-        });
-          setValues((prevValues) => ({
-            ...prevValues,
-            textmask: userData.phoneNumber,
-          }));
-          setUserImage(userData.imagePath || '');
-          const selectedRole = rolesList.find(role => role.name === userData.role) || null;
-          setSelectedRole(selectedRole);
-          const selectedAuthType = authTypeList.find(authType => authType.name === userData.authType) || null;
-          setSelectedAuthType(selectedAuthType);
-        }
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-};
+                if (Id) {
+                    const userData = await GetUserById(Id);
+                    const birthdayDate = moment(userData.birthday, 'YYYY-MM-DD').format('YYYY-MM-DD');
+                    setFormData({
+                        ...formData,
+                        id: userData.id,
+                        birthday: birthdayDate,
+                        firstName: userData.firstName,
+                        lastName: userData.lastName,
+                        email: userData.email,
+                        phoneNumber: userData.phoneNumber,
+                        role: userData.role,
+                        authType: userData.authType,
+                        isBlocked: userData.isBlocked,
+                    });
+                    setValues((prevValues) => ({
+                        ...prevValues,
+                        textmask: userData.phoneNumber,
+                    }));
+                    setUserImage(userData.imagePath || '');
+                    const selectedRole = rolesList.find(role => role.name === userData.role) || null;
+                    setSelectedRole(selectedRole);
+                    const selectedAuthType = authTypeList.find(authType => authType.name === userData.authType) || null;
+                    setSelectedAuthType(selectedAuthType);
+                }
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
 
-loadData();
-      }, [Id]);
+        loadData();
+    }, [Id]);
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -194,6 +196,7 @@ loadData();
                 authType: formData.authType || '',
                 birthday: new Date(formData.birthday),
                 password: formData.password,
+                isBlocked: formData.isBlocked,
             };
             try {
                 await editUser(model);
@@ -441,6 +444,21 @@ loadData();
                                                                 errors={errors}
                                                             />
                                                         </div>
+                                                    </div>
+
+                                                    <div className="col-span-12 sm:col-span-6">
+                                                        <FormGroup>
+                                                            <FormControlLabel
+                                                                control={
+                                                                    <Checkbox
+                                                                        checked={formData.isBlocked}
+                                                                        onChange={(e) => setFormData(prevData => ({ ...prevData, isBlocked: e.target.checked }))}
+                                                                        color="primary"
+                                                                    />
+                                                                }
+                                                                label={t('ProfileSettings_BlockUser')}
+                                                            />
+                                                        </FormGroup>
                                                     </div>
                                                 </div>
                                             </div>
