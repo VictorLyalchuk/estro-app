@@ -556,4 +556,7 @@ export const uk = {
     "Admin_Recent_Orders" : "Останні замовлення",
     "Admin_View" : "Переглянути",
     "Admin_View_all" : "Переглянути всі",
+
+    //User
+    "User_AuthType" : "Тип авторизації",
 }

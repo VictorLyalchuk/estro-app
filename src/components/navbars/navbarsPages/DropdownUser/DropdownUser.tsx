@@ -65,12 +65,12 @@ const DropdownUser = () => {
         className="flex items-center gap-4"
         to="#"
       >
-        <div className=" text-right lg:block hover:text-indigo-500">
+        <div className="text-right lg:block hover:text-indigo-500">
           <div className={`block text-sm font-medium ${isAuth ? 'text-gray-900 hover:text-indigo-500' : 'text-gray-700 hover:text-indigo-500'}`}>
             {user?.FirstName} {' '} {user?.LastName}
           </div>
         </div>
-        <span className="h-12 w-12 " >
+        <span className="h-12 w-12 hidden sm:flex" >
           <img src={`${baseUrl}/uploads/${user?.ImagePath || "user404.webp"}`}
             className='rounded-full'
             alt="User" />

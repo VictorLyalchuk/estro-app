@@ -561,4 +561,6 @@ export const en = {
     "Admin_View" : "View",
     "Admin_View_all" : "View all",
 
+    //User
+    "User_AuthType" : "Auth Type",
 }

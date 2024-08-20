@@ -43,6 +43,8 @@ import CategoryList from "./components/admin/category/CategoryList.tsx";
 import AddCategoryPanelPage from "./components/admin/category/add-category/AddCategoryPanelPage.tsx";
 import EditCategoryPanelPage from "./components/admin/category/edit-category/EditCategoryPanelPage.tsx";
 import UserList from "./components/admin/user/UserList.tsx";
+import AddUser from "./components/admin/user/AddUser.tsx";
+import EditUser from "./components/admin/user/EditUser.tsx";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -114,7 +116,8 @@ function App() {
           <Route path="category/edit-category-fr/:Id" element={<EditCategoryPanelPage/>}/>
 
           <Route path="user/user-list" element={<UserList/>}/>
-
+          <Route path="user/add-user" element={<AddUser/>}></Route>
+          <Route path="user/edit-user/:Id" element={<EditUser/>}></Route>
 
         </Route>
 

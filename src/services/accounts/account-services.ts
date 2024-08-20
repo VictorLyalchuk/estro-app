@@ -7,6 +7,8 @@ import { AuthReducerActionType } from "../../store/accounts/AuthReducer";
 import { IUserEdit } from "../../interfaces/Auth/IUserEdit";
 import { IRegister } from "../../interfaces/Auth/IRegister";
 import { ILogin } from "../../interfaces/Auth/ILogin";
+import { IUserCreate } from "../../interfaces/Auth/IUserCreate";
+import { IUserGetEdit } from "../../interfaces/Auth/IUserGetEdit";
 
 const baseUrl = APP_ENV.BASE_URL;
 
@@ -225,6 +227,21 @@ export async function getUsersByPage(page: number) {
     }
 }
 
+export async function GetUserById(id: string) {
+    const token = localStorage.getItem('token');
+    try {
+        const resp = await instance.get<IUserGetEdit>(`GetUserById/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+        return resp.data;
+    } catch (error) {
+        console.error('Failed to fetch user data:', error);
+        throw error;
+    }
+}
+
 export async function getUsersQuantity() {
     const token = localStorage.getItem('token');
     try {
@@ -236,6 +253,34 @@ export async function getUsersQuantity() {
         return resp.data;
     } catch (error) {
         console.error('Failed to fetch quantity users data:', error);
+        throw error;
+    }
+}
+
+export async function createUser(model: IUserCreate) {
+    const token = localStorage.getItem('token');
+    try {
+        await instance.post(`CreateUser`, model, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+    } catch (error) {
+        console.error('Failed to create user data:', error);
+        throw error;
+    }
+}
+
+export async function editUser(model: IUserGetEdit) {
+    const token = localStorage.getItem('token');
+    try {
+        await instance.post(`editUser`, model, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+    } catch (error) {
+        console.error('Failed to edit user data:', error);
         throw error;
     }
 }

@@ -405,7 +405,7 @@ const NavbarsPage = () => {
                                                 </div>
                                                 {isAuth ? (
                                                     <>
-                                                        <div className="hidden lg:flex pl-5">
+                                                        <div className="lg:flex pl-5">
                                                             <DropdownUser />
                                                         </div>
                                                     </>
@@ -419,7 +419,7 @@ const NavbarsPage = () => {
                                                 
                                                 {/* Bonuses */}
                                                 {isAuth ? (
-                                                <div className="ml-4 flow-root lg:ml-6">
+                                                <div className="ml-4 flow-root hidden lg:flex lg:ml-6">
                                                     <Link to={"/account/bonuses"} className={`group -m-2 text-sm font-medium text-gray-700 group-hover:text-gray-800 w-10 flex items-center hover:text-gray-500 ${user ? "mr-12" : "mr-2"}`}>
                                                         <CurrencyDollarIcon className="h-6 w-6 flex-shrink-0 text-gray-400 group-hover:text-gray-500 mr-2" aria-hidden="true" />
                                                         {user ? userProfile?.bonusBalance?.toLocaleString('uk-UA', { minimumFractionDigits: 3 }).slice(0, -1) : 0}</Link>
