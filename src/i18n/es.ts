@@ -559,5 +559,7 @@ export const es = {
 
     //User
     "User_AuthType": "Tipo de autenticación",
+    "User_Add" : "Agregar usuario",
+    "User_Edit" : "Editar usuario",
     "ProfileSettings_BlockUser": "Bloquear usuario"
 }

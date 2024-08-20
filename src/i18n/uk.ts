@@ -559,5 +559,7 @@ export const uk = {
 
     //User
     "User_AuthType" : "Тип авторизації",
+    "User_Add" : "Додати користувача",
+    "User_Edit" : "Редагувати користувача",
     "ProfileSettings_BlockUser": "Заблокувати користувача"
 }

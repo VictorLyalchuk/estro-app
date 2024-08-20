@@ -18,9 +18,9 @@ import { validateForm } from '../../../validations/account/add-user-validation';
 import { IUserCreate } from '../../../interfaces/Auth/IUserCreate';
 import { message } from 'antd';
 import { useNavigate } from 'react-router-dom';
-import RoleSelect from '../../../ui/acount/roleSelect';
+import RoleSelect from '../../../ui/acount/RoleSelect';
+import AuthTypeSelect from '../../../ui/acount/AuthTypeSelect';
 import { Roles } from '../../../interfaces/Auth/Roles';
-import AuthTypeSelect from '../../../ui/acount/authTypeSelect';
 
 const AddUser = () => {
     const baseUrl = APP_ENV.BASE_URL;
@@ -191,248 +191,251 @@ const AddUser = () => {
     };
 
     return (
-        <>
-            <div>
-                <main >
-                    <div className="bg-white rounded-md shadow-md mb-8 mt-8">
-                        <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-7xl lg:px-8">
-                            <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
+        <div className="bg-gray-100">
+            <div className="container mx-auto p-8 flex relative max-w-7xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row justify-between">
+                <div className="sm:mx-auto sm:w-full">
+                    <div className="w-full ">
+                        <div className="bg-white p-5 rounded-md shadow-md mb-8 mt-8 ">
+                            <div className="sm:mx-auto sm:w-full sm:max-w-sm flex justify-center ">
+                                <div className="pb-6 mt-6">
+                                    <h2 className="text-base font-semibold leading-7 text-gray-900">{t('User_Add')}</h2>
+                                </div>
+                            </div>
+                            <div className="border-t">
+                                <div className="space-y-6">
+                                    <ThemeProvider theme={theme}>
+                                        <div className=" lg:col-span-9">
+                                            <form onSubmit={onSubmit}>
+                                                {/* Profile section */}
+                                                <div className="px-4 py-6 sm:p-6 lg:pb-8">
+                                                    <div className="mt-6 flex flex-col lg:flex-row">
+                                                        <div className="flex-grow space-y-6">
 
-                                <ThemeProvider theme={theme}>
-                                    <div className=" lg:col-span-9">
-                                        <form onSubmit={onSubmit}>
-                                            {/* Profile section */}
-                                            <div className="px-4 py-6 sm:p-6 lg:pb-8">
-                                                <div>
-                                                    <h2 className="text-lg font-medium leading-6 text-gray-900">{t('ProfileSettings_ProfileSettings')}</h2>
-                                                </div>
-
-                                                <div className="mt-6 flex flex-col lg:flex-row">
-                                                    <div className="flex-grow space-y-6">
-
-                                                        <div>
-                                                            <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
-                                                                {t('ProfileSettings_Email')}
-                                                            </label>
-                                                            <div className="mt-2 flex rounded-md shadow-sm">
-                                                                <TextFieldReadOnlyNoLableComponent
-                                                                    name="email"
-                                                                    id="email"
-                                                                    value={formData.email}
-                                                                    onChange={handleChange}
-                                                                    error={errors.email}
-                                                                    autoComplete="email"
-                                                                    maxLength={30}
-                                                                    readOnly={false}
-                                                                />
-                                                            </div>
-                                                        </div>
-
-                                                        <div>
-                                                            <label htmlFor="textmask" className="block text-sm font-medium leading-6 text-gray-900">
-                                                                {t('ProfileSettings_Phone')}
-                                                            </label>
-                                                            <div className="mt-2">
-                                                                <PhoneNumberNoLableComponent
-                                                                    value={values.textmask}
-                                                                    id="textmask"
-                                                                    onChange={changePhoneNumber}
-                                                                    error={errors.phoneNumber}
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="mt-6 flex-grow lg:ml-6 lg:mt-0 lg:flex-shrink-0 lg:flex-grow-0">
-                                                        <p className="text-sm font-medium leading-6 text-gray-900" aria-hidden="true">
-                                                            {t('ProfileSettings_Photo')}
-                                                        </p>
-                                                        <div className="mt-2 lg:hidden">
-                                                            <div className="flex items-center">
-                                                                <div
-                                                                    className="inline-block h-12 w-12 flex-shrink-0 overflow-hidden rounded-full"
-                                                                    aria-hidden="true"
-                                                                >
-                                                                    <img src={userImage ? `${baseUrl}/uploads/${userImage}` : `${baseUrl}/uploads/user404.webp`} alt="User" className="h-12 w-12 rounded-full" />
+                                                            <div>
+                                                                <label htmlFor="email" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                    {t('ProfileSettings_Email')}
+                                                                </label>
+                                                                <div className="mt-2 flex rounded-md shadow-sm">
+                                                                    <TextFieldReadOnlyNoLableComponent
+                                                                        name="email"
+                                                                        id="email"
+                                                                        value={formData.email}
+                                                                        onChange={handleChange}
+                                                                        error={errors.email}
+                                                                        autoComplete="email"
+                                                                        maxLength={30}
+                                                                        readOnly={false}
+                                                                    />
                                                                 </div>
-                                                                <div className="relative ml-5">
+                                                            </div>
+
+                                                            <div>
+                                                                <label htmlFor="textmask" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                    {t('ProfileSettings_Phone')}
+                                                                </label>
+                                                                <div className="mt-2">
+                                                                    <PhoneNumberNoLableComponent
+                                                                        value={values.textmask}
+                                                                        id="textmask"
+                                                                        onChange={changePhoneNumber}
+                                                                        error={errors.phoneNumber}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="mt-6 flex-grow lg:ml-6 lg:mt-0 lg:flex-shrink-0 lg:flex-grow-0">
+                                                            <p className="text-sm font-medium leading-6 text-gray-900" aria-hidden="true">
+                                                                {t('ProfileSettings_Photo')}
+                                                            </p>
+                                                            <div className="mt-2 lg:hidden">
+                                                                <div className="flex items-center">
+                                                                    <div
+                                                                        className="inline-block h-12 w-12 flex-shrink-0 overflow-hidden rounded-full"
+                                                                        aria-hidden="true"
+                                                                    >
+                                                                        <img src={userImage ? `${baseUrl}/uploads/${userImage}` : `${baseUrl}/uploads/user404.webp`} alt="User" className="h-12 w-12 rounded-full" />
+                                                                    </div>
+                                                                    <div className="relative ml-5">
+                                                                        <input
+                                                                            id="mobile-user-photo"
+                                                                            name="user-photo"
+                                                                            type="file"
+                                                                            accept="image/*"
+                                                                            onChange={handleFileChange}
+                                                                            className="peer absolute h-full w-full rounded-md opacity-0"
+                                                                        />
+                                                                        <label
+                                                                            htmlFor="mobile-user-photo"
+                                                                            className="pointer-events-none block rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 peer-hover:ring-gray-400 peer-focus:ring-2 peer-focus:ring-sky-500"
+                                                                        >
+                                                                            <span>{t('ProfileSettings_Change')}</span>
+                                                                            <span className="sr-only"> {t('ProfileSettings_UserPhoto')}</span>
+                                                                        </label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+
+                                                            <div className="relative hidden overflow-hidden rounded-full lg:block">
+                                                                <img src={userImage ? `${baseUrl}/uploads/${userImage}` : `${baseUrl}/uploads/user404.webp`} alt="User" className="h-40 w-40 rounded-full" />
+                                                                <label
+                                                                    htmlFor="desktop-user-photo"
+                                                                    className="absolute inset-0 flex h-full w-full items-center justify-center bg-black bg-opacity-75 text-sm font-medium text-white opacity-0 focus-within:opacity-0 hover:opacity-100"
+                                                                >
+                                                                    <span>{t('ProfileSettings_Change')}</span>
+                                                                    <span className="sr-only"> {t('ProfileSettings_UserPhoto')}</span>
                                                                     <input
-                                                                        id="mobile-user-photo"
-                                                                        name="user-photo"
                                                                         type="file"
                                                                         accept="image/*"
+                                                                        // onChange={changeImage}
                                                                         onChange={handleFileChange}
-                                                                        className="peer absolute h-full w-full rounded-md opacity-0"
+                                                                        id="desktop-user-photo"
+                                                                        name="user-photo"
+                                                                        className="absolute inset-0 h-full w-full cursor-pointer rounded-md border-gray-300 opacity-0"
                                                                     />
-                                                                    <label
-                                                                        htmlFor="mobile-user-photo"
-                                                                        className="pointer-events-none block rounded-md px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 peer-hover:ring-gray-400 peer-focus:ring-2 peer-focus:ring-sky-500"
-                                                                    >
-                                                                        <span>{t('ProfileSettings_Change')}</span>
-                                                                        <span className="sr-only"> {t('ProfileSettings_UserPhoto')}</span>
-                                                                    </label>
-                                                                </div>
+                                                                </label>
                                                             </div>
-                                                        </div>
 
-                                                        <div className="relative hidden overflow-hidden rounded-full lg:block">
-                                                            <img src={userImage ? `${baseUrl}/uploads/${userImage}` : `${baseUrl}/uploads/user404.webp`} alt="User" className="h-40 w-40 rounded-full" />
-                                                            <label
-                                                                htmlFor="desktop-user-photo"
-                                                                className="absolute inset-0 flex h-full w-full items-center justify-center bg-black bg-opacity-75 text-sm font-medium text-white opacity-0 focus-within:opacity-0 hover:opacity-100"
-                                                            >
-                                                                <span>{t('ProfileSettings_Change')}</span>
-                                                                <span className="sr-only"> {t('ProfileSettings_UserPhoto')}</span>
-                                                                <input
-                                                                    type="file"
-                                                                    accept="image/*"
-                                                                    // onChange={changeImage}
-                                                                    onChange={handleFileChange}
-                                                                    id="desktop-user-photo"
-                                                                    name="user-photo"
-                                                                    className="absolute inset-0 h-full w-full cursor-pointer rounded-md border-gray-300 opacity-0"
+                                                            {modalOpen && selectedFile && (
+                                                                <Modal
+                                                                    changeImage={changeImage}
+                                                                    closeModal={() => setModalOpen(false)}
+                                                                    file={selectedFile}
                                                                 />
+                                                            )}
+
+                                                        </div>
+                                                    </div>
+
+                                                    <div className="mt-6 grid grid-cols-12 gap-6">
+                                                        <div className="col-span-12 sm:col-span-6">
+                                                            <label htmlFor="firstName" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                {t('ProfileSettings_FirstName')}
                                                             </label>
-                                                        </div>
-
-                                                        {modalOpen && selectedFile && (
-                                                            <Modal
-                                                                changeImage={changeImage}
-                                                                closeModal={() => setModalOpen(false)}
-                                                                file={selectedFile}
-                                                            />
-                                                        )}
-
-                                                    </div>
-                                                </div>
-
-                                                <div className="mt-6 grid grid-cols-12 gap-6">
-                                                    <div className="col-span-12 sm:col-span-6">
-                                                        <label htmlFor="firstName" className="block text-sm font-medium leading-6 text-gray-900">
-                                                            {t('ProfileSettings_FirstName')}
-                                                        </label>
-                                                        <div className="mt-2 flex rounded-md shadow-sm">
-                                                            <TextFieldNoLableComponent
-                                                                id="firstName"
-                                                                name="firstName"
-                                                                value={formData.firstName}
-                                                                onChange={handleChange}
-                                                                error={errors.firstName}
-                                                                autoComplete="firstName"
-                                                                maxLength={50}
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-span-12 sm:col-span-6">
-                                                        <label htmlFor="lastName" className="block text-sm font-medium leading-6 text-gray-900">
-                                                            {t('ProfileSettings_LastName')}
-                                                        </label>
-                                                        <div className="mt-2 flex rounded-md shadow-sm">
-                                                            <TextFieldNoLableComponent
-                                                                name="lastName"
-                                                                id="lastName"
-                                                                value={formData.lastName}
-                                                                onChange={handleChange}
-                                                                error={errors.lastName}
-                                                                autoComplete="lastName"
-                                                                maxLength={50}
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-span-12 sm:col-span-6">
-                                                        <label htmlFor="birthday" className="block text-sm font-medium leading-6 text-gray-900">
-                                                            {t('ProfileSettings_Birthday')}
-                                                        </label>
-
-                                                        <div className="mt-2 flex rounded-md shadow-sm">
-                                                            <BirthdayComponent
-                                                                birthday={formData.birthday}
-                                                                handleChange={handleChange}
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-span-12 sm:col-span-6">
-                                                        <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                                                            {t('ProfileSettings_CurrentPassword')}
-                                                        </label>
-                                                        <div className="mt-2 flex rounded-md shadow-sm">
-                                                            <PasswordFieldNoLableComponent
-                                                                name="password"
-                                                                id="password"
-                                                                value={formData.password}
-                                                                onChange={handleChange}
-                                                                error={errors.password}
-                                                                autoComplete="password"
-                                                                showPassword={showCurrentPassword}
-                                                                handlePasswordToggle={currentPasswordToggle}
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-span-12 sm:col-span-6">
-                                                        <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                                                            {t('User_AuthType')}
-                                                        </label>
-                                                        <div className="mt-2 flex rounded-md shadow-sm">
-                                                            <AuthTypeSelect
-                                                                authTypeList={authTypeList}
-                                                                selectedAuthType={selectedAuthType}
-                                                                handleAuthTypeChange={handleAuthTypeChange}
-                                                                errors={errors}
-                                                            />
-                                                        </div>
-                                                    </div>
-
-                                                    <div className="col-span-12 sm:col-span-6">
-                                                        <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
-                                                            {t('User_Role')}
-                                                        </label>
-                                                        <div className="mt-2 flex rounded-md shadow-sm">
-                                                            <RoleSelect
-                                                                rolesList={rolesList}
-                                                                selectedRole={selectedRole}
-                                                                handleRoleChange={handleRoleChange}
-                                                                errors={errors}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-
-                                            {/* New password section */}
-                                            <div className=" pt-6 ">
-                                                <div className="mt-4 flex justify-end gap-x-3 px-4 py-4 sm:px-6">
-                                                    <div className="flex justify-end w-64">
-
-                                                        <FormControl fullWidth variant="outlined">
-                                                            <div className="mt-6 flex items-center justify-end gap-x-6">
-                                                                <button
-                                                                    type="submit"
-                                                                    disabled={isUploading}
-                                                                    className={`p-2 flex items-center justify-center rounded-md border ${isUploading ? 'bg-gray-300' : "bg-indigo-600 hover:bg-indigo-700"} px-8 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
-                                                                >
-                                                                    {t('Add_Product_Save')}
-                                                                </button>
-                                                                <button type="button" className="p-2 mr-3 flex items-center rounded-md border bg-gray-200 hover:bg-gray-300 justify-center px-8 py-2 text-sm font-semibold leading-6 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onClick={handleCancel}>
-                                                                    {t('Add_Product_Cancel')}
-                                                                </button>
+                                                            <div className="mt-2 flex rounded-md shadow-sm">
+                                                                <TextFieldNoLableComponent
+                                                                    id="firstName"
+                                                                    name="firstName"
+                                                                    value={formData.firstName}
+                                                                    onChange={handleChange}
+                                                                    error={errors.firstName}
+                                                                    autoComplete="firstName"
+                                                                    maxLength={50}
+                                                                />
                                                             </div>
-                                                        </FormControl>
+                                                        </div>
+
+                                                        <div className="col-span-12 sm:col-span-6">
+                                                            <label htmlFor="lastName" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                {t('ProfileSettings_LastName')}
+                                                            </label>
+                                                            <div className="mt-2 flex rounded-md shadow-sm">
+                                                                <TextFieldNoLableComponent
+                                                                    name="lastName"
+                                                                    id="lastName"
+                                                                    value={formData.lastName}
+                                                                    onChange={handleChange}
+                                                                    error={errors.lastName}
+                                                                    autoComplete="lastName"
+                                                                    maxLength={50}
+                                                                />
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="col-span-12 sm:col-span-6">
+                                                            <label htmlFor="birthday" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                {t('ProfileSettings_Birthday')}
+                                                            </label>
+
+                                                            <div className="mt-2 flex rounded-md shadow-sm">
+                                                                <BirthdayComponent
+                                                                    birthday={formData.birthday}
+                                                                    handleChange={handleChange}
+                                                                />
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="col-span-12 sm:col-span-6">
+                                                            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                {t('ProfileSettings_CurrentPassword')}
+                                                            </label>
+                                                            <div className="mt-2 flex rounded-md shadow-sm">
+                                                                <PasswordFieldNoLableComponent
+                                                                    name="password"
+                                                                    id="password"
+                                                                    value={formData.password}
+                                                                    onChange={handleChange}
+                                                                    error={errors.password}
+                                                                    autoComplete="password"
+                                                                    showPassword={showCurrentPassword}
+                                                                    handlePasswordToggle={currentPasswordToggle}
+                                                                />
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="col-span-12 sm:col-span-6">
+                                                            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                {t('User_AuthType')}
+                                                            </label>
+                                                            <div className="mt-2 flex rounded-md shadow-sm">
+                                                                <AuthTypeSelect
+                                                                    authTypeList={authTypeList}
+                                                                    selectedAuthType={selectedAuthType}
+                                                                    handleAuthTypeChange={handleAuthTypeChange}
+                                                                    errors={errors}
+                                                                />
+                                                            </div>
+                                                        </div>
+
+                                                        <div className="col-span-12 sm:col-span-6">
+                                                            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                                                                {t('User_Role')}
+                                                            </label>
+                                                            <div className="mt-2 flex rounded-md shadow-sm">
+                                                                <RoleSelect
+                                                                    rolesList={rolesList}
+                                                                    selectedRole={selectedRole}
+                                                                    handleRoleChange={handleRoleChange}
+                                                                    errors={errors}
+                                                                />
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </ThemeProvider>
+
+                                                {/* New password section */}
+                                                <div className=" pt-6 ">
+                                                    <div className="mt-4 flex justify-end gap-x-3 px-4 py-4 sm:px-6">
+                                                        <div className="flex justify-end w-64">
+
+                                                            <FormControl fullWidth variant="outlined">
+                                                                <div className="mt-6 flex items-center justify-end gap-x-6">
+                                                                    <button
+                                                                        type="submit"
+                                                                        disabled={isUploading}
+                                                                        className={`p-2 flex items-center justify-center rounded-md border ${isUploading ? 'bg-gray-300' : "bg-indigo-600 hover:bg-indigo-700"} px-8 py-2 text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}
+                                                                    >
+                                                                        {t('Add_Product_Save')}
+                                                                    </button>
+                                                                    <button type="button" className="p-2 mr-3 flex items-center rounded-md border bg-gray-200 hover:bg-gray-300 justify-center px-8 py-2 text-sm font-semibold leading-6 text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2" onClick={handleCancel}>
+                                                                        {t('Add_Product_Cancel')}
+                                                                    </button>
+                                                                </div>
+                                                            </FormControl>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </ThemeProvider>
+
+                                </div>
                             </div>
                         </div>
                     </div>
-                </main>
+                </div>
             </div>
-        </>
+        </div>
     );
 };
 
