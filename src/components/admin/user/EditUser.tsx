@@ -18,9 +18,9 @@ import { validatePhoneNumber } from '../../../validations/custom/add-user-phone-
 import { validateForm } from '../../../validations/account/edit-user-validations';
 import { message } from 'antd';
 import { useNavigate, useParams } from 'react-router-dom';
-import RoleSelect from '../../../ui/acount/roleSelect';
+import RoleSelect from '../../../ui/acount/RoleSelect';
 import { Roles } from '../../../interfaces/Auth/Roles';
-import AuthTypeSelect from '../../../ui/acount/authTypeSelect';
+import AuthTypeSelect from '../../../ui/acount/AuthTypeSelect';
 import { IUserGetEdit } from '../../../interfaces/Auth/IUserGetEdit';
 import { useDispatch } from 'react-redux';
 
