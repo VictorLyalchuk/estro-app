@@ -191,7 +191,7 @@ const AddUser = () => {
     };
 
     return (
-        <div className="bg-gray-100">
+        <div className="bg-gray-100 pb-20">
             <div className="container mx-auto p-8 flex relative max-w-7xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row justify-between">
                 <div className="sm:mx-auto sm:w-full">
                     <div className="w-full ">
@@ -204,7 +204,7 @@ const AddUser = () => {
                             <div className="border-t">
                                 <div className="space-y-6">
                                     <ThemeProvider theme={theme}>
-                                        <div className=" lg:col-span-9">
+                                        <div className="lg:col-span-9">
                                             <form onSubmit={onSubmit}>
                                                 {/* Profile section */}
                                                 <div className="px-4 py-6 sm:p-6 lg:pb-8">
@@ -388,7 +388,7 @@ const AddUser = () => {
                                                         </div>
 
                                                         <div className="col-span-12 sm:col-span-6">
-                                                            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                                                            <label htmlFor="role" className="block text-sm font-medium leading-6 text-gray-900">
                                                                 {t('User_Role')}
                                                             </label>
                                                             <div className="mt-2 flex rounded-md shadow-sm">

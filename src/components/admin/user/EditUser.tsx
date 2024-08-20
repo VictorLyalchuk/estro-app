@@ -434,7 +434,7 @@ const EditUser = () => {
                                                         </div>
 
                                                         <div className="col-span-12 sm:col-span-6">
-                                                            <label htmlFor="password" className="block text-sm font-medium leading-6 text-gray-900">
+                                                            <label htmlFor="role" className="block text-sm font-medium leading-6 text-gray-900">
                                                                 {t('User_Role')}
                                                             </label>
                                                             <div className="mt-2 flex rounded-md shadow-sm">
