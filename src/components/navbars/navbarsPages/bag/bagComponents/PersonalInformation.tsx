@@ -2,7 +2,7 @@ import { Theme, ThemeProvider } from '@material-ui/core/styles';
 import TextFieldComponent from '../../../../../ui/input-with-label/TextFieldComponent';
 import PhoneNumberComponent from '../../../../../ui/input-with-label/PhoneNumberComponent';
 import { ArrowDownIcon, ArrowLongRightIcon } from '@heroicons/react/24/outline';
-import {t} from "i18next";
+import { t } from "i18next";
 
 
 interface PersonalInformationProps {
@@ -66,7 +66,8 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
                 onChange={handleChange}
                 error={errors.firstName ?? null}
                 autoComplete="firstName"
-                maxLength={30}       
+                maxLength={30}
+                placeholder={''}
               />
               <label htmlFor="lastName" className="block text-sm font-medium text-gray-700 mb-2">
                 {t('Bag_PersonalInfo_LastName')}
@@ -79,7 +80,8 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
                 onChange={handleChange}
                 error={errors.lastName ?? null}
                 autoComplete="lastName"
-                maxLength={30}       
+                maxLength={30}
+                placeholder={''}
               />
 
               <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
@@ -93,7 +95,8 @@ const PersonalInformation: React.FC<PersonalInformationProps> = ({
                 onChange={handleChange}
                 error={errors.email ?? null}
                 autoComplete="email"
-                maxLength={30}       
+                maxLength={30}
+                placeholder={''}
               />
 
               <label htmlFor="textmask" className="block text-sm font-medium text-gray-700 mb-2">

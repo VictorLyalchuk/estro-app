@@ -52,6 +52,7 @@ const EditProduct_es: React.FC<EditProductProps> = (
                                             error={errors.name_es ?? null}
                                             autoComplete="name_es"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 
@@ -68,6 +69,7 @@ const EditProduct_es: React.FC<EditProductProps> = (
                                             error={errors.article ?? null}
                                             autoComplete="article"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 

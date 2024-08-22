@@ -1,5 +1,4 @@
-export interface IStore {
-    id: number;
+export interface IAddStoreData {
     name_en: string;
     name_es: string;
     name_fr: string;
@@ -10,6 +9,5 @@ export interface IStore {
     address_uk: string;
     workingHours: string;
     mapLink: string; 
-    city: string; 
- 
+    cityId: number; 
 }

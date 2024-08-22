@@ -70,6 +70,7 @@ const AddCategory_es: React.FC<AddCategoryProps> = (
                                             error={errors.name_es ?? null}
                                             autoComplete="name_es"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 
@@ -86,6 +87,7 @@ const AddCategory_es: React.FC<AddCategoryProps> = (
                                             error={errors.urlName ?? null}
                                             autoComplete="urlName"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 

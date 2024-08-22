@@ -536,8 +536,6 @@ export const fr = {
     "User_Delete_User": "Supprimer un utilisateur",
     "User_Model": "Êtes-vous sûr de vouloir supprimer cet utilisateur ?",
 
-    "Stores": "Magasins",
-
     //Admin
     "Admin_Home": "Maison",
     "Admin_Your_Profile": "Votre profil",
@@ -559,7 +557,21 @@ export const fr = {
 
     //User
     "User_AuthType": "Type d'authentification",
-    "User_Add" : "Ajouter un utilisateur",
-    "User_Edit" : "Modifier l'utilisateur",
-    "ProfileSettings_BlockUser": "Bloquer l'utilisateur"
+    "User_Add": "Ajouter un utilisateur",
+    "User_Edit": "Modifier l'utilisateur",
+    "ProfileSettings_BlockUser": "Bloquer l'utilisateur",
+
+    //Store
+    "Stores": "Magasins",
+    "Stores_Create": "Créer un magasin",
+    "Stores_Id": "Id",
+    "Stores_Country": "Pays",
+    "Stores_City": "Ville",
+    "Stores_Location": "Emplacement",
+    "Stores_Address": "Adresse",
+    "Stores_workingHours": "Heures d'ouverture",
+    "Stores_Edit_Store": "Modifier le magasin",
+    "Stores_Delete_Store": "Supprimer le magasin",
+    "Store_Model": "Êtes-vous sûr de vouloir supprimer ce magasin?",
+    "Store_AddStore" : "Ajouter un magasin",
 }

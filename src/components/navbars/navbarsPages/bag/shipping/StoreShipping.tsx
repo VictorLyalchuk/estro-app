@@ -1,5 +1,5 @@
 import { FormControl, MenuItem, TextField } from '@material-ui/core';
-import { IStore } from '../../../../../interfaces/Catalog/IStore';
+import { IStore } from '../../../../../interfaces/Store/IStore';
 import '../../../../../satoshi.css';
 import { ICity } from '../../../../../interfaces/Address/ICity';
 import { ICountry } from '../../../../../interfaces/Address/ICountry';

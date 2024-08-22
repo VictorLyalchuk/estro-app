@@ -10,6 +10,6 @@ export interface ICategory {
     description_fr: string | null;
     imagePath: string | null;        
     subCategoryId: number;
-    mainCategoryId:number;
+    mainCategoryId: number;
     urlName: string;
 }

@@ -8,7 +8,7 @@ import { IOrderCreate } from "../../../../interfaces/Bag/IOrderCreate";
 import GoodsNotFound from "../../../../assets/goods-not-found.png";
 import { FormControl } from '@material-ui/core';
 import '../../../../satoshi.css';
-import { IStore } from "../../../../interfaces/Catalog/IStore";
+import { IStore } from "../../../../interfaces/Store/IStore";
 import { getBagByEmail, getBagItemsByEmail } from "../../../../services/bag/bag-services";
 import { theme } from "../../../../theme/theme";
 import { validateForm } from "../../../../validations/bag/bag-validations";

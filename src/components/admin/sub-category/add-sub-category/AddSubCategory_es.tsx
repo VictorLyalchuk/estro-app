@@ -54,6 +54,7 @@ const AddSubCategory_es: React.FC<AddSubCategoryProps> = (
                                             error={errors.name_es ?? null}
                                             autoComplete="name_es"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 
@@ -70,6 +71,7 @@ const AddSubCategory_es: React.FC<AddSubCategoryProps> = (
                                             error={errors.urlName ?? null}
                                             autoComplete="urlName"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 

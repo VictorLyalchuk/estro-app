@@ -85,7 +85,8 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
                                                     onChange={handleChange}
                                                     error={errors.email}
                                                     autoComplete="email"
-                                                    maxLength={30}       
+                                                    maxLength={30}   
+                                                    placeholder={''}    
                                                 />
                                         </ThemeProvider>
                                             <FormControl fullWidth variant="outlined">

@@ -1,5 +1,5 @@
 export interface ICountry {
-    id: string;
+    id: number;
     countryName_en: string;
     countryName_es: string;
     countryName_fr: string;

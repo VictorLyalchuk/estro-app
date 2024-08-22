@@ -70,6 +70,7 @@ const AddCategory_en: React.FC<AddCategoryProps> = (
                                             error={errors.name_en ?? null}
                                             autoComplete="name_en"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 
@@ -86,6 +87,7 @@ const AddCategory_en: React.FC<AddCategoryProps> = (
                                             error={errors.urlName ?? null}
                                             autoComplete="urlName"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 
@@ -204,7 +206,6 @@ const AddCategory_en: React.FC<AddCategoryProps> = (
                             )}
 
                         </div>
-
                     </div>
                     <div className="mt-6 flex items-center justify-end gap-x-6">
                         <button

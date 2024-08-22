@@ -383,7 +383,8 @@ const RegisterPage = () => {
                                                         onChange={handleChange}
                                                         error={errors.firstName}
                                                         autoComplete="firstName"
-                                                        maxLength={30}       
+                                                        maxLength={30}  
+                                                        placeholder={''}     
                                                     />
                                                     <TextFieldComponent
                                                         label={t('RegisterPage_LastName')}
@@ -393,7 +394,8 @@ const RegisterPage = () => {
                                                         onChange={handleChange}
                                                         error={errors.lastName}
                                                         autoComplete="lastName"
-                                                        maxLength={30}       
+                                                        maxLength={30}  
+                                                        placeholder={''}     
                                                     />
                                                     <TextFieldComponent
                                                         label={t('RegisterPage_Email')}
@@ -403,7 +405,8 @@ const RegisterPage = () => {
                                                         onChange={handleChange}
                                                         error={errors.email}
                                                         autoComplete="email"
-                                                        maxLength={30}       
+                                                        maxLength={30}  
+                                                        placeholder={''}     
                                                     />
                                                 </ThemeProvider>
 
@@ -493,7 +496,8 @@ const RegisterPage = () => {
                                                         onChange={handleChange}
                                                         error={errors.firstName}
                                                         autoComplete="firstName"
-                                                        maxLength={30}       
+                                                        maxLength={30} 
+                                                        placeholder={''}      
                                                     />
                                                     <TextFieldComponent
                                                         label={t('RegisterPage_LastName')}
@@ -503,7 +507,8 @@ const RegisterPage = () => {
                                                         onChange={handleChange}
                                                         error={errors.lastName}
                                                         autoComplete="lastName"
-                                                        maxLength={30}       
+                                                        maxLength={30}     
+                                                        placeholder={''}  
                                                     />
                                                 </ThemeProvider>
                                                 <FileInputComponent

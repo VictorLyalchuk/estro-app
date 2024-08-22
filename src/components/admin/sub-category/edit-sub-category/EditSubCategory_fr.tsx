@@ -54,6 +54,7 @@ const EditSubCategory_fr: React.FC<EditSubCategoryProps> = (
                                             error={errors.name_fr ?? null}
                                             autoComplete="name_fr"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 
@@ -70,6 +71,7 @@ const EditSubCategory_fr: React.FC<EditSubCategoryProps> = (
                                             error={errors.urlName ?? null}
                                             autoComplete="urlName"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 

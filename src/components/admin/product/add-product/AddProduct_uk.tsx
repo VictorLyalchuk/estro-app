@@ -52,6 +52,7 @@ const AddProduct_uk: React.FC<AddProductProps> = (
                                             error={errors.name_uk ?? null}
                                             autoComplete="name_uk"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 
@@ -68,6 +69,7 @@ const AddProduct_uk: React.FC<AddProductProps> = (
                                             error={errors.article ?? null}
                                             autoComplete="article"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 

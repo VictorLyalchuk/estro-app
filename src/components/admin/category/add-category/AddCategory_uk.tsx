@@ -70,6 +70,7 @@ const AddCategory_uk: React.FC<AddCategoryProps> = (
                                             error={errors.name_uk ?? null}
                                             autoComplete="name_uk"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 
@@ -86,6 +87,7 @@ const AddCategory_uk: React.FC<AddCategoryProps> = (
                                             error={errors.urlName ?? null}
                                             autoComplete="urlName"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 

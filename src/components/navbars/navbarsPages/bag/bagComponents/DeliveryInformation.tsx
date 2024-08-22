@@ -2,7 +2,7 @@ import { ThemeProvider } from '@material-ui/core/styles';
 import { RadioGroup } from '@headlessui/react';
 import { CheckCircleIcon } from '@heroicons/react/24/outline';
 import StoreShipping from '../shipping/StoreShipping';
-import { IStore } from '../../../../../interfaces/Catalog/IStore';
+import { IStore } from '../../../../../interfaces/Store/IStore';
 import { ArrowDownIcon, ArrowLongRightIcon } from '@heroicons/react/24/outline';
 import AddressShipping from '../shipping/AddressShipping';
 import { theme } from '../../../../../theme/theme';

@@ -38,6 +38,7 @@ const AddMainCategory_fr: React.FC<AddMainCategoryProps> = (
                                             error={errors.name_fr ?? null}
                                             autoComplete="name_fr"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 
@@ -54,6 +55,7 @@ const AddMainCategory_fr: React.FC<AddMainCategoryProps> = (
                                             error={errors.urlName ?? null}
                                             autoComplete="urlName"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 

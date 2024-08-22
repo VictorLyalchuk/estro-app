@@ -536,8 +536,6 @@ export const es = {
     "User_Delete_User": "Eliminar usuario",
     "User_Model": "Estás seguro de que deseas eliminar este usuario?",
 
-    "Stores": "Víveres",
-
     //Admin
     "Admin_Home": "Hogar",
     "Admin_Your_Profile": "Tu perfil",
@@ -559,7 +557,21 @@ export const es = {
 
     //User
     "User_AuthType": "Tipo de autenticación",
-    "User_Add" : "Agregar usuario",
-    "User_Edit" : "Editar usuario",
-    "ProfileSettings_BlockUser": "Bloquear usuario"
+    "User_Add": "Agregar usuario",
+    "User_Edit": "Editar usuario",
+    "ProfileSettings_BlockUser": "Bloquear usuario",
+
+    //Store
+    "Stores": "Víveres",
+    "Stores_Create": "Crear tienda",
+    "Stores_Id": "Íd",
+    "Stores_Country": "País",
+    "Stores_City": "Ciudad",
+    "Stores_Location": "Ubicación",
+    "Stores_Address": "Dirección",
+    "Stores_workingHours": "Horas de trabajo",
+    "Stores_Edit_Store": "Editar tienda",
+    "Stores_Delete_Store": "Eliminar tienda",
+    "Store_Model": "¿Estás seguro de que quieres eliminar esta tienda?",
+    "Store_AddStore" : "Agregar tienda",
 }

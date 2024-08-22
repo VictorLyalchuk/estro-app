@@ -311,7 +311,8 @@ const LoginPage = () => {
                                                     onChange={handleChange}
                                                     error={errors.email}
                                                     autoComplete="email"
-                                                    maxLength={30}       
+                                                    maxLength={30}   
+                                                    placeholder={''}    
                                                 />
                                                 <PasswordFieldComponent
                                                     label={t('LoginPage_Password')}

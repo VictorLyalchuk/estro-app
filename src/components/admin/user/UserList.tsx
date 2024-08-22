@@ -122,7 +122,7 @@ export default function UserList() {
                             {/* <th scope="col" className="py-2 pl-8 pr-4 font-semibold hidden xl:table-cell sm:pr-8 sm:text-left lg:pr-20">
                                 {t('User_Birthday')}
                             </th> */}
-                            <th scope="col" className="py-2 pl-8 pr-4 font-semibold hidden 2xl:table-cell sm:pr-8 sm:text-left lg:pr-20">
+                            <th scope="col" className="py-2 pl-8 pr-4 font-semibold hidden xl:table-cell sm:pr-8 sm:text-left lg:pr-20">
                                 {t('User_Balance')}
                             </th>
                             <th scope="col" className="py-2 pl-8 pr-4 font-semibold hidden sm:table-cell sm:pr-8 sm:text-left lg:pr-20">
@@ -170,7 +170,7 @@ export default function UserList() {
                                 {/* <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
                                     {formatDateFromDate(user?.birthday)}
                                 </td> */}
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden 2xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
                                     {user.bonusBalance}
                                 </td>
                                 <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden sm:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">

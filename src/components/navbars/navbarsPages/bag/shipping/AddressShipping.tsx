@@ -1,12 +1,11 @@
-
 import { ThemeProvider } from '@material-ui/core/styles';
 import TextFieldComponent from "../../../../../ui/input-with-label/TextFieldComponent";
 import { theme } from "../../../../../theme/theme";
-import {t} from "i18next";
+import { t } from "i18next";
 
 interface AddressShippingProps {
     errors: { country?: string; city?: string; state?: string; street?: string };
-    shippingData: { country: string, city: string, state: string, street: string,}
+    shippingData: { country: string, city: string, state: string, street: string, }
     handleChangeShipping: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -23,8 +22,10 @@ const AddressShipping: React.FC<AddressShippingProps> = ({ shippingData, errors,
                 value={shippingData?.country}
                 onChange={handleChangeShipping}
                 error={errors.country ?? null}
-                autoComplete="country" 
-                maxLength={30}            />
+                autoComplete="country"
+                maxLength={30}
+                placeholder={''}
+            />
             <label htmlFor="city" className="block text-sm font-medium text-gray-700 mb-2">
                 {t('Bag_AddressShipping_City')}
             </label>
@@ -36,7 +37,8 @@ const AddressShipping: React.FC<AddressShippingProps> = ({ shippingData, errors,
                 onChange={handleChangeShipping}
                 error={errors.city ?? null}
                 autoComplete="city"
-                maxLength={30}       
+                maxLength={30}
+                placeholder={''}
             />
 
             <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-2">
@@ -50,7 +52,8 @@ const AddressShipping: React.FC<AddressShippingProps> = ({ shippingData, errors,
                 onChange={handleChangeShipping}
                 error={errors.state ?? null}
                 autoComplete="state"
-                maxLength={30}       
+                maxLength={30}
+                placeholder={''}
             />
 
             <label htmlFor="street" className="block text-sm font-medium text-gray-700 mb-2">
@@ -64,7 +67,8 @@ const AddressShipping: React.FC<AddressShippingProps> = ({ shippingData, errors,
                 onChange={handleChangeShipping}
                 error={errors.street ?? null}
                 autoComplete="street"
-                maxLength={50}       
+                maxLength={50}
+                placeholder={''}
             />
         </ThemeProvider>
     </div>

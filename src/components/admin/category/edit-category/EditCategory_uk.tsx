@@ -70,6 +70,7 @@ const EditCategory_uk: React.FC<EditCategoryProps> = (
                                             error={errors.name_uk ?? null}
                                             autoComplete="name_uk"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 
@@ -86,6 +87,7 @@ const EditCategory_uk: React.FC<EditCategoryProps> = (
                                             error={errors.urlName ?? null}
                                             autoComplete="urlName"
                                             maxLength={30}
+                                            placeholder={''}
                                         />
                                     </div>
 

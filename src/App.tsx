@@ -45,6 +45,9 @@ import EditCategoryPanelPage from "./components/admin/category/edit-category/Edi
 import UserList from "./components/admin/user/UserList.tsx";
 import AddUser from "./components/admin/user/AddUser.tsx";
 import EditUser from "./components/admin/user/EditUser.tsx";
+import StoreList from "./components/admin/store/StoreList.tsx";
+import AddStorePanelPage from "./components/admin/store/add-store/AddStorePanelPage.tsx";
+import EditStorePanelPage from "./components/admin/store/edit-store/EditStorePanelPage.tsx";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -119,6 +122,15 @@ function App() {
           <Route path="user/add-user" element={<AddUser/>}></Route>
           <Route path="user/edit-user/:Id" element={<EditUser/>}></Route>
 
+          <Route path="store/store-list" element={<StoreList/>}/>
+          <Route path="store/add-store-en" element={<AddStorePanelPage/>}/>
+          <Route path="store/add-store-uk" element={<AddStorePanelPage/>}/>
+          <Route path="store/add-store-es" element={<AddStorePanelPage/>}/>
+          <Route path="store/add-store-fr" element={<AddStorePanelPage/>}/>
+          <Route path="store/edit-store-en/:Id" element={<EditStorePanelPage/>}/>
+          <Route path="store/edit-store-uk/:Id" element={<EditStorePanelPage/>}/>
+          <Route path="store/edit-store-es/:Id" element={<EditStorePanelPage/>}/>
+          <Route path="store/edit-store-fr/:Id" element={<EditStorePanelPage/>}/>
         </Route>
 
         {/* Маршрути для користувачів з Logo, NavbarsPage і Footer */}

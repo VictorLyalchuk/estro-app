@@ -539,8 +539,6 @@ export const en = {
     "User_Edit_User" : "Edit User",
     "User_Delete_User" : "Delete User",
     "User_Model" : "Are you sure you want to delete this user?",
-
-    "Stores" : "Stores",
     
     //Admin
     "Admin_Home" : "Home",
@@ -565,5 +563,20 @@ export const en = {
     "User_AuthType" : "Auth Type",
     "User_Add" : "Add User",
     "User_Edit" : "Edit User",
-    "ProfileSettings_BlockUser": "Block User"
+    "ProfileSettings_BlockUser": "Block User",
+
+    //Store
+    "Stores" : "Stores",
+    "Stores_Create" : "Create Store",
+    "Stores_Id" : "Id",
+    "Stores_Country" : "Country",
+    "Stores_City" : "City",
+    "Stores_Location" : "Location",
+    "Stores_Address" : "Address",
+    "Stores_workingHours" : "Working Hours",
+    "Stores_MapLink" : "Map Link",
+    "Stores_Edit_Store" : "Edit Store",
+    "Stores_Delete_Store" : "Delete Store",
+    "Store_Model" : "Are you sure you want to delete this store?",
+    "Store_AddStore" : "Add Store",
 }

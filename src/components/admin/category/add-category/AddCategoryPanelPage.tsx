@@ -29,7 +29,6 @@ const AddCategoryPanelPage = () => {
     const [selectedMainCategory, setSelectedMainCategory] = useState<IMainCategory | null>(null);
     const [selectedSubCategory, setSelectedSubCategory] = useState<ISubCategory | null>(null);
 
-
     const [formData, setFormData] = useState<IAddCategoryData>({
         name_en: '',
         name_uk: '',
