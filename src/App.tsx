@@ -48,6 +48,12 @@ import EditUser from "./components/admin/user/EditUser.tsx";
 import StoreList from "./components/admin/store/StoreList.tsx";
 import AddStorePanelPage from "./components/admin/store/add-store/AddStorePanelPage.tsx";
 import EditStorePanelPage from "./components/admin/store/edit-store/EditStorePanelPage.tsx";
+import PlacedOrders from "./components/admin/orders/PlacedOrders.tsx";
+import Processing from "./components/admin/orders/Processing.tsx";
+import Shipped from "./components/admin/orders/Shipped.tsx";
+import Delivered from "./components/admin/orders/Delivered.tsx";
+import Cancelled from "./components/admin/orders/Cancelled.tsx";
+import Returned from "./components/admin/orders/Returned.tsx";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -131,6 +137,13 @@ function App() {
           <Route path="store/edit-store-uk/:Id" element={<EditStorePanelPage/>}/>
           <Route path="store/edit-store-es/:Id" element={<EditStorePanelPage/>}/>
           <Route path="store/edit-store-fr/:Id" element={<EditStorePanelPage/>}/>
+
+          <Route path="orders/placed-orders" element={<PlacedOrders/>}/>
+          <Route path="orders/order-processing" element={<Processing/>}/>
+          <Route path="orders/shipped-orders" element={<Shipped/>}/>
+          <Route path="orders/delivered-orders" element={<Delivered/>}/>
+          <Route path="orders/cancelled-orders" element={<Cancelled/>}/>
+          <Route path="orders/returned-orders" element={<Returned/>}/>
         </Route>
 
         {/* Маршрути для користувачів з Logo, NavbarsPage і Footer */}

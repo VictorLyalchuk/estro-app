@@ -1,5 +1,5 @@
 import MaskedInput from 'react-text-mask';
-import { TextMaskCustomProps } from '../../interfaces/Custom/Phone/State';
+import { TextMaskCustomProps } from '../../interfaces/Catalog/State';
 
 const TextMaskCustom: React.FC<TextMaskCustomProps> = (props) => {
     const { inputRef, ...other } = props;

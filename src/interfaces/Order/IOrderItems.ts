@@ -16,4 +16,5 @@ interface IOrderItems {
   size: number;
   quantity: number;
   productId: number;
+  orderId: number;
 }

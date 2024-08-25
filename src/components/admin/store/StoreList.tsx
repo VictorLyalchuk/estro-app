@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Modal } from 'antd';
 import { useTranslation } from "react-i18next";
 import { Link as Scrollink } from 'react-scroll'
@@ -13,7 +12,6 @@ import { deleteStoreByID, getCity, getStoreByPage, getStoreQuantity } from "../.
 export default function StoreList() {
     const { t, i18n } = useTranslation();
     const lang = i18n.language;
-    const dispatch = useDispatch();
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [storeOptions, setStoreOptions] = useState<IStore[]>([]);
     const [selectedStore, setSelectedStore] = useState<IStore | null>(null);
@@ -40,7 +38,7 @@ export default function StoreList() {
         getCity().then(resp => setCityOptions(resp));
         getStoreByPage(page).then(resp => setStoreOptions(resp));
         getStoreQuantity().then(data => setCountPage(data));
-    }, [dispatch, page]);
+    }, [page]);
 
     const showDeleteConfirm = (category: IStore) => {
         setSelectedStore(category);
@@ -96,7 +94,7 @@ export default function StoreList() {
                         <col className="lg:w-1/12" />
                         <col className="lg:w-1/12" />
                         <col className="lg:w-1/12" />
-                        <col className="lg:w-3/12" />
+                        <col className="lg:w-1/12" />
                         <col className="lg:w-1/12" />
                         <col className="lg:w-1/12" />
                     </colgroup>

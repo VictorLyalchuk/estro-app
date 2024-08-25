@@ -2,7 +2,7 @@ import { useState, ChangeEvent, useEffect } from 'react';
 import { Checkbox, FormControl, FormControlLabel, FormGroup, ThemeProvider } from '@material-ui/core';
 import { t } from "i18next";
 import moment from 'moment/moment';
-import { State } from '../../../interfaces/Custom/Phone/State';
+import { State } from '../../../interfaces/Catalog/State';
 import { APP_ENV } from '../../../env/config';
 import { beforeUpload, createUserImage, deleteUserImage, editUserImage } from '../../../services/images/images-services';
 import { IIUserImageEdit } from '../../../interfaces/Auth/IIUserImageEdit';

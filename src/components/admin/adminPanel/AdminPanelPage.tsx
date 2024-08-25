@@ -1,90 +1,18 @@
-import { AcademicCapIcon, BanknotesIcon, CheckBadgeIcon, ClockIcon, ReceiptRefundIcon, UsersIcon } from '@heroicons/react/24/outline'
+import { AcademicCapIcon, BanknotesIcon, CheckBadgeIcon, ClockIcon, DocumentChartBarIcon, ReceiptRefundIcon, XCircleIcon, RocketLaunchIcon } from '@heroicons/react/24/outline'
 import classNames from 'classnames'
 import { useSelector } from 'react-redux'
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer'
 import { APP_ENV } from '../../../env/config'
 import { Link } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import { useEffect, useState } from 'react'
+import { getProductQuantity } from '../../../services/product/product-services'
+import { getUsersQuantity } from '../../../services/accounts/account-services'
+import { getOrderQuantity, getOrdersByPage } from '../../../services/order/order-services'
+import { IOrderItemsAdmin } from '../../../interfaces/Order/IOrderItemsAdmin'
+import { getLocalizedField } from '../../../utils/localized/localized'
+import Invoice from '../orders/Invoice'
 
-const stats = [
-  { label: 'Vacation days left', value: 12 },
-  { label: 'Sick days left', value: 4 },
-  { label: 'Personal days left', value: 2 },
-]
-const actions = [
-  {
-    icon: ClockIcon,
-    name: 'Request time off',
-    href: '#',
-    iconForeground: 'text-teal-700',
-    iconBackground: 'bg-teal-50',
-  },
-  {
-    icon: CheckBadgeIcon,
-    name: 'Benefits',
-    href: '#',
-    iconForeground: 'text-purple-700',
-    iconBackground: 'bg-purple-50',
-  },
-  {
-    icon: UsersIcon,
-    name: 'Schedule a one-on-one',
-    href: '#',
-    iconForeground: 'text-sky-700',
-    iconBackground: 'bg-sky-50',
-  },
-  {
-    icon: BanknotesIcon,
-    name: 'Payroll',
-    href: '#',
-    iconForeground: 'text-yellow-700',
-    iconBackground: 'bg-yellow-50',
-  },
-  {
-    icon: ReceiptRefundIcon,
-    name: 'Submit an expense',
-    href: '#',
-    iconForeground: 'text-rose-700',
-    iconBackground: 'bg-rose-50',
-  },
-  {
-    icon: AcademicCapIcon,
-    name: 'Training',
-    href: '#',
-    iconForeground: 'text-indigo-700',
-    iconBackground: 'bg-indigo-50',
-  },
-]
-const recentHires = [
-  {
-    name: 'Leonard Krasner',
-    handle: 'leonardkrasner',
-    imageUrl:
-      'https://images.unsplash.com/photo-1519345182560-3f2917c472ef?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    href: '#',
-  },
-  {
-    name: 'Floyd Miles',
-    handle: 'floydmiles',
-    imageUrl:
-      'https://images.unsplash.com/photo-1463453091185-61582044d556?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    href: '#',
-  },
-  {
-    name: 'Emily Selman',
-    handle: 'emilyselman',
-    imageUrl:
-      'https://images.unsplash.com/photo-1502685104226-ee32379fefbe?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    href: '#',
-  },
-  {
-    name: 'Kristin Watson',
-    handle: 'kristinwatson',
-    imageUrl:
-      'https://images.unsplash.com/photo-1500917293891-ef795e70e1f6?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80',
-    href: '#',
-  },
-]
 const announcements = [
   {
     id: 1,
@@ -110,8 +38,124 @@ const announcements = [
 ]
 export default function AdminPanelPage() {
   const baseUrl = APP_ENV.BASE_URL;
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
+  const stepQuick = [0];
+  const page = 1;
+  const itemsPerPage = 3;
+  const [productsCount, setProductsCount] = useState(0);
+  const [usersCount, setUsersCount] = useState(0);
+  const [ordersCount, setOrdersCount] = useState(0);
+  const [step] = useState<number[]>([0, 1, 2, 3, 4, 5]);
+  const [orderItems, setOrderItems] = useState<IOrderItemsAdmin[]>([]);
+  const [selectedOrderItem, setSelectedOrderItem] = useState<IOrderItemsAdmin | null>(null);
+  const [modalVisiblePrintOrder, setModalVisiblePrintOrder] = useState<boolean>(false);
+
+  const stats = [
+    { label: t('Product_Count'), value: productsCount },
+    { label: t('Orders_Count'), value: ordersCount },
+    { label: t('Users_Count'), value: usersCount },
+  ]
+
+  const actions = [
+    {
+      id: 1,
+      icon: DocumentChartBarIcon,
+      name: t('Orders_Placed_Orders'),
+      href: '/admin/orders/placed-orders',
+      iconForeground: 'text-yellow-700',
+      iconBackground: 'bg-yellow-50',
+      descriptions: t('Placed_Orders_descriptions'),
+    },
+    {
+      id: 2,
+      icon: ClockIcon,
+      name: t('Orders_Order_processing'),
+      href: '/admin/orders/order-processing',
+      iconForeground: 'text-orange-700',
+      iconBackground: 'bg-orange-50',
+      descriptions: t('Order_processing_descriptions'),
+    },
+    {
+      id: 3,
+      icon: RocketLaunchIcon,
+      name: t('Orders_Shipped_Orders'),
+      href: '/admin/orders/shipped-orders',
+      iconForeground: 'text-blue-700',
+      iconBackground: 'bg-blue-50',
+      descriptions: t('Order_shipped_descriptions'),
+    },
+    {
+      id: 4,
+      icon: CheckBadgeIcon,
+      name: t('Orders_Delivered_Orders'),
+      href: '/admin/orders/delivered-orders',
+      iconForeground: 'text-green-700',
+      iconBackground: 'bg-green-50',
+      descriptions: t('Order_delivered_descriptions'),
+    },
+    {
+      id: 5,
+      icon: XCircleIcon,
+      name: t('Orders_Cancelled_Orders'),
+      href: '/admin/orders/cancelled-orders',
+      iconForeground: 'text-red-700',
+      iconBackground: 'bg-red-50',
+      descriptions: t('Order_cancelled_descriptions'),
+    },
+    {
+      id: 6,
+      icon: ReceiptRefundIcon,
+      name: t('Orders_Returned_Orders'),
+      href: '/admin/orders/returned-orders',
+      iconForeground: 'text-gray-700',
+      iconBackground: 'bg-gray-50',
+      descriptions: t('Order_returned_descriptions'),
+    },
+    {
+      id: 7,
+      icon: BanknotesIcon,
+      name: t('Financial_Report'),
+      href: '#',
+      iconForeground: 'text-rose-700',
+      iconBackground: 'bg-rose-50',
+      descriptions: t('Order_financial_descriptions'),
+    },
+    {
+      id: 8,
+      icon: AcademicCapIcon,
+      name: t('Sales_Report'),
+      href: '#',
+      iconForeground: 'text-indigo-700',
+      iconBackground: 'bg-indigo-50',
+      descriptions: t('Order_sales_descriptions'),
+    },
+  ]
+
+  useEffect(() => {
+    getProductQuantity()
+      .then(data => setProductsCount(data))
+      .catch(error => console.error('Error fetching product quantity data:', error));
+    getUsersQuantity()
+      .then(data => setUsersCount(data))
+      .catch(error => console.error('Error fetching user quantity data:', error));
+    getOrderQuantity(step).then(data => setOrdersCount(data))
+      .catch(error => console.error('Error fetching orders quantity data:', error));
+    getOrdersByPage(page, itemsPerPage, stepQuick).then(data => setOrderItems(data))
+      .catch(error => console.error('Error fetching orders data:', error));
+  }, []);
+
+  const handleOpenModal = (orderItem: IOrderItemsAdmin) => {
+    setSelectedOrderItem(orderItem);
+    setModalVisiblePrintOrder(true);
+  };
+
+  const handleCloseModal = () => {
+    setModalVisiblePrintOrder(false);
+    setSelectedOrderItem(null);
+  };
+
   return (
     <>
       <div className="min-h-full">
@@ -169,7 +213,7 @@ export default function AdminPanelPage() {
                     </h2>
                     {actions.map((action, actionIdx) => (
                       <div
-                        key={action.name}
+                        key={action.id}
                         className={classNames(
                           actionIdx === 0 ? 'rounded-tl-lg rounded-tr-lg sm:rounded-tr-none' : '',
                           actionIdx === 1 ? 'sm:rounded-tr-lg' : '',
@@ -191,15 +235,14 @@ export default function AdminPanelPage() {
                         </div>
                         <div className="mt-8">
                           <h3 className="text-lg font-medium">
-                            <a href={action.href} className="focus:outline-none">
+                            <Link to={action.href} className="focus:outline-none">
                               {/* Extend touch target to entire panel */}
                               <span className="absolute inset-0" aria-hidden="true" />
                               {action.name}
-                            </a>
+                            </Link>
                           </h3>
                           <p className="mt-2 text-sm text-gray-500">
-                            Doloribus dolores nostrum quia qui natus officia quod et dolorem. Sit repellendus qui ut at
-                            blanditiis et quo et molestiae.
+                            {action.descriptions}
                           </p>
                         </div>
                         <span
@@ -264,23 +307,24 @@ export default function AdminPanelPage() {
                       </h2>
                       <div className="mt-6 flow-root">
                         <ul role="list" className="-my-5 divide-y divide-gray-200">
-                          {recentHires.map((person) => (
-                            <li key={person.handle} className="py-4">
+                          {orderItems.map((item) => (
+                            <li key={item.id} className="py-4">
                               <div className="flex items-center space-x-4">
                                 <div className="flex-shrink-0">
-                                  <img className="h-8 w-8 rounded-full" src={person.imageUrl} alt="" />
+                                  <img src={`${baseUrl}/uploads/1200_${item.imagePath || '/uploads/default.jpg'}`} className="h-14" />
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                  <p className="truncate text-sm font-medium text-gray-900">{person.name}</p>
-                                  <p className="truncate text-sm text-gray-500">{'@' + person.handle}</p>
+                                  <p className="truncate text-sm font-medium text-gray-900">{getLocalizedField(item, 'name', lang)}</p>
+                                  <p className="truncate text-sm text-gray-500">{item.price} €</p>
+                                  <p className="truncate text-sm text-gray-500">{t('Orders_Quantity') + ': ' + item.quantity}</p>
                                 </div>
                                 <div>
-                                  <a
-                                    href={person.href}
+                                  <button
+                                    onClick={() => handleOpenModal(item)}
                                     className="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                                   >
                                     {t('Admin_View')}
-                                  </a>
+                                  </button>
                                 </div>
                               </div>
                             </li>
@@ -288,12 +332,12 @@ export default function AdminPanelPage() {
                         </ul>
                       </div>
                       <div className="mt-6">
-                        <a
-                          href="#"
+                        <Link
+                          to="/admin/orders/placed-orders"
                           className="flex w-full items-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                         >
                           {t('Admin_View_all')}
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -302,7 +346,11 @@ export default function AdminPanelPage() {
             </div>
           </div>
         </main>
-
+        <Invoice
+          open={modalVisiblePrintOrder}
+          onClose={handleCloseModal}
+          orderItem={selectedOrderItem}
+        />
       </div>
     </>
   )

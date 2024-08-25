@@ -3,7 +3,7 @@ import GoodsNotFound from "../../../../assets/goods-not-found.png";
 import { APP_ENV } from "../../../../env/config";
 import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/react/20/solid';
 import { CompactOrdersProps } from "../../../../interfaces/ProfileUser/ProfileUserProps";
-import { ArrowsPointingOutIcon } from "@heroicons/react/24/outline";
+import { ArrowsPointingOutIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { formatDate } from "../../../../services/custom/format-data";
 import { useTranslation } from "react-i18next";
 import { getLocalizedField } from "../../../../utils/localized/localized";
@@ -90,7 +90,7 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
                               <p className="mt-3 text-sm text-gray-500">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
                               <p className="mt-3 text-sm text-gray-500">{t('Order_Quantity')}: {product.quantity}</p>
                               <p className="mt-3 font-medium text-gray-900">{t('Order_Size')}: {product.size}</p>
-                              <p className="mt-3 text-sm text-gray-500">{getLocalizedField(product, 'description', lang)}</p>
+                              {/* <p className="mt-3 text-sm text-gray-500">{getLocalizedField(product, 'description', lang)}</p> */}
                             </div>
                           </div>
 
@@ -126,24 +126,38 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
                             )}
                           </p>
                           <div className="mt-6" aria-hidden="true">
-                            <div className="overflow-hidden rounded-full bg-gray-200">
-                              <div
-                                className="h-2 rounded-full bg-indigo-600"
-                                style={{ width: `calc((${product.step} * 2 + 1) / 8 * 100%)` }}
-                              />
-                            </div>
-                            <div className="mt-6 hidden grid-cols-4 text-sm font-medium text-gray-600 sm:grid">
-                              <div className="text-indigo-600">{t('Order_OrderPlaced')}</div>
-                              <div className={classNames(product.step > 0 ? 'text-indigo-600' : '', 'text-center')}>
-                                {t('Order_Processing')}
+                            {product.step > 3 ? (
+                              <div className="text-red-600 text-center font-medium flex items-center">
+                                <XMarkIcon className="w-6 h-6 mr-2" />
+                                {t('Order_Cancelled')}
                               </div>
-                              <div className={classNames(product.step > 1 ? 'text-indigo-600' : '', 'text-center')}>
-                                {t('Order_Shipped')}
-                              </div>
-                              <div className={classNames(product.step > 2 ? 'text-indigo-600' : '', 'text-right')}>
-                                {t('Order_Delivered')}
-                              </div>
-                            </div>
+                            ) : (
+                              <>
+                                <div className="overflow-hidden rounded-full bg-gray-200">
+                                  <div
+                                    className="h-2 rounded-full bg-indigo-600"
+                                    // style={{ width: `calc((${product.step} * 2 + 1) / 8 * 100%)` }}
+                                    style={{
+                                      width: product.step === 3
+                                        ? '100%'
+                                        : `calc((${product.step} * 2 + 1) / 8 * 100%)`
+                                    }}
+                                  />
+                                </div>
+                                <div className="mt-6 hidden grid-cols-4 text-sm font-medium text-gray-600 sm:grid">
+                                  <div className="text-indigo-600">{t('Order_OrderPlaced')}</div>
+                                  <div className={classNames(product.step > 0 ? 'text-indigo-600' : '', 'text-center')}>
+                                    {t('Order_Processing')}
+                                  </div>
+                                  <div className={classNames(product.step > 1 ? 'text-indigo-600' : '', 'text-center')}>
+                                    {t('Order_Shipped')}
+                                  </div>
+                                  <div className={classNames(product.step > 2 ? 'text-indigo-600' : '', 'text-right')}>
+                                    {t('Order_Delivered')}
+                                  </div>
+                                </div>
+                              </>
+                            )}
                           </div>
                         </div>
                       </div>

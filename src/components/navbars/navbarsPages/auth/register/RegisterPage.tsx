@@ -12,7 +12,7 @@ import { useGoogleLogin } from "@react-oauth/google";
 import ReactCodeInput from "react-code-input";
 import Modal from '../../../../cropImage/Modal';
 import { validateForm } from '../../../../../validations/account/register-validations';
-import { State } from '../../../../../interfaces/Custom/Phone/State';
+import { State } from '../../../../../interfaces/Catalog/State';
 import { validatePhoneNumber } from '../../../../../validations/custom/register-phone-validations';
 import { register } from '../../../../../services/accounts/account-services';
 import { theme } from '../../../../../theme/theme';

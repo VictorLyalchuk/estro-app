@@ -26,7 +26,7 @@ import { useStyles } from '../../../../../theme/styles';
 import TextFieldComponent from '../../../../../ui/input-with-label/TextFieldComponent';
 import PasswordFieldComponent from '../../../../../ui/input-with-label/PasswordFieldComponent';
 import PhoneNumberComponent from '../../../../../ui/input-with-label/PhoneNumberComponent';
-import { State } from '../../../../../interfaces/Custom/Phone/State';
+import { State } from '../../../../../interfaces/Catalog/State';
 import {useTranslation} from "react-i18next";
 import i18next from "i18next";
 

@@ -428,11 +428,12 @@ export default function CatalogNavigation() {
           <div className="flex items-baseline justify-between border-b border-gray-200 pb-2 pt-4">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 pb-4">{t('CatalogNavigation_Catalog')}</h1>
 
+            {/* Sort */}
             <div className="flex items-center">
               <Menu as="div" className="relative inline-block text-left">
                 <div>
                   <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-gray-900">
-                    {t('CatalogNavigation_Sort')}
+                    {activeSortOption ? activeSortOption.name : t('CatalogNavigation_Sort')}
                     <ChevronDownIcon
                       className="-mr-1 ml-1 h-5 w-5 flex-shrink-0 text-gray-400 group-hover:text-gray-500"
                       aria-hidden="true"
@@ -440,7 +441,6 @@ export default function CatalogNavigation() {
                   </Menu.Button>
                 </div>
 
-                {/* Sort */}
                 <Transition
                   as={Fragment}
                   enter="transition ease-out duration-100"

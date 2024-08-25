@@ -1,9 +1,11 @@
+import { useTranslation } from "react-i18next";
 import { ProfileUserProps } from "../../../../interfaces/ProfileUser/ProfileUserProps";
 import { emailConfirm } from "../../../../services/accounts/account-services";
-import {t} from "i18next";
-import { formatDateFromDate } from "../../../../services/custom/format-data";
+import { formatDate } from "../../../../services/custom/format-data";
 
 const Profile: React.FC<ProfileUserProps> = ({ userProfile, countPage }) => {
+  const { t, i18n } = useTranslation();
+  const lang = i18n.language;
   const confirm = async () => {
     if (userProfile) {
       emailConfirm(userProfile?.email);
@@ -33,7 +35,7 @@ const Profile: React.FC<ProfileUserProps> = ({ userProfile, countPage }) => {
                 <div className="pt-6 sm:flex">
                   <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">{t('Profile_Birthday')}</dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900">{formatDateFromDate(userProfile?.birthday)}</div>
+                    <time className="text-gray-900">{formatDate(userProfile?.birthday, lang)}</time>
                   </dd>
                 </div>
                 <div className="pt-6 sm:flex">

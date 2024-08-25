@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Modal } from 'antd';
 import { APP_ENV } from "../../../env/config";
 import { useTranslation } from "react-i18next";
@@ -14,7 +13,6 @@ export default function MainCategoryList() {
     const { t, i18n } = useTranslation();
     const lang = i18n.language;
     const baseUrl = APP_ENV.BASE_URL;
-    const dispatch = useDispatch();
     const [mainCategoryList, setMainCategoryList] = useState<IMainCategory[]>([]);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [SelectedMainCategory, setSelectedMainCategory] = useState<IMainCategory | null>(null);
@@ -43,7 +41,7 @@ export default function MainCategoryList() {
         getMainCategoryQuantity()
             .then(data => setCountPage(data))
             .catch(error => console.error('Error fetching main category quantity data:', error));
-    }, [dispatch, page]);
+    }, [page]);
 
 
     const showDeleteConfirm = (mainCategory: IMainCategory) => {

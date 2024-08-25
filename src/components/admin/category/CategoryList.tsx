@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Modal } from 'antd';
 import { APP_ENV } from "../../../env/config";
 import { useTranslation } from "react-i18next";
@@ -15,7 +14,6 @@ export default function CategoryList() {
     const { t, i18n } = useTranslation();
     const lang = i18n.language;
     const baseUrl = APP_ENV.BASE_URL;
-    const dispatch = useDispatch();
     const [subCategory, setSubCategory] = useState<ISubCategory[]>([]);
     const [categoryList, setCategoryList] = useState<ICategory[]>([]);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
@@ -48,7 +46,7 @@ export default function CategoryList() {
         getCategoryQuantity()
             .then(data => setCountPage(data))
             .catch(error => console.error('Error fetching category quantity data:', error));
-    }, [dispatch, page]);
+    }, [page]);
 
     const showDeleteConfirm = (category: ICategory) => {
         setSelectedCategory(category);

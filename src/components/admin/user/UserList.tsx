@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
 import { Modal } from 'antd';
 import { APP_ENV } from "../../../env/config";
 import { useTranslation } from "react-i18next";
@@ -16,7 +15,6 @@ const statuses: Record<Status, string> = { True: 'text-green-400 bg-green-400/10
 export default function UserList() {
     const { t } = useTranslation();
     const baseUrl = APP_ENV.BASE_URL;
-    const dispatch = useDispatch();
     const [usersList, setUsersList] = useState<IUserProfile[]>([]);
     const [modalVisible, setModalVisible] = useState<boolean>(false);
     const [selectedUser, setSelectedUser] = useState<IUserProfile | null>(null);
@@ -45,7 +43,7 @@ export default function UserList() {
         getUsersQuantity()
             .then(data => setCountPage(data))
             .catch(error => console.error('Error fetching user quantity data:', error));
-    }, [dispatch, page]);
+    }, [page]);
 
     const showDeleteConfirm = (user: IUserProfile) => {
         setSelectedUser(user);
@@ -101,7 +99,6 @@ export default function UserList() {
                         <col className="xl:w-1/12" />
                         <col className="xl:w-1/12" />
                         <col className="xl:w-1/12" />
-                        {/* <col className="xl:w-1/12" /> */}
                         <col className="xl:w-1/12" />
                         <col className="xl:w-1/12" />
                         <col className="xl:w-1/12" />
@@ -113,15 +110,12 @@ export default function UserList() {
                             <th scope="col" className="py-2 pl-8 pr-8 font-semibold hidden sm:table-cell">
                                 {t('User_Index')}
                             </th>
-                            <th scope="col" className="py-2 pl-8 pr-8 font-semibold sm:table-cell">
+                            <th scope="col" className="py-2 pl-8 pr-8 font-semibold sm:table-cell whitespace-normal">
                                 {t('User_Name')}
                             </th>
                             <th scope="col" className="py-2 pl-8 pr-4 font-semibold hidden md:table-cell sm:pr-6 lg:pr-8">
                                 {t('User_Role')}
                             </th>
-                            {/* <th scope="col" className="py-2 pl-8 pr-4 font-semibold hidden xl:table-cell sm:pr-8 sm:text-left lg:pr-20">
-                                {t('User_Birthday')}
-                            </th> */}
                             <th scope="col" className="py-2 pl-8 pr-4 font-semibold hidden xl:table-cell sm:pr-8 sm:text-left lg:pr-20">
                                 {t('User_Balance')}
                             </th>

@@ -101,7 +101,7 @@ export default function ProductList() {
                 <table className="mt-6 w-full whitespace-nowrap text-left">
                     <colgroup>
                         <col className="xl:w-1/12" />
-                        <col className="xl:w-4/12" />
+                        <col className="xl:w-3/12" />
                         <col className="xl:w-1/12" />
                         <col className="xl:w-1/12" />
                         <col className="xl:w-1/12" />
@@ -143,7 +143,7 @@ export default function ProductList() {
                                 <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
                                     <div className="font-mono text-sm leading-6">{product.id}</div>
                                 </td>
-                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 ">
+                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 whitespace-normal">
                                     <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                                         {product.images && product.images.length > 0 ? (
                                             <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`} className="w-30 rounded-lg" />

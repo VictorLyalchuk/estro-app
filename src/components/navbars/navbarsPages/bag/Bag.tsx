@@ -12,7 +12,7 @@ import { IStore } from "../../../../interfaces/Store/IStore";
 import { getBagByEmail, getBagItemsByEmail } from "../../../../services/bag/bag-services";
 import { theme } from "../../../../theme/theme";
 import { validateForm } from "../../../../validations/bag/bag-validations";
-import { State } from "../../../../interfaces/Custom/Phone/State";
+import { State } from "../../../../interfaces/Catalog/State";
 import { validatePhoneNumber } from "../../../../validations/custom/bag-phone-validations";
 import { getCity, getCountry, getStore } from "../../../../services/shipping/shipping-services";
 import PersonalInformation from "./bagComponents/PersonalInformation";

@@ -3,6 +3,8 @@ import { APP_ENV } from "../../env/config";
 import { IOrderCreate } from "../../interfaces/Bag/IOrderCreate";
 import { CardReducerActionType } from "../../store/bag/CardReducer";
 import { BagReducerActionType } from "../../store/bag/BagReducer";
+import { IOrderItemsAdmin } from "../../interfaces/Order/IOrderItemsAdmin";
+import { ICreateOrderItemsAdmin } from "../../interfaces/Order/ICreateOrderItemsAdmin";
 
 const baseUrl = APP_ENV.BASE_URL;
 
@@ -45,6 +47,60 @@ export async function createOrder(order: IOrderCreate, dispatch: any) {
         });
     } catch (error) {
         console.error('Failed to create user order data:', error);
+        throw error;
+    }
+}
+
+//admin panel Order
+export async function getOrdersByPage(page: number, pageSize: number, step: number[]) {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await instance.get<IOrderItemsAdmin[]>(`OrderByPage/${page}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            params: {
+                step: JSON.stringify(step),
+                pageSize: pageSize
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Failed to fetch orders data:', error);
+        throw error;
+    }
+}
+
+export async function getOrderQuantity(step: number[]) {
+    const token = localStorage.getItem('token');
+    try {
+        const response = await instance.get<number>(`OrderQuantity`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+                'Content-Type': 'application/json',
+            },
+            params: {
+                step: JSON.stringify(step)
+            }
+        });
+        return response.data;
+    } catch (error) {
+        console.error('Failed to fetch quantity orders data:', error);
+        throw error;
+    }
+}
+
+export async function editOrderItems(model: ICreateOrderItemsAdmin) {
+    const token = localStorage.getItem('token');
+    try {
+        await instance.post(`EditOrderItems`, model, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        })
+    } catch (error) {
+        console.error('Failed to edit order items data:', error);
         throw error;
     }
 }

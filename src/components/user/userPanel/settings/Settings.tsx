@@ -7,7 +7,7 @@ import { FormControl, TextField, ThemeProvider } from '@material-ui/core';
 import { beforeUpload, createUserImage, deleteUserImage, editUserImage } from '../../../../services/images/images-services';
 import { APP_ENV } from '../../../../env/config';
 import { editUserData, refreshRedux, refreshToken } from '../../../../services/accounts/account-services';
-import { State } from '../../../../interfaces/Custom/Phone/State';
+import { State } from '../../../../interfaces/Catalog/State';
 import { validateForm } from '../../../../validations/account/account-validations';
 import { validatePhoneNumber } from '../../../../validations/custom/phone-validations';
 import { SettingsUserProps } from '../../../../interfaces/ProfileUser/ProfileUserProps';
