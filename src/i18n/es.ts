@@ -626,5 +626,16 @@ export const es = {
     "Cancelled": "Cancelado",
     "Returned": "Devuelto",
     "The money was returned": "El dinero fue devuelto",
-    "The money has been paid": "El dinero ha sido pagado"
+    "The money has been paid": "El dinero ha sido pagado",
+    "Recent Reviews": "Reseñas recientes",
+
+    // Review
+    "Id": "Id",
+    "Comment": "Comentario",
+    "Rating": "Calificación",
+    "Date": "Fecha",
+    "View Product": "Ver producto",
+    "Delete Review": "Eliminar reseña",
+    "Review_Model": "¿Está seguro de que desea eliminar esta reseña?"
+
 }

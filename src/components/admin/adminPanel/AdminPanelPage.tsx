@@ -12,30 +12,10 @@ import { getOrderQuantity, getOrdersByPage } from '../../../services/order/order
 import { IOrderItemsAdmin } from '../../../interfaces/Order/IOrderItemsAdmin'
 import { getLocalizedField } from '../../../utils/localized/localized'
 import Invoice from '../orders/Invoice'
+import { getReviewByPage } from '../../../services/userProductReview/user-product-review-services'
+import { StarIcon } from '@heroicons/react/24/solid'
+import { formatDateWithTime } from '../../../services/custom/format-data'
 
-const announcements = [
-  {
-    id: 1,
-    title: 'Office closed on July 2nd',
-    href: '#',
-    preview:
-      'Cum qui rem deleniti. Suscipit in dolor veritatis sequi aut. Vero ut earum quis deleniti. Ut a sunt eum cum ut repudiandae possimus. Nihil ex tempora neque cum consectetur dolores.',
-  },
-  {
-    id: 2,
-    title: 'New password policy',
-    href: '#',
-    preview:
-      'Alias inventore ut autem optio voluptas et repellendus. Facere totam quaerat quam quo laudantium cumque eaque excepturi vel. Accusamus maxime ipsam reprehenderit rerum id repellendus rerum. Culpa cum vel natus. Est sit autem mollitia.',
-  },
-  {
-    id: 3,
-    title: 'Office closed on July 2nd',
-    href: '#',
-    preview:
-      'Tenetur libero voluptatem rerum occaecati qui est molestiae exercitationem. Voluptate quisquam iure assumenda consequatur ex et recusandae. Alias consectetur voluptatibus. Accusamus a ab dicta et. Consequatur quis dignissimos voluptatem nisi.',
-  },
-]
 export default function AdminPanelPage() {
   const baseUrl = APP_ENV.BASE_URL;
   const { t, i18n } = useTranslation();
@@ -49,6 +29,7 @@ export default function AdminPanelPage() {
   const [ordersCount, setOrdersCount] = useState(0);
   const [step] = useState<number[]>([0, 1, 2, 3, 4, 5]);
   const [orderItems, setOrderItems] = useState<IOrderItemsAdmin[]>([]);
+  const [orderReview, setReviewItems] = useState<IUserProductReview[]>([]);
   const [selectedOrderItem, setSelectedOrderItem] = useState<IOrderItemsAdmin | null>(null);
   const [modalVisiblePrintOrder, setModalVisiblePrintOrder] = useState<boolean>(false);
 
@@ -144,6 +125,8 @@ export default function AdminPanelPage() {
       .catch(error => console.error('Error fetching orders quantity data:', error));
     getOrdersByPage(page, itemsPerPage, stepQuick).then(data => setOrderItems(data))
       .catch(error => console.error('Error fetching orders data:', error));
+    getReviewByPage(page, itemsPerPage).then(data => setReviewItems(data))
+      .catch(error => console.error('Error fetching Review data:', error));
   }, []);
 
   const handleOpenModal = (orderItem: IOrderItemsAdmin) => {
@@ -256,38 +239,63 @@ export default function AdminPanelPage() {
 
               {/* Right column */}
               <div className="grid grid-cols-1 gap-4">
-                {/* Announcements */}
+                {/* Reviews */}
                 <section aria-labelledby="announcements-title">
                   <div className="overflow-hidden rounded-lg bg-white shadow">
                     <div className="p-6">
                       <h2 className="text-base font-medium text-gray-900" id="announcements-title">
-                        Recent Reviews
+                        {t('Recent Reviews')}
                       </h2>
                       <div className="mt-6 flow-root">
                         <ul role="list" className="-my-5 divide-y divide-gray-200">
-                          {announcements.map((announcement) => (
-                            <li key={announcement.id} className="py-5">
-                              <div className="relative focus-within:ring-2 focus-within:ring-indigo-500">
-                                <h3 className="text-sm font-semibold text-gray-800">
-                                  <a href={announcement.href} className="hover:underline focus:outline-none">
-                                    {/* Extend touch target to entire panel */}
-                                    <span className="absolute inset-0" aria-hidden="true" />
-                                    {announcement.title}
-                                  </a>
-                                </h3>
-                                <p className="mt-1 line-clamp-2 text-sm text-gray-600">{announcement.preview}</p>
+                          {orderReview.map((review, index) => (
+                            <li key={index} className="py-5">
+                              <div className="flex items-center space-x-4">
+                                <div className="flex-shrink-0">
+                                  <img src={`${baseUrl}/uploads/${review.avatar || '/uploads/default.jpg'}`} className="h-8 rounded-full" />
+                                </div>
+                                <div className="relative flex-grow focus-within:ring-2 focus-within:ring-indigo-500">
+                                  <h3 className="text-sm font-semibold text-gray-800">
+                                    <Link to={`/product/${review.productId}`} className="focus:outline-none">
+                                      {/* Extend touch target to entire panel */}
+                                      <span className="absolute inset-0" aria-hidden="true" />
+                                      {review.author}
+                                    </Link>
+                                  </h3>
+                                  <div className="mt-1 flex items-center">
+                                    {[0, 1, 2, 3, 4].map((rating) => (
+                                      <StarIcon
+                                        key={rating}
+                                        className={classNames(
+                                          review.rating > rating ? 'text-yellow-400' : 'text-gray-300',
+                                          'h-5 w-5 flex-shrink-0'
+                                        )}
+                                        aria-hidden="true"
+                                      />
+                                    ))}
+                                  </div>
+                                  <p className="mt-1 line-clamp-2 text-sm text-gray-600">{review.content}</p>
+                                </div>
+                                <div className="ml-auto">
+                                  <div className="mt-1 line-clamp-2 text-sm text-gray-600">
+                                    {new Date(review.orderDate).toLocaleDateString()}
+                                  </div>
+                                  <div className="mt-1 line-clamp-2 text-sm text-gray-600">
+                                    {formatDateWithTime(review.orderDate)}
+                                  </div>
+                                </div>
                               </div>
                             </li>
                           ))}
                         </ul>
                       </div>
                       <div className="mt-6">
-                        <a
-                          href="#"
+                        <Link
+                          to="/admin/review/review-list"
                           className="flex w-full items-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                         >
-                          View all
-                        </a>
+                          {t('Admin_View_all')}
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -309,14 +317,16 @@ export default function AdminPanelPage() {
                                   <img src={`${baseUrl}/uploads/1200_${item.imagePath || '/uploads/default.jpg'}`} className="h-14" />
                                 </div>
                                 <div className="min-w-0 flex-1">
-                                  <p className="truncate text-sm font-medium text-gray-900">{getLocalizedField(item, 'name', lang)}</p>
-                                  <p className="truncate text-sm text-gray-500">{item.price} €</p>
-                                  <p className="truncate text-sm text-gray-500">{t('Orders_Quantity') + ': ' + item.quantity}</p>
+                                  <Link to={`/product/${item.productId}`} className="focus:outline-none">
+                                    <p className="truncate text-sm font-medium text-gray-900">{getLocalizedField(item, 'name', lang)}</p>
+                                    <p className="truncate text-sm text-gray-500">{item.price} €</p>
+                                    <p className="truncate text-sm text-gray-500">{t('Orders_Quantity') + ': ' + item.quantity}</p>
+                                  </Link>
                                 </div>
                                 <div>
                                   <button
                                     onClick={() => handleOpenModal(item)}
-                                    className="inline-flex items-center rounded-full bg-white px-2.5 py-1 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                                    className="inline-flex items-center rounded-full bg-white px-2.5 py-2 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
                                   >
                                     {t('Admin_View')}
                                   </button>

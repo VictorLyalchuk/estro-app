@@ -50,6 +50,7 @@ import AddStorePanelPage from "./components/admin/store/add-store/AddStorePanelP
 import EditStorePanelPage from "./components/admin/store/edit-store/EditStorePanelPage.tsx";
 import OrderItemsList from "./components/admin/orders/OrderItemsList.tsx";
 import { t } from "i18next";
+import ReviewList from "./components/admin/review/ReviewList.tsx";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -140,6 +141,8 @@ function App() {
           <Route path="orders/delivered-orders" element={<OrderItemsList name={t('Orders_Delivered_Orders')} step={[3]} />} />
           <Route path="orders/cancelled-orders" element={<OrderItemsList name={t('Orders_Cancelled_Orders')} step={[4]} />} />
           <Route path="orders/returned-orders" element={<OrderItemsList name={t('Orders_Returned_Orders')} step={[5]} />} />
+
+          <Route path="review/review-list" element={<ReviewList />} />
         </Route>
 
         {/* Маршрути для користувачів з Logo, NavbarsPage і Footer */}

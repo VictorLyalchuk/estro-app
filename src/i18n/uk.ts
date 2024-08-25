@@ -626,5 +626,16 @@ export const uk = {
     "Cancelled": "Скасовано",
     "Returned": "Повернуто",
     "The money was returned": "Гроші були повернені",
-    "The money has been paid": "Гроші були сплачені"
+    "The money has been paid": "Гроші були сплачені",
+    "Recent Reviews": "Останні відгуки",
+
+    // Review
+    "Id": "Ідентифікатор",
+    "Comment": "Коментар",
+    "Rating": "Оцінка",
+    "Date": "Дата",
+    "View Product": "Переглянути продукт",
+    "Delete Review": "Видалити відгук",
+    "Review_Model": "Ви впевнені, що хочете видалити цей відгук?"
+
 }

@@ -627,4 +627,14 @@ export const fr = {
     "Returned": "Retourné",
     "The money was returned": "L'argent a été retourné",
     "The money has been paid": "L'argent a été payé",
+    "Recent Reviews": "Commentaires récents",
+
+    // Review
+    "Id": "Id",
+    "Comment": "Commentaire",
+    "Rating": "Évaluation",
+    "Date": "Date",
+    "View Product": "Voir le produit",
+    "Delete Review": "Supprimer la critique",
+    "Review_Model": "Êtes-vous sûr de vouloir supprimer cette critique ?"
 }

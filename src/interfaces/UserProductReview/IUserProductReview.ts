@@ -1,4 +1,5 @@
 interface IUserProductReview {
+    id: number;
     rating: number;
     content: string;
     author: string;
