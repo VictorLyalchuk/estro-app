@@ -97,8 +97,8 @@ export default function AdminPanelPage() {
     {
       id: 7,
       icon: BanknotesIcon,
-      name: t('Financial_Report'),
-      href: '#',
+      name: t('Financial_Reports'),
+      href: '/admin/report/financial-reports',
       iconForeground: 'text-rose-700',
       iconBackground: 'bg-rose-50',
       descriptions: t('Order_financial_descriptions'),
@@ -165,7 +165,7 @@ export default function AdminPanelPage() {
                         <div className="mt-5 flex justify-center sm:mt-0">
                           <Link
                             to={'/account/profile'}
-                            className="flex items-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                            className="flex items-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50  hover:text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                           >
                             {t('Admin_View_profile')}
                           </Link>
@@ -292,7 +292,7 @@ export default function AdminPanelPage() {
                       <div className="mt-6">
                         <Link
                           to="/admin/review/review-list"
-                          className="flex w-full items-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                          className="flex w-full items-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50  hover:text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         >
                           {t('Admin_View_all')}
                         </Link>
@@ -326,7 +326,7 @@ export default function AdminPanelPage() {
                                 <div>
                                   <button
                                     onClick={() => handleOpenModal(item)}
-                                    className="inline-flex items-center rounded-full bg-white px-2.5 py-2 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                                    className="inline-flex items-center rounded-full bg-white px-2.5 py-1.5 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100"
                                   >
                                     {t('Admin_View')}
                                   </button>
@@ -339,7 +339,7 @@ export default function AdminPanelPage() {
                       <div className="mt-6">
                         <Link
                           to="/admin/orders/placed-orders"
-                          className="flex w-full items-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
+                          className="flex w-full items-center justify-center rounded-md bg-white px-3 py-2 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50  hover:text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         >
                           {t('Admin_View_all')}
                         </Link>

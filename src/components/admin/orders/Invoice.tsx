@@ -17,11 +17,13 @@ interface ShipOrderModalProps {
   orderItem: IOrderItemsAdmin | null;
 }
 
-const ShipOrder: React.FC<ShipOrderModalProps> = ({ isOpen, setOpen, orderItem }) => {
+const Invoice: React.FC<ShipOrderModalProps> = ({ isOpen, setOpen, orderItem }) => {
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const baseUrl = APP_ENV.BASE_URL;
 
+  console.log(orderItem);
+  
   const handleClose = () => {
     setOpen(false);
   };
@@ -105,10 +107,10 @@ const ShipOrder: React.FC<ShipOrderModalProps> = ({ isOpen, setOpen, orderItem }
               <p><strong>${t('Orders_Price')}:</strong> ${orderItem.price} €</p>
               <p><strong>${t('Orders_Date')}:</strong> ${new Date(orderItem.dueDate).toLocaleDateString()} ${formatDateWithTime(orderItem.dueDate)}</p>
               <p><strong>${t('Orders_Status')}:</strong> ${t(`${orderItem.status}`)}</p>
-              <p><strong>${t('Payment')}:</strong> ${t(`${orderItem.order.orderPayment.payment}`)}</p>           
-              <p><strong>${t('Payment_Method')}:</strong> ${orderItem.order.orderPayment.paymentMethod}</p>
-              <p><strong>${t('Card_Number')}:</strong> ${formatCardNumber(orderItem.order.orderPayment.cardNumber)}</p>
-              <p><strong>${t('Card_Holder_Name')}:</strong> ${orderItem.order.orderPayment.cardHolderName}</p>
+              <p><strong>${t('Payment')}:</strong> ${t(`${orderItem.orderPayment.payment}`)}</p>           
+              <p><strong>${t('Payment_Method')}:</strong> ${orderItem.orderPayment.paymentMethod}</p>
+              <p><strong>${t('Card_Number')}:</strong> ${formatCardNumber(orderItem.orderPayment.cardNumber)}</p>
+              <p><strong>${t('Card_Holder_Name')}:</strong> ${orderItem.orderPayment.cardHolderName}</p>
             </div>
           </div>
         </body>
@@ -228,19 +230,19 @@ const ShipOrder: React.FC<ShipOrderModalProps> = ({ isOpen, setOpen, orderItem }
                       </div>
                       <div className="flex justify-between border-b border-gray-300 pb-2">
                         <span className="font-medium text-gray-700">{t('Payment')}:</span>
-                        <span className={`font-medium ${orderItem.order.orderPayment.payment === 'The money has been paid' ? 'text-green-500' : 'text-red-500'}`}>{t(`${orderItem.order.orderPayment.payment}`)}</span>
+                        <span className={`font-medium ${orderItem.orderPayment.payment === 'The money has been paid' ? 'text-green-500' : 'text-red-500'}`}>{t(`${orderItem.orderPayment.payment}`)}</span>
                       </div>
                       <div className="flex justify-between border-b border-gray-300 pb-2">
                         <span className="font-medium text-gray-700">{t('Payment_Method')}:</span>
-                        <span className="text-gray-900">{orderItem.order.orderPayment.paymentMethod}</span>
+                        <span className="text-gray-900">{orderItem.orderPayment.paymentMethod}</span>
                       </div>
                       <div className="flex justify-between border-b border-gray-300 pb-2">
                         <span className="font-medium text-gray-700">{t('Card_Number')}:</span>
-                        <span className="text-gray-900">{formatCardNumber(orderItem.order.orderPayment.cardNumber)}</span>
+                        <span className="text-gray-900">{formatCardNumber(orderItem.orderPayment.cardNumber)}</span>
                       </div>
                       <div className="flex justify-between border-b border-gray-300 pb-2">
                         <span className="font-medium text-gray-700">{t('Card_Holder_Name')}:</span>
-                        <span className="text-gray-900">{orderItem.order.orderPayment.cardHolderName}</span>
+                        <span className="text-gray-900">{orderItem.orderPayment.cardHolderName}</span>
                       </div>
 
                     </div>
@@ -269,4 +271,4 @@ const ShipOrder: React.FC<ShipOrderModalProps> = ({ isOpen, setOpen, orderItem }
   );
 };
 
-export default ShipOrder;
+export default Invoice;

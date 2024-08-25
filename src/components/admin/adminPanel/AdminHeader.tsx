@@ -26,7 +26,8 @@ export default function AdminHeader() {
         { name: t('Category'), link: '/admin/category/category-list', current: false },
         { name: t('User_Users'), link: '/admin/user/user-list', current: false },
         { name: t('Stores'), link: '/admin/store/store-list', current: false },
-    ]
+        { name: t('Reviews'), link: '/admin/review/review-list', current: false },
+        ]
 
     const userNavigation = [
         { name: t('Admin_Your_Profile'), to: '/account/profile' },

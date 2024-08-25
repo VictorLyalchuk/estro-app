@@ -10,6 +10,7 @@ import { getLocalizedField } from "../../../../utils/localized/localized";
 import classNames from "classnames";
 import { infoPaymentList } from "../../../../data/infoPaymentList";
 import { Link as Scrollink } from 'react-scroll'
+import { ArrowUturnLeftIcon } from "@heroicons/react/24/solid";
 
 const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange, page, countPage, onPageChange }) => {
   const { t, i18n } = useTranslation();
@@ -67,7 +68,7 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
                       >
                         <div className="px-4 py-6 sm:px-6 lg:grid lg:grid-cols-12 lg:gap-x-8 lg:p-8">
                           <div className="sm:flex lg:col-span-7">
-                            <div className="aspect-h-1 aspect-w-1 w-full flex-shrink-0 overflow-hidden rounded-lg sm:aspect-none sm:h-80 sm:w-60">
+                            <div className="aspect-h-1 aspect-w-1 w-full flex-shrink-0 overflow-hidden rounded-lg sm:aspect-none sm:h-40 sm:w-30">
                               {product.imagePath && product.imagePath.length > 0 ? (
                                 <img
                                   src={`${baseUrl}/uploads/1200_${product?.imagePath || '/uploads/default.jpg'}`}
@@ -126,10 +127,15 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
                             )}
                           </p>
                           <div className="mt-6" aria-hidden="true">
-                            {product.step > 3 ? (
+                            {product.step > 3 && product.step < 5 ? (
                               <div className="text-red-600 text-center font-medium flex items-center">
                                 <XMarkIcon className="w-6 h-6 mr-2" />
                                 {t('Order_Cancelled')}
+                              </div>
+                            ) : product.step >= 5 ? (
+                              <div className="text-gray-600 text-center font-medium flex items-center">
+                                <ArrowUturnLeftIcon className="w-6 h-6 mr-2" />
+                                {t('Returned')}
                               </div>
                             ) : (
                               <>
@@ -184,16 +190,14 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
                         <dt className="font-medium text-gray-900">{t('Order_PaymentInformation')}</dt>
                         <dd className="-ml-4 -mt-1 flex flex-wrap">
                           <div className="ml-4 mt-4 flex-shrink-0">
-
-                            {infoPaymentList.find(info => info.id === order.orderPayment.paymentMethod)?.logo || null}
-
-                            <p className="sr-only">{order.orderPayment.paymentMethod}</p>
+                            {infoPaymentList.find(info => info.id === orders[0].orderItems[0].orderPayment.paymentMethod)?.logo || null}
+                            <p className="sr-only">{orders[0].orderItems[0].orderPayment.paymentMethod}</p>
                           </div>
                           <div className="ml-4 mt-4">
                             <p> <span className="text-gray-600"> {t('Order_EndingWith')} </span>
-                              <span className="text-gray-900 font-medium ">{order.orderPayment.cardNumber.slice(-4)}</span></p>
+                              <span className="text-gray-900 font-medium ">{orders[0].orderItems[0].orderPayment.cardNumber.slice(-4)}</span></p>
                             <p> <span className="text-gray-600"> {t('Order_Expires')} </span>
-                              <span className="text-gray-900 font-medium ">{order.orderPayment.cardMonthExpires} / {order.orderPayment.cardYearExpires.slice(-2)}</span></p>
+                              <span className="text-gray-900 font-medium ">{orders[0].orderItems[0].orderPayment.cardMonthExpires} / {orders[0].orderItems[0].orderPayment.cardYearExpires.slice(-2)}</span></p>
                           </div>
                         </dd>
                       </div>

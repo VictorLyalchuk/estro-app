@@ -51,6 +51,7 @@ import EditStorePanelPage from "./components/admin/store/edit-store/EditStorePan
 import OrderItemsList from "./components/admin/orders/OrderItemsList.tsx";
 import { t } from "i18next";
 import ReviewList from "./components/admin/review/ReviewList.tsx";
+import FinancialReports from "./components/admin/report/finance-report/FinancialReports.tsx";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
@@ -143,6 +144,8 @@ function App() {
           <Route path="orders/returned-orders" element={<OrderItemsList name={t('Orders_Returned_Orders')} step={[5]} />} />
 
           <Route path="review/review-list" element={<ReviewList />} />
+
+          {/* <Route path="report/financial-reports" element={<FinancialReports/>}/> */}
         </Route>
 
         {/* Маршрути для користувачів з Logo, NavbarsPage і Footer */}

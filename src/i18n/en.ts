@@ -607,7 +607,7 @@ export const en = {
     "Order_cancelled_descriptions": "Cancelled Orders refer to orders that have been officially terminated and will not be processed or fulfilled. This status indicates that the order has been canceled before it could be shipped or completed.",
     "Orders_Returned_Orders": "Returned Orders",
     "Order_returned_descriptions": "Returned Orders refer to orders that have been sent back by the customer after delivery. This status indicates that the customer has returned the order, either due to dissatisfaction or other reasons, and the order is being processed for return.",
-    "Financial_Report": "Financial Report",
+    "Financial_Reports": "Financial Report",
     "Order_financial_descriptions": "A Financial Report is a comprehensive document that provides an overview of an organization's financial status. It includes information such as income, expenses, assets, liabilities, and overall financial performance. The report is used to assess the financial health of the organization and to inform decision-making.",
     "Sales_Report": "Sales Report",
     "Order_sales_descriptions": "A Sales Report is a detailed document that provides an overview of sales performance for a specific product or across various products. It includes data such as total sales, revenue, units sold, and sales trends over a specific period. The report helps in analyzing sales effectiveness and identifying opportunities for growth.",
@@ -636,7 +636,7 @@ export const en = {
     "Recent Reviews": "Recent Reviews",
 
     // Review
-    "Review" : "Review",
+    "Reviews" : "Reviews",
     "Id" : "Id",
     "Comment" : "Comment",
     "Rating" : "Rating",

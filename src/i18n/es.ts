@@ -602,7 +602,7 @@ export const es = {
     "Order_cancelled_descriptions": "Los Pedidos Cancelados se refieren a los pedidos que han sido oficialmente anulados y no serán procesados ni cumplidos. Este estado indica que el pedido ha sido cancelado antes de que pudiera ser enviado o completado.",
     "Orders_Returned_Orders": "Pedidos devueltos",
     "Order_returned_descriptions": "Los Pedidos Devueltos se refieren a los pedidos que han sido enviados de vuelta por el cliente después de la entrega. Este estado indica que el cliente ha devuelto el pedido, ya sea por insatisfacción u otras razones, y el pedido está siendo procesado para su devolución.",
-    "Financial_Report": "Informe financiero",
+    "Financial_Reports": "Informe financiero",
     "Order_financial_descriptions": "Un Informe Financiero es un documento integral que proporciona una visión general del estado financiero de una organización. Incluye información como ingresos, gastos, activos, pasivos y el rendimiento financiero general. El informe se utiliza para evaluar la salud financiera de la organización y para tomar decisiones.",
     "Sales_Report": "Informe de ventas",
     "Order_sales_descriptions": "Un Informe de Ventas es un documento detallado que proporciona una visión general del rendimiento de ventas de un producto específico o de varios productos. Incluye datos como el total de ventas, los ingresos, las unidades vendidas y las tendencias de ventas durante un período específico. El informe ayuda a analizar la efectividad de las ventas e identificar oportunidades de crecimiento.",
@@ -630,6 +630,7 @@ export const es = {
     "Recent Reviews": "Reseñas recientes",
 
     // Review
+    "Reviews" : "Reseñas",
     "Id": "Id",
     "Comment": "Comentario",
     "Rating": "Calificación",

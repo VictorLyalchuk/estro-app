@@ -602,7 +602,7 @@ export const fr = {
     "Order_cancelled_descriptions": "Les Commandes Annulées se réfèrent aux commandes qui ont été officiellement annulées et ne seront ni traitées ni exécutées. Ce statut indique que la commande a été annulée avant qu'elle puisse être expédiée ou complétée.",
     "Orders_Returned_Orders": "Commandes retournées",
     "Order_returned_descriptions": "Les Commandes Retournées se réfèrent aux commandes qui ont été renvoyées par le client après livraison. Ce statut indique que le client a retourné la commande, soit en raison d'une insatisfaction, soit pour d'autres raisons, et que la commande est en cours de traitement pour retour.",
-    "Financial_Report": "Rapport financier",
+    "Financial_Reports": "Rapport financier",
     "Order_financial_descriptions": "Un Rapport Financier est un document complet qui fournit un aperçu de la situation financière d'une organisation. Il comprend des informations telles que les revenus, les dépenses, les actifs, les passifs et la performance financière globale. Le rapport est utilisé pour évaluer la santé financière de l'organisation et pour prendre des décisions.",
     "Sales_Report": "Rapport de ventes",
     "Order_sales_descriptions": "Un Rapport de Ventes est un document détaillé qui fournit un aperçu de la performance des ventes pour un produit spécifique ou pour plusieurs produits. Il inclut des données telles que le total des ventes, les revenus, les unités vendues et les tendances de vente sur une période donnée. Le rapport aide à analyser l'efficacité des ventes et à identifier les opportunités de croissance.",
@@ -630,6 +630,7 @@ export const fr = {
     "Recent Reviews": "Commentaires récents",
 
     // Review
+    "Reviews" : "Critiques",
     "Id": "Id",
     "Comment": "Commentaire",
     "Rating": "Évaluation",

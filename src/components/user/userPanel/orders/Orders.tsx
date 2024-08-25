@@ -11,6 +11,7 @@ import { getLocalizedField } from "../../../../utils/localized/localized";
 import classNames from "classnames";
 import { infoPaymentList } from "../../../../data/infoPaymentList";
 import { Link as Scrollink } from 'react-scroll'
+import { ArrowUturnLeftIcon } from "@heroicons/react/24/solid";
 
 const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPage, onPageChange }) => {
   const { t, i18n } = useTranslation();
@@ -124,10 +125,15 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                             )}
                           </p>
                           <div className="mt-6">
-                            {product.step > 3 ? (
-                                  <div className="text-red-600 text-center font-medium flex items-center">
-                                  <XMarkIcon className="w-6 h-6 mr-2" />
+                            {product.step > 3 && product.step < 5 ? (
+                              <div className="text-red-600 text-center font-medium flex items-center">
+                                <XMarkIcon className="w-6 h-6 mr-2" />
                                 {t('Order_Cancelled')}
+                              </div>
+                            ) : product.step >= 5 ? (
+                              <div className="text-gray-600 text-center font-medium flex items-center">
+                                <ArrowUturnLeftIcon className="w-6 h-6 mr-2" />
+                                {t('Returned')}
                               </div>
                             ) : (
                               <>
@@ -182,15 +188,15 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
                         <dt className="font-medium text-gray-900">{t('Order_PaymentInformation')}</dt>
                         <dd className="mt-3 flex">
                           <div>
-                            {infoPaymentList.find(info => info.id === order.orderPayment.paymentMethod)?.logo || null}
+                            {infoPaymentList.find(info => info.id === orders[0].orderItems[0].orderPayment.paymentMethod)?.logo || null}
 
-                            <p className="sr-only">{order.orderPayment.paymentMethod}</p>
+                            <p className="sr-only">{orders[0].orderItems[0].orderPayment.paymentMethod}</p>
                           </div>
                           <div className="ml-4">
                             <p> <span className="text-gray-600"> {t('Order_EndingWith')} </span>
-                              <span className="text-gray-900 font-medium ">{order.orderPayment.cardNumber.slice(-4)}</span></p>
+                              <span className="text-gray-900 font-medium ">{orders[0].orderItems[0].orderPayment.cardNumber.slice(-4)}</span></p>
                             <p> <span className="text-gray-600"> {t('Order_Expires')} </span>
-                              <span className="text-gray-900 font-medium ">{order.orderPayment.cardMonthExpires} / {order.orderPayment.cardYearExpires.slice(-2)}</span></p>
+                              <span className="text-gray-900 font-medium ">{orders[0].orderItems[0].orderPayment.cardMonthExpires} / {orders[0].orderItems[0].orderPayment.cardYearExpires.slice(-2)}</span></p>
                           </div>
                         </dd>
                       </div>
