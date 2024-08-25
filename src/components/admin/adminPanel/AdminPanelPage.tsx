@@ -151,11 +151,6 @@ export default function AdminPanelPage() {
     setModalVisiblePrintOrder(true);
   };
 
-  const handleCloseModal = () => {
-    setModalVisiblePrintOrder(false);
-    setSelectedOrderItem(null);
-  };
-
   return (
     <>
       <div className="min-h-full">
@@ -266,7 +261,7 @@ export default function AdminPanelPage() {
                   <div className="overflow-hidden rounded-lg bg-white shadow">
                     <div className="p-6">
                       <h2 className="text-base font-medium text-gray-900" id="announcements-title">
-                        Announcements
+                        Recent Reviews
                       </h2>
                       <div className="mt-6 flow-root">
                         <ul role="list" className="-my-5 divide-y divide-gray-200">
@@ -347,8 +342,8 @@ export default function AdminPanelPage() {
           </div>
         </main>
         <Invoice
-          open={modalVisiblePrintOrder}
-          onClose={handleCloseModal}
+          isOpen={modalVisiblePrintOrder}
+          setOpen={setModalVisiblePrintOrder}
           orderItem={selectedOrderItem}
         />
       </div>

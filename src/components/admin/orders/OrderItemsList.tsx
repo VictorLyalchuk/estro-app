@@ -9,15 +9,8 @@ import Invoice from './Invoice';
 import { IOrderItemsAdmin } from '../../../interfaces/Order/IOrderItemsAdmin';
 import { Modal } from 'antd';
 import { ICreateOrderItemsAdmin } from '../../../interfaces/Order/ICreateOrderItemsAdmin';
-import { formatDate, formatDateWithTime } from '../../../services/custom/format-data';
-
-export type OrderStatus =
-  | 'Order placed'
-  | 'Processing'
-  | 'Shipped'
-  | 'Delivered'
-  | 'Cancelled'
-  | 'Returned';
+import { formatDateWithTime } from '../../../services/custom/format-data';
+import { OrderStatus } from '../../../interfaces/Type/OrderStatus';
 
 const statusOptions: OrderStatus[] = [
   'Order placed',
@@ -28,12 +21,16 @@ const statusOptions: OrderStatus[] = [
   'Returned',
 ];
 
-const PlacedOrders = () => {
+interface OrderItemsListProps {
+  name: string;
+  step: number[];
+}
+
+const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
   const baseUrl = APP_ENV.BASE_URL;
   const [orderItems, setOrderItems] = useState<IOrderItemsAdmin[]>([]);
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
-  const [step] = useState<number[]>([0]);
   const [modalVisibleStatusChange, setModalVisibleStatusChange] = useState<boolean>(false);
   const [modalVisiblePrintOrder, setModalVisiblePrintOrder] = useState<boolean>(false);
   const [selectedOrderItem, setSelectedOrderItem] = useState<IOrderItemsAdmin | null>(null);
@@ -131,11 +128,6 @@ const PlacedOrders = () => {
     setModalVisiblePrintOrder(true);
   };
 
-  const handleCloseModal = () => {
-    setModalVisiblePrintOrder(false);
-    setSelectedOrderItem(null);
-  };
-
   const getStatusClass = (status: string) => {
     switch (status) {
       case 'Order placed':
@@ -159,7 +151,7 @@ const PlacedOrders = () => {
     <div className="bg-gray-100 py-10 px-4 sm:px-6 lg:px-8 product-start">
       <div className="sm:flex sm:items-center">
         <div className="sm:flex-auto">
-          <h2 className="px-4 text-base font-semibold leading-7 text-gray-900 sm:px-6 lg:px-8">{t('Orders_Placed_Orders')}</h2>
+          <h2 className="px-4 text-base font-semibold leading-7 text-gray-900 sm:px-6 lg:px-8">{name}</h2>
         </div>
       </div>
 
@@ -211,7 +203,7 @@ const PlacedOrders = () => {
             {orderItems.map((item) => (
               <tr key={`${item.orderId}-${item.productId}-${item.size}`} className="text-gray-700 hover:bg-gray-200 ">
                 <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
-                  <div className="font-mono text-sm leading-6">Order #{item.orderId}-{item.id}</div>
+                  <div className="font-mono text-sm leading-6">{t('Orders_Order')} #{item.orderId}-{item.id}</div>
                 </td>
                 <td className="py-4 pl-8 pr-4 hidden lg:table-cell sm:pr-8 border-t border-b border-gray-200 whitespace-normal">
                   <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
@@ -238,7 +230,6 @@ const PlacedOrders = () => {
                 <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden sm:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
                   {item.product.storages?.map((storage, index) => {
                     const isSizeMatch = Number(storage.size) === Number(item.size);
-                    // const isInStock = storage.inStock === true;
                     if (isSizeMatch) {
                       return <span key={index}>{storage.productQuantity}</span>;
                     }
@@ -250,10 +241,10 @@ const PlacedOrders = () => {
                 </td>
                 <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden xl:table-cell lg:pr-20 border-t border-b border-gray-200">
                   <div>
-                  {formatDate(item.dueDate, lang)}
+                    {new Date(item.dueDate).toLocaleDateString()}
                   </div>
                   <div>
-                  {formatDateWithTime(item.dueDate)}
+                    {formatDateWithTime(item.dueDate)}
                   </div>
                 </td>
                 <td className="py-4 pl-8 pr-8 text-sm leading-6 sm:table-cell lg:pr-20 border-t border-b border-gray-200">
@@ -347,7 +338,8 @@ const PlacedOrders = () => {
                           }
                           return (
                             <option key={status} value={status} className={color}>
-                              {status}
+                              {t(`${status}`)}
+                              {/* {status} */}
                             </option>
                           );
                         })}
@@ -366,8 +358,8 @@ const PlacedOrders = () => {
         </table>
 
         <Invoice
-          open={modalVisiblePrintOrder}
-          onClose={handleCloseModal}
+          isOpen={modalVisiblePrintOrder}
+          setOpen={setModalVisiblePrintOrder}
           orderItem={selectedOrderItem}
         />
 
@@ -472,4 +464,4 @@ const PlacedOrders = () => {
   );
 };
 
-export default PlacedOrders;
+export default OrderItemsList;

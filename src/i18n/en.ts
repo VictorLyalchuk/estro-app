@@ -614,4 +614,23 @@ export const en = {
     "Product_Count" : "products in the database",
     "Orders_Count" : "orders in the database",
     "Users_Count" : "users in the database",
+
+    "Client" : "Client",
+    "Phone_Number" : "Phone Number",
+    "Email" : "E-mail",
+    "Payment" : "Payment",
+    "Payment_Method" : "Payment Method",
+    "Card_Number" : "Card Number",
+    "Card_Holder_Name" : "Card Holder Name",
+    "Print" : "Print",
+    "Close" : "Close",
+
+    "Order placed" : "Order placed",
+    "Processing" : "Processing",
+    "Shipped" : "Shipped",
+    "Delivered" : "Delivered",
+    "Cancelled" : "Cancelled",
+    "Returned" : "Returned",
+    "The money was returned" : "The money was returned",
+    "The money has been paid" : "The money has been paid", 
 }

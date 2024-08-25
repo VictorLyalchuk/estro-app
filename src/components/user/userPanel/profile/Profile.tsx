@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { ProfileUserProps } from "../../../../interfaces/ProfileUser/ProfileUserProps";
 import { emailConfirm } from "../../../../services/accounts/account-services";
 import { formatDate } from "../../../../services/custom/format-data";
+import { formatPhoneNumber } from "../../../../services/custom/format-phone-number";
 
 const Profile: React.FC<ProfileUserProps> = ({ userProfile, countPage }) => {
   const { t, i18n } = useTranslation();
@@ -59,7 +60,7 @@ const Profile: React.FC<ProfileUserProps> = ({ userProfile, countPage }) => {
                 <div className="pt-6 sm:flex">
                   <dt className="font-medium text-gray-900 sm:w-64 sm:flex-none sm:pr-6">{t('Profile_Phone')}</dt>
                   <dd className="mt-1 flex justify-between gap-x-6 sm:mt-0 sm:flex-auto">
-                    <div className="text-gray-900">{userProfile?.phoneNumber}</div>
+                    <div className="text-gray-900">{formatPhoneNumber(userProfile?.phoneNumber)}</div>
                   </dd>
                 </div>
               </dl>

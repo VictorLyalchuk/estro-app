@@ -48,21 +48,17 @@ import EditUser from "./components/admin/user/EditUser.tsx";
 import StoreList from "./components/admin/store/StoreList.tsx";
 import AddStorePanelPage from "./components/admin/store/add-store/AddStorePanelPage.tsx";
 import EditStorePanelPage from "./components/admin/store/edit-store/EditStorePanelPage.tsx";
-import PlacedOrders from "./components/admin/orders/PlacedOrders.tsx";
-import Processing from "./components/admin/orders/Processing.tsx";
-import Shipped from "./components/admin/orders/Shipped.tsx";
-import Delivered from "./components/admin/orders/Delivered.tsx";
-import Cancelled from "./components/admin/orders/Cancelled.tsx";
-import Returned from "./components/admin/orders/Returned.tsx";
+import OrderItemsList from "./components/admin/orders/OrderItemsList.tsx";
+import { t } from "i18next";
 
 function App() {
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
     setTimeout(() => setLoading(false), 1000);
-    }, []);
-    
-    useAuthTokenEffect()
-    useGetFavoritesEffect();
+  }, []);
+
+  useAuthTokenEffect()
+  useGetFavoritesEffect();
 
   return loading ? (
     <>
@@ -73,17 +69,17 @@ function App() {
       <Toaster position="top-right" reverseOrder={false} containerClassName="overflow-auto" />
       <Routes>
         {/* Гостьові маршрути */}
-        <Route element={<><Logo /><NavbarsPage /><GuestLayout /><Footer/></>}>
+        <Route element={<><Logo /><NavbarsPage /><GuestLayout /><Footer /></>}>
           <Route path='/auth' element={<AuthPanelPage />} />
           <Route path="/auth/:email/:token" element={<AuthPanelPage />} />
         </Route>
 
         {/* Адміністраторські маршрути без Logo, NavbarsPage і Footer */}
-        <Route path="/admin" element={<><AdminHeader/><AdminLayout /></>}>
+        <Route path="/admin" element={<><AdminHeader /><AdminLayout /></>}>
           <Route path="/admin/*" element={<Page404 />} />
           <Route path="admin-panel-page" element={<AdminPanelPage />} />
-          
-          <Route path="product/product-list" element={<ProductList/>}/>
+
+          <Route path="product/product-list" element={<ProductList />} />
           <Route path="product/add-product-en" element={<AddProductPanelPage />} />
           <Route path="product/add-product-uk" element={<AddProductPanelPage />} />
           <Route path="product/add-product-es" element={<AddProductPanelPage />} />
@@ -94,60 +90,60 @@ function App() {
           <Route path="product/edit-product-fr/:Id" element={<EditPanelPage />} />
           <Route path="product/add-storage/:Id" element={<AddStorage />} />
 
-          <Route path="main-category/main-category-list" element={<MainCategoryList/>}/>
-          <Route path="main-category/add-main-category-en" element={<AddMainCategoryPanelPage/>}/>
-          <Route path="main-category/add-main-category-uk" element={<AddMainCategoryPanelPage/>}/>
-          <Route path="main-category/add-main-category-es" element={<AddMainCategoryPanelPage/>}/>
-          <Route path="main-category/add-main-category-fr" element={<AddMainCategoryPanelPage/>}/>
-          <Route path="main-category/edit-main-category-en/:Id" element={<EditMainCategoryPanelPage/>}/>
-          <Route path="main-category/edit-main-category-uk/:Id" element={<EditMainCategoryPanelPage/>}/>
-          <Route path="main-category/edit-main-category-es/:Id" element={<EditMainCategoryPanelPage/>}/>
-          <Route path="main-category/edit-main-category-fr/:Id" element={<EditMainCategoryPanelPage/>}/>
+          <Route path="main-category/main-category-list" element={<MainCategoryList />} />
+          <Route path="main-category/add-main-category-en" element={<AddMainCategoryPanelPage />} />
+          <Route path="main-category/add-main-category-uk" element={<AddMainCategoryPanelPage />} />
+          <Route path="main-category/add-main-category-es" element={<AddMainCategoryPanelPage />} />
+          <Route path="main-category/add-main-category-fr" element={<AddMainCategoryPanelPage />} />
+          <Route path="main-category/edit-main-category-en/:Id" element={<EditMainCategoryPanelPage />} />
+          <Route path="main-category/edit-main-category-uk/:Id" element={<EditMainCategoryPanelPage />} />
+          <Route path="main-category/edit-main-category-es/:Id" element={<EditMainCategoryPanelPage />} />
+          <Route path="main-category/edit-main-category-fr/:Id" element={<EditMainCategoryPanelPage />} />
 
-          <Route path="sub-category/sub-category-list" element={<SubCategoryList/>}/>
-          <Route path="sub-category/add-sub-category-en" element={<AddSubCategoryPanelPage/>}/>
-          <Route path="sub-category/add-sub-category-uk" element={<AddSubCategoryPanelPage/>}/>
-          <Route path="sub-category/add-sub-category-es" element={<AddSubCategoryPanelPage/>}/>
-          <Route path="sub-category/add-sub-category-fr" element={<AddSubCategoryPanelPage/>}/>
-          <Route path="sub-category/edit-sub-category-en/:Id" element={<EditSubCategoryPanelPage/>}/>
-          <Route path="sub-category/edit-sub-category-uk/:Id" element={<EditSubCategoryPanelPage/>}/>
-          <Route path="sub-category/edit-sub-category-es/:Id" element={<EditSubCategoryPanelPage/>}/>
-          <Route path="sub-category/edit-sub-category-fr/:Id" element={<EditSubCategoryPanelPage/>}/>
-          
-          <Route path="category/category-list" element={<CategoryList/>}/>
-          <Route path="category/add-category-en" element={<AddCategoryPanelPage/>}/>
-          <Route path="category/add-category-uk" element={<AddCategoryPanelPage/>}/>
-          <Route path="category/add-category-es" element={<AddCategoryPanelPage/>}/>
-          <Route path="category/add-category-fr" element={<AddCategoryPanelPage/>}/>
-          <Route path="category/edit-category-en/:Id" element={<EditCategoryPanelPage/>}/>
-          <Route path="category/edit-category-uk/:Id" element={<EditCategoryPanelPage/>}/>
-          <Route path="category/edit-category-es/:Id" element={<EditCategoryPanelPage/>}/>
-          <Route path="category/edit-category-fr/:Id" element={<EditCategoryPanelPage/>}/>
+          <Route path="sub-category/sub-category-list" element={<SubCategoryList />} />
+          <Route path="sub-category/add-sub-category-en" element={<AddSubCategoryPanelPage />} />
+          <Route path="sub-category/add-sub-category-uk" element={<AddSubCategoryPanelPage />} />
+          <Route path="sub-category/add-sub-category-es" element={<AddSubCategoryPanelPage />} />
+          <Route path="sub-category/add-sub-category-fr" element={<AddSubCategoryPanelPage />} />
+          <Route path="sub-category/edit-sub-category-en/:Id" element={<EditSubCategoryPanelPage />} />
+          <Route path="sub-category/edit-sub-category-uk/:Id" element={<EditSubCategoryPanelPage />} />
+          <Route path="sub-category/edit-sub-category-es/:Id" element={<EditSubCategoryPanelPage />} />
+          <Route path="sub-category/edit-sub-category-fr/:Id" element={<EditSubCategoryPanelPage />} />
 
-          <Route path="user/user-list" element={<UserList/>}/>
-          <Route path="user/add-user" element={<AddUser/>}></Route>
-          <Route path="user/edit-user/:Id" element={<EditUser/>}></Route>
+          <Route path="category/category-list" element={<CategoryList />} />
+          <Route path="category/add-category-en" element={<AddCategoryPanelPage />} />
+          <Route path="category/add-category-uk" element={<AddCategoryPanelPage />} />
+          <Route path="category/add-category-es" element={<AddCategoryPanelPage />} />
+          <Route path="category/add-category-fr" element={<AddCategoryPanelPage />} />
+          <Route path="category/edit-category-en/:Id" element={<EditCategoryPanelPage />} />
+          <Route path="category/edit-category-uk/:Id" element={<EditCategoryPanelPage />} />
+          <Route path="category/edit-category-es/:Id" element={<EditCategoryPanelPage />} />
+          <Route path="category/edit-category-fr/:Id" element={<EditCategoryPanelPage />} />
 
-          <Route path="store/store-list" element={<StoreList/>}/>
-          <Route path="store/add-store-en" element={<AddStorePanelPage/>}/>
-          <Route path="store/add-store-uk" element={<AddStorePanelPage/>}/>
-          <Route path="store/add-store-es" element={<AddStorePanelPage/>}/>
-          <Route path="store/add-store-fr" element={<AddStorePanelPage/>}/>
-          <Route path="store/edit-store-en/:Id" element={<EditStorePanelPage/>}/>
-          <Route path="store/edit-store-uk/:Id" element={<EditStorePanelPage/>}/>
-          <Route path="store/edit-store-es/:Id" element={<EditStorePanelPage/>}/>
-          <Route path="store/edit-store-fr/:Id" element={<EditStorePanelPage/>}/>
+          <Route path="user/user-list" element={<UserList />} />
+          <Route path="user/add-user" element={<AddUser />}></Route>
+          <Route path="user/edit-user/:Id" element={<EditUser />}></Route>
 
-          <Route path="orders/placed-orders" element={<PlacedOrders/>}/>
-          <Route path="orders/order-processing" element={<Processing/>}/>
-          <Route path="orders/shipped-orders" element={<Shipped/>}/>
-          <Route path="orders/delivered-orders" element={<Delivered/>}/>
-          <Route path="orders/cancelled-orders" element={<Cancelled/>}/>
-          <Route path="orders/returned-orders" element={<Returned/>}/>
+          <Route path="store/store-list" element={<StoreList />} />
+          <Route path="store/add-store-en" element={<AddStorePanelPage />} />
+          <Route path="store/add-store-uk" element={<AddStorePanelPage />} />
+          <Route path="store/add-store-es" element={<AddStorePanelPage />} />
+          <Route path="store/add-store-fr" element={<AddStorePanelPage />} />
+          <Route path="store/edit-store-en/:Id" element={<EditStorePanelPage />} />
+          <Route path="store/edit-store-uk/:Id" element={<EditStorePanelPage />} />
+          <Route path="store/edit-store-es/:Id" element={<EditStorePanelPage />} />
+          <Route path="store/edit-store-fr/:Id" element={<EditStorePanelPage />} />
+
+          <Route path="orders/placed-orders" element={<OrderItemsList name={t('Orders_Placed_Orders')} step={[0]} />} />
+          <Route path="orders/order-processing" element={<OrderItemsList name={t('Orders_Order_processing')} step={[1]} />} />
+          <Route path="orders/shipped-orders" element={<OrderItemsList name={t('Orders_Shipped_Orders')} step={[2]} />} />
+          <Route path="orders/delivered-orders" element={<OrderItemsList name={t('Orders_Delivered_Orders')} step={[3]} />} />
+          <Route path="orders/cancelled-orders" element={<OrderItemsList name={t('Orders_Cancelled_Orders')} step={[4]} />} />
+          <Route path="orders/returned-orders" element={<OrderItemsList name={t('Orders_Returned_Orders')} step={[5]} />} />
         </Route>
 
         {/* Маршрути для користувачів з Logo, NavbarsPage і Footer */}
-        <Route element={<><Logo /><NavbarsPage /><UserLayout /><Footer/></>}>
+        <Route element={<><Logo /><NavbarsPage /><UserLayout /><Footer /></>}>
           <Route path="/account/*" element={<Page404 />} />
           <Route path="account/orders" element={<UserPanelPage />} />
           <Route path='account/profile' element={<UserPanelPage />} />
@@ -157,7 +153,7 @@ function App() {
         </Route>
 
         {/* Загальні маршрути з Logo, NavbarsPage і Footer */}
-        <Route element={<><GeneralLayout /><Footer/></>}>
+        <Route element={<><GeneralLayout /><Footer /></>}>
           <Route path="/" element={<HomeStore />} />
           <Route path="/:email/:token" element={<HomeStore />} />
           <Route path="catalog/:subName/:urlName" element={<CatalogNavigation />} />
