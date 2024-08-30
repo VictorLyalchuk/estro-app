@@ -18,7 +18,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../../../store/store.ts';
 import { IAuthReducerState } from '../../../store/accounts/AuthReducer.ts';
 import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavoritesReducer.ts';
-import { HeartIcon } from '@heroicons/react/24/solid';
+import { ArrowUpIcon, HeartIcon } from '@heroicons/react/24/solid';
 import { addFavoriteProduct, removeFavoriteProduct } from '../../../services/userFavoriteProducts/user-favorite-products-services.ts';
 import { IFavoriteProducts } from '../../../interfaces/FavoriteProducts/IFavoriteProducts.ts';
 import i18next, { t } from "i18next";
@@ -64,6 +64,8 @@ export default function CatalogNavigation() {
   const [selectedSize, setSelectedSize] = useState<IStorages | null>(null);
   const [activeSortOption, setActiveSortOption] = useState<ISortOptions | null>(null);
   const [sortOptions, setSortOptions] = useState<ISortOptions[]>(initialSortOptions);
+
+  const [activeOption, setActiveOption] = useState('');
 
   if (endPage - startPage + 1 < visiblePages) {
     startPage = Math.max(1, endPage - visiblePages + 1);
@@ -546,7 +548,8 @@ export default function CatalogNavigation() {
                     {({ open }) => (
                       <>
                         <h3 className="-my-3 flow-root">
-                          <Disclosure.Button className="flex w-full items-center justify-between bg-gray-100 py-3 text-sm text-gray-400 hover:text-gray-500">
+                          <Disclosure.Button
+                            className="flex w-full items-center justify-between bg-gray-100 py-3 text-sm text-gray-400 hover:text-gray-500">
                             <span className="font-medium text-gray-900 hover:text-indigo-500">
                               {i18next.language === 'uk' ? section.name_uk : null}
                               {i18next.language === 'en' ? section.name_en : null}
@@ -574,8 +577,8 @@ export default function CatalogNavigation() {
                                   checked={filters.some((filter) => filter.name === section.name_en && filter.values.includes(option.value))}
                                   onChange={() => {
                                     createFilters(section.name_en, option.value);
+                                    setActiveOption(option.value);
                                   }}
-
                                   className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 "
                                 />
                                 <label
@@ -584,6 +587,22 @@ export default function CatalogNavigation() {
                                 >
                                   {option.label}
                                 </label>
+                                {activeOption === option.value && (
+                                  <button
+                                    type="button"
+                                    className="absolute ml-25 p-2 bg-indigo-600 text-sm text-white rounded-lg shadow-md transition-opacity duration-300"
+                                    onClick={() => {
+                                      window.scrollTo({ top: 0, behavior: 'smooth' });
+                                      setActiveOption('');
+                                    }}
+                                    aria-label="Scroll to top"
+                                  >
+                                    <div className="flex items-center ">
+                                      <span className="whitespace-nowrap">{t('CatalogNavigation_Found')} {countPage} {t('CatalogNavigation_products')}</span>
+                                      <ArrowUpIcon className="ml-2 h-5 w-5" aria-hidden="true" />
+                                    </div>
+                                  </button>
+                                )}
                               </div>
                             ))}
                           </div>

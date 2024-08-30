@@ -256,7 +256,7 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
                     >
                       {statusOptions.filter((status) => {
                         const isSizeInStock = item.product.storages?.some(
-                          (storage) => Number(storage.size) === Number(item.size) && storage.inStock === true
+                          (storage) => Number(storage.size) === Number(item.size) && storage.productQuantity >= item.quantity && storage.inStock === true
                         );
 
                         if (item.status === 'Cancelled' || item.status === 'Returned') {
@@ -283,8 +283,18 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
                           return false;
                         }
 
+                        // Remove "Shipped" or "Delivered" if the current status is "Order placed"
+                        if (['Shipped', 'Delivered'].includes(status) && item.status === 'Order placed') {
+                          return false;
+                        }
+
                         // Прибираємо статус "Cancelled", якщо поточний статус "Delivered" або "Returned"
                         if (status === 'Cancelled' && (item.status === 'Delivered' || item.status === 'Returned')) {
+                          return false;
+                        }
+
+                        // Прибираємо статус "Delivered", якщо поточний статус "Processing"
+                        if (status === 'Delivered' && item.status === 'Processing') {
                           return false;
                         }
 

@@ -189,7 +189,11 @@ export async function login(_user: ILogin, dispatch: any) {
         });
         await setToken(token);
     } catch (error) {
-        console.error('Failed to edit user data:', error);
+        if (axios.isAxiosError(error)) {
+            console.error('Login request failed:', error.response?.data?.message || error.message);
+        } else {
+            console.error('Unexpected error:', error);
+        }
         throw error;
     }
 }

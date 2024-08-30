@@ -389,6 +389,8 @@ export const en = {
     "CatalogNavigation_Size": "Size",
     "CatalogNavigation_Catalog": "Catalog",
     "CatalogNavigation_CloseMenu": "Close menu",
+    "CatalogNavigation_products" : "products",
+    "CatalogNavigation_Found" : "Found",
 
     // PRODUCTS
     "Product_Reviews": "Reviews",

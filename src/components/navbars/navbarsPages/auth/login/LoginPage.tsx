@@ -27,7 +27,7 @@ import TextFieldComponent from '../../../../../ui/input-with-label/TextFieldComp
 import PasswordFieldComponent from '../../../../../ui/input-with-label/PasswordFieldComponent';
 import PhoneNumberComponent from '../../../../../ui/input-with-label/PhoneNumberComponent';
 import { State } from '../../../../../interfaces/Catalog/State';
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
 import i18next from "i18next";
 
 interface GoogleOAuthResponse {
@@ -51,7 +51,7 @@ const LoginPage = () => {
     const [myToken, setMyToken] = useState("");
     const [isDisabled, setIsDisabled] = useState(false);
     const [countdown, setCountdown] = useState(30);
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
     useEffect(() => {
         let timer: string | number | NodeJS.Timeout | undefined;
@@ -101,7 +101,13 @@ const LoginPage = () => {
                 navigate("/");
             } catch (error) {
                 console.error("Login error:", error);
-                setErrorMessage(t('LoginPage_InvalidEmailOrPassword'));
+                if (axios.isAxiosError(error)) {
+                    const errorMessage = error.response?.data?.message || t('LoginPage_InvalidEmailOrPassword');
+                    setErrorMessage(errorMessage);
+                } else {
+                    setErrorMessage(t('LoginPage_InvalidEmailOrPassword'));
+                }
+                // setErrorMessage(t('LoginPage_InvalidEmailOrPassword'));
                 setTimeout(() => {
                     setErrorMessage("");
                 }, 1000);
@@ -123,7 +129,12 @@ const LoginPage = () => {
 
         } catch (error) {
             console.error("Login error:", error);
-            setErrorMessage(t('LoginPage_InvalidEmailOrPassword'));
+            if (axios.isAxiosError(error)) {
+                const errorMessage = error.response?.data?.message || t('LoginPage_InvalidEmailOrPassword');
+                setErrorMessage(errorMessage);
+            } else {
+                setErrorMessage(t('LoginPage_InvalidEmailOrPassword'));
+            }
             setTimeout(() => {
                 setErrorMessage("");
             }, 1000);
@@ -131,8 +142,6 @@ const LoginPage = () => {
     }
 
     const handleCodeConfirm = async () => {
-
-
         try {
             const response = await axios.post(
                 `https://verify.twilio.com/v2/Services/${twilio_service_sid}/VerificationCheck`,
@@ -230,7 +239,12 @@ const LoginPage = () => {
                     navigate('/');
                 } catch (error) {
                     console.error('Login error:', error);
-                    setErrorMessage(t('LoginPage_InvalidEmailOrPassword'));
+                    if (axios.isAxiosError(error)) {
+                        const errorMessage = error.response?.data?.message || t('LoginPage_InvalidEmailOrPassword');
+                        setErrorMessage(errorMessage);
+                    } else {
+                        setErrorMessage(t('LoginPage_InvalidEmailOrPassword'));
+                    }
                     setTimeout(() => {
                         setErrorMessage('');
                     }, 1000);
@@ -311,8 +325,8 @@ const LoginPage = () => {
                                                     onChange={handleChange}
                                                     error={errors.email}
                                                     autoComplete="email"
-                                                    maxLength={30}   
-                                                    placeholder={''}    
+                                                    maxLength={30}
+                                                    placeholder={''}
                                                 />
                                                 <PasswordFieldComponent
                                                     label={t('LoginPage_Password')}

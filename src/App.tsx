@@ -145,7 +145,7 @@ function App() {
 
           <Route path="review/review-list" element={<ReviewList />} />
 
-          {/* <Route path="report/financial-reports" element={<FinancialReports/>}/> */}
+          <Route path="report/financial-reports" element={<FinancialReports/>}/>
         </Route>
 
         {/* Маршрути для користувачів з Logo, NavbarsPage і Footer */}

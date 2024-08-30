@@ -388,6 +388,8 @@ export const uk = {
     "CatalogNavigation_Size": "Розмір",
     "CatalogNavigation_Catalog": "Каталог",
     "CatalogNavigation_CloseMenu": "Закрити меню",
+    "CatalogNavigation_products" : "товарів",
+    "CatalogNavigation_Found" : "Знайдено",
 
     // PRODUCTS
     "Product_Reviews": "Відгуків",

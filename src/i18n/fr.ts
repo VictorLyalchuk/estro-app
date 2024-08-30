@@ -388,6 +388,8 @@ export const fr = {
     "CatalogNavigation_Size": "Taille",
     "CatalogNavigation_Catalog": "Catalogue",
     "CatalogNavigation_CloseMenu": "Fermer le menu",
+    "CatalogNavigation_products" : "produits",
+    "CatalogNavigation_Found" : "Trouvé",
 
     // PRODUCTS
     "Product_Reviews": "Avis",
