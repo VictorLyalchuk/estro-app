@@ -8,6 +8,7 @@ import { useTranslation } from 'react-i18next';
 import { formatDate } from '../../../services/custom/format-data';
 import { Link as Scrollink } from 'react-scroll'
 import { Link } from 'react-router-dom';
+import { validateForm } from '../../../validations/product/product-review-validations';
 
 interface UserProductReviewProps {
     userId?: string;
@@ -35,24 +36,34 @@ const UserProductReview: React.FC<UserProductReviewProps> = ({ userId, productId
     let startPage = Math.max(1, page - Math.floor(visiblePages / 2));
     let endPage = Math.min(totalPages, startPage + visiblePages - 1);
 
+    const [errors, setErrors] = useState({
+        rating: '',
+        content: '',
+    });
+
     const handleFormSubmit = async (e: { preventDefault: () => void }) => {
         e.preventDefault()
         if (!userId) {
             console.error('User ID is required');
             return;
         }
-        const model: ICreateUserProductReviewDTO = {
-            rating: rating,
-            content: content,
-            userId: userId,
-            productId: productId,
-        }
-        await addUserProductReview(model);
-        setShowForm(false)
-        setRating(0)
-        setContent('')
-        if (loadReviews) {
-            await loadReviews(1);
+        const { isValid, newErrors } = validateForm(rating, content);
+        setErrors(newErrors);
+        if (isValid) {
+
+            const model: ICreateUserProductReviewDTO = {
+                rating: rating,
+                content: content,
+                userId: userId,
+                productId: productId,
+            }
+            await addUserProductReview(model);
+            setShowForm(false)
+            setRating(0)
+            setContent('')
+            if (loadReviews) {
+                await loadReviews(1);
+            }
         }
     }
 
@@ -180,6 +191,10 @@ const UserProductReview: React.FC<UserProductReviewProps> = ({ userId, productId
                                         value={content}
                                         onChange={(e) => setContent(e.target.value)}
                                     />
+                                    {errors.content ? (
+                                        <div className="mt-2 h-6 text-xs text-red-500">Error: {errors.content}</div>
+                                    ) : (<div className="mt-2 h-6 text-xs "> </div>)}
+
                                 </div>
 
                                 <div className="flex justify-end">
