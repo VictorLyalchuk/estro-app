@@ -631,9 +631,9 @@ export default function CatalogNavigation() {
               <div className="overflow-hidden rounded-sm dark:border-strokedark dark:bg-boxdark bg-gray-100">
                 <div className="relative mx-auto max-w-2xl px-2 py-8  lg:max-w-screen-2xl lg:px-2 bg-gray-100">
                   {/* <h2 className="text-2xl font-bold tracking-tight text-gray-900">Customers also purchased</h2> */}
-                  <div className={`min-h-[970px] mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-${gridView} xl:gap-x-5 pb-8 transition-all duration-500`}>
+                  <div className={`min-h-[662px] mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-${gridView} xl:gap-x-5 pb-8 transition-all duration-500`}>
                     {loading ? (
-                      <Loader/>
+                      <Loader />
                     ) : (
                       productList.slice(0, itemsPerPage).map((product) => (
                         <div key={product.id} className="group relative">
