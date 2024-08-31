@@ -62,10 +62,10 @@ const OurBrand = () => {
 
     return (
         <div className="bg-gray-100">
-            <div className="mx-auto max-w-2xl px-2 py-8 lg:max-w-7xl lg:px-2 justify-center">
+            <div className="mx-auto max-w-2xl px-2 py-8 lg:max-w-screen-2xl lg:px-2 justify-center">
                 <div className="flex flex-wrap justify-center">
                     {images.length >= 15 && (
-                        <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-7xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
+                        <div className="mx-auto mt-6 max-w-2xl sm:px-6 lg:grid lg:max-w-screen-2xl lg:grid-cols-3 lg:gap-x-8 lg:px-8">
                             <div className="aspect-h-4 aspect-w-3 overflow-hidden rounded-lg lg:block mt-7 bp-7">
                                 <img
                                     src={`${baseUrl}/uploads/${images[0].imagePath}`}

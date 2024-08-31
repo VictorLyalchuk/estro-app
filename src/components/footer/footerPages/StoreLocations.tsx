@@ -73,7 +73,7 @@ const StoreLocations = () => {
   return (
     <>
       <div className="bg-gray-100 min-h-[900px]">
-        <div className="text-gray-700 mx-auto max-w-8xl px-4 sm:px-6 lg:px-8 text-center p-8">
+        <div className="text-gray-700 mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 text-center p-8">
           <h2 className="text-4xl font-bold mb-4 text-center">Estro {t('Store_Locations')}</h2>
 
           {/* Country Selection */}
@@ -121,7 +121,7 @@ const StoreLocations = () => {
               {filteredStores.length > 0 ? (
                 filteredStores.map((store, index) => (
                   <div key={index} className="bg-white rounded-md p-6 shadow-md mb-2 mt-2 hover:bg-indigo-400 hover:text-white">
-                    <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-7xl lg:px-8 hover:bg-indigo-400">
+                    <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-screen-2xl lg:px-8 hover:bg-indigo-400">
                       <h3 className="text-xl font-semibold mb-2">
                         {getLocalizedField(store, 'name', lang)}
                       </h3>

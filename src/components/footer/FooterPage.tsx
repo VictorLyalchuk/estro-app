@@ -9,7 +9,7 @@ const FooterPage = () => {
     return (
 
         <footer className="bg-gray-100 p-8 ">
-            <div className="border-t p-8 mx-auto max-w-7xl px-2 sm:px-2 lg:px-2 justify-items-center">
+            <div className="border-t p-8 mx-auto max-w-screen-2xl px-2 sm:px-2 lg:px-2 justify-items-center">
                 <div className="container mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
                     {/* Column 1 */}
                     <div className="mb-4">

@@ -145,7 +145,7 @@ export default function Product() {
     <div className="overflow-hidden rounded-sm border-stroke bg-gray-100 shadow-default dark:border-strokedark dark:bg-boxdark text-body">
 
       <nav aria-label="Breadcrumb" className="pt-6">
-        <ol role="list" className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+        <ol role="list" className="mx-auto flex max-w-2xl items-center space-x-2 px-4 sm:px-6 lg:max-w-screen-2xl lg:px-8">
           <li key={`${product.id}-mainCategory`}>
             <div className="flex items-center">
               <Link to={`/catalog-home/${product.urlMainCategoryName}`} className="mr-2 text-sm font-medium text-gray-900">
@@ -205,12 +205,12 @@ export default function Product() {
         </ol>
       </nav>
 
-      <main className="mx-auto mt-8 max-w-2xl px-4 pb-4  lg:max-w-7xl lg:px-8">
+      <main className="mx-auto mt-8 max-w-2xl px-4 pb-4  lg:max-w-screen-2xl lg:px-8">
 
         <div className="lg:grid lg:grid-cols-12 lg:gap-x-8 mb-8">
 
           {/* Image gallery */}
-          <div className="mt-8 lg:col-span-7 lg:col-start-1 lg:row-span-3 lg:row-start-1 lg:mt-0">
+          <div className="mt-8 lg:col-span-6 lg:col-start-1 lg:row-span-3 lg:row-start-1 lg:mt-0">
             <div className="grid grid-cols-1 lg:grid-cols-1 lg:gap-8">
               <Slider>
                 {product.images && product.images.length > 0 ? (

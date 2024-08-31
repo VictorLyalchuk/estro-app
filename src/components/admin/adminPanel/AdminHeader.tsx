@@ -47,7 +47,7 @@ export default function AdminHeader() {
             <Popover as="header" className="bg-gradient-to-r pb-24 bg-white-container-header">
                 {({ open }) => (
                     <>
-                        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-7xl lg:px-8">
+                        <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:max-w-screen-2xl lg:px-8">
                             <div className="relative flex flex-wrap items-center justify-center lg:justify-between">
                                 {/* Logo */}
                                 <div className="absolute left-0 flex-shrink-0 py-5 lg:static hidden lg:block">

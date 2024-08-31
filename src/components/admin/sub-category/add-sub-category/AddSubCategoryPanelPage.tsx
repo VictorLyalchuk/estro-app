@@ -249,7 +249,7 @@ const AddSubCategoryPanelPage = () => {
     return (
         <>
             <div className="bg-gray-100">
-                <div className="container mx-auto p-8 flex relative max-w-7xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row justify-between">
+                <div className="container mx-auto p-8 flex relative max-w-screen-2xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row justify-between">
                     <div className="sm:mx-auto sm:w-full">
                         <div className="w-full ">
                             <TabProductComponent tabs={tabs} onTabChange={handleTabChange} />

@@ -16,7 +16,7 @@ const Bonuses: React.FC<BonusesUserProps> = ({ userBonuses, bonusBalance }) => {
   return (
     <>
       <div className="bg-white rounded-md shadow-md mb-8 mt-8">
-        <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-7xl lg:px-8">
+        <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-screen-2xl lg:px-8">
           <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
             <div className="px-4 py-6 sm:p-6 lg:pb-8 min-h-[500px]">
               <div className="sm:flex sm:items-center justify-between">
@@ -98,7 +98,7 @@ const Bonuses: React.FC<BonusesUserProps> = ({ userBonuses, bonusBalance }) => {
                   </table>
                 </div>
               ) : (
-                <div className="container mx-auto p-8 flex justify-center relative mx-auto max-w-7xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row">
+                <div className="container mx-auto p-8 flex justify-center relative mx-auto max-w-screen-2xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row">
                   <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0">
                     <div className="mt-8 flex justify-center mb-90">
                       <p>{t('Bonuses_NoBonuses')}</p>

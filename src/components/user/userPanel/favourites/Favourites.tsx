@@ -35,7 +35,7 @@ const Favourites = () => {
   return (
     <>
       <div className="bg-white rounded-md shadow-md mb-8 mt-8">
-        <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-7xl lg:px-8">
+        <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-screen-2xl lg:px-8">
           <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
             <div className="px-4 py-6 sm:p-6 lg:pb-8 min-h-[500px]">
               <div className="sm:flex sm:items-baseline sm:justify-between">
@@ -100,7 +100,7 @@ const Favourites = () => {
                   </button>
                 </div>
               )}
-              <div className="container mx-auto flex relative max-w-7xl lg:flex-row justify-between m-0">
+              <div className="container mx-auto flex relative max-w-screen-2xl lg:flex-row justify-between m-0">
                 <div className="sm:flex sm:flex-1 sm:items-center sm:justify-between ">
                   <div>
                     <p className="text-sm text-gray-700">

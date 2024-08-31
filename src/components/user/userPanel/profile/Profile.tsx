@@ -16,7 +16,7 @@ const Profile: React.FC<ProfileUserProps> = ({ userProfile, countPage }) => {
   return (
     <>
       <div className="bg-white rounded-md shadow-md mb-8 mt-8">
-        <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-7xl lg:px-8">
+        <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-screen-2xl lg:px-8">
           <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none">
             <div className="px-4 pt-6 sm:p-6 lg:pb-8">
               <h2 className="text-base font-semibold leading-7 text-gray-900">{t('Profile_Profile')}</h2>

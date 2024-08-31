@@ -35,7 +35,7 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
         <>
           {orders.map((order, index) => (
             <div key={index} className="bg-white rounded-md shadow-md mb-8 mt-8 order-start">
-              <div className="mx-auto max-w-2xl pb-8 pt-8 sm:px-6 sm:pt-8 lg:max-w-7xl lg:px-8 ">
+              <div className="mx-auto max-w-2xl pb-8 pt-8 sm:px-6 sm:pt-8 lg:max-w-screen-2xl lg:px-8 ">
                 <div className="flex justify-between space-y-2 px-4 border-b border-gray-200 pb-5 sm:flex sm:items-baseline sm:justify-between sm:space-y-0 sm:px-0">
                   <div className="grid grid-rows-1 px-4 py-6 sm:p-6 lg:pb-8">
                     <h1 className="text-3xl font-bold tracking-tight text-gray-900 ">{t('Order_OrderDetails')}</h1>
@@ -227,7 +227,7 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
           ))}
 
           <nav className="flex items-center justify-between bg-white rounded-md shadow-md bg-white px-4 py-3 sm:px-6">
-            <div className="container mx-auto p-4 flex relative max-w-7xl lg:flex-row justify-between ">
+            <div className="container mx-auto p-4 flex relative max-w-screen-2xl lg:flex-row justify-between ">
               <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between ">
                 <div>
                   <p className="text-sm text-gray-700">
@@ -295,7 +295,7 @@ const Orders: React.FC<OrdersProps> = ({ orders, onViewModeChange, page, countPa
           </nav>
         </>
       ) : (
-        <div className="container mx-auto p-8 flex justify-center relative bg-gray-100 mx-auto max-w-7xl px-2 sm:px-2 lg:px-2   flex-col lg:flex-row  ">
+        <div className="container mx-auto p-8 flex justify-center relative bg-gray-100 mx-auto max-w-screen-2xl px-2 sm:px-2 lg:px-2   flex-col lg:flex-row  ">
           <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0">
             <div className="mt-8 flex justify-center">
               <img src={GoodsNotFound}></img>

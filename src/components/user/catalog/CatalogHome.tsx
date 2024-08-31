@@ -48,7 +48,7 @@ export default function CatalogHome() {
     const [productList, setProduct] = useState<IProduct[]>([]);
     const [filterOptionsList, setFilterOptionsList] = useState<IInfo[]>([]);
     const [filters, setFilters] = useState<{ name: string; values: string[] }[]>([]);
-    const [itemsPerPage] = useState<number>(10);
+    const [itemsPerPage] = useState<number>(12);
     const [page, setPage] = useState(1);
     const [countPage, setCountPage] = useState(0);
     const indexOfLastItem = page * itemsPerPage;
@@ -425,7 +425,7 @@ export default function CatalogHome() {
 
                 <main>
                     <div className="bg-gray-100 product-start">
-                        <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
+                        <div className="mx-auto max-w-screen-2xl px-4 py-16 sm:px-6 lg:px-8">
                             <div className="flex flex-col lg:flex-row">
                                 <div className="lg:mr-4 w-full lg:w-2/4 lg:border-r">
                                     <h1 className="text-3xl font-bold tracking-tight text-gray-900">ESTRO</h1>
@@ -482,8 +482,8 @@ export default function CatalogHome() {
                             {t('CatalogHome_Filters')}
                         </h2>
 
-                        <div className="relative mx-auto max-w-7xl border-b border-gray-200 bg-gray-100 pb-4">
-                            <div className="mx-auto flex max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+                        <div className="relative mx-auto max-w-screen-2xl border-b border-gray-200 bg-gray-100 pb-4">
+                            <div className="mx-auto flex max-w-screen-2xl items-center justify-between px-4 sm:px-6 lg:px-8">
                                 <Menu as="div" className="relative inline-block text-left">
                                     <div>
                                         <Menu.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-indigo-500">
@@ -605,7 +605,7 @@ export default function CatalogHome() {
 
                         {/* Active filters */}
                         <div className="bg-gray-100">
-                            <div className="mx-auto max-w-7xl px-4 py-3 sm:flex sm:items-center sm:px-6 lg:px-8">
+                            <div className="mx-auto max-w-screen-2xl px-4 py-3 sm:flex sm:items-center sm:px-6 lg:px-8">
                                 <h3 className="text-sm font-medium text-gray-500">
                                     {t('CatalogHome_Filters')}
                                     <span className="sr-only">, active</span>
@@ -651,12 +651,12 @@ export default function CatalogHome() {
                     {/* Product grid */}
                     <section
                         aria-labelledby="products-heading"
-                        className="mx-auto max-w-2xl px-4 pb-16 pt-12 sm:px-6 sm:pb-24 sm:pt-16 lg:max-w-7xl lg:px-8">
+                        className="mx-auto max-w-2xl px-4 pb-16 pt-12 sm:px-6 sm:pb-24 sm:pt-16 lg:max-w-screen-2xl lg:px-8">
                         <h2 id="products-heading" className="sr-only">Products</h2>
-                        <div className="min-h-[990px] grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 xl:gap-x-8">
+                        <div className="min-h-[990px] grid grid-cols-1 gap-x-6 gap-y-20 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-x-5">
                             {productList.map((product) => (
                                 <div key={product.id} className="group relative">
-                                    <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-lg bg-gray-200 xl:aspect-h-8 xl:aspect-w-7  hover13">
+                                    <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200 xl:aspect-h-8 xl:aspect-w-7  hover13">
                                         <Link to={`/product/${product.id}`} className="group">
                                             {product.images && product.images.length > 0 ? (
                                                 <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
@@ -694,16 +694,15 @@ export default function CatalogHome() {
                                                 {t('CatalogHome_Size')}:
                                             </p>
                                             <div className="flex gap-1">
-                                                {product.storages?.map((size) => (
-                                                    size.inStock && (
-                                                        <p
-                                                            key={size.size}
-                                                            onClick={() => handleQuickviewOpen(product, size)}
-                                                            className="cursor-pointer text-xs border-transparent -inset-px rounded-md hover:text-indigo-500"
-                                                        >
-                                                            {size.size}
-                                                        </p>
-                                                    )
+                                                {product.storages?.filter(size => size.inStock).map((size, index, array) => (
+                                                    <span
+                                                        key={size.size}
+                                                        onClick={() => handleQuickviewOpen(product, size)}
+                                                        className="cursor-pointer text-xs border-transparent -inset-px rounded-md hover:text-indigo-500"
+                                                    >
+                                                        {size.size}
+                                                        {index < array.length - 1 && ' | '}
+                                                    </span>
                                                 ))}
                                             </div>
                                         </div>
@@ -724,7 +723,7 @@ export default function CatalogHome() {
                             ))}
                         </div>
                         {/* Pagination */}
-                        <div className="container mx-auto mt-20 p-4 flex relative max-w-7xl lg:flex-row justify-between">
+                        <div className="container mx-auto mt-20 p-4 flex relative max-w-screen-2xl lg:flex-row justify-between">
                             <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between ">
                                 <div>
                                     <p className="text-sm text-gray-700">

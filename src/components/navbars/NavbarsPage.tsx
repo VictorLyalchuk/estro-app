@@ -229,10 +229,10 @@ const NavbarsPage = () => {
                     </Dialog>
                 </Transition.Root>
 
-                <header className="relative bg-gray-100 mx-auto max-w-7xl px-2 sm:px-2 lg:px-2">
+                <header className="relative bg-gray-100 mx-auto max-w-screen-2xl px-2 sm:px-2 lg:px-2">
                     <div className=" items-baseline justify-between border-b border-gray-200 pb-2 pt-2">
 
-                        <nav aria-label="Top" className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 ">
+                        <nav aria-label="Top" className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 ">
                             <div>
                                 <div className="flex items-center h-16">
                                     <button
@@ -279,7 +279,7 @@ const NavbarsPage = () => {
                                                                     <div className="absolute inset-0 top-1/2 bg-gray-100 shadow" aria-hidden="true" />
 
                                                                     <div className="relative bg-gray-100">
-                                                                        <div className="mx-auto max-w-7xl px-8">
+                                                                        <div className="mx-auto max-w-screen-2xl px-8">
                                                                             <div className="grid grid-cols-2 gap-x-8 gap-y-10 py-16">
                                                                                 <div className="col-start-2 grid grid-cols-2 gap-x-8">
                                                                                     {collections.map((item) => (

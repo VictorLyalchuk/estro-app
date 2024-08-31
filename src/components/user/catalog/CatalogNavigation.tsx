@@ -426,7 +426,7 @@ export default function CatalogNavigation() {
             </div>
           </Dialog>
         </Transition.Root>
-        <main className="mx-auto max-w-7xl px-2 sm:px-2 lg:px-2 product-start">
+        <main className="mx-auto max-w-screen-2xl px-2 sm:px-2 lg:px-2 product-start">
           <div className="flex items-baseline justify-between border-b border-gray-200 pb-2 pt-4">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 pb-4">{t('CatalogNavigation_Catalog')}</h1>
 
@@ -495,10 +495,12 @@ export default function CatalogNavigation() {
             {t('CatalogNavigation_Products')}
           </h2>
 
-          <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-4">
+          <div className="grid grid-cols-1 gap-x-8 gap-y-10 lg:grid-cols-5">
             {/* Filters */}
             <form className="hidden lg:block">
-              <div className=' px-2 py-8 ' style={{ minWidth: '280px' }}>
+              <div className=' px-2 py-8 '
+              // style={{ minWidth: '280px' }}
+              >
                 <h3 className="sr-only">{t('CatalogNavigation_Categories')}</h3>
                 <ul role="list" className="space-y-4  text-sm font-medium text-gray-500">
                   {mainCategoryList.map((mainCategory) =>
@@ -616,15 +618,15 @@ export default function CatalogNavigation() {
             </form>
 
             {/* Product grid */}
-            <div className="lg:col-span-3  ">
+            <div className="lg:col-span-4  ">
               <div className="overflow-hidden rounded-sm dark:border-strokedark dark:bg-boxdark bg-gray-100">
-                <div className="mx-auto max-w-2xl px-2 py-8  lg:max-w-7xl lg:px-2 bg-gray-100">
+                <div className="mx-auto max-w-2xl px-2 py-8  lg:max-w-screen-2xl lg:px-2 bg-gray-100">
                   {/* <h2 className="text-2xl font-bold tracking-tight text-gray-900">Customers also purchased</h2> */}
-                  <div className={`min-h-[970px] mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-${gridView} xl:gap-x-8 pb-8 transition-all duration-500`}>
+                  <div className={`min-h-[970px] mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-${gridView} xl:gap-x-5 pb-8 transition-all duration-500`}>
                     {productList.slice(0, itemsPerPage).map((product) => (
                       <div key={product.id} className="group relative">
                         <Link to={`/product/${product.id}`}>
-                          <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none lg:h-80 hover13">
+                          <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none lg:h-120 hover13">
                             {product.images && product.images.length > 0 ? (
                               <img
                                 src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
@@ -670,21 +672,19 @@ export default function CatalogNavigation() {
                               {t('CatalogHome_Size')}:
                             </p>
                             <div className="flex gap-1">
-                              {product.storages?.map((size) => (
-                                size.inStock && (
-                                  <p
-                                    key={size.size}
-                                    onClick={() => handleQuickviewOpen(product, size)}
-                                    className="cursor-pointer text-xs border-transparent -inset-px rounded-md hover:text-indigo-500"
-                                  >
-                                    {size.size}
-                                  </p>
-                                )
+                              {product.storages?.filter(size => size.inStock).map((size, index, array) => (
+                                <span
+                                  key={size.size}
+                                  onClick={() => handleQuickviewOpen(product, size)}
+                                  className="cursor-pointer text-xs border-transparent -inset-px rounded-md hover:text-indigo-500"
+                                >
+                                  {size.size}
+                                  {index < array.length - 1 && ' | '}
+                                </span>
                               ))}
                             </div>
                           </div>
                         </div>
-
 
                         <div className="flex items-end pt-2 opacity-0 group-hover:opacity-100" aria-hidden="true">
                         </div>
@@ -700,7 +700,7 @@ export default function CatalogNavigation() {
                     ))}
                   </div>
                   {/* Pagination */}
-                  <div className="container mx-auto p-4 flex relative max-w-7xl lg:flex-row justify-between">
+                  <div className="container mx-auto p-4 flex relative max-w-screen-2xl lg:flex-row justify-between">
                     <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between ">
                       <div>
                         <p className="text-sm text-gray-700">

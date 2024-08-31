@@ -32,10 +32,10 @@ const HomeStore = () => {
   return (
     <>
       <div className="bg-gray-100">
-        <div className="container mx-auto p-8 flex relative max-w-7xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row justify-between">
+        <div className="container mx-auto p-8 flex relative max-w-screen-2xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row justify-between">
           <div className="sm:mx-auto sm:w-full">
             <div className="w-full ">
-              <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-7xl lg:px-8">
+              <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-screen-2xl lg:px-8">
                 <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none ">
                     <div className="sm:min-h-[1800px] md:min-h-[1800px] lg:min-h-[1000px] min-h-[1300px] grid grid-cols-1 grid-rows-2 lg:grid-cols-2 lg:grid-rows-1">
                       <div className="relative flex group hover13 h-full">
