@@ -684,7 +684,7 @@ export default function CatalogHome() {
                                         </div>
 
                                     </div>
-                                    <h3 className="mt-4 text-sm text-gray-700 line-clamp-2 break-words w-45">{getLocalizedField(product, 'name', lang).split(' ').slice(0, 3).join(' ')}</h3>
+                                    <h3 className="mt-4 text-sm text-gray-700 line-clamp-2 break-words ">{getLocalizedField(product, 'name', lang).split(' ').slice(0, 3).join(' ')}</h3>
                                     <p className="mt-1 text-xs text-gray-500">{product.article}</p>
                                     <p className="mt-1 text-xs text-gray-500">{getLocalizedField(product, 'season', lang)}</p>
                                     <p className="mt-1 text-lg font-medium text-red-900">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
