@@ -656,7 +656,7 @@ export default function CatalogNavigation() {
                           </div>
                           <div className="mt-4 flex justify-between">
                             <div>
-                              <h3 className="text-md text-gray-700 meta-5 font-bold  break-words w-40">
+                              <h3 className="text-sm text-gray-700 meta-5   break-words w-40">
                                 {getLocalizedField(product, 'name', lang)}
                               </h3>
                               <p className="mt-1 text-xs text-gray-500">{product.article}</p>
