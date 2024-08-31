@@ -172,14 +172,19 @@ export default function CatalogHome() {
     const getInfo = async () => {
         try {
             setFilterOptionsList([]);
-
+    
             // Витягування категорій і фільтрів з бази даних
             const mainCategories = await getMainCategories();
+    
+            // Фільтруємо категорії за gender, якщо він є, або використовуємо всі категорії
             setFilterOptionsList(prevFilters => {
-                const mainCategory = mainCategories.find(mainCategory => mainCategory.urlName === gender);
+                const filteredCategories = gender
+                    ? mainCategories.filter(mainCategory => mainCategory.urlName === gender)
+                    : mainCategories;
+    
                 const subCategoryWithOptions: IInfo[] = [];
-
-                if (mainCategory) {
+    
+                filteredCategories.forEach(mainCategory => {
                     mainCategory.subCategories.forEach((subCategory, index) => {
                         const options = subCategory.categories.map(category => ({
                             id: category.id.toString(),
@@ -194,12 +199,12 @@ export default function CatalogHome() {
                                     case 'fr':
                                         return category.name_fr;
                                     default:
-                                        return category.name_en; // Fallback to English if language not found
+                                        return category.name_en; // Fallback на англійську мову
                                 }
                             })(),
                             value: category.urlName
                         }));
-
+    
                         subCategoryWithOptions.push({
                             id: subCategory.id.toString(),
                             name_en: subCategory.name_en,
@@ -209,18 +214,18 @@ export default function CatalogHome() {
                             value: `category-${index + 1}`,
                             options: options
                         });
-
                     });
-
+    
                     setSubCategoryIndex(mainCategory.subCategories.length);
                     setCategoriesLoaded(true);
                     return [...prevFilters, ...subCategoryWithOptions];
-                }
-                return prevFilters;
+                });
+    
+                return [...prevFilters, ...subCategoryWithOptions];
             });
-
+    
+            // Отримання і трансформація додаткових даних
             const infos = await getInfoList();
-
             const transformedInfos: IInfo[] = infos.map(info => {
                 const allOptions = [
                     ...transformToOptions(info.colors || [], i18next.language),
@@ -228,7 +233,7 @@ export default function CatalogHome() {
                     ...transformToOptions(info.sizes || [], i18next.language),
                     ...transformToOptions(info.materials || [], i18next.language),
                 ];
-
+    
                 return {
                     id: info.id,
                     name_en: info.name_en,
@@ -239,9 +244,8 @@ export default function CatalogHome() {
                     options: allOptions.length > 0 ? allOptions : null
                 };
             });
-
+    
             setFilterOptionsList(prevFilters => [...prevFilters, ...transformedInfos]);
-            // setFilterOptionsList(prevFilters => [...prevFilters, ...infos]);
         } catch (error) {
             console.error('Error fetching data:', error);
         }
