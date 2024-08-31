@@ -26,6 +26,7 @@ import { getLocalizedField } from '../../../utils/localized/localized.ts';
 import { useTranslation } from 'react-i18next';
 import { Link as Scrollink } from 'react-scroll'
 import classNames from 'classnames';
+import Loader from '../../../common/Loader/loader.tsx';
 
 export default function CatalogNavigation() {
   const initialSortOptions: ISortOptions[] = [
@@ -64,14 +65,16 @@ export default function CatalogNavigation() {
   const [selectedSize, setSelectedSize] = useState<IStorages | null>(null);
   const [activeSortOption, setActiveSortOption] = useState<ISortOptions | null>(null);
   const [sortOptions, setSortOptions] = useState<ISortOptions[]>(initialSortOptions);
-
   const [activeOption, setActiveOption] = useState('');
+
+  const [loading, setLoading] = useState(true);
 
   if (endPage - startPage + 1 < visiblePages) {
     startPage = Math.max(1, endPage - visiblePages + 1);
   };
 
   const onViewModeChange = () => {
+    setLoading(true);
     const newGridView = gridView === "3" ? "4" : "3";
     const newItemsPerPage = gridView === "3" ? 8 : 6;
 
@@ -80,6 +83,7 @@ export default function CatalogNavigation() {
   }
 
   const onSortModeChange = (selectedOption: ISortOptions) => {
+    // setLoading(true);
     setActiveSortOption(selectedOption);
     const updatedSortOptions = sortOptions.map(option =>
       option.name === selectedOption.name
@@ -94,6 +98,7 @@ export default function CatalogNavigation() {
   };
 
   const onSortModeLoad = (selectedOption: string | null) => {
+    setLoading(true);
     const updatedSortOptions = sortOptions.map(option =>
       option.url === selectedOption
         ? { ...option, current: true }
@@ -104,6 +109,7 @@ export default function CatalogNavigation() {
   };
 
   const onPageChange = (newPage: number) => {
+    setLoading(true);
     setPage(newPage);
     const queryParams = onPageChangeQueryParams(newPage, filters);
     const newQueryString = qs.stringify(queryParams, { encodeValuesOnly: true, delimiter: ';' });
@@ -111,6 +117,7 @@ export default function CatalogNavigation() {
   };
 
   const createFilters = async (name: string, value: string) => {
+    setLoading(true);
     const newFilters = updateFilters(filters, name, value);
     setFilters(newFilters);
     setPage(1);
@@ -278,7 +285,9 @@ export default function CatalogNavigation() {
   }, []);
 
   useEffect(() => {
-    loadFromURL();
+    loadFromURL().then(() => {
+      setLoading(false);
+    });
   }, [subName, urlName, location.search, page, itemsPerPage]);
 
   return (
@@ -618,86 +627,90 @@ export default function CatalogNavigation() {
             </form>
 
             {/* Product grid */}
-            <div className="lg:col-span-4  ">
+            <div className="lg:col-span-4">
               <div className="overflow-hidden rounded-sm dark:border-strokedark dark:bg-boxdark bg-gray-100">
-                <div className="mx-auto max-w-2xl px-2 py-8  lg:max-w-screen-2xl lg:px-2 bg-gray-100">
+                <div className="relative mx-auto max-w-2xl px-2 py-8  lg:max-w-screen-2xl lg:px-2 bg-gray-100">
                   {/* <h2 className="text-2xl font-bold tracking-tight text-gray-900">Customers also purchased</h2> */}
                   <div className={`min-h-[970px] mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-${gridView} xl:gap-x-5 pb-8 transition-all duration-500`}>
-                    {productList.slice(0, itemsPerPage).map((product) => (
-                      <div key={product.id} className="group relative">
-                        <Link to={`/product/${product.id}`}>
-                          <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none lg:h-120 hover13">
-                            {product.images && product.images.length > 0 ? (
-                              <img
-                                src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
-                                alt={getLocalizedField(product, 'name', lang)}
-                                className="h-full w-full lg:h-full lg:w-full object-cover object-center"
-                              />
-                            ) : (
-                              <img
-                                src={`${baseUrl}/uploads/imagenot.webp`}
-                                alt="Image Not Available"
-                                className="h-full w-full lg:h-full lg:w-full object-cover object-center"
-                              />
-                            )}
-                            <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
-                              <div className={classNames(
-                                isFavorite(product.id) ? 'text-red-600' : 'text-gray-400 hover:text-gray-500',
-                                'ml-3 text-gray-400 hover:text-gray-500'
-                              )}>
+                    {loading ? (
+                      <Loader/>
+                    ) : (
+                      productList.slice(0, itemsPerPage).map((product) => (
+                        <div key={product.id} className="group relative">
+                          <Link to={`/product/${product.id}`}>
+                            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none lg:h-120 hover13">
+                              {product.images && product.images.length > 0 ? (
+                                <img
+                                  src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
+                                  alt={getLocalizedField(product, 'name', lang)}
+                                  className="h-full w-full lg:h-full lg:w-full object-cover object-center"
+                                />
+                              ) : (
+                                <img
+                                  src={`${baseUrl}/uploads/imagenot.webp`}
+                                  alt="Image Not Available"
+                                  className="h-full w-full lg:h-full lg:w-full object-cover object-center"
+                                />
+                              )}
+                              <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
+                                <div className={classNames(
+                                  isFavorite(product.id) ? 'text-red-600' : 'text-gray-400 hover:text-gray-500',
+                                  'ml-3 text-gray-400 hover:text-gray-500'
+                                )}>
 
-                                {isFavorite(product.id) ? (
-                                  <HeartIcon className="w-7 h-7 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                                ) : (
-                                  <OutlineHeartIcon className="w-7 h-7 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                                )}
+                                  {isFavorite(product.id) ? (
+                                    <HeartIcon className="w-7 h-7 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                  ) : (
+                                    <OutlineHeartIcon className="w-7 h-7 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                            <div className="mt-4 flex justify-between">
+                              <div>
+                                <h3 className="text-sm text-gray-700 meta-5   break-words w-40">
+                                  {getLocalizedField(product, 'name', lang)}
+                                </h3>
+                                <p className="mt-1 text-xs text-gray-500">{product.article}</p>
+                                <p className="mt-1 text-xs text-gray-500">{getLocalizedField(product, 'season', lang)}</p>
+                              </div>
+                              <p className="text-sm font-bold text-red-800 whitespace-nowrap" >{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
+                            </div>
+                          </Link>
+
+                          <div className="flex items-end opacity-0 group-hover:opacity-100" aria-hidden="true">
+                            <div className="mt-4 flex items-center gap-1">
+                              <p className=" text-xs border-transparent pointer-events-none -inset-px rounded-md">
+                                {t('CatalogHome_Size')}:
+                              </p>
+                              <div className="flex gap-1">
+                                {product.storages?.filter(size => size.inStock).map((size, index, array) => (
+                                  <span
+                                    key={size.size}
+                                    onClick={() => handleQuickviewOpen(product, size)}
+                                    className="cursor-pointer text-xs border-transparent -inset-px rounded-md hover:text-indigo-500"
+                                  >
+                                    {size.size}
+                                    {index < array.length - 1 && ' | '}
+                                  </span>
+                                ))}
                               </div>
                             </div>
                           </div>
-                          <div className="mt-4 flex justify-between">
-                            <div>
-                              <h3 className="text-sm text-gray-700 meta-5   break-words w-40">
-                                {getLocalizedField(product, 'name', lang)}
-                              </h3>
-                              <p className="mt-1 text-xs text-gray-500">{product.article}</p>
-                              <p className="mt-1 text-xs text-gray-500">{getLocalizedField(product, 'season', lang)}</p>
-                            </div>
-                            <p className="text-sm font-bold text-red-800 whitespace-nowrap" >{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
-                          </div>
-                        </Link>
 
-                        <div className="flex items-end opacity-0 group-hover:opacity-100" aria-hidden="true">
-                          <div className="mt-4 flex items-center gap-1">
-                            <p className=" text-xs border-transparent pointer-events-none -inset-px rounded-md">
-                              {t('CatalogHome_Size')}:
-                            </p>
-                            <div className="flex gap-1">
-                              {product.storages?.filter(size => size.inStock).map((size, index, array) => (
-                                <span
-                                  key={size.size}
-                                  onClick={() => handleQuickviewOpen(product, size)}
-                                  className="cursor-pointer text-xs border-transparent -inset-px rounded-md hover:text-indigo-500"
-                                >
-                                  {size.size}
-                                  {index < array.length - 1 && ' | '}
-                                </span>
-                              ))}
-                            </div>
+                          <div className="flex items-end pt-2 opacity-0 group-hover:opacity-100" aria-hidden="true">
                           </div>
+                          {isQuickviewOpen && focusedProduct && (
+                            <ProductQuickview
+                              product={focusedProduct}
+                              isOpen={isQuickviewOpen}
+                              setOpen={setQuickviewOpen}
+                              size={selectedSize}
+                            />
+                          )}
                         </div>
-
-                        <div className="flex items-end pt-2 opacity-0 group-hover:opacity-100" aria-hidden="true">
-                        </div>
-                        {isQuickviewOpen && focusedProduct && (
-                          <ProductQuickview
-                            product={focusedProduct}
-                            isOpen={isQuickviewOpen}
-                            setOpen={setQuickviewOpen}
-                            size={selectedSize}
-                          />
-                        )}
-                      </div>
-                    ))}
+                      ))
+                    )}
                   </div>
                   {/* Pagination */}
                   <div className="container mx-auto p-4 flex relative max-w-screen-2xl lg:flex-row justify-between">
