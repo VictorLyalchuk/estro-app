@@ -180,7 +180,7 @@ const Bag = () => {
 
   return (
     <div className="bg-gray-100">
-      <div className="container mx-auto p-8 flex  relative bg-gray-100 mx-auto max-w-7xl px-2 sm:px-2 lg:px-2   flex-col lg:flex-row justify-between min-h-[780px]">
+      <div className="container mx-auto p-8 flex  relative bg-gray-100 mx-auto max-w-screen-2xl px-2 sm:px-2 lg:px-2   flex-col lg:flex-row justify-between min-h-[780px]">
         {bagItems && bagItems.length > 0 ? (
           <>
             {/* Order Summary */}
@@ -257,7 +257,7 @@ const Bag = () => {
             </div>
           </>
         ) : (
-          <div className="container mx-auto p-8 flex justify-center relative bg-gray-100 mx-auto max-w-7xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row">
+          <div className="container mx-auto p-8 flex justify-center relative bg-gray-100 mx-auto max-w-screen-2xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row">
             <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0">
               <div className="mt-8 flex justify-center">
                 <img src={GoodsNotFound}></img>
