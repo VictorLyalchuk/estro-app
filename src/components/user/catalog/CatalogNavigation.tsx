@@ -27,6 +27,7 @@ import { useTranslation } from 'react-i18next';
 import { Link as Scrollink } from 'react-scroll'
 import classNames from 'classnames';
 import Loader from '../../../common/Loader/loader.tsx';
+import SimpleCarousel from '../../../ui/carousel/SimpleCarousel.tsx';
 
 export default function CatalogNavigation() {
   const initialSortOptions: ISortOptions[] = [
@@ -66,7 +67,7 @@ export default function CatalogNavigation() {
   const [activeSortOption, setActiveSortOption] = useState<ISortOptions | null>(null);
   const [sortOptions, setSortOptions] = useState<ISortOptions[]>(initialSortOptions);
   const [activeOption, setActiveOption] = useState('');
-
+  const [hoveredProductId, setHoveredProductId] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
 
   if (endPage - startPage + 1 < visiblePages) {
@@ -639,19 +640,30 @@ export default function CatalogNavigation() {
                         <div key={product.id} className="group relative">
                           <Link to={`/product/${product.id}`}>
                             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none lg:h-120 hover13">
-                              {product.images && product.images.length > 0 ? (
-                                <img
-                                  src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
-                                  alt={getLocalizedField(product, 'name', lang)}
-                                  className="h-full w-full lg:h-full lg:w-full object-cover object-center"
-                                />
-                              ) : (
-                                <img
-                                  src={`${baseUrl}/uploads/imagenot.webp`}
-                                  alt="Image Not Available"
-                                  className="h-full w-full lg:h-full lg:w-full object-cover object-center"
-                                />
-                              )}
+                              <div
+                                key={product.id}
+                                onMouseEnter={() => setHoveredProductId(product.id)}
+                                onMouseLeave={() => setHoveredProductId(null)}
+                              >
+                                {hoveredProductId === product.id && product.images && product.images?.length > 0 ? (
+                                  <div className="h-120 ">
+                                    <SimpleCarousel product={product} lang={lang} />
+                                  </div>
+                                ) : (
+                                  <Link to={`/product/${product.id}`} className="group">
+                                    {product.images && product.images.length > 0 ? (
+                                      <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
+                                        className="h-full w-full object-cover object-center " />
+                                    ) : (
+                                      <img
+                                        src={`${baseUrl}/uploads/imagenot.webp`}
+                                        alt="Image Not Available"
+                                        className="h-full w-full object-cover object-center "
+                                      />
+                                    )}
+                                  </Link>
+                                )}
+                              </div>
                               <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
                                 <div className={classNames(
                                   isFavorite(product.id) ? 'text-red-600' : 'text-gray-400 hover:text-gray-500',

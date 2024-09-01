@@ -250,7 +250,7 @@ const Invoice: React.FC<ShipOrderModalProps> = ({ isOpen, setOpen, orderItem }) 
                   <div className="flex justify-end p-4 border-gray-200">
                     <button
                       onClick={handlePrint}
-                      className="bg-blue-600 text-white hover:bg-blue-700 py-2 px-4 rounded mr-2"
+                      className="bg-indigo-600 text-white hover:bg-indigo-700 py-2 px-4 rounded mr-2"
                     >
                       {t('Print')}
                     </button>

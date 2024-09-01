@@ -26,8 +26,7 @@ import { useTranslation } from 'react-i18next'
 import { Link as Scrollink } from 'react-scroll'
 import classNames from 'classnames'
 import Loader from '../../../common/Loader/loader'
-import Carousel from 'react-material-ui-carousel'
-import Brightness1RoundedIcon from '@mui/icons-material/Brightness1Rounded';
+import SimpleCarousel from '../../../ui/carousel/SimpleCarousel'
 
 export default function CatalogHome() {
     const initialSortOptions: ISortOptions[] = [
@@ -675,64 +674,32 @@ export default function CatalogHome() {
                                 productList.map((product) => (
                                     <div key={product.id} className="group relative">
                                         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200 xl:aspect-h-8 xl:aspect-w-7  hover13">
-                                            {/* <Link to={`/product/${product.id}`} className="group">
-                                                {product.images && product.images.length > 0 ? (
-                                                    <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
-                                                        className="h-full w-full object-cover object-center " />
-                                                ) : (
-                                                    <img
-                                                        src={`${baseUrl}/uploads/imagenot.webp`}
-                                                        alt="Image Not Available"
-                                                        className="h-full w-full object-cover object-center "
-                                                    />
-                                                )}
-                                            </Link> */}
                                             <div
                                                 key={product.id}
                                                 onMouseEnter={() => setHoveredProductId(product.id)}
                                                 onMouseLeave={() => setHoveredProductId(null)}
                                             >
-                                                {hoveredProductId === product.id && product.images && product.images?.length > 0 ? (
-                                                    <Carousel
-                                                        swipe
-                                                        animation="slide"
-                                                        duration={500}
-                                                        autoPlay={false}
-                                                        indicatorIconButtonProps={{ style: { width: '35px', height: '35px' } }}
-                                                        IndicatorIcon={<Brightness1RoundedIcon fontSize='small' />}
-                                                        indicators={false}
-                                                        className="h-full w-full overflow-hidden"
-                                                    >
-                                                        {product.images?.map((image, index) => (
-                                                            <div
-                                                                key={index}
-                                                                className="w-full h-full flex items-center justify-center overflow-hidden"
-                                                            >
-                                                                <Link to={`/product/${product.id}`} className="group">
-                                                                    <img
-                                                                        src={`${baseUrl}/uploads/1200_${image?.imagePath || 'imagenot.webp'}`}
-                                                                        alt={getLocalizedField(product, 'name', lang)}
-                                                                        className="h-full w-full object-cover object-center"
-                                                                    />
-                                                                </Link>
-                                                            </div>
+                                                <Link to={`/product/${product.id}`} className="group">
 
-                                                        ))}
-                                                    </Carousel>
-                                                ) : (
-                                                    <Link to={`/product/${product.id}`} className="group">
-                                                        {product.images && product.images.length > 0 ? (
-                                                            <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
-                                                                className="h-full w-full object-cover object-center " />
-                                                        ) : (
-                                                            <img
-                                                                src={`${baseUrl}/uploads/imagenot.webp`}
-                                                                alt="Image Not Available"
-                                                                className="h-full w-full object-cover object-center "
-                                                            />
-                                                        )}
-                                                    </Link>
-                                                )}
+                                                    {hoveredProductId === product.id && product.images && product.images?.length > 0 ? (
+                                                        <div className="h-120">
+                                                            <SimpleCarousel product={product} lang={lang} />
+                                                        </div>
+                                                    ) : (
+                                                        <Link to={`/product/${product.id}`} className="group">
+                                                            {product.images && product.images.length > 0 ? (
+                                                                <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
+                                                                    className="h-full w-full object-cover object-center " />
+                                                            ) : (
+                                                                <img
+                                                                    src={`${baseUrl}/uploads/imagenot.webp`}
+                                                                    alt="Image Not Available"
+                                                                    className="h-full w-full object-cover object-center "
+                                                                />
+                                                            )}
+                                                        </Link>
+                                                    )}
+                                                </Link>
                                             </div>
                                             <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
                                                 <div className={classNames(
