@@ -680,13 +680,12 @@ export default function CatalogHome() {
                                                 onMouseLeave={() => setHoveredProductId(null)}
                                             >
                                                 <Link to={`/product/${product.id}`} className="group">
-
                                                     {hoveredProductId === product.id && product.images && product.images?.length > 0 ? (
                                                         <div className="h-120">
                                                             <SimpleCarousel product={product} lang={lang} />
                                                         </div>
                                                     ) : (
-                                                        <Link to={`/product/${product.id}`} className="group">
+                                                        <div  className="group">
                                                             {product.images && product.images.length > 0 ? (
                                                                 <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
                                                                     className="h-full w-full object-cover object-center " />
@@ -697,7 +696,7 @@ export default function CatalogHome() {
                                                                     className="h-full w-full object-cover object-center "
                                                                 />
                                                             )}
-                                                        </Link>
+                                                        </div>
                                                     )}
                                                 </Link>
                                             </div>

@@ -81,6 +81,7 @@ export default function CatalogNavigation() {
 
     setGridView(newGridView);
     setItemsPerPage(newItemsPerPage);
+    onPageChange(1);
   }
 
   const onSortModeChange = (selectedOption: ISortOptions) => {
@@ -650,7 +651,7 @@ export default function CatalogNavigation() {
                                     <SimpleCarousel product={product} lang={lang} />
                                   </div>
                                 ) : (
-                                  <Link to={`/product/${product.id}`} className="group">
+                                  <div className="group">
                                     {product.images && product.images.length > 0 ? (
                                       <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
                                         className="h-full w-full object-cover object-center " />
@@ -661,7 +662,7 @@ export default function CatalogNavigation() {
                                         className="h-full w-full object-cover object-center "
                                       />
                                     )}
-                                  </Link>
+                                  </div>
                                 )}
                               </div>
                               <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
