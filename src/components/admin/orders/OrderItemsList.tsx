@@ -12,6 +12,7 @@ import { ICreateOrderItemsAdmin } from '../../../interfaces/Order/ICreateOrderIt
 import { formatDateWithTime } from '../../../services/custom/format-data';
 import { OrderStatus } from '../../../interfaces/Type/OrderStatus';
 import Loader from '../../../common/Loader/loader';
+import { Link } from 'react-router-dom';
 
 const statusOptions: OrderStatus[] = [
   'Order placed',
@@ -225,7 +226,9 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
                         />
                       )}
                       <div className="hover:text-indigo-500 md:table-cell">
-                        <div className="font-medium text-sm leading-6" >{getLocalizedField(item, 'name', lang)}</div>
+                        <Link to={`/product/${item.productId}`}>
+                          <div className="font-medium text-sm leading-6" >{getLocalizedField(item, 'name', lang)}</div>
+                        </Link>
                       </div>
                     </div>
                   </td>
