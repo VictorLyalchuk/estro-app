@@ -75,14 +75,14 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang }) => {
       {/* Previous Button */}
       <button
         onClick={goToPrev}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-gray-100 text-black hover:bg-gray-300 rounded-full p-2.5 shadow-lg flex items-center justify-center"
+        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#4F5050] text-white hover:bg-[#3a3b3b] rounded-full p-2.5 shadow-lg flex items-center justify-center"
       >
         <ArrowBackIosNewIcon fontSize="small" />
       </button>
       {/* Next Button */}
       <button
         onClick={goToNext}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-gray-100 text-black hover:bg-gray-300 rounded-full p-2.5 shadow-xl flex items-center justify-center"
+        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#4F5050] text-white hover:bg-[#3a3b3b] rounded-full p-2.5 shadow-xl flex items-center justify-center"
       >
         <ArrowForwardIosIcon fontSize="small" />
       </button>
@@ -92,7 +92,7 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang }) => {
           <button
             key={index}
             onClick={(event) => handleIndicatorClick(index, event)}
-            className={`w-7 h-1.5 rounded ${index === currentIndex ? 'bg-white' : 'bg-gray-300'} focus:outline-none`}
+            className={`w-7 h-1.5 rounded ${index === currentIndex ? 'bg-white' : 'bg-[#4F5050]'} focus:outline-none`}
           />
         ))}
       </div>
