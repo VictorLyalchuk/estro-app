@@ -8,6 +8,7 @@ import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/react/20/solid
 import { getLocalizedField } from "../../../utils/localized/localized";
 import { IMainCategory } from "../../../interfaces/Category/Main-Category/IMainCategory";
 import { deleteMainCategoryByID, getMainCategoryByPage, getMainCategoryQuantity } from "../../../services/category/category-services";
+import Loader from "../../../common/Loader/loader";
 
 export default function MainCategoryList() {
     const { t, i18n } = useTranslation();
@@ -23,6 +24,8 @@ export default function MainCategoryList() {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const totalPages = Math.ceil(countPage / itemsPerPage);
     const visiblePages = 5;
+    const [loading, setLoading] = useState(true);
+
     let startPage = Math.max(1, page - Math.floor(visiblePages / 2));
     let endPage = Math.min(totalPages, startPage + visiblePages - 1);
 
@@ -40,6 +43,7 @@ export default function MainCategoryList() {
             .catch(error => console.error('Error fetching  main category data:', error));
         getMainCategoryQuantity()
             .then(data => setCountPage(data))
+            .then(() => { setLoading(false); })
             .catch(error => console.error('Error fetching main category quantity data:', error));
     }, [page]);
 
@@ -92,7 +96,7 @@ export default function MainCategoryList() {
             </div>
 
             <div className="-mx-4 mt-10 ring-1 ring-gray-200 sm:mx-0 sm:rounded-lg">
-                <table className="mt-6 w-full whitespace-nowrap text-left">
+                <table className="relative mt-6 w-full whitespace-nowrap text-left">
                     <colgroup>
                         <col className="lg:w-1/12" />
                         <col className="lg:w-3/12" />
@@ -120,45 +124,50 @@ export default function MainCategoryList() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
-                        {mainCategoryList.map((mainCategory) => (
-                            <tr key={mainCategory.id} className="text-gray-700 hover:bg-gray-200 ">
-                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
-                                    <div className="font-mono text-sm leading-6">{mainCategory.id}</div>
-                                </td>
-                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 ">
-                                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                                        {mainCategory.imagePath && mainCategory.imagePath.length > 0 ? (
-                                            <img src={`${baseUrl}/uploads/${mainCategory.imagePath || '/uploads/default.jpg'}`} className="w-30 rounded-lg" />
-                                        ) : (
+                        {loading ? (
+                            <div className="min-h-[662px]">
+                                <Loader />
+                            </div>
+                        ) : (
+                            mainCategoryList.map((mainCategory) => (
+                                <tr key={mainCategory.id} className="text-gray-700 hover:bg-gray-200 ">
+                                    <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
+                                        <div className="font-mono text-sm leading-6">{mainCategory.id}</div>
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 ">
+                                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                                            {mainCategory.imagePath && mainCategory.imagePath.length > 0 ? (
+                                                <img src={`${baseUrl}/uploads/${mainCategory.imagePath || '/uploads/default.jpg'}`} className="w-30 rounded-lg" />
+                                            ) : (
                                                 <img
                                                     src={`${baseUrl}/uploads/imagenot.webp`}
                                                     alt="Image Not Available"
                                                     className="w-30 rounded-lg"
                                                 />
-                                        )}
-                                        <Link to={`/catalog-home/${mainCategory.urlName}`} className="hover:text-indigo-500 ">
-                                            <div className="font-mono text-sm leading-6">{getLocalizedField(mainCategory, 'name', lang)}</div>
-                                        </Link>
-                                    </div>
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden lg:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                {getLocalizedField(mainCategory, 'description', lang) || '-'}
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden sm:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                    {mainCategory.urlName}
-                                </td>
+                                            )}
+                                            <Link to={`/catalog-home/${mainCategory.urlName}`} className="hover:text-indigo-500 ">
+                                                <div className="font-mono text-sm leading-6">{getLocalizedField(mainCategory, 'name', lang)}</div>
+                                            </Link>
+                                        </div>
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden lg:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        {getLocalizedField(mainCategory, 'description', lang) || '-'}
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden sm:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        {mainCategory.urlName}
+                                    </td>
 
-                                <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-b border-gray-200">
-                                    <Link to={`/admin/main-category/edit-main-category-en/${mainCategory.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        {t('Category_Edit_MainCategory')}
-                                    </Link>
-                                    <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                        onClick={() => showDeleteConfirm(mainCategory)}>
-                                        {t('Category_Delete_MainCategory')}
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                                    <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-b border-gray-200">
+                                        <Link to={`/admin/main-category/edit-main-category-en/${mainCategory.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            {t('Category_Edit_MainCategory')}
+                                        </Link>
+                                        <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            onClick={() => showDeleteConfirm(mainCategory)}>
+                                            {t('Category_Delete_MainCategory')}
+                                        </button>
+                                    </td>
+                                </tr>
+                            )))}
                     </tbody>
                 </table>
 
@@ -242,24 +251,23 @@ export default function MainCategoryList() {
             >
                 <p>{t('Category_Model')}</p>
                 <div className="flex justify-end gap-4 mt-4">
-                <button
-                    key="delete"
-                    type="button"
-                    onClick={handleDeleteMainCategory}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                    {t('Category_Delete')}
-                </button>
-                <button
-                    key="cancel"
-                    onClick={handleCancel}
-                    className="bg-gray-200 hover:bg-gray-300 text-gray-900 font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                    {t('Category_Cancel')}
-                </button>
-            </div>
+                    <button
+                        key="delete"
+                        type="button"
+                        onClick={handleDeleteMainCategory}
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                        {t('Category_Delete')}
+                    </button>
+                    <button
+                        key="cancel"
+                        onClick={handleCancel}
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-900 font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                        {t('Category_Cancel')}
+                    </button>
+                </div>
             </Modal>
         </div>
     );
-
 }

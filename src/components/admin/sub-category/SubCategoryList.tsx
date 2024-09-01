@@ -9,6 +9,7 @@ import { getLocalizedField } from "../../../utils/localized/localized";
 import { deleteSubCategoryByID, getMainCategory, getSubCategoryByPage, getSubCategoryQuantity } from "../../../services/category/category-services";
 import { ISubCategory } from "../../../interfaces/Category/Sub-Category/ISubCategory";
 import { IMainCategory } from "../../../interfaces/Category/Main-Category/IMainCategory";
+import Loader from "../../../common/Loader/loader";
 
 export default function SubCategoryList() {
     const { t, i18n } = useTranslation();
@@ -25,6 +26,8 @@ export default function SubCategoryList() {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const totalPages = Math.ceil(countPage / itemsPerPage);
     const visiblePages = 5;
+    const [loading, setLoading] = useState(true);
+
     let startPage = Math.max(1, page - Math.floor(visiblePages / 2));
     let endPage = Math.min(totalPages, startPage + visiblePages - 1);
 
@@ -42,6 +45,7 @@ export default function SubCategoryList() {
             .catch(error => console.error('Error fetching sub category data:', error));
         getSubCategoryByPage(page)
             .then(data => setSubCategoryList(data))
+            .then(() => { setLoading(false); })
             .catch(error => console.error('Error fetching sub category data:', error));
         getSubCategoryQuantity()
             .then(data => setCountPage(data))
@@ -96,7 +100,7 @@ export default function SubCategoryList() {
             </div>
 
             <div className="-mx-4 mt-10 ring-1 ring-gray-200 sm:mx-0 sm:rounded-lg">
-                <table className="mt-6 w-full whitespace-nowrap text-left">
+                <table className="relative mt-6 w-full whitespace-nowrap text-left">
                     <colgroup>
                         <col className="lg:w-1/12" />
                         <col className="lg:w-3/12" />
@@ -128,52 +132,57 @@ export default function SubCategoryList() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
-                        {subCategoryList.map((subCategory) => (
-                            <tr key={subCategory.id} className="text-gray-700 hover:bg-gray-200 ">
-                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
-                                    <div className="font-mono text-sm leading-6">{subCategory.id}</div>
-                                </td>
-                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 ">
-                                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                                        {subCategory.imagePath && subCategory.imagePath.length > 0 ? (
-                                            <img src={`${baseUrl}/uploads/${subCategory.imagePath || '/uploads/default.jpg'}`} className="w-30 rounded-lg" />
-                                        ) : (
-                                            <img
-                                                src={`${baseUrl}/uploads/imagenot.webp`}
-                                                alt="Image Not Available"
-                                                className="w-30 rounded-lg"
-                                            />
-                                        )}
-                                        <Link to={`/catalog/${subCategory.urlName}`} className="hover:text-indigo-500 ">
-                                            <div className="font-mono text-sm leading-6">{getLocalizedField(subCategory, 'name', lang)}</div>
-                                        </Link>
-                                    </div>
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden lg:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                    {
-                                        mainCategory.find((category) => category.id === subCategory.mainCategoryId)
-                                            ? getLocalizedField(mainCategory.find((category) => category.id === subCategory.mainCategoryId)!, 'name', lang)
-                                            : '-'
-                                    }
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden lg:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                    {getLocalizedField(subCategory, 'description', lang) || '-'}
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden sm:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                    {subCategory.urlName}
-                                </td>
+                        {loading ? (
+                            <div className="min-h-[662px]">
+                                <Loader />
+                            </div>
+                        ) : (
+                            subCategoryList.map((subCategory) => (
+                                <tr key={subCategory.id} className="text-gray-700 hover:bg-gray-200 ">
+                                    <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
+                                        <div className="font-mono text-sm leading-6">{subCategory.id}</div>
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 ">
+                                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                                            {subCategory.imagePath && subCategory.imagePath.length > 0 ? (
+                                                <img src={`${baseUrl}/uploads/${subCategory.imagePath || '/uploads/default.jpg'}`} className="w-30 rounded-lg" />
+                                            ) : (
+                                                <img
+                                                    src={`${baseUrl}/uploads/imagenot.webp`}
+                                                    alt="Image Not Available"
+                                                    className="w-30 rounded-lg"
+                                                />
+                                            )}
+                                            <Link to={`/catalog/${subCategory.urlName}`} className="hover:text-indigo-500 ">
+                                                <div className="font-mono text-sm leading-6">{getLocalizedField(subCategory, 'name', lang)}</div>
+                                            </Link>
+                                        </div>
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden lg:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        {
+                                            mainCategory.find((category) => category.id === subCategory.mainCategoryId)
+                                                ? getLocalizedField(mainCategory.find((category) => category.id === subCategory.mainCategoryId)!, 'name', lang)
+                                                : '-'
+                                        }
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden lg:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        {getLocalizedField(subCategory, 'description', lang) || '-'}
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden sm:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        {subCategory.urlName}
+                                    </td>
 
-                                <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-b border-gray-200">
-                                    <Link to={`/admin/sub-category/edit-sub-category-en/${subCategory.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        {t('Category_Edit_SubCategory')}
-                                    </Link>
-                                    <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                        onClick={() => showDeleteConfirm(subCategory)}>
-                                        {t('Category_Delete_SubCategory')}
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                                    <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-b border-gray-200">
+                                        <Link to={`/admin/sub-category/edit-sub-category-en/${subCategory.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            {t('Category_Edit_SubCategory')}
+                                        </Link>
+                                        <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            onClick={() => showDeleteConfirm(subCategory)}>
+                                            {t('Category_Delete_SubCategory')}
+                                        </button>
+                                    </td>
+                                </tr>
+                            )))}
                     </tbody>
                 </table>
 

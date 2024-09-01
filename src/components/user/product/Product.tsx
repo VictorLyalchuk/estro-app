@@ -214,7 +214,7 @@ export default function Product() {
             <div className="grid grid-cols-1 lg:grid-cols-1 lg:gap-8">
               <Slider>
                 {product.images && product.images.length > 0 ? (
-                  <Carousel swipe animation="fade" duration={1500} autoPlay={true} indicatorIconButtonProps={{ style: { width: '35px', height: '35px', }, }}
+                  <Carousel swipe animation="fade" duration={500} autoPlay={true} indicatorIconButtonProps={{ style: { width: '35px', height: '35px', }, }}
                     IndicatorIcon={<Brightness1RoundedIcon fontSize='small' />}
                     indicators={true} className="h-full w-full rounded-lg overflow-hidden" >
                     {product.images?.map((image, index) => (
@@ -241,11 +241,11 @@ export default function Product() {
           </div>
 
           {/* Product */}
-          <div className="lg:col-span-5 lg:col-start-8">
+          <div className="lg:col-span-6 lg:col-start-7">
             {/* Options */}
-            <div className="flex justify-between">
+            <div className="justify-between">
               <h1 className="text-xl font-medium text-gray-900">{getLocalizedField(product, 'name', lang)}</h1>
-              <p className="text-xl font-medium text-gray-900">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
+              <p className="text-2xl font-medium text-gray-900">{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
             </div>
 
             {/* Reviews */}
@@ -272,7 +272,7 @@ export default function Product() {
             </div>
           </div>
 
-          <div className="mt-8 lg:col-span-5">
+          <div className="mt-8 lg:col-span-4 lg:col-start-7">
             <form>
 
               {/* Size picker */}

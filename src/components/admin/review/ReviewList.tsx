@@ -8,6 +8,7 @@ import { ArrowLongLeftIcon, ArrowLongRightIcon, StarIcon } from '@heroicons/reac
 import { deleteReviewByID, getReviewByPage, getReviewQuantity } from "../../../services/userProductReview/user-product-review-services";
 import classNames from "classnames";
 import { formatDateWithTime } from "../../../services/custom/format-data";
+import Loader from "../../../common/Loader/loader";
 
 export default function ReviewList() {
     const { t } = useTranslation();
@@ -22,6 +23,8 @@ export default function ReviewList() {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const totalPages = Math.ceil(countPage / itemsPerPage);
     const visiblePages = 5;
+    const [loading, setLoading] = useState(true);
+
     let startPage = Math.max(1, page - Math.floor(visiblePages / 2));
     let endPage = Math.min(totalPages, startPage + visiblePages - 1);
 
@@ -34,7 +37,9 @@ export default function ReviewList() {
     };
 
     useEffect(() => {
-        getReviewByPage(page, itemsPerPage).then(data => setReviewItems(data))
+        getReviewByPage(page, itemsPerPage)
+            .then(data => setReviewItems(data))
+            .then(() => { setLoading(false); })
             .catch(error => console.error('Error fetching review data:', error));
         getReviewQuantity()
             .then(data => setCountPage(data))
@@ -82,7 +87,7 @@ export default function ReviewList() {
             </div>
 
             <div className="-mx-4 mt-10 ring-1 ring-gray-200 sm:mx-0 sm:rounded-lg">
-                <table className="mt-6 w-full whitespace-nowrap text-left">
+                <table className="relative mt-6 w-full whitespace-nowrap text-left">
                     <colgroup>
                         <col className="xl:w-1/12" />
                         <col className="xl:w-2/12" />
@@ -117,70 +122,75 @@ export default function ReviewList() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
-                        {reviewItems.map((review, index) => (
-                            <tr key={review.id} className="text-gray-700 hover:bg-gray-200 ">
-                                <td className="py-4 pl-8 pr-4 hidden sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
-                                    <div className="font-mono text-sm leading-6">{index + 1}</div>
-                                </td>
-                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 ">
-                                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                                        {review.avatar ? (
-                                            <img src={`${baseUrl}/uploads/${review.avatar || '/uploads/default.jpg'}`} className="h-8 w-8 rounded-full" />
-                                        ) : (
-                                            <img
-                                                src={`${baseUrl}/uploads/user404.webp`}
-                                                alt="Image Not Available"
-                                                className="h-8 w-8 rounded-full"
-                                            />
-                                        )}
-                                        <div className="hover:text-indigo-500 md:table-cell">
-                                            <div className="font-medium text-sm leading-6">{review.author} </div>
+                        {loading ? (
+                            <div className="min-h-[662px]">
+                                <Loader />
+                            </div>
+                        ) : (
+                            reviewItems.map((review, index) => (
+                                <tr key={review.id} className="text-gray-700 hover:bg-gray-200 ">
+                                    <td className="py-4 pl-8 pr-4 hidden sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
+                                        <div className="font-mono text-sm leading-6">{index + 1}</div>
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 ">
+                                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                                            {review.avatar ? (
+                                                <img src={`${baseUrl}/uploads/${review.avatar || '/uploads/default.jpg'}`} className="h-8 w-8 rounded-full" />
+                                            ) : (
+                                                <img
+                                                    src={`${baseUrl}/uploads/user404.webp`}
+                                                    alt="Image Not Available"
+                                                    className="h-8 w-8 rounded-full"
+                                                />
+                                            )}
+                                            <div className="hover:text-indigo-500 md:table-cell">
+                                                <div className="font-medium text-sm leading-6">{review.author} </div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden md:table-cell lg:pr-20 border-t border-b border-gray-200">
-                                    {review.content}
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                    <div className="mt-1 flex items-center">
-                                        {[0, 1, 2, 3, 4].map((rating) => (
-                                            <StarIcon
-                                                key={rating}
-                                                className={classNames(
-                                                    review.rating > rating ? 'text-yellow-400' : 'text-gray-300',
-                                                    'h-5 w-5 flex-shrink-0'
-                                                )}
-                                                aria-hidden="true"
-                                            />
-                                        ))}
-                                    </div>
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden sm:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                    <div>
-                                        {new Date(review.orderDate).toLocaleDateString()}
-                                    </div>
-                                    <div>
-                                        {formatDateWithTime(review.orderDate)}
-                                    </div>
-                                </td>
-                                {/* <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden xl:table-cell lg:pr-20 border-t border-b border-gray-200">
+                                    </td>
+                                    <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden md:table-cell lg:pr-20 border-t border-b border-gray-200">
+                                        {review.content}
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        <div className="mt-1 flex items-center">
+                                            {[0, 1, 2, 3, 4].map((rating) => (
+                                                <StarIcon
+                                                    key={rating}
+                                                    className={classNames(
+                                                        review.rating > rating ? 'text-yellow-400' : 'text-gray-300',
+                                                        'h-5 w-5 flex-shrink-0'
+                                                    )}
+                                                    aria-hidden="true"
+                                                />
+                                            ))}
+                                        </div>
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden sm:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        <div>
+                                            {new Date(review.orderDate).toLocaleDateString()}
+                                        </div>
+                                        <div>
+                                            {formatDateWithTime(review.orderDate)}
+                                        </div>
+                                    </td>
+                                    {/* <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden xl:table-cell lg:pr-20 border-t border-b border-gray-200">
                                     {review.productId}
                                 </td> */}
 
-                                <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-b border-gray-200">
-                                    <Link to={`/product/${review.productId}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        {t('View Product')}
-                                    </Link>
-                                    <Link to={`/admin/user/edit-user/${review.userId}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        {t('User_Edit_User')}
-                                    </Link>
-                                    <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                        onClick={() => showDeleteConfirm(review)}>
-                                        {t('Delete Review')}
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                                    <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-b border-gray-200">
+                                        <Link to={`/product/${review.productId}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            {t('View Product')}
+                                        </Link>
+                                        <Link to={`/admin/user/edit-user/${review.userId}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            {t('User_Edit_User')}
+                                        </Link>
+                                        <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            onClick={() => showDeleteConfirm(review)}>
+                                            {t('Delete Review')}
+                                        </button>
+                                    </td>
+                                </tr>
+                            )))}
                     </tbody>
                 </table>
 
@@ -283,5 +293,4 @@ export default function ReviewList() {
             </Modal>
         </div>
     );
-
 }

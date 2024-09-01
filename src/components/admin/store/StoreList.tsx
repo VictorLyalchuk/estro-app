@@ -8,6 +8,7 @@ import { getLocalizedField } from "../../../utils/localized/localized";
 import { IStore } from "../../../interfaces/Store/IStore";
 import { ICity } from "../../../interfaces/Address/ICity";
 import { deleteStoreByID, getCity, getStoreByPage, getStoreQuantity } from "../../../services/shipping/shipping-services";
+import Loader from "../../../common/Loader/loader";
 
 export default function StoreList() {
     const { t, i18n } = useTranslation();
@@ -23,6 +24,8 @@ export default function StoreList() {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const totalPages = Math.ceil(countPage / itemsPerPage);
     const visiblePages = 5;
+    const [loading, setLoading] = useState(true);
+
     let startPage = Math.max(1, page - Math.floor(visiblePages / 2));
     let endPage = Math.min(totalPages, startPage + visiblePages - 1);
 
@@ -36,8 +39,11 @@ export default function StoreList() {
 
     useEffect(() => {
         getCity().then(resp => setCityOptions(resp));
-        getStoreByPage(page).then(resp => setStoreOptions(resp));
-        getStoreQuantity().then(data => setCountPage(data));
+        getStoreByPage(page)
+            .then(resp => setStoreOptions(resp))
+            .then(() => { setLoading(false); });
+        getStoreQuantity()
+            .then(data => setCountPage(data));
     }, [page]);
 
     const showDeleteConfirm = (category: IStore) => {
@@ -88,7 +94,7 @@ export default function StoreList() {
             </div>
 
             <div className="-mx-4 mt-10 ring-1 ring-gray-200 sm:mx-0 sm:rounded-lg">
-                <table className="mt-6 w-full whitespace-nowrap text-left">
+                <table className="relative mt-6 w-full whitespace-nowrap text-left">
                     <colgroup>
                         <col className="lg:w-1/12" />
                         <col className="lg:w-1/12" />
@@ -124,44 +130,49 @@ export default function StoreList() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
-                        {storeOptions.map((store) => (
-                            <tr key={store.id} className="text-gray-700 hover:bg-gray-200 ">
-                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
-                                    <div className="font-mono text-sm leading-6">{store.id}</div>
-                                </td>
+                        {loading ? (
+                            <div className="min-h-[662px]">
+                                <Loader />
+                            </div>
+                        ) : (
+                            storeOptions.map((store) => (
+                                <tr key={store.id} className="text-gray-700 hover:bg-gray-200 ">
+                                    <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
+                                        <div className="font-mono text-sm leading-6">{store.id}</div>
+                                    </td>
 
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden lg:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                    {cityOptions.find((city) => city.id === store.cityId) ? getLocalizedField(cityOptions.find((city) => city.id === store.cityId)!, 'countryName', lang) : '-'}
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden lg:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                    {cityOptions.find((city) => city.id === store.cityId) ? getLocalizedField(cityOptions.find((city) => city.id === store.cityId)!, 'cityName', lang) : '-'}
-                                </td>
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden lg:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        {cityOptions.find((city) => city.id === store.cityId) ? getLocalizedField(cityOptions.find((city) => city.id === store.cityId)!, 'countryName', lang) : '-'}
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden lg:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        {cityOptions.find((city) => city.id === store.cityId) ? getLocalizedField(cityOptions.find((city) => city.id === store.cityId)!, 'cityName', lang) : '-'}
+                                    </td>
 
-                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 ">
-                                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                                        <div className="hover:text-indigo-500 ">
-                                            <div className="font-mono text-sm leading-6">{getLocalizedField(store, 'name', lang)}</div>
+                                    <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 ">
+                                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                                            <div className="hover:text-indigo-500 ">
+                                                <div className="font-mono text-sm leading-6">{getLocalizedField(store, 'name', lang)}</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                    {getLocalizedField(store, 'address', lang) || '-'}
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden 2xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                    {store.workingHours}
-                                </td>
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        {getLocalizedField(store, 'address', lang) || '-'}
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden 2xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        {store.workingHours}
+                                    </td>
 
-                                <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-b border-gray-200">
-                                    <Link to={`/admin/store/edit-store-en/${store.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        {t('Stores_Edit_Store')}
-                                    </Link>
-                                    <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                        onClick={() => showDeleteConfirm(store)}>
-                                        {t('Stores_Delete_Store')}
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                                    <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-b border-gray-200">
+                                        <Link to={`/admin/store/edit-store-en/${store.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            {t('Stores_Edit_Store')}
+                                        </Link>
+                                        <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            onClick={() => showDeleteConfirm(store)}>
+                                            {t('Stores_Delete_Store')}
+                                        </button>
+                                    </td>
+                                </tr>
+                            )))}
                     </tbody>
                 </table>
 
@@ -264,5 +275,4 @@ export default function StoreList() {
             </Modal>
         </div>
     );
-
 }

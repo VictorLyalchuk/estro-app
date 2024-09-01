@@ -9,6 +9,7 @@ import { getLocalizedField } from "../../../utils/localized/localized";
 import { deleteCategoryByID, getCategoryByPage, getCategoryQuantity, getSubCategory } from "../../../services/category/category-services";
 import { ICategory } from "../../../interfaces/Category/Category/ICategory";
 import { ISubCategory } from "../../../interfaces/Category/Sub-Category/ISubCategory";
+import Loader from "../../../common/Loader/loader";
 
 export default function CategoryList() {
     const { t, i18n } = useTranslation();
@@ -25,9 +26,10 @@ export default function CategoryList() {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const totalPages = Math.ceil(countPage / itemsPerPage);
     const visiblePages = 5;
+    const [loading, setLoading] = useState(true);
+
     let startPage = Math.max(1, page - Math.floor(visiblePages / 2));
     let endPage = Math.min(totalPages, startPage + visiblePages - 1);
-
     if (endPage - startPage + 1 < visiblePages) {
         startPage = Math.max(1, endPage - visiblePages + 1);
     }
@@ -42,6 +44,7 @@ export default function CategoryList() {
             .catch(error => console.error('Error fetching sub category data:', error));
         getCategoryByPage(page)
             .then(data => setCategoryList(data))
+            .then(() => { setLoading(false); })
             .catch(error => console.error('Error fetching category data:', error));
         getCategoryQuantity()
             .then(data => setCountPage(data))
@@ -57,10 +60,10 @@ export default function CategoryList() {
         if (selectedCategory) {
             onPageChange(1);
             deleteCategoryByID(selectedCategory?.id)
-            .then(() => {
-                return getCategoryQuantity();
-            })
-            .then(data => {
+                .then(() => {
+                    return getCategoryQuantity();
+                })
+                .then(data => {
                     setCountPage(data);
                 })
                 .then(() => {
@@ -96,7 +99,7 @@ export default function CategoryList() {
             </div>
 
             <div className="-mx-4 mt-10 ring-1 ring-gray-200 sm:mx-0 sm:rounded-lg">
-                <table className="mt-6 w-full whitespace-nowrap text-left">
+                <table className="relative mt-6 w-full whitespace-nowrap text-left">
                     <colgroup>
                         <col className="lg:w-1/12" />
                         <col className="lg:w-3/12" />
@@ -128,52 +131,57 @@ export default function CategoryList() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
-                        {categoryList.map((category) => (
-                            <tr key={category.id} className="text-gray-700 hover:bg-gray-200 ">
-                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
-                                    <div className="font-mono text-sm leading-6">{category.id}</div>
-                                </td>
-                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 ">
-                                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                                        {category.imagePath && category.imagePath.length > 0 ? (
-                                            <img src={`${baseUrl}/uploads/${category.imagePath || '/uploads/default.jpg'}`} className="w-30 rounded-lg" />
-                                        ) : (
-                                            <img
-                                                src={`${baseUrl}/uploads/imagenot.webp`}
-                                                alt="Image Not Available"
-                                                className="w-30 rounded-lg"
-                                            />
-                                        )}
-                                        <Link to={`/catalog/${category.urlName}`} className="hover:text-indigo-500 ">
-                                            <div className="font-mono text-sm leading-6">{getLocalizedField(category, 'name', lang)}</div>
-                                        </Link>
-                                    </div>
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden lg:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                    {
-                                        subCategory.find((subCategory) => subCategory.id === category.subCategoryId)
-                                            ? getLocalizedField(subCategory.find((subCategory) => subCategory.id === category.subCategoryId)!, 'name', lang)
-                                            : '-'
-                                    }
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden lg:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                    {getLocalizedField(category, 'description', lang) || '-'}
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden sm:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                    {category.urlName}
-                                </td>
+                        {loading ? (
+                            <div className="min-h-[662px]">
+                                <Loader />
+                            </div>
+                        ) : (
+                            categoryList.map((category) => (
+                                <tr key={category.id} className="text-gray-700 hover:bg-gray-200">
+                                    <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
+                                        <div className="font-mono text-sm leading-6">{category.id}</div>
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 ">
+                                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                                            {category.imagePath && category.imagePath.length > 0 ? (
+                                                <img src={`${baseUrl}/uploads/${category.imagePath || '/uploads/default.jpg'}`} className="w-30 rounded-lg" />
+                                            ) : (
+                                                <img
+                                                    src={`${baseUrl}/uploads/imagenot.webp`}
+                                                    alt="Image Not Available"
+                                                    className="w-30 rounded-lg"
+                                                />
+                                            )}
+                                            <Link to={`/catalog/${category.urlName}`} className="hover:text-indigo-500 ">
+                                                <div className="font-mono text-sm leading-6">{getLocalizedField(category, 'name', lang)}</div>
+                                            </Link>
+                                        </div>
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden lg:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        {
+                                            subCategory.find((subCategory) => subCategory.id === category.subCategoryId)
+                                                ? getLocalizedField(subCategory.find((subCategory) => subCategory.id === category.subCategoryId)!, 'name', lang)
+                                                : '-'
+                                        }
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden lg:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        {getLocalizedField(category, 'description', lang) || '-'}
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden sm:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        {category.urlName}
+                                    </td>
 
-                                <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-b border-gray-200">
-                                    <Link to={`/admin/category/edit-category-en/${category.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        {t('Category_Edit_Category')}
-                                    </Link>
-                                    <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                        onClick={() => showDeleteConfirm(category)}>
-                                        {t('Category_Delete_Category')}
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                                    <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-b border-gray-200">
+                                        <Link to={`/admin/category/edit-category-en/${category.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            {t('Category_Edit_Category')}
+                                        </Link>
+                                        <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            onClick={() => showDeleteConfirm(category)}>
+                                            {t('Category_Delete_Category')}
+                                        </button>
+                                    </td>
+                                </tr>
+                            )))}
                     </tbody>
                 </table>
 

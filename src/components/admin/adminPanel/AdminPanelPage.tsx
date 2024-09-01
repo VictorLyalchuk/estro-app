@@ -15,6 +15,7 @@ import Invoice from '../orders/Invoice'
 import { getReviewByPage } from '../../../services/userProductReview/user-product-review-services'
 import { StarIcon } from '@heroicons/react/24/solid'
 import { formatDateWithTime } from '../../../services/custom/format-data'
+import Loader from '../../../common/Loader/loader'
 
 export default function AdminPanelPage() {
   const baseUrl = APP_ENV.BASE_URL;
@@ -32,6 +33,7 @@ export default function AdminPanelPage() {
   const [orderReview, setReviewItems] = useState<IUserProductReview[]>([]);
   const [selectedOrderItem, setSelectedOrderItem] = useState<IOrderItemsAdmin | null>(null);
   const [modalVisiblePrintOrder, setModalVisiblePrintOrder] = useState<boolean>(false);
+  const [loading, setLoading] = useState(true);
 
   const stats = [
     { label: t('Product_Count'), value: productsCount },
@@ -123,10 +125,12 @@ export default function AdminPanelPage() {
       .catch(error => console.error('Error fetching user quantity data:', error));
     getOrderQuantity(step).then(data => setOrdersCount(data))
       .catch(error => console.error('Error fetching orders quantity data:', error));
-    getOrdersByPage(page, itemsPerPage, stepQuick).then(data => setOrderItems(data))
-      .catch(error => console.error('Error fetching orders data:', error));
-    getReviewByPage(page, itemsPerPage).then(data => setReviewItems(data))
-      .catch(error => console.error('Error fetching Review data:', error));
+    getOrdersByPage(page, itemsPerPage, stepQuick).then(data => setOrderItems(data)).then(() => {
+      setLoading(false);
+    }).catch(error => console.error('Error fetching orders data:', error));
+    getReviewByPage(page, itemsPerPage).then(data => setReviewItems(data)).then(() => {
+      setLoading(false);
+    }).catch(error => console.error('Error fetching Review data:', error));
   }, []);
 
   const handleOpenModal = (orderItem: IOrderItemsAdmin) => {
@@ -247,46 +251,51 @@ export default function AdminPanelPage() {
                         {t('Recent Reviews')}
                       </h2>
                       <div className="mt-6 flow-root">
-                        <ul role="list" className="-my-5 divide-y divide-gray-200">
-                          {orderReview.map((review, index) => (
-                            <li key={index} className="py-5">
-                              <div className="flex items-center space-x-4">
-                                <div className="flex-shrink-0">
-                                  <img src={`${baseUrl}/uploads/${review.avatar || '/uploads/default.jpg'}`} className="h-8 rounded-full" />
-                                </div>
-                                <div className="relative flex-grow focus-within:ring-2 focus-within:ring-indigo-500">
-                                  <h3 className="text-sm font-semibold text-gray-800">
-                                    <Link to={`/product/${review.productId}`} className="focus:outline-none">
-                                      {/* Extend touch target to entire panel */}
-                                      <span className="absolute inset-0" aria-hidden="true" />
-                                      {review.author}
-                                    </Link>
-                                  </h3>
-                                  <div className="mt-1 flex items-center">
-                                    {[0, 1, 2, 3, 4].map((rating) => (
-                                      <StarIcon
-                                        key={rating}
-                                        className={classNames(
-                                          review.rating > rating ? 'text-yellow-400' : 'text-gray-300',
-                                          'h-5 w-5 flex-shrink-0'
-                                        )}
-                                        aria-hidden="true"
-                                      />
-                                    ))}
+                        <ul role="list" className="-my-5 divide-y divide-gray-200 relative">
+                          {loading ? (
+                            <div className="min-h-[162px]">
+                              <Loader />
+                            </div>
+                          ) : (
+                            orderReview.map((review, index) => (
+                              <li key={index} className="py-5 relative">
+                                <div className="flex items-center space-x-4">
+                                  <div className="flex-shrink-0">
+                                    <img src={`${baseUrl}/uploads/${review.avatar || '/uploads/default.jpg'}`} className="h-8 rounded-full" />
                                   </div>
-                                  <p className="mt-1 line-clamp-2 text-sm text-gray-600">{review.content}</p>
-                                </div>
-                                <div className="ml-auto">
-                                  <div className="mt-1 line-clamp-2 text-sm text-gray-600">
-                                    {new Date(review.orderDate).toLocaleDateString()}
+                                  <div className="relative flex-grow focus-within:ring-2 focus-within:ring-indigo-500">
+                                    <h3 className="text-sm font-semibold text-gray-800">
+                                      <Link to={`/product/${review.productId}`} className="focus:outline-none">
+                                        {/* Extend touch target to entire panel */}
+                                        <span className="absolute inset-0" aria-hidden="true" />
+                                        {review.author}
+                                      </Link>
+                                    </h3>
+                                    <div className="mt-1 flex items-center">
+                                      {[0, 1, 2, 3, 4].map((rating) => (
+                                        <StarIcon
+                                          key={rating}
+                                          className={classNames(
+                                            review.rating > rating ? 'text-yellow-400' : 'text-gray-300',
+                                            'h-5 w-5 flex-shrink-0'
+                                          )}
+                                          aria-hidden="true"
+                                        />
+                                      ))}
+                                    </div>
+                                    <p className="mt-1 line-clamp-2 text-sm text-gray-600">{review.content}</p>
                                   </div>
-                                  <div className="mt-1 line-clamp-2 text-sm text-gray-600">
-                                    {formatDateWithTime(review.orderDate)}
+                                  <div className="ml-auto">
+                                    <div className="mt-1 line-clamp-2 text-sm text-gray-600">
+                                      {new Date(review.orderDate).toLocaleDateString()}
+                                    </div>
+                                    <div className="mt-1 line-clamp-2 text-sm text-gray-600">
+                                      {formatDateWithTime(review.orderDate)}
+                                    </div>
                                   </div>
                                 </div>
-                              </div>
-                            </li>
-                          ))}
+                              </li>
+                            )))}
                         </ul>
                       </div>
                       <div className="mt-6">
@@ -309,31 +318,36 @@ export default function AdminPanelPage() {
                         {t('Admin_Recent_Orders')}
                       </h2>
                       <div className="mt-6 flow-root">
-                        <ul role="list" className="-my-5 divide-y divide-gray-200">
-                          {orderItems.map((item) => (
-                            <li key={item.id} className="py-4">
-                              <div className="flex items-center space-x-4">
-                                <div className="flex-shrink-0">
-                                  <img src={`${baseUrl}/uploads/1200_${item.imagePath || '/uploads/default.jpg'}`} className="h-14" />
+                        <ul role="list" className="-my-5 divide-y divide-gray-200 relative">
+                          {loading ? (
+                            <div className="min-h-[162px]">
+                              <Loader />
+                            </div>
+                          ) : (
+                            orderItems.map((item) => (
+                              <li key={item.id} className="py-4 relative">
+                                <div className="flex items-center space-x-4">
+                                  <div className="flex-shrink-0">
+                                    <img src={`${baseUrl}/uploads/1200_${item.imagePath || '/uploads/default.jpg'}`} className="h-14" />
+                                  </div>
+                                  <div className="min-w-0 flex-1">
+                                    <Link to={`/product/${item.productId}`} className="focus:outline-none">
+                                      <p className="truncate text-sm font-medium text-gray-900">{getLocalizedField(item, 'name', lang)}</p>
+                                      <p className="truncate text-sm text-gray-500">{item.price} €</p>
+                                      <p className="truncate text-sm text-gray-500">{t('Orders_Quantity') + ': ' + item.quantity}</p>
+                                    </Link>
+                                  </div>
+                                  <div>
+                                    <button
+                                      onClick={() => handleOpenModal(item)}
+                                      className="inline-flex items-center rounded-full bg-white px-2.5 py-1.5 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100"
+                                    >
+                                      {t('Admin_View')}
+                                    </button>
+                                  </div>
                                 </div>
-                                <div className="min-w-0 flex-1">
-                                  <Link to={`/product/${item.productId}`} className="focus:outline-none">
-                                    <p className="truncate text-sm font-medium text-gray-900">{getLocalizedField(item, 'name', lang)}</p>
-                                    <p className="truncate text-sm text-gray-500">{item.price} €</p>
-                                    <p className="truncate text-sm text-gray-500">{t('Orders_Quantity') + ': ' + item.quantity}</p>
-                                  </Link>
-                                </div>
-                                <div>
-                                  <button
-                                    onClick={() => handleOpenModal(item)}
-                                    className="inline-flex items-center rounded-full bg-white px-2.5 py-1.5 text-xs font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-100"
-                                  >
-                                    {t('Admin_View')}
-                                  </button>
-                                </div>
-                              </div>
-                            </li>
-                          ))}
+                              </li>
+                            )))}
                         </ul>
                       </div>
                       <div className="mt-6">

@@ -8,6 +8,7 @@ import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/react/20/solid
 import { deleteUserByID, getUsersByPage, getUsersQuantity } from "../../../services/accounts/account-services";
 import { IUserProfile } from "../../../interfaces/Auth/IUserProfile";
 import classNames from "classnames";
+import Loader from "../../../common/Loader/loader";
 
 type Status = 'True' | 'False';
 const statuses: Record<Status, string> = { True: 'text-green-400 bg-green-400/10', False: 'text-rose-400 bg-rose-400/10' }
@@ -25,6 +26,8 @@ export default function UserList() {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const totalPages = Math.ceil(countPage / itemsPerPage);
     const visiblePages = 5;
+    const [loading, setLoading] = useState(true);
+
     let startPage = Math.max(1, page - Math.floor(visiblePages / 2));
     let endPage = Math.min(totalPages, startPage + visiblePages - 1);
 
@@ -39,6 +42,7 @@ export default function UserList() {
     useEffect(() => {
         getUsersByPage(page)
             .then(data => setUsersList(data))
+            .then(() => { setLoading(false); })
             .catch(error => console.error('Error fetching users data:', error));
         getUsersQuantity()
             .then(data => setCountPage(data))
@@ -93,7 +97,7 @@ export default function UserList() {
             </div>
 
             <div className="-mx-4 mt-10 ring-1 ring-gray-200 sm:mx-0 sm:rounded-lg">
-                <table className="mt-6 w-full whitespace-nowrap text-left">
+                <table className="relative mt-6 w-full whitespace-nowrap text-left">
                     <colgroup>
                         <col className="xl:w-1/12" />
                         <col className="xl:w-1/12" />
@@ -137,69 +141,74 @@ export default function UserList() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
-                        {usersList.map((user, index) => (
-                            <tr key={user.id} className="text-gray-700 hover:bg-gray-200 ">
-                                <td className="py-4 pl-8 pr-4 hidden sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
-                                    <div className="font-mono text-sm leading-6">{index+1}</div>
-                                </td>
-                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 ">
-                                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                                        {user.imagePath && user.imagePath.length > 0 ? (
-                                            <img src={`${baseUrl}/uploads/${user.imagePath || '/uploads/default.jpg'}`} className="h-8 w-8 rounded-full" />
-                                        ) : (
-                                            <img
-                                                src={`${baseUrl}/uploads/user404.webp`}
-                                                alt="Image Not Available"
-                                                className="h-8 w-8 rounded-full"
-                                            />
-                                        )}
-                                        <div className="hover:text-indigo-500 md:table-cell">
-                                            <div className="font-medium text-sm leading-6">{user.firstName} {user.lastName}</div>
+                        {loading ? (
+                            <div className="min-h-[662px]">
+                                <Loader />
+                            </div>
+                        ) : (
+                            usersList.map((user, index) => (
+                                <tr key={user.id} className="text-gray-700 hover:bg-gray-200 ">
+                                    <td className="py-4 pl-8 pr-4 hidden sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
+                                        <div className="font-mono text-sm leading-6">{index + 1}</div>
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 ">
+                                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                                            {user.imagePath && user.imagePath.length > 0 ? (
+                                                <img src={`${baseUrl}/uploads/${user.imagePath || '/uploads/default.jpg'}`} className="h-8 w-8 rounded-full" />
+                                            ) : (
+                                                <img
+                                                    src={`${baseUrl}/uploads/user404.webp`}
+                                                    alt="Image Not Available"
+                                                    className="h-8 w-8 rounded-full"
+                                                />
+                                            )}
+                                            <div className="hover:text-indigo-500 md:table-cell">
+                                                <div className="font-medium text-sm leading-6">{user.firstName} {user.lastName}</div>
+                                            </div>
                                         </div>
-                                    </div>
-                                </td>
-                                <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden md:table-cell lg:pr-20 border-t border-b border-gray-200">
-                                    {user.role}
-                                </td>
-                                {/* <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                    </td>
+                                    <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden md:table-cell lg:pr-20 border-t border-b border-gray-200">
+                                        {user.role}
+                                    </td>
+                                    {/* <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
                                     {formatDateFromDate(user?.birthday)}
                                 </td> */}
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                    {user.bonusBalance}
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden sm:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                    {user.email}
-                                </td>
-                                <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden 2xl:table-cell lg:pr-20 border-t border-b border-gray-200">
-                                    <div className="flex items-center justify-end gap-x-2 sm:justify-start">
-                                        <div className={classNames(statuses[user.emailConfirmed ? 'True' : 'False'], 'flex-none rounded-full p-1')}>
-                                            <div className="h-1.5 w-1.5 rounded-full bg-current" />
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        {user.bonusBalance}
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden sm:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        {user.email}
+                                    </td>
+                                    <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden 2xl:table-cell lg:pr-20 border-t border-b border-gray-200">
+                                        <div className="flex items-center justify-end gap-x-2 sm:justify-start">
+                                            <div className={classNames(statuses[user.emailConfirmed ? 'True' : 'False'], 'flex-none rounded-full p-1')}>
+                                                <div className="h-1.5 w-1.5 rounded-full bg-current" />
+                                            </div>
+                                            <div className="hidden font-medium sm:block">{user.emailConfirmed ? 'True' : 'False'}</div>
                                         </div>
-                                        <div className="hidden font-medium sm:block">{user.emailConfirmed ? 'True' : 'False'}</div>
-                                    </div>
-                                </td>
-                                <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden xl:table-cell lg:pr-20 border-t border-b border-gray-200">
-                                    {user.phoneNumber}
-                                </td>
-                                <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden 2xl:table-cell lg:pr-20 border-t border-b border-gray-200">
-                                    <div className="flex items-center justify-end gap-x-2 sm:justify-start">
-                                        <div className={classNames(statuses[user.phoneNumberConfirmed ? 'True' : 'False'], 'flex-none rounded-full p-1')}>
-                                            <div className="h-1.5 w-1.5 rounded-full bg-current" />
+                                    </td>
+                                    <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden xl:table-cell lg:pr-20 border-t border-b border-gray-200">
+                                        {user.phoneNumber}
+                                    </td>
+                                    <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden 2xl:table-cell lg:pr-20 border-t border-b border-gray-200">
+                                        <div className="flex items-center justify-end gap-x-2 sm:justify-start">
+                                            <div className={classNames(statuses[user.phoneNumberConfirmed ? 'True' : 'False'], 'flex-none rounded-full p-1')}>
+                                                <div className="h-1.5 w-1.5 rounded-full bg-current" />
+                                            </div>
+                                            <div className="hidden font-medium sm:block">{user.phoneNumberConfirmed ? 'True' : 'False'}</div>
                                         </div>
-                                        <div className="hidden font-medium sm:block">{user.phoneNumberConfirmed ? 'True' : 'False'}</div>
-                                    </div>
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-b border-gray-200">
-                                    <Link to={`/admin/user/edit-user/${user.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        {t('User_Edit_User')}
-                                    </Link>
-                                    <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                        onClick={() => showDeleteConfirm(user)}>
-                                        {t('User_Delete_User')}
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-b border-gray-200">
+                                        <Link to={`/admin/user/edit-user/${user.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            {t('User_Edit_User')}
+                                        </Link>
+                                        <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            onClick={() => showDeleteConfirm(user)}>
+                                            {t('User_Delete_User')}
+                                        </button>
+                                    </td>
+                                </tr>
+                            )))}
                     </tbody>
                 </table>
 

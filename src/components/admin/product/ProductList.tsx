@@ -10,6 +10,7 @@ import { Link as Scrollink } from 'react-scroll'
 import { ArrowLongLeftIcon, ArrowLongRightIcon } from '@heroicons/react/20/solid';
 import { deleteProductByID, getProductByPage, getProductQuantity } from "../../../services/product/product-services";
 import { getLocalizedField } from "../../../utils/localized/localized";
+import Loader from "../../../common/Loader/loader";
 
 export default function ProductList() {
     const { t, i18n } = useTranslation();
@@ -26,6 +27,8 @@ export default function ProductList() {
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const totalPages = Math.ceil(countPage / itemsPerPage);
     const visiblePages = 5;
+    const [loading, setLoading] = useState(true);
+
     let startPage = Math.max(1, page - Math.floor(visiblePages / 2));
     let endPage = Math.min(totalPages, startPage + visiblePages - 1);
 
@@ -43,6 +46,7 @@ export default function ProductList() {
                 type: ProductReducerActionType.SET,
                 payload: { products: data }
             }))
+            .then(() => { setLoading(false); })
             .catch(error => console.error('Error fetching product data:', error));
         getProductQuantity()
             .then(data => setCountPage(data))
@@ -98,7 +102,7 @@ export default function ProductList() {
             </div>
 
             <div className="-mx-4 mt-10 ring-1 ring-gray-200 sm:mx-0 sm:rounded-lg">
-                <table className="mt-6 w-full whitespace-nowrap text-left">
+                <table className="relative mt-6 w-full whitespace-nowrap text-left">
                     <colgroup>
                         <col className="xl:w-1/12" />
                         <col className="xl:w-3/12" />
@@ -138,68 +142,73 @@ export default function ProductList() {
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
-                        {productList.map((product) => (
-                            <tr key={product.id} className="text-gray-700 hover:bg-gray-200 ">
-                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
-                                    <div className="font-mono text-sm leading-6">{product.id}</div>
-                                </td>
-                                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 whitespace-normal">
-                                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                                        {product.images && product.images.length > 0 ? (
-                                            <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`} className="w-30 rounded-lg" />
-                                        ) : (
+                        {loading ? (
+                            <div className="min-h-[662px]">
+                                <Loader />
+                            </div>
+                        ) : (
+                            productList.map((product) => (
+                                <tr key={product.id} className="text-gray-700 hover:bg-gray-200 ">
+                                    <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
+                                        <div className="font-mono text-sm leading-6">{product.id}</div>
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 whitespace-normal">
+                                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                                            {product.images && product.images.length > 0 ? (
+                                                <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/default.jpg'}`} className="w-30 rounded-lg" />
+                                            ) : (
                                                 <img
                                                     src={`${baseUrl}/uploads/imagenot.webp`}
                                                     alt="Image Not Available"
                                                     className="w-30 rounded-lg"
                                                 />
-                                        )}
-                                        <Link to={`/product/${product.id}`} className="hover:text-indigo-500 hidden md:table-cell">
-                                            <div className="font-mono text-sm leading-6">{getLocalizedField(product, 'name', lang)}</div>
+                                            )}
+                                            <Link to={`/product/${product.id}`} className="hover:text-indigo-500 hidden md:table-cell">
+                                                <div className="font-mono text-sm leading-6">{getLocalizedField(product, 'name', lang)}</div>
+                                            </Link>
+                                        </div>
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden 2xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                                        {product.article}
+                                    </td>
+                                    <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden xl:table-cell lg:pr-20 border-t border-b border-gray-200">
+                                        {getLocalizedField(product, 'categoryName', lang)}
+                                    </td>
+                                    <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden md:table-cell lg:pr-20 border-t border-b border-gray-200">
+                                        {product.price} €
+                                    </td>
+                                    <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden xl:table-cell lg:pr-20 border-t border-b border-gray-200">
+                                        <div className="col-span-1">
+                                            {product.storages?.map((storage, index) => (
+                                                <p key={index} className="text-sm mb-2">
+                                                    {`${storage.size}`}
+                                                </p>
+                                            ))}
+                                        </div>
+                                    </td>
+                                    <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden xl:table-cell lg:pr-20 border-t border-b border-gray-200">
+                                        <div className="col-span-1">
+                                            {product.storages?.map((storage, index) => (
+                                                <p key={index} className="text-sm mb-2">
+                                                    {`${storage.productQuantity}`}
+                                                </p>
+                                            ))}
+                                        </div>
+                                    </td>
+                                    <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-b border-gray-200">
+                                        <Link to={`/admin/product/add-storage/${product.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            {t('Products_Add_Storage')}
                                         </Link>
-                                    </div>
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden 2xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                                    {product.article}
-                                </td>
-                                <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden xl:table-cell lg:pr-20 border-t border-b border-gray-200">
-                                    {getLocalizedField(product, 'categoryName', lang)}
-                                </td>
-                                <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden md:table-cell lg:pr-20 border-t border-b border-gray-200">
-                                    {product.price} €
-                                </td>
-                                <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden xl:table-cell lg:pr-20 border-t border-b border-gray-200">
-                                    <div className="col-span-1">
-                                        {product.storages?.map((storage, index) => (
-                                            <p key={index} className="text-sm mb-2">
-                                                {`${storage.size}`}
-                                            </p>
-                                        ))}
-                                    </div>
-                                </td>
-                                <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden xl:table-cell lg:pr-20 border-t border-b border-gray-200">
-                                    <div className="col-span-1">
-                                        {product.storages?.map((storage, index) => (
-                                            <p key={index} className="text-sm mb-2">
-                                                {`${storage.productQuantity}`}
-                                            </p>
-                                        ))}
-                                    </div>
-                                </td>
-                                <td className="py-4 pl-8 pr-4 text-right text-sm leading-6 sm:table-cell sm:pr-6 lg:pr-8 border-t border-b border-gray-200">
-                                    <Link to={`/admin/product/add-storage/${product.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        {t('Products_Add_Storage')}
-                                    </Link>
-                                    <Link to={`/admin/product/edit-product-en/${product.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
-                                        {t('Products_Edit_Product')}
-                                    </Link>
-                                    <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                                        onClick={() => showDeleteConfirm(product)}>
-                                        {t('Products_Delete_Product')}
-                                    </button>
-                                </td>
-                            </tr>
-                        ))}
+                                        <Link to={`/admin/product/edit-product-en/${product.id}`} className="mb-2 block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+                                            {t('Products_Edit_Product')}
+                                        </Link>
+                                        <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                                            onClick={() => showDeleteConfirm(product)}>
+                                            {t('Products_Delete_Product')}
+                                        </button>
+                                    </td>
+                                </tr>
+                            )))}
                     </tbody>
                 </table>
 
@@ -283,22 +292,22 @@ export default function ProductList() {
             >
                 <p>{t('Products_Model')}</p>
                 <div className="flex justify-end gap-4 mt-4">
-                <button
-                    key="delete"
-                    type="button"
-                    onClick={handleDeleteProduct}
-                    className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                    {t('Products_Delete')}
-                </button>
-                <button
-                    key="cancel"
-                    onClick={handleCancel}
-                    className="bg-gray-200 hover:bg-gray-300 text-gray-900 font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                >
-                    {t('Products_Cancel')}
-                </button>
-            </div>
+                    <button
+                        key="delete"
+                        type="button"
+                        onClick={handleDeleteProduct}
+                        className="bg-indigo-600 hover:bg-indigo-700 text-white font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                        {t('Products_Delete')}
+                    </button>
+                    <button
+                        key="cancel"
+                        onClick={handleCancel}
+                        className="bg-gray-200 hover:bg-gray-300 text-gray-900 font-medium py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+                    >
+                        {t('Products_Cancel')}
+                    </button>
+                </div>
             </Modal>
         </div>
     );

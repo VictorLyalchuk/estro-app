@@ -26,6 +26,8 @@ import { useTranslation } from 'react-i18next'
 import { Link as Scrollink } from 'react-scroll'
 import classNames from 'classnames'
 import Loader from '../../../common/Loader/loader'
+import Carousel from 'react-material-ui-carousel'
+import Brightness1RoundedIcon from '@mui/icons-material/Brightness1Rounded';
 
 export default function CatalogHome() {
     const initialSortOptions: ISortOptions[] = [
@@ -67,6 +69,7 @@ export default function CatalogHome() {
     const [categoriesLoaded, setCategoriesLoaded] = useState(false);
     const [searchValue, setSearchValue] = useState('');
     const [loading, setLoading] = useState(true);
+    const [hoveredProductId, setHoveredProductId] = useState<number | null>(null);
 
     const filterValueCounts = filterOptionsList.map((section) =>
         filters.reduce((count, filter) => {
@@ -172,18 +175,18 @@ export default function CatalogHome() {
     const getInfo = async () => {
         try {
             setFilterOptionsList([]);
-    
+
             // Витягування категорій і фільтрів з бази даних
             const mainCategories = await getMainCategories();
-    
+
             // Фільтруємо категорії за gender, якщо він є, або використовуємо всі категорії
             setFilterOptionsList(prevFilters => {
                 const filteredCategories = gender
                     ? mainCategories.filter(mainCategory => mainCategory.urlName === gender)
                     : mainCategories;
-    
+
                 const subCategoryWithOptions: IInfo[] = [];
-    
+
                 filteredCategories.forEach(mainCategory => {
                     mainCategory.subCategories.forEach((subCategory, index) => {
                         const options = subCategory.categories.map(category => ({
@@ -204,7 +207,7 @@ export default function CatalogHome() {
                             })(),
                             value: category.urlName
                         }));
-    
+
                         subCategoryWithOptions.push({
                             id: subCategory.id.toString(),
                             name_en: subCategory.name_en,
@@ -215,15 +218,15 @@ export default function CatalogHome() {
                             options: options
                         });
                     });
-    
+
                     setSubCategoryIndex(mainCategory.subCategories.length);
                     setCategoriesLoaded(true);
                     return [...prevFilters, ...subCategoryWithOptions];
                 });
-    
+
                 return [...prevFilters, ...subCategoryWithOptions];
             });
-    
+
             // Отримання і трансформація додаткових даних
             const infos = await getInfoList();
             const transformedInfos: IInfo[] = infos.map(info => {
@@ -233,7 +236,7 @@ export default function CatalogHome() {
                     ...transformToOptions(info.sizes || [], i18next.language),
                     ...transformToOptions(info.materials || [], i18next.language),
                 ];
-    
+
                 return {
                     id: info.id,
                     name_en: info.name_en,
@@ -244,7 +247,7 @@ export default function CatalogHome() {
                     options: allOptions.length > 0 ? allOptions : null
                 };
             });
-    
+
             setFilterOptionsList(prevFilters => [...prevFilters, ...transformedInfos]);
         } catch (error) {
             console.error('Error fetching data:', error);
@@ -672,7 +675,7 @@ export default function CatalogHome() {
                                 productList.map((product) => (
                                     <div key={product.id} className="group relative">
                                         <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200 xl:aspect-h-8 xl:aspect-w-7  hover13">
-                                            <Link to={`/product/${product.id}`} className="group">
+                                            {/* <Link to={`/product/${product.id}`} className="group">
                                                 {product.images && product.images.length > 0 ? (
                                                     <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
                                                         className="h-full w-full object-cover object-center " />
@@ -683,7 +686,54 @@ export default function CatalogHome() {
                                                         className="h-full w-full object-cover object-center "
                                                     />
                                                 )}
-                                            </Link>
+                                            </Link> */}
+                                            <div
+                                                key={product.id}
+                                                onMouseEnter={() => setHoveredProductId(product.id)}
+                                                onMouseLeave={() => setHoveredProductId(null)}
+                                            >
+                                                {hoveredProductId === product.id && product.images && product.images?.length > 0 ? (
+                                                    <Carousel
+                                                        swipe
+                                                        animation="slide"
+                                                        duration={500}
+                                                        autoPlay={false}
+                                                        indicatorIconButtonProps={{ style: { width: '35px', height: '35px' } }}
+                                                        IndicatorIcon={<Brightness1RoundedIcon fontSize='small' />}
+                                                        indicators={false}
+                                                        className="h-full w-full overflow-hidden"
+                                                    >
+                                                        {product.images?.map((image, index) => (
+                                                            <div
+                                                                key={index}
+                                                                className="w-full h-full flex items-center justify-center overflow-hidden"
+                                                            >
+                                                                <Link to={`/product/${product.id}`} className="group">
+                                                                    <img
+                                                                        src={`${baseUrl}/uploads/1200_${image?.imagePath || 'imagenot.webp'}`}
+                                                                        alt={getLocalizedField(product, 'name', lang)}
+                                                                        className="h-full w-full object-cover object-center"
+                                                                    />
+                                                                </Link>
+                                                            </div>
+
+                                                        ))}
+                                                    </Carousel>
+                                                ) : (
+                                                    <Link to={`/product/${product.id}`} className="group">
+                                                        {product.images && product.images.length > 0 ? (
+                                                            <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
+                                                                className="h-full w-full object-cover object-center " />
+                                                        ) : (
+                                                            <img
+                                                                src={`${baseUrl}/uploads/imagenot.webp`}
+                                                                alt="Image Not Available"
+                                                                className="h-full w-full object-cover object-center "
+                                                            />
+                                                        )}
+                                                    </Link>
+                                                )}
+                                            </div>
                                             <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
                                                 <div className={classNames(
                                                     isFavorite(product.id) ? 'text-red-600' : 'text-gray-400 hover:text-gray-500',
@@ -697,7 +747,6 @@ export default function CatalogHome() {
                                                     )}
                                                 </div>
                                             </div>
-
                                         </div>
                                         <h3 className="mt-4 text-sm text-gray-700 line-clamp-2 break-words ">{getLocalizedField(product, 'name', lang).split(' ').slice(0, 3).join(' ')}</h3>
                                         <p className="mt-1 text-xs text-gray-500">{product.article}</p>

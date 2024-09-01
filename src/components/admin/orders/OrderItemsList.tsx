@@ -11,6 +11,7 @@ import { Modal } from 'antd';
 import { ICreateOrderItemsAdmin } from '../../../interfaces/Order/ICreateOrderItemsAdmin';
 import { formatDateWithTime } from '../../../services/custom/format-data';
 import { OrderStatus } from '../../../interfaces/Type/OrderStatus';
+import Loader from '../../../common/Loader/loader';
 
 const statusOptions: OrderStatus[] = [
   'Order placed',
@@ -41,6 +42,8 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const totalPages = Math.ceil(countPage / itemsPerPage);
   const visiblePages = 5;
+  const [loading, setLoading] = useState(true);
+
   let startPage = Math.max(1, page - Math.floor(visiblePages / 2));
   let endPage = Math.min(totalPages, startPage + visiblePages - 1);
 
@@ -64,7 +67,7 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
       }
     };
 
-    loadOrders();
+    loadOrders().then(() => { setLoading(false); })
   }, [page]);
 
   const handleSelectChange = (orderItem: IOrderItemsAdmin, newStatus: OrderStatus) => {
@@ -156,7 +159,7 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
       </div>
 
       <div className="-mx-4 mt-10 ring-1 ring-gray-200 sm:mx-0 sm:rounded-lg">
-        <table className="mt-6 w-full whitespace-nowrap text-left">
+        <table className="relative mt-6 w-full whitespace-nowrap text-left">
           <colgroup>
             <col className="xl:w-1/12" />
             <col className="xl:w-4/12" />
@@ -200,170 +203,175 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
             </tr>
           </thead>
           <tbody className="divide-y divide-white/5">
-            {orderItems.map((item) => (
-              <tr key={`${item.orderId}-${item.productId}-${item.size}`} className="text-gray-700 hover:bg-gray-200 ">
-                <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
-                  <div className="font-mono text-sm leading-6">{t('Orders_Order')} #{item.orderId}-{item.id}</div>
-                </td>
-                <td className="py-4 pl-8 pr-4 hidden lg:table-cell sm:pr-8 border-t border-b border-gray-200 whitespace-normal">
-                  <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-                    {item.imagePath && item.imagePath.length > 0 ? (
-                      <img src={`${baseUrl}/uploads/1200_${item.imagePath || '/uploads/default.jpg'}`} className="h-20 rounded-md" />
-                    ) : (
-                      <img
-                        src={`${baseUrl}/uploads/user404.webp`}
-                        alt="Image Not Available"
-                        className="h-20 rounded-md"
-                      />
-                    )}
-                    <div className="hover:text-indigo-500 md:table-cell">
-                      <div className="font-medium text-sm leading-6" >{getLocalizedField(item, 'name', lang)}</div>
+            {loading ? (
+              <div className="min-h-[662px]">
+                <Loader />
+              </div>
+            ) : (
+              orderItems.map((item) => (
+                <tr key={`${item.orderId}-${item.productId}-${item.size}`} className="text-gray-700 hover:bg-gray-200 ">
+                  <td className="py-4 pl-8 pr-4 sm:table-cell sm:pr-8 border-t border-b border-gray-200 hover:border-gray-100">
+                    <div className="font-mono text-sm leading-6">{t('Orders_Order')} #{item.orderId}-{item.id}</div>
+                  </td>
+                  <td className="py-4 pl-8 pr-4 hidden lg:table-cell sm:pr-8 border-t border-b border-gray-200 whitespace-normal">
+                    <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
+                      {item.imagePath && item.imagePath.length > 0 ? (
+                        <img src={`${baseUrl}/uploads/1200_${item.imagePath || '/uploads/default.jpg'}`} className="h-20 rounded-md" />
+                      ) : (
+                        <img
+                          src={`${baseUrl}/uploads/user404.webp`}
+                          alt="Image Not Available"
+                          className="h-20 rounded-md"
+                        />
+                      )}
+                      <div className="hover:text-indigo-500 md:table-cell">
+                        <div className="font-medium text-sm leading-6" >{getLocalizedField(item, 'name', lang)}</div>
+                      </div>
                     </div>
-                  </div>
-                </td>
-                <td className="py-4 pl-8 pr-8 text-sm leading-6 md:table-cell lg:pr-20 border-t border-b border-gray-200">
-                  {item.size}
-                </td>
-                <td className="py-4 pl-8 pr-4 text-sm leading-6 xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                  {item.quantity}
-                </td>
-                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden sm:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                  {item.product.storages?.map((storage, index) => {
-                    const isSizeMatch = Number(storage.size) === Number(item.size);
-                    if (isSizeMatch) {
-                      return <span key={index}>{storage.productQuantity}</span>;
-                    }
-                    return null;
-                  })}
-                </td>
-                <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden 2xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
-                  {item.price} €
-                </td>
-                <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden xl:table-cell lg:pr-20 border-t border-b border-gray-200">
-                  <div>
-                    {new Date(item.dueDate).toLocaleDateString()}
-                  </div>
-                  <div>
-                    {formatDateWithTime(item.dueDate)}
-                  </div>
-                </td>
-                <td className="py-4 pl-8 pr-8 text-sm leading-6 sm:table-cell lg:pr-20 border-t border-b border-gray-200">
-                  <div className="flex items-center justify-end gap-x-2 sm:justify-start">
-                    <select
-                      className={`p-2 border rounded ${getStatusClass(item.status)}`}
-                      value={item.status}
-                      onChange={(e) => { handleSelectChange(item, e.target.value as OrderStatus); }}
-                    >
-                      {statusOptions.filter((status) => {
-                        const isSizeInStock = item.product.storages?.some(
-                          (storage) => Number(storage.size) === Number(item.size) && storage.productQuantity >= item.quantity && storage.inStock === true
-                        );
-
-                        if (item.status === 'Cancelled' || item.status === 'Returned') {
-                          return status === item.status;
-                        }
-
-                        // Прибираємо статус "Returned" зі списку, якщо поточний статус не "Delivered"
-                        if (status === 'Returned' && item.status !== 'Delivered') {
-                          return false;
-                        }
-
-                        // Прибираємо статус "Order placed", якщо поточний статус "Processing", "Shipped", або "Delivered"
-                        if (status === 'Order placed' && (item.status === 'Processing' || item.status === 'Shipped' || item.status === 'Delivered')) {
-                          return false;
-                        }
-
-                        // Прибираємо статус "Processing", якщо поточний статус "Shipped" або "Delivered"
-                        if (status === 'Processing' && (item.status === 'Shipped' || item.status === 'Delivered')) {
-                          return false;
-                        }
-
-                        // Прибираємо статус "Shipped", якщо поточний статус "Delivered"
-                        if (status === 'Shipped' && item.status === 'Delivered') {
-                          return false;
-                        }
-
-                        // Remove "Shipped" or "Delivered" if the current status is "Order placed"
-                        if (['Shipped', 'Delivered'].includes(status) && item.status === 'Order placed') {
-                          return false;
-                        }
-
-                        // Прибираємо статус "Cancelled", якщо поточний статус "Delivered" або "Returned"
-                        if (status === 'Cancelled' && (item.status === 'Delivered' || item.status === 'Returned')) {
-                          return false;
-                        }
-
-                        // Прибираємо статус "Delivered", якщо поточний статус "Processing"
-                        if (status === 'Delivered' && item.status === 'Processing') {
-                          return false;
-                        }
-
-                        // Якщо товару немає на складі, якщо поточний статус "Delivered"
-                        if (!isSizeInStock && item.status === 'Delivered') {
-                          // Прибираємо статуси, які вимагають наявності товару
-                          if (['Processing', 'Shipped'].includes(status)) {
-                            return false;
-                          }
-                        }
-                        else if (!isSizeInStock && item.status === 'Shipped') {
-                          // Прибираємо статуси, які вимагають наявності товару
-                          if (['Processing'].includes(status)) {
-                            return false;
-                          }
-                        }
-                        else if (!isSizeInStock && item.status === 'Processing') {
-                          // Не прибираємо інші статуси, дозволяючи вибрати 'Shipped', 'Delivered' і 'Returned'
-                        }
-                        else if (!isSizeInStock) {
-                          // Прибираємо статуси, які вимагають наявності товару
-                          if (['Processing', 'Shipped', 'Delivered'].includes(status)) {
-                            return false;
-                          }
-                        }
-                        return true;
-                      })
-                        .map((status) => {
-                          let color;
-                          switch (status) {
-                            case 'Order placed':
-                              color = 'bg-yellow-100';
-                              break;
-                            case 'Processing':
-                              color = 'bg-orange-200';
-                              break;
-                            case 'Shipped':
-                              color = 'bg-blue-200';
-                              break;
-                            case 'Delivered':
-                              color = 'bg-green-300';
-                              break;
-                            case 'Cancelled':
-                              color = 'bg-red-300';
-                              break;
-                            case 'Returned':
-                              color = 'bg-gray-200';
-                              break;
-                            default:
-                              color = 'bg-black-200';
-                          }
-                          return (
-                            <option key={status} value={status} className={color}>
-                              {t(`${status}`)}
-                              {/* {status} */}
-                            </option>
+                  </td>
+                  <td className="py-4 pl-8 pr-8 text-sm leading-6 md:table-cell lg:pr-20 border-t border-b border-gray-200">
+                    {item.size}
+                  </td>
+                  <td className="py-4 pl-8 pr-4 text-sm leading-6 xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                    {item.quantity}
+                  </td>
+                  <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden sm:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                    {item.product.storages?.map((storage, index) => {
+                      const isSizeMatch = Number(storage.size) === Number(item.size);
+                      if (isSizeMatch) {
+                        return <span key={index}>{storage.productQuantity}</span>;
+                      }
+                      return null;
+                    })}
+                  </td>
+                  <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden 2xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
+                    {item.price} €
+                  </td>
+                  <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden xl:table-cell lg:pr-20 border-t border-b border-gray-200">
+                    <div>
+                      {new Date(item.dueDate).toLocaleDateString()}
+                    </div>
+                    <div>
+                      {formatDateWithTime(item.dueDate)}
+                    </div>
+                  </td>
+                  <td className="py-4 pl-8 pr-8 text-sm leading-6 sm:table-cell lg:pr-20 border-t border-b border-gray-200">
+                    <div className="flex items-center justify-end gap-x-2 sm:justify-start">
+                      <select
+                        className={`p-2 border rounded ${getStatusClass(item.status)}`}
+                        value={item.status}
+                        onChange={(e) => { handleSelectChange(item, e.target.value as OrderStatus); }}
+                      >
+                        {statusOptions.filter((status) => {
+                          const isSizeInStock = item.product.storages?.some(
+                            (storage) => Number(storage.size) === Number(item.size) && storage.productQuantity >= item.quantity && storage.inStock === true
                           );
-                        })}
-                    </select>
-                  </div>
-                </td>
-                <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden 2xl:table-cell lg:pr-20 border-t border-b border-gray-200">
-                  <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    onClick={() => handleOpenModal(item)}>
-                    {t('Orders_Invoice')}
-                  </button>
-                </td>
-              </tr>
-            ))}
+
+                          if (item.status === 'Cancelled' || item.status === 'Returned') {
+                            return status === item.status;
+                          }
+
+                          // Прибираємо статус "Returned" зі списку, якщо поточний статус не "Delivered"
+                          if (status === 'Returned' && item.status !== 'Delivered') {
+                            return false;
+                          }
+
+                          // Прибираємо статус "Order placed", якщо поточний статус "Processing", "Shipped", або "Delivered"
+                          if (status === 'Order placed' && (item.status === 'Processing' || item.status === 'Shipped' || item.status === 'Delivered')) {
+                            return false;
+                          }
+
+                          // Прибираємо статус "Processing", якщо поточний статус "Shipped" або "Delivered"
+                          if (status === 'Processing' && (item.status === 'Shipped' || item.status === 'Delivered')) {
+                            return false;
+                          }
+
+                          // Прибираємо статус "Shipped", якщо поточний статус "Delivered"
+                          if (status === 'Shipped' && item.status === 'Delivered') {
+                            return false;
+                          }
+
+                          // Remove "Shipped" or "Delivered" if the current status is "Order placed"
+                          if (['Shipped', 'Delivered'].includes(status) && item.status === 'Order placed') {
+                            return false;
+                          }
+
+                          // Прибираємо статус "Cancelled", якщо поточний статус "Delivered" або "Returned"
+                          if (status === 'Cancelled' && (item.status === 'Delivered' || item.status === 'Returned')) {
+                            return false;
+                          }
+
+                          // Прибираємо статус "Delivered", якщо поточний статус "Processing"
+                          if (status === 'Delivered' && item.status === 'Processing') {
+                            return false;
+                          }
+
+                          // Якщо товару немає на складі, якщо поточний статус "Delivered"
+                          if (!isSizeInStock && item.status === 'Delivered') {
+                            // Прибираємо статуси, які вимагають наявності товару
+                            if (['Processing', 'Shipped'].includes(status)) {
+                              return false;
+                            }
+                          }
+                          else if (!isSizeInStock && item.status === 'Shipped') {
+                            // Прибираємо статуси, які вимагають наявності товару
+                            if (['Processing'].includes(status)) {
+                              return false;
+                            }
+                          }
+                          else if (!isSizeInStock && item.status === 'Processing') {
+                            // Не прибираємо інші статуси, дозволяючи вибрати 'Shipped', 'Delivered' і 'Returned'
+                          }
+                          else if (!isSizeInStock) {
+                            // Прибираємо статуси, які вимагають наявності товару
+                            if (['Processing', 'Shipped', 'Delivered'].includes(status)) {
+                              return false;
+                            }
+                          }
+                          return true;
+                        })
+                          .map((status) => {
+                            let color;
+                            switch (status) {
+                              case 'Order placed':
+                                color = 'bg-yellow-100';
+                                break;
+                              case 'Processing':
+                                color = 'bg-orange-200';
+                                break;
+                              case 'Shipped':
+                                color = 'bg-blue-200';
+                                break;
+                              case 'Delivered':
+                                color = 'bg-green-300';
+                                break;
+                              case 'Cancelled':
+                                color = 'bg-red-300';
+                                break;
+                              case 'Returned':
+                                color = 'bg-gray-200';
+                                break;
+                              default:
+                                color = 'bg-black-200';
+                            }
+                            return (
+                              <option key={status} value={status} className={color}>
+                                {t(`${status}`)}
+                                {/* {status} */}
+                              </option>
+                            );
+                          })}
+                      </select>
+                    </div>
+                  </td>
+                  <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden 2xl:table-cell lg:pr-20 border-t border-b border-gray-200">
+                    <button className="block mx-auto w-full rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                      onClick={() => handleOpenModal(item)}>
+                      {t('Orders_Invoice')}
+                    </button>
+                  </td>
+                </tr>
+              )))}
           </tbody>
         </table>
 
