@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Dialog, RadioGroup, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { IProduct, IStorages } from '../../../interfaces/Product/IProduct'
@@ -9,9 +9,8 @@ import { BagReducerActionType } from '../../../store/bag/BagReducer';
 import { IBag } from '../../../interfaces/Bag/IBag';
 import { useNavigate } from 'react-router-dom'
 import { createBag } from '../../../services/bag/bag-services'
-import Carousel from 'react-material-ui-carousel';
 import { Image } from 'antd';
-import { HeartIcon } from '@heroicons/react/24/solid';
+import { HeartIcon, StarIcon } from '@heroicons/react/24/solid';
 import { HeartIcon as OutlineHeartIcon } from '@heroicons/react/24/outline'
 import { RootState } from '../../../store/store';
 import { addToFavorite, removeFromFavorite } from '../../../store/favourites/FavoritesReducer';
@@ -22,6 +21,8 @@ import ManSizeGuideComponent from './ManSizeGuideComponent';
 import { t } from "i18next";
 import { useTranslation } from 'react-i18next'
 import { getLocalizedField } from '../../../utils/localized/localized'
+import SimpleCarousel from '../../../ui/carousel/SimpleCarousel'
+import { getUserProductRating } from '../../../services/userProductReview/user-product-review-services'
 
 function classNames(...classes: string[]) {
     return classes.filter(Boolean).join(' ')
@@ -41,11 +42,17 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const favoriteProducts = useSelector((state: RootState) => state.favorites.favoriteProducts);
+    const [ratings, setRatings] = useState<IUserProductRating>();
     const isFavorite = (productId: number) => favoriteProducts.some((product: { productId: number }) => product.productId === productId);
     const [isQuickviewOpen, setQuickviewOpen] = useState(false);
     const handleClose = () => {
         setOpen(true);
     };
+
+    useEffect(() => {
+        getUserProductRating(product.id).then(data => setRatings(data)).catch(error => console.error('Error fetching ratings data:', error));
+    }, []);
+
     const addToBag = async () => {
         if (!isAuth) {
             navigate("/auth");
@@ -73,6 +80,7 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
             }
         }
     }
+
     const favoriteToggle = async (product: IProduct, e: React.MouseEvent<SVGSVGElement, MouseEvent>) => {
         e.preventDefault();
         if (user) {
@@ -163,17 +171,7 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                         <div className="grid w-full grid-cols-1 items-start gap-x-6 gap-y-8 sm:grid-cols-12 lg:gap-x-8">
                                             <div className="aspect-h-3 aspect-w-2 overflow-hidden sm:col-span-4 lg:col-span-5">
                                                 {product.images && product.images.length > 0 ? (
-                                                    <Carousel swipe animation="fade" duration={500} autoPlay={true} indicators={false} className="absolute ">
-                                                        {product.images?.map((image, index) => (
-                                                            <div key={index}>
-                                                                <Image
-                                                                    src={`${baseUrl}/uploads/1200_${image.imagePath || '/uploads/imagenot.webp'}`}
-                                                                    className="h-full w-full object-cover object-center"
-                                                                    alt={getLocalizedField(product, 'name', lang)}
-                                                                />
-                                                            </div>
-                                                        ))}
-                                                    </Carousel>
+                                                    <SimpleCarousel product={product} lang={lang} />
                                                 ) : (
                                                     <div >
                                                         <Image
@@ -197,27 +195,27 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                                     </div>
 
                                                     {/* Reviews */}
-                                                    {/* <div className="mt-6">
+                                                    <div className="mt-6">
                                                         <h4 className="sr-only">Reviews</h4>
                                                         <div className="flex items-center">
                                                             <div className="flex items-center">
-                                                                {[0, 1, 2, 3, 4].map((rating) => (
+                                                                {[0, 1, 2, 3, 4].map((rating, index) => (
                                                                     <StarIcon
-                                                                        key={rating}
+                                                                        key={index}
                                                                         className={classNames(
-                                                                            product.rating > rating ? 'text-gray-900' : 'text-gray-200',
+                                                                            ratings && ratings?.averageRating > rating ? 'text-yellow-400' : 'text-gray-300',
                                                                             'h-5 w-5 flex-shrink-0'
                                                                         )}
                                                                         aria-hidden="true"
                                                                     />
                                                                 ))}
                                                             </div>
-                                                            <p className="sr-only">{product.rating} out of 5 stars</p>
-                                                            <a href="#" className="ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
-                                                                {product.reviewCount} reviews
-                                                            </a>
+                                                            <p className="sr-only">{ratings?.averageRating} {t('Product_OutOf')} 5 {t('Product_Stars')}</p>
+                                                            <div className="cursor-pointer ml-3 text-sm font-medium text-indigo-600 hover:text-indigo-500">
+                                                                {ratings?.totalCount} {t('Product_Reviews')}
+                                                            </div>
                                                         </div>
-                                                    </div> */}
+                                                    </div>
                                                 </section>
 
                                                 <section aria-labelledby="options-heading" className="mt-10">
@@ -234,14 +232,12 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                                                 </a>
                                                             </div>
 
-
-
                                                             <RadioGroup
                                                                 value={selectedSize}
                                                                 onChange={setSelectedSize}
                                                                 className="mt-4">
                                                                 <RadioGroup.Label className="sr-only">Choose a size</RadioGroup.Label>
-                                                                <div className="grid grid-cols-4 gap-4">
+                                                                <div className="grid grid-cols-5 gap-4">
                                                                     {product.storages?.map((size) => (
                                                                         <RadioGroup.Option
                                                                             key={size.size}
