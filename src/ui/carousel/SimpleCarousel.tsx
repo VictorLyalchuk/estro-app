@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { getLocalizedField } from "../../utils/localized/localized";
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
@@ -16,14 +16,35 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang, isHovere
   const [currentIndex, setCurrentIndex] = useState(0);
   const baseUrl = APP_ENV.BASE_URL;
 
-  const images = product.images || []; 
+  const images = product.images || [];
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (carouselRef.current) {
+        carouselRef.current.scrollTo({ 
+          left: currentIndex * carouselRef.current.clientWidth, 
+          behavior: 'smooth' 
+        });
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    
+    // Викликати handleResize під час першого рендеру, щоб позиція каруселі була правильною
+    handleResize();
+
+    return () => window.removeEventListener('resize', handleResize);
+  }, [currentIndex]);
 
   const goToPrev = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (carouselRef.current) {
       setCurrentIndex(prevIndex => {
         const newIndex = (prevIndex === 0 ? images.length - 1 : prevIndex - 1);
-        carouselRef.current?.scrollTo({ left: newIndex * carouselRef.current.clientWidth, behavior: 'smooth' });
+        carouselRef.current?.scrollTo({ 
+          left: newIndex * carouselRef.current.clientWidth, 
+          behavior: 'smooth' 
+        });
         return newIndex;
       });
     }
@@ -34,7 +55,10 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang, isHovere
     if (carouselRef.current) {
       setCurrentIndex(prevIndex => {
         const newIndex = (prevIndex === images.length - 1 ? 0 : prevIndex + 1);
-        carouselRef.current?.scrollTo({ left: newIndex * carouselRef.current.clientWidth, behavior: 'smooth' });
+        carouselRef.current?.scrollTo({ 
+          left: newIndex * carouselRef.current.clientWidth, 
+          behavior: 'smooth' 
+        });
         return newIndex;
       });
     }
@@ -43,7 +67,10 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang, isHovere
   const handleIndicatorClick = (index: number, event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (carouselRef.current) {
-      carouselRef.current.scrollTo({ left: index * carouselRef.current.clientWidth, behavior: 'smooth' });
+      carouselRef.current.scrollTo({ 
+        left: index * carouselRef.current.clientWidth, 
+        behavior: 'smooth' 
+      });
       setCurrentIndex(index);
     }
   };
@@ -76,21 +103,18 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang, isHovere
       {/* Show controls and indicators only when the product is hovered */}
       {isHovered && (
         <>
-          {/* Previous Button */}
           <button
             onClick={goToPrev}
             className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#4F5050] text-white hover:bg-[#3a3b3b] rounded-full p-2.5 shadow-lg flex items-center justify-center"
           >
             <ArrowBackIosNewIcon fontSize="small" />
           </button>
-          {/* Next Button */}
           <button
             onClick={goToNext}
             className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#4F5050] text-white hover:bg-[#3a3b3b] rounded-full p-2.5 shadow-xl flex items-center justify-center"
           >
             <ArrowForwardIosIcon fontSize="small" />
           </button>
-          {/* Indicators */}
           <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
             {images.map((_, index) => (
               <button
