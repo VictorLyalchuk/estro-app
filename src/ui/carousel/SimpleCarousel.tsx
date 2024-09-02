@@ -8,14 +8,15 @@ import { IProduct } from "../../interfaces/Product/IProduct";
 interface SimpleCarouselProps {
   product: IProduct;
   lang: string;
+  isHovered: boolean;
 }
 
-const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang }) => {
+const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang, isHovered }) => {
   const carouselRef = useRef<HTMLDivElement>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
   const baseUrl = APP_ENV.BASE_URL;
 
-  const images = product.images || []; // Default to empty array if images is null
+  const images = product.images || []; 
 
   const goToPrev = (event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
@@ -72,30 +73,35 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang }) => {
           </div>
         )}
       </div>
-      {/* Previous Button */}
-      <button
-        onClick={goToPrev}
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#4F5050] text-white hover:bg-[#3a3b3b] rounded-full p-2.5 shadow-lg flex items-center justify-center"
-      >
-        <ArrowBackIosNewIcon fontSize="small" />
-      </button>
-      {/* Next Button */}
-      <button
-        onClick={goToNext}
-        className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#4F5050] text-white hover:bg-[#3a3b3b] rounded-full p-2.5 shadow-xl flex items-center justify-center"
-      >
-        <ArrowForwardIosIcon fontSize="small" />
-      </button>
-      {/* Indicators */}
-      <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
-        {images.map((_, index) => (
+      {/* Show controls and indicators only when the product is hovered */}
+      {isHovered && (
+        <>
+          {/* Previous Button */}
           <button
-            key={index}
-            onClick={(event) => handleIndicatorClick(index, event)}
-            className={`w-7 h-1.5 rounded ${index === currentIndex ? 'bg-white' : 'bg-[#4F5050]'} focus:outline-none`}
-          />
-        ))}
-      </div>
+            onClick={goToPrev}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#4F5050] text-white hover:bg-[#3a3b3b] rounded-full p-2.5 shadow-lg flex items-center justify-center"
+          >
+            <ArrowBackIosNewIcon fontSize="small" />
+          </button>
+          {/* Next Button */}
+          <button
+            onClick={goToNext}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#4F5050] text-white hover:bg-[#3a3b3b] rounded-full p-2.5 shadow-xl flex items-center justify-center"
+          >
+            <ArrowForwardIosIcon fontSize="small" />
+          </button>
+          {/* Indicators */}
+          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
+            {images.map((_, index) => (
+              <button
+                key={index}
+                onClick={(event) => handleIndicatorClick(index, event)}
+                className={`w-7 h-1.5 rounded ${index === currentIndex ? 'bg-white' : 'bg-[#4F5050]'} focus:outline-none`}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </div>
   );
 };

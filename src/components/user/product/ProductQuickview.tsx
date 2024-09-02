@@ -176,22 +176,17 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                                     onMouseEnter={() => setHoveredProductId(product.id)}
                                                     onMouseLeave={() => setHoveredProductId(null)}
                                                 >
-                                                    {hoveredProductId === product.id && product.images && product.images.length > 0 ? (
-                                                        <SimpleCarousel product={product} lang={lang} />
-                                                    ) : (
-                                                        <div className="group">
-                                                            {product.images && product.images.length > 0 ? (
-                                                                <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
-                                                                    className="h-full w-full object-cover object-center " />
-                                                            ) : (
-                                                                <img
-                                                                    src={`${baseUrl}/uploads/imagenot.webp`}
-                                                                    alt="Image Not Available"
-                                                                    className="h-full w-full object-cover object-center "
-                                                                />
-                                                            )}
-                                                        </div>
-                                                    )}
+                                                    <div className="group">
+                                                        {product.images && product.images.length > 0 ? (
+                                                            <SimpleCarousel product={product} lang={lang} isHovered={hoveredProductId === product.id} />
+                                                        ) : (
+                                                            <img
+                                                                src={`${baseUrl}/uploads/imagenot.webp`}
+                                                                alt="Image Not Available"
+                                                                className="h-full w-full object-cover object-center "
+                                                            />
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
                                             <div className="sm:col-span-8 lg:col-span-7">

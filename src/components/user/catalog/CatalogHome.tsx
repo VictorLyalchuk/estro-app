@@ -673,47 +673,40 @@ export default function CatalogHome() {
                             ) : (
                                 productList.map((product) => (
                                     <div key={product.id} className="group relative">
-                                        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200 xl:aspect-h-8 xl:aspect-w-7  hover13">
-                                            <div
-                                                key={product.id}
-                                                onMouseEnter={() => setHoveredProductId(product.id)}
-                                                onMouseLeave={() => setHoveredProductId(null)}
-                                            >
-                                                <Link to={`/product/${product.id}`} className="group">
-                                                    {hoveredProductId === product.id && product.images && product.images?.length > 0 ? (
-                                                        <div className="h-120">
-                                                            <SimpleCarousel product={product} lang={lang} />
-                                                        </div>
-                                                    ) : (
-                                                        <div  className="group">
-                                                            {product.images && product.images.length > 0 ? (
-                                                                <img src={`${baseUrl}/uploads/1200_${product.images?.[0]?.imagePath || '/uploads/imagenot.webp'}`}
-                                                                    className="h-full w-full object-cover object-center " />
-                                                            ) : (
-                                                                <img
-                                                                    src={`${baseUrl}/uploads/imagenot.webp`}
-                                                                    alt="Image Not Available"
-                                                                    className="h-full w-full object-cover object-center "
-                                                                />
-                                                            )}
-                                                        </div>
-                                                    )}
-                                                </Link>
-                                            </div>
-                                            <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
-                                                <div className={classNames(
-                                                    isFavorite(product.id) ? 'text-red-600' : 'text-gray-400 hover:text-gray-500',
-                                                    'ml-3 text-gray-400 hover:text-gray-500'
-                                                )}>
+                                        <Link to={`/product/${product.id}`} className="group">
+                                            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200 xl:aspect-h-8 xl:aspect-w-7  hover13">
+                                                <div
+                                                    key={product.id}
+                                                    onMouseEnter={() => setHoveredProductId(product.id)}
+                                                    onMouseLeave={() => setHoveredProductId(null)}
+                                                >
+                                                    <div className="group">
+                                                        {product.images && product.images.length > 0 ? (
+                                                            <SimpleCarousel product={product} lang={lang} isHovered={hoveredProductId === product.id} />
+                                                        ) : (
+                                                            <img
+                                                                src={`${baseUrl}/uploads/imagenot.webp`}
+                                                                alt="Image Not Available"
+                                                                className="h-full w-full object-cover object-center "
+                                                            />
+                                                        )}
+                                                    </div>
+                                                </div>
+                                                <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
+                                                    <div className={classNames(
+                                                        isFavorite(product.id) ? 'text-red-600' : 'text-gray-400 hover:text-gray-500',
+                                                        'ml-3 text-gray-400 hover:text-gray-500'
+                                                    )}>
 
-                                                    {isFavorite(product.id) ? (
-                                                        <HeartIcon className="w-7 h-7 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                                                    ) : (
-                                                        <OutlineHeartIcon className="w-7 h-7 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                                                    )}
+                                                        {isFavorite(product.id) ? (
+                                                            <HeartIcon className="w-7 h-7 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                                        ) : (
+                                                            <OutlineHeartIcon className="w-7 h-7 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                                        )}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </Link>
                                         <h3 className="mt-4 text-sm text-gray-700 line-clamp-2 break-words ">{getLocalizedField(product, 'name', lang).split(' ').slice(0, 3).join(' ')}</h3>
                                         <p className="mt-1 text-xs text-gray-500">{product.article}</p>
                                         <p className="mt-1 text-xs text-gray-500">{getLocalizedField(product, 'season', lang)}</p>
