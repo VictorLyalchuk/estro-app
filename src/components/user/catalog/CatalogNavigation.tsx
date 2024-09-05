@@ -640,7 +640,7 @@ export default function CatalogNavigation() {
                       productList.slice(0, itemsPerPage).map((product) => (
                         <div key={product.id} className="group relative">
                           {/* <Link to={`/product/${product.id}`}> */}
-                            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none lg:h-120 hover13">
+                            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden lg:aspect-none lg:h-120 hover13">
                               <div
                                 key={product.id}
                                 onMouseEnter={() => setHoveredProductId(product.id)}

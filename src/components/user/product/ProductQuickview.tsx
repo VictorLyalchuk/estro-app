@@ -144,7 +144,7 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                         leaveFrom="opacity-100"
                         leaveTo="opacity-0"
                     >
-                        <div className="fixed inset-0 hidden bg-gray-300 bg-opacity-20 transition-opacity md:block" />
+                        <div className="fixed inset-0 hidden bg-gray-300 bg-opacity-15 transition-opacity md:block" />
                     </Transition.Child>
 
                     <div className="fixed inset-0 z-10 overflow-y-auto">
@@ -238,6 +238,7 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                                                                     {t('Product_SizeGuide')}
                                                                 </a>
                                                             </div>
+                                                            {renderSizeGuide(isQuickviewOpen)}
 
                                                             <RadioGroup
                                                                 value={selectedSize}
@@ -331,7 +332,6 @@ const ProductQuickview: React.FC<IProductQuickviewProps> = ({ product, isOpen, s
                     </div>
                 </Dialog>
             </Transition.Root>
-            {renderSizeGuide(isQuickviewOpen)}
         </>
     )
 }

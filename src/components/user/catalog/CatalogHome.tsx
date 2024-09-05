@@ -732,8 +732,8 @@ export default function CatalogHome() {
 
                                         </div>
 
-                                        <div className="flex items-end pt-2 opacity-0 group-hover:opacity-100" aria-hidden="true">
-                                        </div>
+                                        {/* <div className="flex items-end pt-2 opacity-0 group-hover:opacity-100" aria-hidden="true">
+                                        </div> */}
                                         {isQuickviewOpen && focusedProduct && (
                                             <ProductQuickview
                                                 product={focusedProduct}

@@ -82,32 +82,30 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang, isHovere
         ref={carouselRef}
         className="flex overflow-hidden whitespace-nowrap h-full"
       >
-                                        <Link to={`/product/${product.id}`} className="group">
-
-        {images.length > 0 ? (
-          images.map((image, index) => (
-            <div
-              key={index}
-              className="inline-block w-full h-full flex-shrink-0"
-            >
+        <Link to={`/product/${product.id}`} className="group">
+          {images.length > 0 ? (
+            images.map((image, index) => (
+              <div
+                key={index}
+                className="inline-block w-full h-full flex-shrink-0"
+              >
+                <img
+                  src={`${baseUrl}/uploads/1200_${image.imagePath || 'imagenot.webp'}`}
+                  alt={getLocalizedField(product, 'name', lang)}
+                  className="h-full w-full object-cover"
+                />
+              </div>
+            ))
+          ) : (
+            <div className="flex items-center justify-center h-full text-gray-500">
               <img
-                src={`${baseUrl}/uploads/1200_${image.imagePath || 'imagenot.webp'}`}
-                alt={getLocalizedField(product, 'name', lang)}
-                className="h-full w-full object-cover"
+                src={`${baseUrl}/uploads/imagenot.webp`}
+                alt="Image Not Available"
+                className="h-full w-full object-cover object-center "
               />
             </div>
-          ))
-        ) : (
-          <div className="flex items-center justify-center h-full text-gray-500">
-            <img
-              src={`${baseUrl}/uploads/imagenot.webp`}
-              alt="Image Not Available"
-              className="h-full w-full object-cover object-center "
-            />
-          </div>
-        )}
-                                        </Link>
-
+          )}
+        </Link>
       </div>
 
       {isHovered && (
@@ -124,19 +122,17 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang, isHovere
           >
             <ArrowForwardIosIcon fontSize="small" />
           </button>
-          <div className={`absolute bottom-0 left-0 w-full bg-gray-100 transition-all duration-300 ease-in-out ${isHovered ? 'h-10 py-2 opacity-100' : 'h-0 py-0 opacity-0'}`}>
-          <div className="flex justify-center items-center h-full">
-
-          {images.map((_, index) => (
-              <button
-                key={index}
-                onClick={(event) => handleIndicatorClick(index, event)}
-                className={`h-2 w-9 mx-1 rounded-full ${index === currentIndex ? 'bg-white' : 'bg-[rgba(79,80,80,0.3)] hover:bg-[rgba(79,80,80,0.5)] transition-all duration-300 ease-in-out shadow-md hover:shadow-lg'} focus:outline-none`}
-              />
-            ))}
+          <div className={`absolute bottom-0 left-0 w-full bg-gray-100 transition-all duration-300 ease-in-out overflow-hidden ${isHovered ? 'h-10 py-2 opacity-100' : 'h-0 py-0 opacity-0'}`}>
+            <div className="flex justify-center items-center h-full">
+              {images.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={(event) => handleIndicatorClick(index, event)}
+                  className={`h-2 w-9 mx-1 rounded-full ${index === currentIndex ? 'bg-white' : 'bg-[rgba(79,80,80,0.3)] hover:bg-[rgba(79,80,80,0.5)] transition-all duration-300 ease-in-out shadow-md hover:shadow-lg'} focus:outline-none`}
+                />
+              ))}
+            </div>
           </div>
-          </div>
-
         </>
       )}
     </div>
