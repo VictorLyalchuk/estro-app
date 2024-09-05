@@ -115,15 +115,12 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang, isHovere
           >
             <ArrowForwardIosIcon fontSize="small" />
           </button>
-          <div className="absolute bottom-2 left-0 w-full flex justify-center">
+          <div className="absolute bottom-2 left-0 w-full flex justify-between px-4">
             {images.map((_, index) => (
               <button
                 key={index}
                 onClick={(event) => handleIndicatorClick(index, event)}
-                className={`mx-1 h-1.5 rounded ${index === currentIndex ? 'bg-white' : 'bg-[rgba(79,80,80,0.3)] hover:bg-[rgba(79,80,80,0.5)] transition-all duration-300 ease-in-out rounded-full flex items-center justify-center shadow-md hover:shadow-lg'} focus:outline-none`}
-                style={{
-                  width: `calc(${100 / images.length}% - 16px)`,
-                }}
+                className={`h-2 flex-grow mx-1 rounded-md ${index === currentIndex ? 'bg-white' : 'bg-[rgba(79,80,80,0.3)] hover:bg-[rgba(79,80,80,0.5)] transition-all duration-300 ease-in-out shadow-md hover:shadow-lg'} focus:outline-none`}
               />
             ))}
           </div>
