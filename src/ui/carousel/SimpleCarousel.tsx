@@ -21,15 +21,15 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang, isHovere
   useEffect(() => {
     const handleResize = () => {
       if (carouselRef.current) {
-        carouselRef.current.scrollTo({ 
-          left: currentIndex * carouselRef.current.clientWidth, 
-          behavior: 'smooth' 
+        carouselRef.current.scrollTo({
+          left: currentIndex * carouselRef.current.clientWidth,
+          behavior: 'smooth'
         });
       }
     };
 
     window.addEventListener('resize', handleResize);
-    
+
     // Викликати handleResize під час першого рендеру, щоб позиція каруселі була правильною
     handleResize();
 
@@ -41,9 +41,9 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang, isHovere
     if (carouselRef.current) {
       setCurrentIndex(prevIndex => {
         const newIndex = (prevIndex === 0 ? images.length - 1 : prevIndex - 1);
-        carouselRef.current?.scrollTo({ 
-          left: newIndex * carouselRef.current.clientWidth, 
-          behavior: 'smooth' 
+        carouselRef.current?.scrollTo({
+          left: newIndex * carouselRef.current.clientWidth,
+          behavior: 'smooth'
         });
         return newIndex;
       });
@@ -55,9 +55,9 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang, isHovere
     if (carouselRef.current) {
       setCurrentIndex(prevIndex => {
         const newIndex = (prevIndex === images.length - 1 ? 0 : prevIndex + 1);
-        carouselRef.current?.scrollTo({ 
-          left: newIndex * carouselRef.current.clientWidth, 
-          behavior: 'smooth' 
+        carouselRef.current?.scrollTo({
+          left: newIndex * carouselRef.current.clientWidth,
+          behavior: 'smooth'
         });
         return newIndex;
       });
@@ -67,9 +67,9 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang, isHovere
   const handleIndicatorClick = (index: number, event: React.MouseEvent<HTMLButtonElement>) => {
     event.preventDefault();
     if (carouselRef.current) {
-      carouselRef.current.scrollTo({ 
-        left: index * carouselRef.current.clientWidth, 
-        behavior: 'smooth' 
+      carouselRef.current.scrollTo({
+        left: index * carouselRef.current.clientWidth,
+        behavior: 'smooth'
       });
       setCurrentIndex(index);
     }
@@ -100,30 +100,34 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang, isHovere
           </div>
         )}
       </div>
-      {/* Show controls and indicators only when the product is hovered */}
+
       {isHovered && (
         <>
           <button
             onClick={goToPrev}
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[#4F5050] text-white hover:bg-[#3a3b3b] rounded-full p-2.5 shadow-lg flex items-center justify-center"
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 bg-[rgba(79,80,80,0.3)] text-white hover:bg-[rgba(79,80,80,0.5)] transition-all duration-300 ease-in-out p-3.5 rounded-full flex items-center justify-center shadow-md hover:shadow-lg"
           >
             <ArrowBackIosNewIcon fontSize="small" />
           </button>
           <button
             onClick={goToNext}
-            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[#4F5050] text-white hover:bg-[#3a3b3b] rounded-full p-2.5 shadow-xl flex items-center justify-center"
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 bg-[rgba(79,80,80,0.3)] text-white hover:bg-[rgba(79,80,80,0.5)] transition-all duration-300 ease-in-out p-3.5 rounded-full flex items-center justify-center shadow-md hover:shadow-lg"
           >
             <ArrowForwardIosIcon fontSize="small" />
           </button>
-          <div className="absolute bottom-2 left-1/2 transform -translate-x-1/2 flex space-x-2">
+          <div className="absolute bottom-2 left-0 w-full flex justify-center">
             {images.map((_, index) => (
               <button
                 key={index}
                 onClick={(event) => handleIndicatorClick(index, event)}
-                className={`w-7 h-1.5 rounded ${index === currentIndex ? 'bg-white' : 'bg-[#4F5050]'} focus:outline-none`}
+                className={`mx-1 h-1.5 rounded ${index === currentIndex ? 'bg-white' : 'bg-[rgba(79,80,80,0.3)] hover:bg-[rgba(79,80,80,0.5)]'} focus:outline-none`}
+                style={{
+                  width: `calc(${100 / images.length}% - 16px)`,
+                }}
               />
             ))}
           </div>
+
         </>
       )}
     </div>
