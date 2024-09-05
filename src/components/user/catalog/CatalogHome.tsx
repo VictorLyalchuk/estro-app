@@ -5,7 +5,7 @@ import { ChevronDownIcon } from '@heroicons/react/20/solid'
 import { HeartIcon } from '@heroicons/react/24/solid'
 import { IProduct, IStorages } from '../../../interfaces/Product/IProduct'
 import { APP_ENV } from '../../../env/config'
-import { Link, useNavigate, useParams } from 'react-router-dom'
+import { useNavigate, useParams } from 'react-router-dom'
 import { IInfo } from '../../../interfaces/Info/IInfo'
 import { createQueryParams, onPageChangeQueryParams, onSortChangeQueryParams, updateFilters } from '../../../utils/catalog/filterUtils'
 import { ISortOptions } from '../../../interfaces/Catalog/ISortOptions'
@@ -673,7 +673,7 @@ export default function CatalogHome() {
                             ) : (
                                 productList.map((product) => (
                                     <div key={product.id} className="group relative">
-                                        <Link to={`/product/${product.id}`} className="group">
+                                        {/* <Link to={`/product/${product.id}`} className="group"> */}
                                             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200 xl:aspect-h-8 xl:aspect-w-7  hover13">
                                                 <div
                                                     key={product.id}
@@ -706,7 +706,7 @@ export default function CatalogHome() {
                                                     </div>
                                                 </div>
                                             </div>
-                                        </Link>
+                                        {/* </Link> */}
                                         <h3 className="mt-4 text-sm text-gray-700 line-clamp-2 break-words ">{getLocalizedField(product, 'name', lang).split(' ').slice(0, 3).join(' ')}</h3>
                                         <p className="mt-1 text-xs text-gray-500">{product.article}</p>
                                         <p className="mt-1 text-xs text-gray-500">{getLocalizedField(product, 'season', lang)}</p>

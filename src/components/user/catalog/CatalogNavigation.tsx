@@ -639,7 +639,7 @@ export default function CatalogNavigation() {
                     ) : (
                       productList.slice(0, itemsPerPage).map((product) => (
                         <div key={product.id} className="group relative">
-                          <Link to={`/product/${product.id}`}>
+                          {/* <Link to={`/product/${product.id}`}> */}
                             <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none lg:h-120 hover13">
                               <div
                                 key={product.id}
@@ -681,7 +681,7 @@ export default function CatalogNavigation() {
                               </div>
                               <p className="text-sm font-bold text-red-800 whitespace-nowrap" >{product.price.toLocaleString('uk-UA', { minimumFractionDigits: 2 })} €</p>
                             </div>
-                          </Link>
+                          {/* </Link> */}
 
                           <div className="flex items-end opacity-0 group-hover:opacity-100" aria-hidden="true">
                             <div className="mt-4 flex items-center gap-1">
