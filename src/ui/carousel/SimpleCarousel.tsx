@@ -120,7 +120,7 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang, isHovere
               <button
                 key={index}
                 onClick={(event) => handleIndicatorClick(index, event)}
-                className={`mx-1 h-1.5 rounded ${index === currentIndex ? 'bg-white' : 'bg-[rgba(79,80,80,0.3)] hover:bg-[rgba(79,80,80,0.5)]'} focus:outline-none`}
+                className={`mx-1 h-1.5 rounded ${index === currentIndex ? 'bg-white' : 'bg-[rgba(79,80,80,0.3)] hover:bg-[rgba(79,80,80,0.5)] transition-all duration-300 ease-in-out rounded-full flex items-center justify-center shadow-md hover:shadow-lg'} focus:outline-none`}
                 style={{
                   width: `calc(${100 / images.length}% - 16px)`,
                 }}
