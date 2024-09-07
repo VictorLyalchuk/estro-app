@@ -261,7 +261,7 @@ export default function AdminPanelPage() {
                               <li key={index} className="py-5 relative">
                                 <div className="flex items-center space-x-4">
                                   <div className="flex-shrink-0">
-                                    <img src={`${baseUrl}/uploads/${review.avatar || '/uploads/default.jpg'}`} className="h-8 rounded-full" />
+                                    <img src={`${baseUrl}/uploads/${review?.avatar || "user404.webp"}`} className="h-8 rounded-full" />
                                   </div>
                                   <div className="relative flex-grow focus-within:ring-2 focus-within:ring-indigo-500">
                                     <h3 className="text-sm font-semibold text-gray-800">
