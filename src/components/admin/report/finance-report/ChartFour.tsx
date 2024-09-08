@@ -1,49 +1,56 @@
-import { ApexOptions } from 'apexcharts';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
 import ReactApexChart from 'react-apexcharts';
+import { ApexOptions } from 'apexcharts';
+import { APP_ENV } from "../../../../env/config.ts";
+import {t} from "i18next";
 
-interface ChartFourState {
-  series: { data: number[] }[];
+const baseUrl = APP_ENV.BASE_URL;
+
+interface DailyOrderTotalDTO {
+  date: string; // Format should be YYYY-MM-DD
+  totalOrders: number;
+  totalAmount: number;
 }
 
 const ChartFour: React.FC = () => {
-  const [state, setState] = useState<ChartFourState>({
+  const [data, setData] = useState<DailyOrderTotalDTO[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  const fetchData = async () => {
+    try {
+      const dayPromises = [];
+      for (let day = 1; day <= 31; day++) {
+        dayPromises.push(axios.get<DailyOrderTotalDTO>(`${baseUrl}/api/OrderControllers/GetTotalByDay?day=${day}`));
+      }
+      const responses = await Promise.all(dayPromises);
+      const dailyTotals = responses.map(response => response.data);
+      setData(dailyTotals);
+      setLoading(false);
+    } catch (error) {
+      console.error('Failed to fetch order totals:', error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  // Prepare chart data
+  const chartData = {
     series: [
       {
-        data: [
-          168, 385, 201, 298, 187, 195, 291, 110, 215, 390, 280, 112, 123, 212,
-          270, 190, 310, 115, 90, 380, 112, 223, 292, 170, 290, 110, 115, 290,
-          380, 312,
-        ],
+        name: t('FinReport_TotalAmount'),
+        data: data.map(day => day.totalAmount),
       },
     ],
-  });
+    categories: data.map(day => new Date(day.date).getDate().toString()), // Extract day numbers from dates
+  };
 
   const options: ApexOptions = {
-    colors: ['#3C50E0'],
     chart: {
-      fontFamily: 'Satoshi, sans-serif',
       type: 'bar',
-      height: 350,
-      toolbar: {
-        show: false,
-      },
-    },
-    plotOptions: {
-      bar: {
-        horizontal: false,
-        columnWidth: '55%',
-        // endingShape: "rounded",
-        borderRadius: 2,
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      show: true,
-      width: 4,
-      colors: ['transparent'],
     },
     xaxis: {
       categories: [
@@ -77,69 +84,17 @@ const ChartFour: React.FC = () => {
         '28',
         '29',
         '30',
+        '31',
       ],
-      axisBorder: {
-        show: false,
-      },
-      axisTicks: {
-        show: false,
-      },
-    },
-    legend: {
-      show: true,
-      position: 'top',
-      horizontalAlign: 'left',
-      fontFamily: 'inter',
 
-      markers: {
-        radius: 99,
-      },
-    },
-    // yaxis: {
-    //   title: false,
-    // },
-    grid: {
-      yaxis: {
-        lines: {
-          show: false,
-        },
-      },
-    },
-    fill: {
-      opacity: 1,
-    },
-
-    tooltip: {
-      x: {
-        show: false,
-      },
-      // y: {
-      //   formatter: function (val) {
-      //     return val;
-      //   },
-      // },
     },
   };
 
   return (
-    <div className="col-span-12 rounded-sm border border-stroke bg-white px-5 pt-7.5 pb-5 shadow-default dark:border-strokedark dark:bg-boxdark sm:px-7.5">
       <div>
-        <h3 className="text-xl font-semibold text-black dark:text-white">
-          Visitors Analytics
-        </h3>
+        <h3>{t('FinReport_OrderTotals')}</h3>
+        <ReactApexChart options={options} series={chartData.series} type="bar" height={350} />
       </div>
-
-      <div className="mb-2">
-        <div id="chartFour" className="-ml-5">
-          <ReactApexChart
-            options={options}
-            series={state.series}
-            type="bar"
-            height={350}
-          />
-        </div>
-      </div>
-    </div>
   );
 };
 

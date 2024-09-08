@@ -80,6 +80,7 @@ function App() {
         <Route path="/admin" element={<><AdminHeader /><AdminLayout /></>}>
           <Route path="/admin/*" element={<Page404 />} />
           <Route path="admin-panel-page" element={<AdminPanelPage />} />
+          <Route path="report/financial-reports" element={<FinancialReports />} />
 
           <Route path="product/product-list" element={<ProductList />} />
           <Route path="product/add-product-en" element={<AddProductPanelPage />} />
