@@ -60,6 +60,7 @@ function App() {
         </Route>
         <Route path="/auth/:email/:token" element={<AuthPanelPage />} />
 
+<<<<<<< Updated upstream
         <Route path="/" element={<HomeStore />}></Route>
         <Route path="/:email/:token" element={<HomeStore />}></Route>
         <Route path="catalog/:subName/:urlName" element={<CatalogNavigation />} />
@@ -69,6 +70,13 @@ function App() {
         <Route path="catalog-home/search/:text" element={<CatalogHome />} />
         <Route path="product/:Id" element={<Product />} />
         <Route path='/bag' element={<Bag />} />
+=======
+        {/* Адміністраторські маршрути без Logo, NavbarsPage і Footer */}
+        <Route path="/admin" element={<><AdminHeader /><AdminLayout /></>}>
+          <Route path="/admin/*" element={<Page404 />} />
+          <Route path="admin-panel-page" element={<AdminPanelPage />} />
+          <Route path="report/financial-reports" element={<FinancialReports />} />
+>>>>>>> Stashed changes
 
         <Route element={<UserLayout />}>
           <Route path="account/orders" element={<UserPanelPage />} />
