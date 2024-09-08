@@ -28,6 +28,7 @@
     "@types/react-swipeable-views": "^0.13.5",
     "antd": "^5.18.1",
     "antd-img-crop": "^4.22.0",
+    "apexcharts": "^3.52.0",
     "autoprefixer": "^10.4.16",
     "axios": "^1.6.5",
     "flag-icons": "^7.2.3",

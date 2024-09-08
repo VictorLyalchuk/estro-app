@@ -28,3 +28,9 @@ interface IOrderPayment {
   cardYearExpires: string;
   cardHolderName: string;
 }
+
+interface DailyOrderTotalDTO {
+  date: Date;
+  totalOrders: number;
+  totalAmount: number;
+}

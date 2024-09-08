@@ -639,6 +639,34 @@ export const es = {
     "Date": "Fecha",
     "View Product": "Ver producto",
     "Delete Review": "Eliminar reseña",
-    "Review_Model": "¿Está seguro de que desea eliminar esta reseña?"
+    "Review_Model": "¿Está seguro de que desea eliminar esta reseña?",
+
+    // FINANCIAL REPORT
+    "FinReport_SalesReports": "Informes de Ventas",
+    "FinReport_TotalAmount": "Monto Total",
+    "FinReport_OrderTotals": "Totales de Pedidos para un Día Específico",
+    "FinReport_TotalSales": "Ventas Totales",
+    "FinReport_January": "Ene",
+    "FinReport_February": "Feb",
+    "FinReport_March": "Mar",
+    "FinReport_April": "Abr",
+    "FinReport_May": "May",
+    "FinReport_June": "Jun",
+    "FinReport_July": "Jul",
+    "FinReport_August": "Ago",
+    "FinReport_September": "Sep",
+    "FinReport_October": "Oct",
+    "FinReport_November": "Nov",
+    "FinReport_December": "Dic",
+    "FinReport_Monday": "L",
+    "FinReport_Tuesday": "M",
+    "FinReport_Wednesday": "X",
+    "FinReport_Thursday": "J",
+    "FinReport_Friday": "V",
+    "FinReport_Saturday": "S",
+    "FinReport_Sunday": "D",
+    "FinReport_ThisWeek": "Esta Semana",
+    "FinReport_LastWeek": "La Semana Pasada",
+    "FinReport_ProfitThisWeek": "Beneficio de esta semana"
 
 }
