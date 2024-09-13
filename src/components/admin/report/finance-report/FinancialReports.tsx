@@ -1,7 +1,9 @@
 import ChartFour from "./ChartFour";
 import ChartOne from "./ChartOne";
-import ChartThree from "./ChartThree";
+import ChartThreeGender from "./ChartThreeGender.tsx";
 import ChartTwo from "./ChartTwo";
+import ChartThreeCategory from "./ChartThreeCategory.tsx";
+import ChartThreeProducts from "./ChartThreeProducts.tsx";
 
 const FinancialReports = () => {
   return (
@@ -13,11 +15,12 @@ const FinancialReports = () => {
         </div>
         <ChartOne />
         <ChartTwo />
-        <ChartThree />
-        <ChartThree />
-        <ChartThree />
-        <ChartThree />
+        <ChartThreeGender />
+        <ChartThreeCategory />
+
+
       </div>
+                <div className={"mt-7.5"}><ChartThreeProducts /></div>
       </div>
     </>
   );
