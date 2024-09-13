@@ -667,6 +667,8 @@ export const es = {
     "FinReport_Sunday": "D",
     "FinReport_ThisWeek": "Esta Semana",
     "FinReport_LastWeek": "La Semana Pasada",
-    "FinReport_ProfitThisWeek": "Beneficio de esta semana"
+    "FinReport_ProfitThisWeek": "Beneficio de esta semana",
+    "FinReport_CategoryDistribution": "Categorías Populares",
+    "FinReport_PopularProducts": "Productos Populares",
 
 }

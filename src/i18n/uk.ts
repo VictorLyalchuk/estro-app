@@ -668,5 +668,11 @@ export const uk = {
     "FinReport_ThisWeek": "Цього тижня",
     "FinReport_LastWeek": "Минулого тижня",
     "FinReport_ProfitThisWeek": "Прибуток цього тижня",
+    "FinReport_GenderChoice": "Замовлення за статтю",
+    "FinReport_Men": "Чоловіки",
+    "FinReport_Women": "Жінки",
+    "FinReport_Orders": "замовлення",
+    "FinReport_CategoryDistribution": "Популярні категорії",
+    "FinReport_PopularProducts": "Популярні продукти",
 
 }

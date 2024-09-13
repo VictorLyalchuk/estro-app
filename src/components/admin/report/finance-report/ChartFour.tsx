@@ -52,6 +52,7 @@ const ChartFour: React.FC = () => {
     chart: {
       type: 'bar',
     },
+    colors: ['#3C50E0'],
     xaxis: {
       categories: [
         '1',
@@ -93,7 +94,7 @@ const ChartFour: React.FC = () => {
   return (
       <div>
         <h3>{t('FinReport_OrderTotals')}</h3>
-        <ReactApexChart options={options} series={chartData.series} type="bar" height={350} />
+        <ReactApexChart options={options} series={chartData.series} colors={chartData.colors} type="bar" height={350} />
       </div>
   );
 };

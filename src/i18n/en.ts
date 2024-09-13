@@ -674,4 +674,10 @@ export const en = {
     "FinReport_ThisWeek": "This Week",
     "FinReport_LastWeek": "Last Week",
     "FinReport_ProfitThisWeek": "Profit this week",
+    "FinReport_GenderChoice": "Orders by gender",
+    "FinReport_Men": "Men",
+    "FinReport_Women": "Women",
+    "FinReport_Orders": "orders",
+    "FinReport_CategoryDistribution": "Popular Categories",
+    "FinReport_PopularProducts": "Popular Products",
 }
