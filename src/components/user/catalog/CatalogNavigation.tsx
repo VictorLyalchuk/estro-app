@@ -533,6 +533,7 @@ export default function CatalogNavigation() {
                                   <Link
                                     to={`/catalog/${subCategory.urlName}/${category.urlName}`}
                                     className={`block ${category.urlName === urlName ? "font-bold text-gray-700" : "text-gray-400 hover:text-indigo-500"}`}
+                                    onClick={() => setPage(1)} 
                                   >
                                     {i18next.language === 'uk' ? category.name_uk : null}
                                     {i18next.language === 'en' ? category.name_en : null}
