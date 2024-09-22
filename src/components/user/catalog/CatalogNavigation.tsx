@@ -520,6 +520,7 @@ export default function CatalogNavigation() {
                         <div className={`block text-xl ${subCategory.urlName === subName ? "font-bold py-3 text-gray-700 " : "text-gray-400 hover:text-indigo-500"}`}>
                           <Link
                             to={`/catalog/${subCategory.urlName}`}
+                            onClick={() => setPage(1)} 
                             className={`block ${subCategory.urlName === subName ? "font-bold text-gray-700" : "text-gray-500 hover:text-indigo-500"}`}
                           >
                             {getLocalizedField(subCategory, 'name', lang)}
