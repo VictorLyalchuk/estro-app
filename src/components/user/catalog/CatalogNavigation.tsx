@@ -551,7 +551,7 @@ export default function CatalogNavigation() {
                   )}
                 </ul>
                 <div className="pt-6 space-y-4 border-b border-gray-200 pb-6">
-                  <button type="button" className='rounded border-gray-300 hover:text-indigo-500 focus:ring-indigo-500'
+                  <button type="button" className='rounded border-gray-300 hover:text-indigo-500 focus:ring-indigo-500 transform transition-transform duration-300 hover:scale-110 origin-left'
                     onClick={resetFilters}>
                     {t('CatalogNavigation_ResetFilters')}
                   </button>
@@ -565,7 +565,7 @@ export default function CatalogNavigation() {
                         <h3 className="-my-3 flow-root">
                           <Disclosure.Button
                             className="flex w-full items-center justify-between bg-gray-100 py-3 text-sm text-gray-400 hover:text-gray-500">
-                            <span className="font-medium text-gray-900 hover:text-indigo-500">
+                            <span className="font-medium text-gray-900 hover:text-indigo-500 transform transition-transform duration-300 hover:scale-110 origin-left">
                               {i18next.language === 'uk' ? section.name_uk : null}
                               {i18next.language === 'en' ? section.name_en : null}
                               {i18next.language === 'es' ? section.name_es : null}
