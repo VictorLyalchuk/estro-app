@@ -521,7 +521,7 @@ export default function CatalogNavigation() {
                           <Link
                             to={`/catalog/${subCategory.urlName}`}
                             onClick={() => setPage(1)} 
-                            className={`block ${subCategory.urlName === subName ? "font-bold text-gray-700" : "text-gray-500 hover:text-indigo-500"}`}
+                            className={`block ${subCategory.urlName === subName ? "font-bold text-gray-700" : "text-gray-500 hover:text-indigo-500 transform transition-transform duration-300 ease-in-out hover:scale-110 origin-left"}`}
                           >
                             {getLocalizedField(subCategory, 'name', lang)}
                           </Link>
@@ -533,7 +533,7 @@ export default function CatalogNavigation() {
                                 <li key={category.id}>
                                   <Link
                                     to={`/catalog/${subCategory.urlName}/${category.urlName}`}
-                                    className={`block ${category.urlName === urlName ? "font-bold text-gray-700" : "text-gray-400 hover:text-indigo-500"}`}
+                                    className={`block ${category.urlName === urlName ? "font-bold text-gray-700" : "text-gray-400 hover:text-indigo-500 transform transition-transform duration-300 hover:scale-110 origin-left"}`}
                                     onClick={() => setPage(1)} 
                                   >
                                     {i18next.language === 'uk' ? category.name_uk : null}

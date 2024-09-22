@@ -309,9 +309,9 @@ const NavbarsPage = () => {
                                                                                     {category.subCategories.map((section) => (
 
                                                                                         <div key={section.name_en}>
-                                                                                            <Popover.Panel>
+                                                                                            <Popover.Panel className="transform transition-transform duration-300 hover:scale-110 origin-left">
                                                                                                 {({ close }) => (
-                                                                                                    <Link id={`${section.name_en}-heading`} to={`/catalog/${section.urlName}`} onClick={() => close()} className="font-bold text-gray-900">
+                                                                                                    <Link id={`${section.name_en}-heading`} to={`/catalog/${section.urlName}`} onClick={() => close()} className="font-bold text-gray-900 hover:text-indigo-500">
                                                                                                         {getLocalizedField(section, 'name', lang)}
                                                                                                     </Link>
                                                                                                 )}
@@ -322,7 +322,7 @@ const NavbarsPage = () => {
                                                                                                 className="mt-6 space-y-6 sm:mt-4 sm:space-y-4"
                                                                                             >
                                                                                                 {section.categories.map((item) => (
-                                                                                                    <li key={item.name_en} className="flex hover:text-indigo-500">
+                                                                                                    <li key={item.name_en} className="flex hover:text-indigo-500 transform transition-transform duration-300 hover:scale-110 origin-left">
                                                                                                         <Popover.Panel>
                                                                                                             {({ close }) => (
                                                                                                                 <Link to={`/catalog/${section.urlName}/${item.urlName}`} onClick={() => close()}>

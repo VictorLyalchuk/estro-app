@@ -12,7 +12,14 @@ export const useStyles = makeStyles((theme) =>
         input: {},
         button: {
             textTransform: 'none',
-             marginBottom: "3px"
+            marginBottom: "3px"
+        },
+        button2: {
+            height: '80px',
+            transition: 'transform 300ms ease-in-out',
+            '&:hover': {
+                transform: 'scale(1.1)',
+            },
         },
         withoutLabel: {
             marginTop: theme.spacing(3),
@@ -33,6 +40,6 @@ export const useStyles = makeStyles((theme) =>
         },
         fullWidth: {
             width: '100%',
-          },
+        },
     }),
 );
