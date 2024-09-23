@@ -594,11 +594,11 @@ export default function CatalogNavigation() {
                                     createFilters(section.name_en, option.value);
                                     setActiveOption(option.value);
                                   }}
-                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500 "
+                                  className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                                 />
                                 <label
                                   htmlFor={`filter-${section.id}-${optionIdx}`}
-                                  className="ml-3 text-sm text-gray-600 hover:text-indigo-500 cursor-pointer"
+                                  className="ml-3 text-sm text-gray-600 hover:text-indigo-500 cursor-pointer transform transition-transform duration-300 hover:scale-110 origin-left"
                                 >
                                   {option.label}
                                 </label>
