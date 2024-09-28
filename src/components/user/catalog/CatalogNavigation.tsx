@@ -722,7 +722,7 @@ export default function CatalogNavigation() {
                     )}
                   </div>
                   {/* Pagination */}
-                  <div className="container mx-auto p-4 flex relative max-w-screen-2xl lg:flex-row justify-between">
+                  <div className="container mx-auto p-4 flex relative max-w-screen-2xl lg:flex-row justify-center">
                     <div className="hidden sm:flex sm:flex-1 sm:items-center sm:justify-between ">
                       <div>
                         <p className="text-sm text-gray-700">
