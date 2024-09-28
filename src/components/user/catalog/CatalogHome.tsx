@@ -776,7 +776,7 @@ export default function CatalogHome() {
                                             </button>
                                         </Scrollink>
 
-
+                                        <div className="hidden lg:block">
                                         <Scrollink to="product-start" smooth={true}>
                                             <button
                                                 onClick={() => onPageChange(1)}
@@ -790,6 +790,7 @@ export default function CatalogHome() {
                                                 {t('Begin')}
                                             </button>
                                         </Scrollink>
+                                        </div>
 
                                         {[...Array(endPage - startPage + 1)].map((_, index) => {
                                             const pageNumber = startPage + index;
@@ -811,6 +812,7 @@ export default function CatalogHome() {
                                             );
                                         })}
 
+                                        <div className="hidden lg:block">
                                         <Scrollink to="product-start" smooth={true}>
                                             <button
                                                 onClick={() => onPageChange(totalPages)}
@@ -824,6 +826,7 @@ export default function CatalogHome() {
                                                 {t('End')}
                                             </button>
                                         </Scrollink>
+                                        </div>
 
                                         <Scrollink to="product-start" smooth={true}>
                                             <button
