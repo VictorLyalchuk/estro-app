@@ -92,7 +92,7 @@ const SimpleCarousel: React.FC<SimpleCarouselProps> = ({ product, lang, isHovere
                 <img
                   src={`${baseUrl}/uploads/1200_${image.imagePath || 'imagenot.webp'}`}
                   alt={getLocalizedField(product, 'name', lang)}
-                  className="h-full w-full object-cover"
+                  className="object-cover h-full w-full "
                 />
               </div>
             ))

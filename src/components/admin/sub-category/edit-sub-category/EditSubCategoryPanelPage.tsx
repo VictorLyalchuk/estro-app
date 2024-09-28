@@ -132,6 +132,7 @@ const EditSubCategoryPanelPage = () => {
     }
 
     const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         event.preventDefault();
         const { isValid, newErrors } = validateForm(formData, selectedMainCategory, setActiveTab);
         setErrors(newErrors);

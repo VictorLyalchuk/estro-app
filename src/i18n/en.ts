@@ -680,4 +680,7 @@ export const en = {
     "FinReport_Orders": "orders",
     "FinReport_CategoryDistribution": "Popular Categories",
     "FinReport_PopularProducts": "Popular Products",
+
+    "Begin" : "Begin",
+    "End" : "End",
 }

@@ -110,6 +110,7 @@ const EditStorePanelPage = () => {
     }
 
     const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         event.preventDefault();
         const { isValid, newErrors } = validateForm(formData, selectedCountry, selectedCity, setActiveTab);
         setErrors(newErrors);

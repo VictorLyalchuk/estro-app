@@ -181,6 +181,7 @@ const EditUser = () => {
     };
 
     const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         event.preventDefault();
         const { isValid, newErrors } = validateForm(formData, values.textmask);
         setErrors(newErrors);

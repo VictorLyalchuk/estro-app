@@ -556,7 +556,7 @@ export default function CatalogHome() {
                                             {filterOptionsList.map((section, index) => (
 
                                                 <Popover key={section.name_en} className="relative inline-block px-4 text-left">
-                                                    <Popover.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-indigo-500 ">
+                                                    <Popover.Button className="group inline-flex justify-center text-sm font-medium text-gray-700 hover:text-indigo-500">
                                                         <span>
                                                             {getLocalizedField(section, 'name', lang)}
                                                         </span>
@@ -674,38 +674,38 @@ export default function CatalogHome() {
                                 productList.map((product) => (
                                     <div key={product.id} className="group relative">
                                         {/* <Link to={`/product/${product.id}`} className="group"> */}
-                                            <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200 xl:aspect-h-8 xl:aspect-w-7  hover13">
-                                                <div
-                                                    key={product.id}
-                                                    onMouseEnter={() => setHoveredProductId(product.id)}
-                                                    onMouseLeave={() => setHoveredProductId(null)}
-                                                >
-                                                    <div className="group">
-                                                        {product.images && product.images.length > 0 ? (
-                                                            <SimpleCarousel product={product} lang={lang} isHovered={hoveredProductId === product.id} />
-                                                        ) : (
-                                                            <img
-                                                                src={`${baseUrl}/uploads/imagenot.webp`}
-                                                                alt="Image Not Available"
-                                                                className="h-full w-full object-cover object-center "
-                                                            />
-                                                        )}
-                                                    </div>
-                                                </div>
-                                                <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
-                                                    <div className={classNames(
-                                                        isFavorite(product.id) ? 'text-red-600' : 'text-gray-400 hover:text-gray-500',
-                                                        'ml-3 text-gray-400 hover:text-gray-500'
-                                                    )}>
-
-                                                        {isFavorite(product.id) ? (
-                                                            <HeartIcon className="w-7 h-7 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                                                        ) : (
-                                                            <OutlineHeartIcon className="w-7 h-7 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
-                                                        )}
-                                                    </div>
+                                        <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden bg-gray-200 xl:aspect-h-8 xl:aspect-w-7  hover13">
+                                            <div
+                                                key={product.id}
+                                                onMouseEnter={() => setHoveredProductId(product.id)}
+                                                onMouseLeave={() => setHoveredProductId(null)}
+                                            >
+                                                <div className="group">
+                                                    {product.images && product.images.length > 0 ? (
+                                                        <SimpleCarousel product={product} lang={lang} isHovered={hoveredProductId === product.id} />
+                                                    ) : (
+                                                        <img
+                                                            src={`${baseUrl}/uploads/imagenot.webp`}
+                                                            alt="Image Not Available"
+                                                            className="h-full w-full object-cover object-center "
+                                                        />
+                                                    )}
                                                 </div>
                                             </div>
+                                            <div className="absolute top-2 right-2 rounded-full p-2 cursor-pointer flex items-center justify-center opacity-0 group-hover:opacity-100" aria-hidden="true">
+                                                <div className={classNames(
+                                                    isFavorite(product.id) ? 'text-red-600' : 'text-gray-400 hover:text-gray-500',
+                                                    'ml-3 text-gray-400 hover:text-gray-500'
+                                                )}>
+
+                                                    {isFavorite(product.id) ? (
+                                                        <HeartIcon className="w-7 h-7 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                                    ) : (
+                                                        <OutlineHeartIcon className="w-7 h-7 stroke-1" onClick={(e) => favoriteToggle(product, e)} />
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
                                         {/* </Link> */}
                                         <h3 className="mt-4 text-sm text-gray-700 line-clamp-2 break-words ">{getLocalizedField(product, 'name', lang).split(' ').slice(0, 3).join(' ')}</h3>
                                         <p className="mt-1 text-xs text-gray-500">{product.article}</p>
@@ -721,7 +721,7 @@ export default function CatalogHome() {
                                                         <span
                                                             key={size.size}
                                                             onClick={() => handleQuickviewOpen(product, size)}
-                                                            className="cursor-pointer text-xs border-transparent -inset-px rounded-md hover:text-indigo-500"
+                                                            className="cursor-pointer text-xs border-transparent -inset-px rounded-md hover:text-indigo-500 transform transition-transform duration-300 hover:scale-110"
                                                         >
                                                             {size.size}
                                                             {index < array.length - 1 && ' | '}
@@ -776,6 +776,21 @@ export default function CatalogHome() {
                                             </button>
                                         </Scrollink>
 
+
+                                        <Scrollink to="product-start" smooth={true}>
+                                            <button
+                                                onClick={() => onPageChange(1)}
+                                                disabled={page === 1}
+                                                className={`inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium 
+                                                ${page === 1
+                                                        ? 'text-gray-300'
+                                                        : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                                                    }`}
+                                            >
+                                                {t('Begin')}
+                                            </button>
+                                        </Scrollink>
+
                                         {[...Array(endPage - startPage + 1)].map((_, index) => {
                                             const pageNumber = startPage + index;
                                             return (
@@ -795,6 +810,20 @@ export default function CatalogHome() {
 
                                             );
                                         })}
+
+                                        <Scrollink to="product-start" smooth={true}>
+                                            <button
+                                                onClick={() => onPageChange(totalPages)}
+                                                disabled={page >= totalPages}
+                                                className={`inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium 
+                                                    ${page >= totalPages
+                                                        ? 'text-gray-300'
+                                                        : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                                                    }`}
+                                            >
+                                                {t('End')}
+                                            </button>
+                                        </Scrollink>
 
                                         <Scrollink to="product-start" smooth={true}>
                                             <button

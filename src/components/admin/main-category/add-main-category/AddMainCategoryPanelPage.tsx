@@ -95,6 +95,7 @@ const AddMainCategoryPanelPage = () => {
     }
 
     const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
         event.preventDefault();
         const { isValid, newErrors } = validateForm(formData, setActiveTab);
         setErrors(newErrors);

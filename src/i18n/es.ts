@@ -671,4 +671,6 @@ export const es = {
     "FinReport_CategoryDistribution": "Categorías Populares",
     "FinReport_PopularProducts": "Productos Populares",
 
+    "Begin" : "Comenzar",
+    "End" : "Fin",
 }

@@ -675,4 +675,7 @@ export const uk = {
     "FinReport_CategoryDistribution": "Популярні категорії",
     "FinReport_PopularProducts": "Популярні продукти",
 
+    "Begin" : "Початок",
+    "End" : "Кінець",
+
 }

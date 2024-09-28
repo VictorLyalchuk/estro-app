@@ -670,4 +670,7 @@ export const fr = {
     "FinReport_ProfitThisWeek": "Bénéfice cette semaine",
     "FinReport_CategoryDistribution": "Catégories Populaires",
     "FinReport_PopularProducts": "Produits Populaires",
+
+    "Begin" : "Commencer",
+    "End" : "Fin",
 }

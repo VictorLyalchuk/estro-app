@@ -227,6 +227,8 @@ export default function ProductList() {
                         <div>
                             <nav className="flex items-center justify-between border-t border-gray-200 px-4 sm:px-0">
                                 <div className="flex flex-1 justify-between sm:justify-end">
+
+
                                     <Scrollink to="product-start" smooth={true}>
                                         <button
                                             onClick={() => onPageChange(page - 1)}
@@ -239,6 +241,20 @@ export default function ProductList() {
                                         >
                                             <ArrowLongLeftIcon className="mr-3 h-5 w-5 text-gray-400" aria-hidden="true" />
                                             {t('Order_Previous')}
+                                        </button>
+                                    </Scrollink>
+
+                                    <Scrollink to="product-start" smooth={true}>
+                                        <button
+                                            onClick={() => onPageChange(1)}
+                                            disabled={page === 1}
+                                            className={`inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium 
+                                                ${page === 1
+                                                    ? 'text-gray-300'
+                                                    : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                                                }`}
+                                        >
+                                            {t('Begin')}
                                         </button>
                                     </Scrollink>
 
@@ -259,6 +275,20 @@ export default function ProductList() {
                                             </Scrollink>
                                         );
                                     })}
+
+                                    <Scrollink to="product-start" smooth={true}>
+                                        <button
+                                            onClick={() => onPageChange(totalPages)}
+                                            disabled={page >= totalPages}
+                                            className={`inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium 
+                                                    ${page >= totalPages
+                                                    ? 'text-gray-300'
+                                                    : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                                                }`}
+                                        >
+                                            {t('End')}
+                                        </button>
+                                    </Scrollink>
 
                                     <Scrollink to="product-start" smooth={true}>
                                         <button
