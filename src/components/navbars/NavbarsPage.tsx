@@ -232,7 +232,7 @@ const NavbarsPage = () => {
                 <header className="relative bg-gray-100 mx-auto max-w-screen-2xl px-2 sm:px-2 lg:px-2">
                     <div className=" items-baseline justify-between border-b border-gray-200 pb-2 pt-2">
 
-                        <nav aria-label="Top" className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8 ">
+                        <nav aria-label="Top" className="mx-auto max-w-screen-2xl px-2 sm:px-2 lg:px-2 ">
                             <div>
                                 <div className="flex items-center h-16">
                                     <button

@@ -438,7 +438,7 @@ export default function CatalogNavigation() {
           </Dialog>
         </Transition.Root>
         <main className="mx-auto max-w-screen-2xl px-2 sm:px-2 lg:px-2 product-start">
-          <div className="flex items-baseline justify-between border-b border-gray-200 pb-2 pt-4">
+          <div className="flex items-baseline justify-between border-b border-gray-200 pb-2 pt-4 px-4 lg:px-1">
             <h1 className="text-4xl font-bold tracking-tight text-gray-900 pb-4">{t('CatalogNavigation_Catalog')}</h1>
 
             {/* Sort */}
