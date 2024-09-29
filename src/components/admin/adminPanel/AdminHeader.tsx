@@ -46,7 +46,6 @@ export default function AdminHeader() {
     };
 
     const handaleSearch = (event: { key: string; }) => {
-                console.log(searchValue);
         if (event.key === 'Enter') {
             if (searchValue.trim() !== "") {
                 const formattedSearchValue = searchValue.replace(/ /g, "_");

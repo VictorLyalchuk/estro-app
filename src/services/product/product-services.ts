@@ -57,12 +57,15 @@ export async function getProductById(id: string) {
 
 
 //admin panel
-export async function getProductByPage(page: number) {
+export async function getProductByPage(page: number, text: string) {
     const token = localStorage.getItem('token');
     try {
         const response = await instance.get<IProduct[]>(`ProductByPage/${page}`, {
             headers: {
                 Authorization: `Bearer ${token}`,
+            },
+            params: {
+                search: text || '',
             },
         })
         return response.data;
@@ -72,13 +75,16 @@ export async function getProductByPage(page: number) {
     }
 }
 
-export async function getProductQuantity() {
+export async function getProductQuantity(text: string) {
     const token = localStorage.getItem('token');
 
     try {
         const response = await instance.get<number>(`ProductQuantity`, {
             headers: {
                 Authorization: `Bearer ${token}`,
+            },
+            params: {
+                search: text || '',
             },
         })
         return response.data;

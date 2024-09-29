@@ -72,7 +72,6 @@ const NavbarsPage = () => {
                 navigate(`catalog-home/search/${formattedSearchValue}`)
             }
             else if (searchValue.trim() === "") {
-                // console.log(categoryList);
                 changeVisibleSearch();
                 navigate(`catalog-home`)
             }

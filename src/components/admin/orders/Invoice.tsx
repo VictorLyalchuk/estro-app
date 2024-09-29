@@ -21,9 +21,7 @@ const Invoice: React.FC<ShipOrderModalProps> = ({ isOpen, setOpen, orderItem }) 
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
   const baseUrl = APP_ENV.BASE_URL;
-
-  console.log(orderItem);
-  
+ 
   const handleClose = () => {
     setOpen(false);
   };

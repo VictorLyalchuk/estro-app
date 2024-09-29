@@ -546,7 +546,7 @@ export const uk = {
     "Admin_Sign_out": "Вийти",
     "Admin_View_notifications": "Перегляд сповіщень",
     "Admin_Open_user_menu": "Відкрити меню користувача",
-    "Admin_Search": "Пошук",
+    "Admin_Search": "Пошук товару за артикулом",
     "Admin_Open_main_menu": "Відкрийте головне меню",
     "Admin_Close_menu": "Закрити меню",
     "Admin_Profile_Overview": "Огляд профілю",

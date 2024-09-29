@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from 'react';
 import { IProduct } from '../../../interfaces/Product/IProduct';
 import { ProductReducerActionType } from '../../../store/product/productReducer';
@@ -14,6 +14,7 @@ import Loader from "../../../common/Loader/loader";
 
 export default function ProductList() {
     const { t, i18n } = useTranslation();
+    const { text } = useParams();
     const lang = i18n.language;
     const baseUrl = APP_ENV.BASE_URL;
     const dispatch = useDispatch();
@@ -41,17 +42,22 @@ export default function ProductList() {
     };
 
     useEffect(() => {
-        getProductByPage(page)
+        const searchText = text?.replace(/_/g, " ") || ''; 
+        if(searchText){
+            setPage(1)
+        }
+        setLoading(true);
+        getProductByPage(page, searchText)
             .then(data => dispatch({
                 type: ProductReducerActionType.SET,
                 payload: { products: data }
             }))
             .then(() => { setLoading(false); })
             .catch(error => console.error('Error fetching product data:', error));
-        getProductQuantity()
+        getProductQuantity(searchText)
             .then(data => setCountPage(data))
             .catch(error => console.error('Error fetching product quantity data:', error));
-    }, [dispatch, page]);
+    }, [dispatch, page, text]);
 
 
     const showDeleteConfirm = (product: IProduct) => {
@@ -61,6 +67,7 @@ export default function ProductList() {
 
     const handleDeleteProduct = () => {
         if (SelectedProduct) {
+            const searchText = text?.replace(/_/g, " ") || ''; 
             onPageChange(1);
             deleteProductByID(SelectedProduct?.id)
                 .then(() => {
@@ -70,7 +77,7 @@ export default function ProductList() {
                             productId: SelectedProduct?.id
                         }
                     });
-                    return getProductQuantity();
+                    return getProductQuantity(searchText);
                 })
                 .then(data => {
                     setCountPage(data);

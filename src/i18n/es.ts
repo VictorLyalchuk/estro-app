@@ -546,7 +546,7 @@ export const es = {
     "Admin_Sign_out": "Desconectar",
     "Admin_View_notifications": "Ver notificaciones",
     "Admin_Open_user_menu": "Abrir menú de usuario",
-    "Admin_Search": "Buscar",
+    "Admin_Search": "Búsqueda de productos por número de artículo",
     "Admin_Open_main_menu": "Abrir menú principal",
     "Admin_Close_menu": "Cerrar menú",
     "Admin_Profile_Overview": "Descripción general del perfil",

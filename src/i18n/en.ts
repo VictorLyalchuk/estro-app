@@ -550,7 +550,7 @@ export const en = {
     "Admin_Sign_out": "Sign out",
     "Admin_View_notifications": "View notifications",
     "Admin_Open_user_menu": "Open user menu",
-    "Admin_Search": "Search",
+    "Admin_Search": "Product search by article",
     "Admin_Open_main_menu": "Open main menu",
     "Admin_Close_menu": "Close menu",
     "Admin_Profile_Overview": "Profile Overview",
