@@ -12,7 +12,6 @@ import TextFieldReadOnlyNoLableComponent from '../../../ui/input-no-label/TextFi
 import PhoneNumberNoLableComponent from '../../../ui/input-no-label/PhoneNumberNoLableComponent';
 import Modal from '../../cropImage/Modal';
 import TextFieldNoLableComponent from '../../../ui/input-no-label/TextFieldNoLableComponent';
-import BirthdayComponent from '../../../ui/input-no-label/BirthdayComponent';
 import PasswordFieldNoLableComponent from '../../../ui/input-no-label/PasswordFieldNoLableComponent';
 import { validatePhoneNumber } from '../../../validations/custom/add-user-phone-validations';
 import { validateForm } from '../../../validations/account/edit-user-validations';
@@ -23,6 +22,7 @@ import { Roles } from '../../../interfaces/Auth/Roles';
 import AuthTypeSelect from '../../../ui/acount/AuthTypeSelect';
 import { IUserGetEdit } from '../../../interfaces/Auth/IUserGetEdit';
 import { useDispatch } from 'react-redux';
+import MyDatePicker from '../../../ui/data-picker/MyDatePicker';
 
 const EditUser = () => {
     const { Id } = useParams();
@@ -395,9 +395,15 @@ const EditUser = () => {
                                                             </label>
 
                                                             <div className="mt-2 flex rounded-md shadow-sm">
-                                                                <BirthdayComponent
+                                                                {/* <BirthdayComponent
                                                                     birthday={formData.birthday}
                                                                     handleChange={handleChange}
+                                                                /> */}
+
+                                                                <MyDatePicker
+                                                                    birthday={formData.birthday}
+                                                                    handleChange={handleChange}
+                                                                    name="birthday"
                                                                 />
                                                             </div>
                                                         </div>

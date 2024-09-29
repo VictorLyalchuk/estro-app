@@ -108,7 +108,6 @@ const LoginPage = () => {
                 } else {
                     setErrorMessage(t('LoginPage_InvalidEmailOrPassword'));
                 }
-                // setErrorMessage(t('LoginPage_InvalidEmailOrPassword'));
                 setTimeout(() => {
                     setErrorMessage("");
                 }, 1000);

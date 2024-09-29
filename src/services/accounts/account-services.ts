@@ -104,7 +104,11 @@ export async function editUserData(user: IUserEdit) {
     try {
         await instance.post(`Edit`, user)
     } catch (error) {
-        console.error('Failed to edit user data:', error);
+        if (axios.isAxiosError(error)) {
+            console.error('Edit request failed:', error.response?.data?.message || error.message);
+        } else {
+            console.error('Unexpected error:', error);
+        }
         throw error;
     }
 }

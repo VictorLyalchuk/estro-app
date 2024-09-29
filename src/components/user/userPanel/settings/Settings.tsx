@@ -15,16 +15,19 @@ import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
 import Modal from '../../../cropImage/Modal';
 import { theme } from '../../../../theme/theme';
-import BirthdayComponent from '../../../../ui/input-no-label/BirthdayComponent';
 import PasswordFieldNoLableComponent from '../../../../ui/input-no-label/PasswordFieldNoLableComponent';
 import TextFieldNoLableComponent from '../../../../ui/input-no-label/TextFieldNoLableComponent';
 import PhoneNumberNoLableComponent from '../../../../ui/input-no-label/PhoneNumberNoLableComponent';
 import TextFieldReadOnlyNoLableComponent from '../../../../ui/input-no-label/TextFieldReadOnlyNoLableComponent';
-import {t} from "i18next";
+import { t } from "i18next";
+import MyDatePicker from '../../../../ui/data-picker/MyDatePicker';
+import axios from 'axios';
+import { validateFormPassword } from '../../../../validations/account/password-validations';
 
 const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
   const baseUrl = APP_ENV.BASE_URL;
   const dispatch = useDispatch();
+  const [errorMessage, setErrorMessage] = useState("");
   const [profileUpdated, setProfileUpdated] = useState(false);
   const [updatePassword, setUpdatePassword] = useState(false);
   const [userImage, setUserImage] = useState<string>('');
@@ -161,7 +164,7 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    const { isValid, newErrors } = validateForm(formData, values.textmask, userProfile, authType);
+    const { isValid, newErrors } = validateForm(formData, values.textmask, authType);
     setErrors(newErrors);
     if (isValid) {
       const model: IUserEdit = {
@@ -176,11 +179,24 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
         newPassword: formData.newPassword || '',
         confirmNewPassword: formData.confirmNewPassword || '',
       };
-      await editUserData(model);
-      await refreshToken();
-      await refreshRedux(dispatch);
-      setProfileUpdated(true);
-      setOpen(true);
+      try {
+        await editUserData(model);
+        await refreshToken();
+        await refreshRedux(dispatch);
+        setProfileUpdated(true);
+        setOpen(true);
+      }
+      catch (error) {
+        if (axios.isAxiosError(error)) {
+          const errorMessage = error.response?.data?.message;
+          setErrorMessage(errorMessage);
+          const { newErrors } = validateFormPassword(errorMessage, authType);
+          setErrors(newErrors);
+        }
+        setTimeout(() => {
+          setErrorMessage("");
+        }, 1000);
+      }
     }
   };
 
@@ -356,9 +372,15 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
                             </label>
 
                             <div className="mt-2 flex rounded-md shadow-sm">
-                              <BirthdayComponent
+                              {/* <BirthdayComponent
                                 birthday={formData.birthday}
                                 handleChange={handleChange}
+                              /> */}
+
+                              <MyDatePicker
+                                birthday={formData.birthday}
+                                handleChange={handleChange}
+                                name="birthday"
                               />
                             </div>
                           </div>
@@ -521,6 +543,11 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
                 </ThemeProvider>
 
               </div>
+            </div>
+          </div>
+          <div className={`fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 ${errorMessage ? 'block' : 'hidden'}`}>
+            <div className="bg-white p-4 rounded-md shadow-md">
+              {errorMessage && <p className="text-red-500">{errorMessage}</p>}
             </div>
           </div>
         </main>
