@@ -244,7 +244,7 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
                   </td>
                   <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden sm:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
                     {item.product.storages?.map((storage, index) => {
-                      const isSizeMatch = Number(storage.size) === Number(item.size);
+                      const isSizeMatch = storage.size === String(item.size);
                       if (isSizeMatch) {
                         return <span key={index}>{storage.productQuantity}</span>;
                       }
@@ -271,7 +271,7 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
                       >
                         {statusOptions.filter((status) => {
                           const isSizeInStock = item.product.storages?.some(
-                            (storage) => Number(storage.size) === Number(item.size) && storage.productQuantity >= item.quantity && storage.inStock === true
+                            (storage) => storage.size === String(item.size) && storage.productQuantity >= item.quantity && storage.inStock === true
                           );
 
                           if (item.status === 'Cancelled' || item.status === 'Returned') {
