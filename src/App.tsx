@@ -83,6 +83,7 @@ function App() {
           <Route path="report/financial-reports" element={<FinancialReports />} />
 
           <Route path="product/product-list" element={<ProductList />} />
+          <Route path="product/product-list/search/:text" element={<ProductList />} />
           <Route path="product/add-product-en" element={<AddProductPanelPage />} />
           <Route path="product/add-product-uk" element={<AddProductPanelPage />} />
           <Route path="product/add-product-es" element={<AddProductPanelPage />} />

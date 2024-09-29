@@ -132,9 +132,13 @@ export default function CategoryList() {
                     </thead>
                     <tbody className="divide-y divide-white/5">
                         {loading ? (
-                            <div className="min-h-[662px]">
-                                <Loader />
-                            </div>
+                            <tr>
+                                <td colSpan={8} className="text-center py-4 min-h-[662px]">
+                                    <div className="min-h-[662px] flex items-center justify-center">
+                                        <Loader />
+                                    </div>
+                                </td>
+                            </tr>
                         ) : (
                             categoryList.map((category) => (
                                 <tr key={category.id} className="text-gray-700 hover:bg-gray-200">

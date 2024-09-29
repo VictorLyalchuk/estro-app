@@ -1,10 +1,10 @@
-import { Fragment } from 'react'
+import { Fragment, useState } from 'react'
 import { Menu, Popover, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon, } from '@heroicons/react/24/outline'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import classNames from 'classnames'
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { AuthReducerActionType, IAuthReducerState } from '../../../store/accounts/AuthReducer'
 import { APP_ENV } from '../../../env/config'
@@ -16,7 +16,9 @@ export default function AdminHeader() {
     const baseUrl = APP_ENV.BASE_URL;
     const { t } = useTranslation();
     const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
+    const [searchValue, setSearchValue] = useState('');
     const dispatch = useDispatch();
+    const navigate = useNavigate();
 
     const navigation = [
         { name: t('Admin_Home'), link: '/admin/admin-panel-page', current: false },
@@ -42,6 +44,20 @@ export default function AdminHeader() {
         dispatch({ type: CardReducerActionType.DELETE_CARD_ALL, });
         dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL, })
     };
+
+    const handaleSearch = (event: { key: string; }) => {
+                console.log(searchValue);
+        if (event.key === 'Enter') {
+            if (searchValue.trim() !== "") {
+                const formattedSearchValue = searchValue.replace(/ /g, "_");
+                navigate(`product/product-list/search/${formattedSearchValue}`)
+            }
+            else if (searchValue.trim() === "") {
+                navigate(`product/product-list`)
+            }
+        }
+    }
+
     return (
         <div className="min-h-full">
             <Popover as="header" className="bg-gradient-to-r pb-24 bg-white-container-header">
@@ -152,6 +168,8 @@ export default function AdminHeader() {
                                                         placeholder={t('Admin_Search')}
                                                         type="search"
                                                         name="search"
+                                                        onChange={(e) => setSearchValue(e.target.value)}
+                                                        onKeyDown={handaleSearch}
                                                     />
                                                 </div>
                                             </div>
