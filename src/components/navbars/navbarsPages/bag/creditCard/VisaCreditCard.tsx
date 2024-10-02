@@ -312,8 +312,6 @@ const VisaCreditCard: React.FC<VisaCreditCardProps> = ({ isOpen, setOpen, model,
                                             </form>
                                         </ThemeProvider>
                                     </div>
-
-
                                 </div>
                             </Dialog.Panel>
                         </Transition.Child>
