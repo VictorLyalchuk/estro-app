@@ -12,7 +12,8 @@ import visa from '../../../../../assets/visa.webp'
 import CardTextFieldNoLableComponent from '../../../../../ui/input-for-card/CardTextFieldComponent';
 import { Theme, ThemeProvider } from '@material-ui/core/styles';
 import { validateForm } from '../../../../../validations/bag/card-validations';
-import {t} from "i18next";
+import { t } from "i18next";
+import LoaderModal from '../../../../../common/Loader/loaderModal';
 
 interface VisaCreditCardProps {
     theme: Theme;
@@ -23,6 +24,7 @@ interface VisaCreditCardProps {
 
 const VisaCreditCard: React.FC<VisaCreditCardProps> = ({ isOpen, setOpen, model, theme }) => {
     const dispatch = useDispatch();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [cardData, setCardData] = useState({
         creditCardNumber: '',
         creditCardHolderName: '',
@@ -50,15 +52,24 @@ const VisaCreditCard: React.FC<VisaCreditCardProps> = ({ isOpen, setOpen, model,
         return creditCardNumber.replace(/(\d{4})/g, '$1 ').trim();
     };
 
-    const handleSubmit = (eventOfSubmission: FormEvent) => {
+    const handleSubmit = async (eventOfSubmission: FormEvent) => {
         eventOfSubmission.preventDefault();
 
         const { isValid, newErrors } = validateForm(cardData);
         setErrors(newErrors);
 
         if (isValid) {
-            model.payment = 'The money has been paid';
-            createOrder(model, dispatch);
+            try {
+                setIsLoaderModal(true);
+                model.payment = 'The money has been paid';
+                await createOrder(model, dispatch);
+            }
+            catch (error) {
+                console.error("error:", error);
+            }
+            finally {
+                setIsLoaderModal(false);
+            }
         }
     };
 
@@ -292,19 +303,25 @@ const VisaCreditCard: React.FC<VisaCreditCardProps> = ({ isOpen, setOpen, model,
                                                 <FormControl fullWidth variant="outlined" className='pt-7'>
                                                     <button
                                                         type="submit"
-                                                        className='flex w-full items-center justify-center rounded-md border bg-indigo-600 hover:bg-indigo-700
-                                                    px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'>
+                                                        disabled={isLoaderModal}
+                                                        className={`flex w-full items-center justify-center rounded-md border  ${isLoaderModal ? 'bg-gray-300' : "bg-indigo-600 hover:bg-indigo-700"}
+                                                    px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2`}>
                                                         {t('Bag_Card_PayNow')}
                                                     </button>
                                                 </FormControl>
                                             </form>
                                         </ThemeProvider>
                                     </div>
+
+
                                 </div>
                             </Dialog.Panel>
                         </Transition.Child>
                     </div>
                 </div>
+                {isLoaderModal && (
+                    <LoaderModal />
+                )}
             </Dialog>
         </Transition.Root>
     );

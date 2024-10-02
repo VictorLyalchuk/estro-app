@@ -25,6 +25,7 @@ import { ICountry } from "../../../../interfaces/Address/ICountry";
 import { t } from "i18next";
 import { IUserProfile } from "../../../../interfaces/Auth/IUserProfile";
 import { getUserData } from "../../../../services/accounts/account-services";
+import LoaderModal from "../../../../common/Loader/loaderModal";
 
 const Bag = () => {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ const Bag = () => {
   const { count } = useSelector((redux: any) => redux.bag as IBagReducerState);
   const bagItems = useSelector((state: { card: ICardReducerState }) => state.card.items) || [];
   const { discount } = useSelector((redux: any) => redux.card as ICardReducerState);
+  const [isLoaderModal, setIsLoaderModal] = useState(false);
   const [bagUser, setBagUser] = useState<IBagUser>();
   const [orderModel, setOrderModel] = useState<IOrderCreate | null>(null);
   const [selectedPayment, setSelectedPayment] = useState<string | ''>('');
@@ -122,8 +124,16 @@ const Bag = () => {
     const { isValid, newErrors } = validateForm(formData, shippingData, selectedPayment, selectedShipping, values.textmask, setActiveBlocks);
     setErrors(newErrors);
     if (isValid) {
-      setOrderModel(model);
-      setQuickviewOpen(true);
+      try {
+        setIsLoaderModal(true);
+       await setOrderModel(model);
+        setQuickviewOpen(true);
+      } catch (error) {
+        console.error("error:", error);
+      }
+      finally {
+        setIsLoaderModal(false);
+      }
     }
   }
 
@@ -255,6 +265,10 @@ const Bag = () => {
                 />
               )}
             </div>
+
+            {isLoaderModal && (
+              <LoaderModal />
+            )}
           </>
         ) : (
           <div className="container mx-auto p-8 flex justify-center relative bg-gray-100 mx-auto max-w-screen-2xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row">

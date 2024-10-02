@@ -23,10 +23,12 @@ import { t } from "i18next";
 import MyDatePicker from '../../../../ui/data-picker/MyDatePicker';
 import axios from 'axios';
 import { validateFormPassword } from '../../../../validations/account/password-validations';
+import LoaderModal from '../../../../common/Loader/loaderModal';
 
 const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
   const baseUrl = APP_ENV.BASE_URL;
   const dispatch = useDispatch();
+  const [isLoaderModal, setIsLoaderModal] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
   const [profileUpdated, setProfileUpdated] = useState(false);
   const [updatePassword, setUpdatePassword] = useState(false);
@@ -167,6 +169,8 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
     const { isValid, newErrors } = validateForm(formData, values.textmask, authType);
     setErrors(newErrors);
     if (isValid) {
+      setIsLoaderModal(true);
+
       const model: IUserEdit = {
         id: formData.id,
         firstName: formData.firstName,
@@ -197,6 +201,9 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
           setErrorMessage("");
         }, 1000);
       }
+      finally {
+        setIsLoaderModal(false);
+    }
     }
   };
 
@@ -545,6 +552,11 @@ const Settings: React.FC<SettingsUserProps> = ({ userProfile, authType }) => {
               </div>
             </div>
           </div>
+
+          {isLoaderModal && (
+            <LoaderModal />
+          )}
+
           <div className={`fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 ${errorMessage ? 'block' : 'hidden'}`}>
             <div className="bg-white p-4 rounded-md shadow-md">
               {errorMessage && <p className="text-red-500">{errorMessage}</p>}

@@ -27,13 +27,14 @@ import PasswordFieldComponent from '../../../../../ui/input-with-label/PasswordF
 import PhoneNumberComponent from '../../../../../ui/input-with-label/PhoneNumberComponent';
 import { State } from '../../../../../interfaces/Catalog/State';
 import { useTranslation } from "react-i18next";
-import i18next from "i18next";
+import LoaderModal from '../../../../../common/Loader/loaderModal';
 
 interface GoogleOAuthResponse {
     access_token: string;
 }
 
 const LoginPage = () => {
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const baseUrl = APP_ENV.BASE_URL;
     const twilio_auth_token = APP_ENV.TWILIO_AUTH_TOKEN;
     const twilio_acc_sid = APP_ENV.TWILIO_ACC_SID;
@@ -97,6 +98,7 @@ const LoginPage = () => {
         const { isValid, newErrors } = validateForm(formData, values.textmask);
         setErrors(newErrors);
         if (isValid) {
+            setIsLoaderModal(true);
             try {
                 await login(formData, dispatch);
                 navigate("/");
@@ -112,17 +114,21 @@ const LoginPage = () => {
                     setErrorMessage("");
                 }, 1000);
             }
+            finally {
+                setIsLoaderModal(false);
+            }
         };
     }
 
     const handleSubmitPhone = async (event: React.FormEvent<HTMLFormElement>) => {
+        setIsLoaderModal(true);
         event.preventDefault();
         try {
             const response = await axios.post(`${baseUrl}/api/AccountControllers/LoginByPhone?phone=${formData.phoneNumber}`, {});
 
             if (response.status === 200) {
                 setIsPhoneExists(true);
-                console.log(response.data);
+                // console.log(response.data);
                 setVerifySid(response.data.token.sid);
                 setMyToken(response.data.token.token);
             }
@@ -139,9 +145,14 @@ const LoginPage = () => {
                 setErrorMessage("");
             }, 1000);
         }
+        finally {
+            setIsLoaderModal(false);
+        }
     }
 
     const handleCodeConfirm = async () => {
+        setIsLoaderModal(true);
+
         try {
             const response = await axios.post(
                 `https://verify.twilio.com/v2/Services/${twilio_service_sid}/VerificationCheck`,
@@ -207,14 +218,18 @@ const LoginPage = () => {
                 setErrorMessage("");
             }, 1000);
         }
-
+        finally {
+            setIsLoaderModal(false);
+        }
     };
 
     const googleSuccess = async (response: GoogleOAuthResponse) => {
-        console.log(response);
-        console.log(i18next.language);
+        // console.log(response);
+        // console.log(i18next.language);
 
         if (response) {
+            setIsLoaderModal(true);
+
             try {
                 const res = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${response.access_token}`, {
                     headers: {
@@ -251,6 +266,9 @@ const LoginPage = () => {
                 }
             } catch (err) {
                 console.log(err);
+            }
+            finally {
+                setIsLoaderModal(false);
             }
         }
     };
@@ -467,6 +485,10 @@ const LoginPage = () => {
                             </div>
                         </div>
                     </div >
+
+                    {isLoaderModal && (
+                        <LoaderModal />
+                    )}
 
                     <div className={`fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 ${errorMessage ? 'block' : 'hidden'}`}>
                         <div className="bg-white p-4 rounded-md shadow-md">

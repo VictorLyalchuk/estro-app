@@ -21,16 +21,18 @@ import TextFieldComponent from '../../../../../ui/input-with-label/TextFieldComp
 import FileInputComponent from '../../../../../ui/input-with-label/FileInputComponent';
 import PhoneNumberComponent from '../../../../../ui/input-with-label/PhoneNumberComponent';
 import PasswordFieldComponent from '../../../../../ui/input-with-label/PasswordFieldComponent';
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
+import LoaderModal from '../../../../../common/Loader/loaderModal';
 
 const RegisterPage = () => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const baseUrl = APP_ENV.BASE_URL;
     const twilio_auth_token = APP_ENV.TWILIO_AUTH_TOKEN;
     const twilio_acc_sid = APP_ENV.TWILIO_ACC_SID;
     const twilio_service_sid = APP_ENV.TWILIO_SERVICE_SID;
 
     const classes = useStyles();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [isRegistered, setIsRegistered] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [showPassword, setShowPassword] = useState(false);
@@ -107,6 +109,7 @@ const RegisterPage = () => {
         setErrors(newErrors);
         if (isValid) {
             try {
+                setIsLoaderModal(true);
                 await register(formData);
                 setIsRegistered(true);
                 setIsEmail(false);
@@ -117,6 +120,9 @@ const RegisterPage = () => {
                     setErrorMessage("");
                 }, 1000);
             }
+            finally {
+                setIsLoaderModal(false);
+            }
         } else {
             console.log(formData);
         }
@@ -126,6 +132,7 @@ const RegisterPage = () => {
         event.preventDefault();
 
         try {
+            setIsLoaderModal(true);
             await axios.post(
                 `https://verify.twilio.com/v2/Services/${twilio_service_sid}/VerificationCheck`,
                 new URLSearchParams({
@@ -171,11 +178,15 @@ const RegisterPage = () => {
                 setErrorMessage("");
             }, 1000);
         }
+        finally {
+            setIsLoaderModal(false);
+        }
     };
 
     const googleSuccess = async (response: { access_token: any; }) => {
         if (response) {
             try {
+                setIsLoaderModal(true);
                 const res = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?access_token=${response.access_token}`, {
                     headers: {
                         Authorization: `Bearer ${response.access_token}`,
@@ -204,6 +215,9 @@ const RegisterPage = () => {
                 setTimeout(() => {
                     setErrorMessage("");
                 }, 1000);
+            }
+            finally {
+                setIsLoaderModal(false);
             }
         }
     };
@@ -383,8 +397,8 @@ const RegisterPage = () => {
                                                         onChange={handleChange}
                                                         error={errors.firstName}
                                                         autoComplete="firstName"
-                                                        maxLength={30}  
-                                                        placeholder={''}     
+                                                        maxLength={30}
+                                                        placeholder={''}
                                                     />
                                                     <TextFieldComponent
                                                         label={t('RegisterPage_LastName')}
@@ -394,8 +408,8 @@ const RegisterPage = () => {
                                                         onChange={handleChange}
                                                         error={errors.lastName}
                                                         autoComplete="lastName"
-                                                        maxLength={30}  
-                                                        placeholder={''}     
+                                                        maxLength={30}
+                                                        placeholder={''}
                                                     />
                                                     <TextFieldComponent
                                                         label={t('RegisterPage_Email')}
@@ -405,8 +419,8 @@ const RegisterPage = () => {
                                                         onChange={handleChange}
                                                         error={errors.email}
                                                         autoComplete="email"
-                                                        maxLength={30}  
-                                                        placeholder={''}     
+                                                        maxLength={30}
+                                                        placeholder={''}
                                                     />
                                                 </ThemeProvider>
 
@@ -496,8 +510,8 @@ const RegisterPage = () => {
                                                         onChange={handleChange}
                                                         error={errors.firstName}
                                                         autoComplete="firstName"
-                                                        maxLength={30} 
-                                                        placeholder={''}      
+                                                        maxLength={30}
+                                                        placeholder={''}
                                                     />
                                                     <TextFieldComponent
                                                         label={t('RegisterPage_LastName')}
@@ -507,8 +521,8 @@ const RegisterPage = () => {
                                                         onChange={handleChange}
                                                         error={errors.lastName}
                                                         autoComplete="lastName"
-                                                        maxLength={30}     
-                                                        placeholder={''}  
+                                                        maxLength={30}
+                                                        placeholder={''}
                                                     />
                                                 </ThemeProvider>
                                                 <FileInputComponent
@@ -588,6 +602,10 @@ const RegisterPage = () => {
                                 )
                             )}
                         </div >
+
+                        {isLoaderModal && (
+                            <LoaderModal />
+                        )}
 
                         <div className={`fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 ${errorMessage ? 'block' : 'hidden'}`}>
                             <div className="bg-white p-4 rounded-md shadow-md">

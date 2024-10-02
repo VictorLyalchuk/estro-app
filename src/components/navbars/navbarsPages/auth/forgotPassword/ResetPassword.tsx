@@ -9,9 +9,11 @@ import { resetPassword } from '../../../../../services/accounts/account-services
 import { theme } from '../../../../../theme/theme';
 import { useStyles } from '../../../../../theme/styles';
 import PasswordFieldComponent from '../../../../../ui/input-with-label/PasswordFieldComponent';
+import LoaderModal from '../../../../../common/Loader/loaderModal';
 
 const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
     const classes = useStyles();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [isResetPassword, setResetPassword] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setConfirmPassword] = useState(false);
@@ -43,6 +45,7 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
         setErrors(newErrors);
         if (isValid) {
             try {
+                setIsLoaderModal(true);
                 await resetPassword(formData);
                 setResetPassword(true);
             } catch (error) {
@@ -51,6 +54,9 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
                 setTimeout(() => {
                     setErrorMessage("");
                 }, 1000);
+            }
+            finally {
+                setIsLoaderModal(false);
             }
         } else {
             console.log(formData);
@@ -142,6 +148,10 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
                             </div>
                         </div>
                     </div >
+
+                    {isLoaderModal && (
+                        <LoaderModal />
+                    )}
 
                     <div className={`fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 ${errorMessage ? 'block' : 'hidden'}`}>
                         <div className="bg-white p-4 rounded-md shadow-md">

@@ -9,11 +9,13 @@ import { validateForm } from '../../../../../validations/account/forgot-validati
 import { theme } from '../../../../../theme/theme';
 import { useStyles } from '../../../../../theme/styles';
 import TextFieldComponent from '../../../../../ui/input-with-label/TextFieldComponent';
-import {useTranslation} from "react-i18next";
+import { useTranslation } from "react-i18next";
+import LoaderModal from '../../../../../common/Loader/loaderModal';
 
 const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfirmation: () => void }) => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const classes = useStyles();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [isSendEmail, setSendEmail] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
     const [formData, setFormData] = useState({
@@ -37,6 +39,7 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
         const { isValid, newErrors } = validateForm(formData);
         setErrors(newErrors);
         if (isValid) {
+            setIsLoaderModal(true);
             try {
                 await forgotPassword(formData.email);
                 setSendEmail(true);
@@ -48,6 +51,9 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
                 setTimeout(() => {
                     setErrorMessage("");
                 }, 1000);
+            }
+            finally {
+                setIsLoaderModal(false);
             }
         } else {
             console.log(formData);
@@ -77,23 +83,23 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
 
                                     <form onSubmit={handleSubmit}>
                                         <ThemeProvider theme={theme}>
-                                        <TextFieldComponent
-                                                    label={t('ForgotPassword_Email')}
-                                                    name="email"
-                                                    id="email"
-                                                    value={formData.email}
-                                                    onChange={handleChange}
-                                                    error={errors.email}
-                                                    autoComplete="email"
-                                                    maxLength={30}   
-                                                    placeholder={''}    
-                                                />
+                                            <TextFieldComponent
+                                                label={t('ForgotPassword_Email')}
+                                                name="email"
+                                                id="email"
+                                                value={formData.email}
+                                                onChange={handleChange}
+                                                error={errors.email}
+                                                autoComplete="email"
+                                                maxLength={30}
+                                                placeholder={''}
+                                            />
                                         </ThemeProvider>
-                                            <FormControl fullWidth variant="outlined">
-                                                <Button className={classes.button}  type="submit" variant="contained" size="large" color="primary" disableElevation>
-                                                    {t('ForgotPassword_ResetPassword')}
-                                                </Button>
-                                            </FormControl>
+                                        <FormControl fullWidth variant="outlined">
+                                            <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
+                                                {t('ForgotPassword_ResetPassword')}
+                                            </Button>
+                                        </FormControl>
                                     </form>
                                 </div >
                             )}
@@ -119,6 +125,10 @@ const ForgotPassword = ({ onPasswordResetConfirmation }: { onPasswordResetConfir
                             </div>
                         </div>
                     </div >
+
+                    {isLoaderModal && (
+                        <LoaderModal />
+                    )}
 
                     <div className={`fixed inset-0 flex items-center justify-center bg-gray-100 bg-opacity-50 ${errorMessage ? 'block' : 'hidden'}`}>
                         <div className="bg-white p-4 rounded-md shadow-md">
