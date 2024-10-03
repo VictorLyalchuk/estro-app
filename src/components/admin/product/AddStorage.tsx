@@ -10,6 +10,7 @@ import { theme } from '../../../theme/theme';
 import StorageTextFieldNoLableComponent from '../../../ui/input-with-label/StorageTextFieldNoLableComponent';
 import { getProductById } from '../../../services/product/product-services';
 import { addQuantityStorage } from '../../../services/storage/storage-services';
+import LoaderModal from '../../../common/Loader/loaderModal';
 
 export default function Product() {
     const { t, i18n } = useTranslation();
@@ -17,6 +18,7 @@ export default function Product() {
     const baseUrl = APP_ENV.BASE_URL;
     const { Id } = useParams();
     const navigate = useNavigate();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [product, setProduct] = useState<IProduct>();
     const [storagesList, setStorages] = useState<IStorages[]>([]);
 
@@ -60,18 +62,22 @@ export default function Product() {
         event.preventDefault();
 
         try {
-            addQuantityStorage(storagesList)
+            setIsLoaderModal(true);
+            await addQuantityStorage(storagesList)
             navigate('/admin/product/product-list');
         }
         catch (ex) {
             message.error('Error to add quantity storage data!');
+        }
+        finally {
+            setIsLoaderModal(false);
         }
     };
 
     const handleCancel = () => {
         navigate('/admin/product/product-list');
     }
-    
+
     return (
         <div className="bg-gray-100">
             <div className="container mx-auto p-8 flex relative max-w-screen-2xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row justify-between" style={{ minHeight: '1000px' }}>
@@ -167,6 +173,9 @@ export default function Product() {
                                 </nav>
                             </div>
                         </div>
+                        {isLoaderModal && (
+                            <LoaderModal />
+                        )}
                     </div>
                 </div>
             </div>

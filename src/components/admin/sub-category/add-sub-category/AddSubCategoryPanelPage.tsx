@@ -15,12 +15,14 @@ import AddSubCategory_en from './AddSubCategory_en';
 import AddSubCategory_uk from './AddSubCategory_uk';
 import AddSubCategory_es from './AddSubCategory_es';
 import AddSubCategory_fr from './AddSubCategory_fr';
+import LoaderModal from '../../../../common/Loader/loaderModal';
 
 const AddSubCategoryPanelPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(0);
     const { t } = useTranslation();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [image, setImage] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [mainCategory, setMainCategory] = useState<IMainCategory[]>([]);
@@ -96,9 +98,9 @@ const AddSubCategoryPanelPage = () => {
         try {
             await deleteCategoryImage(ImagePath);
             setImage(null);
-            } catch (error) {
-                console.error('Error uploading file:', error);
-            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
     };
 
     const handleMainCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -136,11 +138,15 @@ const AddSubCategoryPanelPage = () => {
             };
 
             try {
+                setIsLoaderModal(true);
                 await createSubCategory(model);
                 navigate("/admin/sub-category/sub-category-list");
             }
             catch (ex) {
                 message.error('Error adding sub-category!');
+            }
+            finally {
+                setIsLoaderModal(false);
             }
         } else {
             message.error('Error validate form sub-category!');
@@ -257,6 +263,9 @@ const AddSubCategoryPanelPage = () => {
                             <div className="mt-4">
                                 {tabs.find(tab => tab.current)?.component}
                             </div>
+                            {isLoaderModal && (
+                                <LoaderModal />
+                            )}
                         </div>
                     </div >
                 </div >

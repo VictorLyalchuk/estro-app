@@ -14,6 +14,7 @@ import EditMainCategory_en from './EditMainCategory_en';
 import EditMainCategory_uk from './EditMainCategory_uk';
 import EditMainCategory_es from './EditMainCategory_es';
 import EditMainCategory_fr from './EditMainCategory_fr';
+import LoaderModal from '../../../../common/Loader/loaderModal';
 
 const EditMainCategoryPanelPage = () => {
     const { Id } = useParams();
@@ -21,6 +22,7 @@ const EditMainCategoryPanelPage = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(0);
     const { t } = useTranslation();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [image, setImage] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const parsedId = Id ? parseInt(Id, 10) : 0;
@@ -107,9 +109,9 @@ const EditMainCategoryPanelPage = () => {
         try {
             await deleteCategoryImage(ImagePath);
             setImage(null);
-            } catch (error) {
-                console.error('Error uploading file:', error);
-            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
     };
 
     const handleCancel = () => {
@@ -140,11 +142,15 @@ const EditMainCategoryPanelPage = () => {
             };
 
             try {
+                setIsLoaderModal(true);
                 await editMainCategory(model);
                 navigate("/admin/main-category/main-category-list");
             }
             catch (ex) {
                 message.error('Error adding main-category!');
+            }
+            finally {
+                setIsLoaderModal(false);
             }
         } else {
             message.error('Error validate form main-category!');
@@ -249,6 +255,9 @@ const EditMainCategoryPanelPage = () => {
                             <div className="mt-4">
                                 {tabs.find(tab => tab.current)?.component}
                             </div>
+                            {isLoaderModal && (
+                                <LoaderModal />
+                            )}
                         </div>
                     </div >
                 </div >

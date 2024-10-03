@@ -15,11 +15,13 @@ import EditStore_en from './EditStore_en';
 import EditStore_uk from './EditStore_uk';
 import EditStore_es from './EditStore_es';
 import EditStore_fr from './EditStore_fr';
+import LoaderModal from '../../../../common/Loader/loaderModal';
 
 const EditStorePanelPage = () => {
     const { Id } = useParams();
     const location = useLocation();
     const navigate = useNavigate();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [activeTab, setActiveTab] = useState(0);
     const { t } = useTranslation();
     const parsedId = Id ? parseInt(Id, 10) : 0;
@@ -131,11 +133,15 @@ const EditStorePanelPage = () => {
             };
 
             try {
+                setIsLoaderModal(true);
                 await editStore(model);
                 navigate("/admin/store/store-list");
             }
             catch (ex) {
                 message.error('Error adding store!');
+            }
+            finally {
+                setIsLoaderModal(false);
             }
         } else {
             message.error('Error validate form store!');
@@ -248,6 +254,9 @@ const EditStorePanelPage = () => {
                             <div className="mt-4">
                                 {tabs.find(tab => tab.current)?.component}
                             </div>
+                            {isLoaderModal && (
+                                <LoaderModal />
+                            )}
                         </div>
                     </div >
                 </div >

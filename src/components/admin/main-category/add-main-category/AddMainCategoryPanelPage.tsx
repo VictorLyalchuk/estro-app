@@ -14,12 +14,14 @@ import AddMainCategory_en from './AddMainCategory_en';
 import AddMainCategory_uk from './AddMainCategory_uk';
 import AddMainCategory_es from './AddMainCategory_es';
 import AddMainCategory_fr from './AddMainCategory_fr';
+import LoaderModal from '../../../../common/Loader/loaderModal';
 
 const AddMainCategoryPanelPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(0);
     const { t } = useTranslation();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [image, setImage] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
 
@@ -85,9 +87,9 @@ const AddMainCategoryPanelPage = () => {
         try {
             await deleteCategoryImage(ImagePath);
             setImage(null);
-            } catch (error) {
-                console.error('Error uploading file:', error);
-            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
     };
 
     const handleCancel = () => {
@@ -117,11 +119,15 @@ const AddMainCategoryPanelPage = () => {
             };
 
             try {
+                setIsLoaderModal(true);
                 await createMainCategory(model);
                 navigate("/admin/main-category/main-category-list");
             }
             catch (ex) {
                 message.error('Error adding main-category!');
+            }
+            finally {
+                setIsLoaderModal(false);
             }
         } else {
             message.error('Error validate form main-category!');
@@ -226,6 +232,9 @@ const AddMainCategoryPanelPage = () => {
                             <div className="mt-4">
                                 {tabs.find(tab => tab.current)?.component}
                             </div>
+                            {isLoaderModal && (
+                                <LoaderModal />
+                            )}
                         </div>
                     </div >
                 </div >

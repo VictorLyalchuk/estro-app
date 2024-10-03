@@ -21,12 +21,14 @@ import AddProduct_es from './AddProduct_es';
 import AddProduct_fr from './AddProduct_fr';
 import { ISubCategory } from '../../../../interfaces/Category/Sub-Category/ISubCategory';
 import { ICategory } from '../../../../interfaces/Category/Category/ICategory';
+import LoaderModal from '../../../../common/Loader/loaderModal';
 
 const AddProductPanelPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(0);
     const { t } = useTranslation();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [season, setSeason] = useState<IProductFilters[]>([]);
     const [colors, setColors] = useState<IProductFilters[]>([]);
     const [materials, setMaterials] = useState<IProductFilters[]>([]);
@@ -264,11 +266,15 @@ const AddProductPanelPage = () => {
             };
 
             try {
+                setIsLoaderModal(true);
                 await createProduct(model);
                 navigate("/admin/product/product-list");
             }
             catch (ex) {
                 message.error('Error adding product!');
+            }
+            finally {
+                setIsLoaderModal(false);
             }
         } else {
             message.error('Error validate form product!');
@@ -433,6 +439,9 @@ const AddProductPanelPage = () => {
                             <div className="mt-4">
                                 {tabs.find(tab => tab.current)?.component}
                             </div>
+                            {isLoaderModal && (
+                                <LoaderModal />
+                            )}
                         </div>
                     </div >
                 </div >

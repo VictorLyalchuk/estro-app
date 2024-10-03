@@ -15,12 +15,14 @@ import { validateForm } from '../../../../validations/add-store/add-store-valida
 import AddStore_uk from './AddStore_uk';
 import AddStore_es from './AddStore_es';
 import AddStore_fr from './AddStore_fr';
+import LoaderModal from '../../../../common/Loader/loaderModal';
 
 const AddStorePanelPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(0);
     const { t } = useTranslation();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [cityOptions, setCityOptions] = useState<ICity[]>([]);
     const [countryOptions, setCountryOptions] = useState<ICountry[]>([]);
     const [selectedCity, setSelectedCity] = useState<ICity | null>(null);
@@ -113,11 +115,15 @@ const AddStorePanelPage = () => {
             };
 
             try {
+                setIsLoaderModal(true);
                 await createStore(model);
                 navigate("/admin/store/store-list");
             }
             catch (ex) {
                 message.error('Error adding store!');
+            }
+            finally {
+                setIsLoaderModal(false);
             }
         } else {
             message.error('Error validate form store!');
@@ -230,6 +236,9 @@ const AddStorePanelPage = () => {
                             <div className="mt-4">
                                 {tabs.find(tab => tab.current)?.component}
                             </div>
+                            {isLoaderModal && (
+                                <LoaderModal />
+                            )}
                         </div>
                     </div >
                 </div >

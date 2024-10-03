@@ -23,12 +23,14 @@ import AuthTypeSelect from '../../../ui/acount/AuthTypeSelect';
 import { IUserGetEdit } from '../../../interfaces/Auth/IUserGetEdit';
 import { useDispatch } from 'react-redux';
 import MyDatePicker from '../../../ui/data-picker/MyDatePicker';
+import LoaderModal from '../../../common/Loader/loaderModal';
 
 const EditUser = () => {
     const { Id } = useParams();
     const baseUrl = APP_ENV.BASE_URL;
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [userImage, setUserImage] = useState<string>('');
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -200,6 +202,7 @@ const EditUser = () => {
                 isBlocked: formData.isBlocked,
             };
             try {
+                setIsLoaderModal(true);
                 await editUser(model);
                 await refreshToken();
                 await refreshRedux(dispatch);
@@ -207,6 +210,9 @@ const EditUser = () => {
             }
             catch (ex) {
                 message.error('Error adding user!');
+            }
+            finally {
+                setIsLoaderModal(false);
             }
         } else {
             message.error('Error validate form user!');
@@ -499,6 +505,9 @@ const EditUser = () => {
                                 </div>
                             </div>
                         </div>
+                        {isLoaderModal && (
+                                <LoaderModal />
+                            )}
                     </div>
                 </div>
             </div>

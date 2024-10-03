@@ -15,6 +15,7 @@ import EditSubCategory_en from './EditSubCategory_en';
 import EditSubCategory_fr from './EditSubCategory_fr';
 import EditSubCategory_es from './EditSubCategory_es';
 import EditSubCategory_uk from './EditSubCategory_uk';
+import LoaderModal from '../../../../common/Loader/loaderModal';
 
 const EditSubCategoryPanelPage = () => {
     const { Id } = useParams();
@@ -22,6 +23,7 @@ const EditSubCategoryPanelPage = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(0);
     const { t } = useTranslation();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [image, setImage] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const parsedId = Id ? parseInt(Id, 10) : 0;
@@ -116,9 +118,9 @@ const EditSubCategoryPanelPage = () => {
         try {
             await deleteCategoryImage(ImagePath);
             setImage(null);
-            } catch (error) {
-                console.error('Error uploading file:', error);
-            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
     };
 
     const handleMainCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -155,11 +157,15 @@ const EditSubCategoryPanelPage = () => {
             };
 
             try {
+                setIsLoaderModal(true);
                 await editSubCategory(model);
                 navigate("/admin/sub-category/sub-category-list");
             }
             catch (ex) {
                 message.error('Error adding sub-category!');
+            }
+            finally {
+                setIsLoaderModal(false);
             }
         } else {
             message.error('Error validate form sub-category!');
@@ -276,6 +282,9 @@ const EditSubCategoryPanelPage = () => {
                             <div className="mt-4">
                                 {tabs.find(tab => tab.current)?.component}
                             </div>
+                            {isLoaderModal && (
+                                <LoaderModal />
+                            )}
                         </div>
                     </div >
                 </div >

@@ -11,7 +11,6 @@ import TextFieldReadOnlyNoLableComponent from '../../../ui/input-no-label/TextFi
 import PhoneNumberNoLableComponent from '../../../ui/input-no-label/PhoneNumberNoLableComponent';
 import Modal from '../../cropImage/Modal';
 import TextFieldNoLableComponent from '../../../ui/input-no-label/TextFieldNoLableComponent';
-import BirthdayComponent from '../../../ui/input-no-label/BirthdayComponent';
 import PasswordFieldNoLableComponent from '../../../ui/input-no-label/PasswordFieldNoLableComponent';
 import { validatePhoneNumber } from '../../../validations/custom/add-user-phone-validations';
 import { validateForm } from '../../../validations/account/add-user-validation';
@@ -21,10 +20,13 @@ import { useNavigate } from 'react-router-dom';
 import RoleSelect from '../../../ui/acount/RoleSelect';
 import AuthTypeSelect from '../../../ui/acount/AuthTypeSelect';
 import { Roles } from '../../../interfaces/Auth/Roles';
+import LoaderModal from '../../../common/Loader/loaderModal';
+import MyDatePicker from '../../../ui/data-picker/MyDatePicker';
 
 const AddUser = () => {
     const baseUrl = APP_ENV.BASE_URL;
     const navigate = useNavigate();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [userImage, setUserImage] = useState<string>('');
     const [showCurrentPassword, setShowCurrentPassword] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
@@ -156,11 +158,15 @@ const AddUser = () => {
                 password: formData.password,
             };
             try {
+                setIsLoaderModal(true);
                 await createUser(model);
                 navigate("/admin/user/user-list");
             }
             catch (ex) {
                 message.error('Error adding user!');
+            }
+            finally {
+                setIsLoaderModal(false);
             }
         } else {
             message.error('Error validate form user!');
@@ -349,9 +355,14 @@ const AddUser = () => {
                                                             </label>
 
                                                             <div className="mt-2 flex rounded-md shadow-sm">
-                                                                <BirthdayComponent
+                                                                {/* <BirthdayComponent
                                                                     birthday={formData.birthday}
                                                                     handleChange={handleChange}
+                                                                /> */}
+                                                                <MyDatePicker
+                                                                    birthday={formData.birthday}
+                                                                    handleChange={handleChange}
+                                                                    name="birthday"
                                                                 />
                                                             </div>
                                                         </div>
@@ -433,6 +444,9 @@ const AddUser = () => {
                                 </div>
                             </div>
                         </div>
+                        {isLoaderModal && (
+                            <LoaderModal />
+                        )}
                     </div>
                 </div>
             </div>

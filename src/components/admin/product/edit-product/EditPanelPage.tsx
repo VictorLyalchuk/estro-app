@@ -21,7 +21,7 @@ import EditProduct_es from './EditProduct_es';
 import EditProduct_fr from './EditProduct_fr';
 import { ISubCategory } from '../../../../interfaces/Category/Sub-Category/ISubCategory';
 import { ICategory } from '../../../../interfaces/Category/Category/ICategory';
-
+import LoaderModal from '../../../../common/Loader/loaderModal';
 
 const EditPanelPage = () => {
     const { Id } = useParams();
@@ -29,6 +29,7 @@ const EditPanelPage = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(0);
     const { t } = useTranslation();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [season, setSeason] = useState<IProductFilters[]>([]);
     const [colors, setColors] = useState<IProductFilters[]>([]);
     const [materials, setMaterials] = useState<IProductFilters[]>([]);
@@ -41,7 +42,7 @@ const EditPanelPage = () => {
     const [selectedSubCategory, setSelectedSubCategory] = useState<ISubCategory | null>(null);
     const [selectedCategory, setSelectedCategory] = useState<ICategory | null>(null);
     const [isUploading, setIsUploading] = useState(false);
-    
+
     const idNumber = Id ? parseInt(Id, 10) : 0;
 
     const [formData, setFormData] = useState<IEditProductData>({
@@ -282,11 +283,15 @@ const EditPanelPage = () => {
             };
 
             try {
+                setIsLoaderModal(true);
                 await editProduct(model);
                 navigate("/admin/product/product-list");
             }
             catch (ex) {
                 message.error('Error adding product!');
+            }
+            finally {
+                setIsLoaderModal(false);
             }
         } else {
             console.log(formData);
@@ -451,6 +456,9 @@ const EditPanelPage = () => {
                             <div className="mt-4">
                                 {tabs.find(tab => tab.current)?.component}
                             </div>
+                            {isLoaderModal && (
+                                <LoaderModal />
+                            )}
                         </div>
                     </div >
                 </div >

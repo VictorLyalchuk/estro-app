@@ -16,12 +16,14 @@ import AddCategory_en from './AddCategory_en';
 import AddCategory_uk from './AddCategory_uk';
 import AddCategory_es from './AddCategory_es';
 import AddCategory_fr from './AddCategory_fe';
+import LoaderModal from '../../../../common/Loader/loaderModal';
 
 const AddCategoryPanelPage = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(0);
     const { t } = useTranslation();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [image, setImage] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const [mainCategory, setMainCategory] = useState<IMainCategory[]>([]);
@@ -103,9 +105,9 @@ const AddCategoryPanelPage = () => {
         try {
             await deleteCategoryImage(ImagePath);
             setImage(null);
-            } catch (error) {
-                console.error('Error uploading file:', error);
-            }
+        } catch (error) {
+            console.error('Error uploading file:', error);
+        }
     };
 
     const handleMainCategoryChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -154,11 +156,15 @@ const AddCategoryPanelPage = () => {
             };
 
             try {
+                setIsLoaderModal(true);
                 await createCategory(model);
                 navigate("/admin/category/category-list");
             }
             catch (ex) {
                 message.error('Error adding sub-category!');
+            }
+            finally {
+                setIsLoaderModal(false);
             }
         } else {
             message.error('Error validate form category!');
@@ -171,21 +177,21 @@ const AddCategoryPanelPage = () => {
             current: activeTab === 0,
             component:
                 <AddCategory_en
-                onSubmit={onSubmit}
-                formData={formData}
-                handleChange={handleChange}
-                errors={errors}
-                image={image}
-                mainCategory={mainCategory}
-                selectedMainCategory={selectedMainCategory}
-                handleMainCategoryChange={handleMainCategoryChange}
-                subCategory={subCategory}
-                selectedSubCategory={selectedSubCategory}
-                handleSubCategoryChange={handleSubCategoryChange}
-                handleFileChange={handleFileChange}
-                handleRemove={handleRemove}
-                handleCancel={handleCancel}
-                isUploading={isUploading}
+                    onSubmit={onSubmit}
+                    formData={formData}
+                    handleChange={handleChange}
+                    errors={errors}
+                    image={image}
+                    mainCategory={mainCategory}
+                    selectedMainCategory={selectedMainCategory}
+                    handleMainCategoryChange={handleMainCategoryChange}
+                    subCategory={subCategory}
+                    selectedSubCategory={selectedSubCategory}
+                    handleSubCategoryChange={handleSubCategoryChange}
+                    handleFileChange={handleFileChange}
+                    handleRemove={handleRemove}
+                    handleCancel={handleCancel}
+                    isUploading={isUploading}
                 />
         },
         {
@@ -215,21 +221,21 @@ const AddCategoryPanelPage = () => {
             current: activeTab === 2,
             component:
                 <AddCategory_es
-                onSubmit={onSubmit}
-                formData={formData}
-                handleChange={handleChange}
-                errors={errors}
-                image={image}
-                mainCategory={mainCategory}
-                selectedMainCategory={selectedMainCategory}
-                handleMainCategoryChange={handleMainCategoryChange}
-                subCategory={subCategory}
-                selectedSubCategory={selectedSubCategory}
-                handleSubCategoryChange={handleSubCategoryChange}
-                handleFileChange={handleFileChange}
-                handleRemove={handleRemove}
-                handleCancel={handleCancel}
-                isUploading={isUploading}
+                    onSubmit={onSubmit}
+                    formData={formData}
+                    handleChange={handleChange}
+                    errors={errors}
+                    image={image}
+                    mainCategory={mainCategory}
+                    selectedMainCategory={selectedMainCategory}
+                    handleMainCategoryChange={handleMainCategoryChange}
+                    subCategory={subCategory}
+                    selectedSubCategory={selectedSubCategory}
+                    handleSubCategoryChange={handleSubCategoryChange}
+                    handleFileChange={handleFileChange}
+                    handleRemove={handleRemove}
+                    handleCancel={handleCancel}
+                    isUploading={isUploading}
                 />
         },
         {
@@ -237,21 +243,21 @@ const AddCategoryPanelPage = () => {
             current: activeTab === 3,
             component:
                 <AddCategory_fr
-                onSubmit={onSubmit}
-                formData={formData}
-                handleChange={handleChange}
-                errors={errors}
-                image={image}
-                mainCategory={mainCategory}
-                selectedMainCategory={selectedMainCategory}
-                handleMainCategoryChange={handleMainCategoryChange}
-                subCategory={subCategory}
-                selectedSubCategory={selectedSubCategory}
-                handleSubCategoryChange={handleSubCategoryChange}
-                handleFileChange={handleFileChange}
-                handleRemove={handleRemove}
-                handleCancel={handleCancel}
-                isUploading={isUploading}
+                    onSubmit={onSubmit}
+                    formData={formData}
+                    handleChange={handleChange}
+                    errors={errors}
+                    image={image}
+                    mainCategory={mainCategory}
+                    selectedMainCategory={selectedMainCategory}
+                    handleMainCategoryChange={handleMainCategoryChange}
+                    subCategory={subCategory}
+                    selectedSubCategory={selectedSubCategory}
+                    handleSubCategoryChange={handleSubCategoryChange}
+                    handleFileChange={handleFileChange}
+                    handleRemove={handleRemove}
+                    handleCancel={handleCancel}
+                    isUploading={isUploading}
                 />
         },
     ];
@@ -287,6 +293,9 @@ const AddCategoryPanelPage = () => {
                             <div className="mt-4">
                                 {tabs.find(tab => tab.current)?.component}
                             </div>
+                            {isLoaderModal && (
+                                <LoaderModal />
+                            )}
                         </div>
                     </div >
                 </div >

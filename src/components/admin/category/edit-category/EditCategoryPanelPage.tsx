@@ -16,6 +16,7 @@ import EditCategory_en from './EditCategory_en';
 import EditCategory_fr from './EditCategory_fr';
 import EditCategory_es from './EditCategory_es';
 import EditCategory_uk from './EditCategory_uk';
+import LoaderModal from '../../../../common/Loader/loaderModal';
 
 const EditCategoryPanelPage = () => {
     const { Id } = useParams();
@@ -23,6 +24,7 @@ const EditCategoryPanelPage = () => {
     const navigate = useNavigate();
     const [activeTab, setActiveTab] = useState(0);
     const { t } = useTranslation();
+    const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [image, setImage] = useState<string | null>(null);
     const [isUploading, setIsUploading] = useState(false);
     const parsedId = Id ? parseInt(Id, 10) : 0;
@@ -174,11 +176,15 @@ const EditCategoryPanelPage = () => {
             };
 
             try {
+                setIsLoaderModal(true);
                 await editCategory(model);
                 navigate("/admin/category/category-list");
             }
             catch (ex) {
                 message.error('Error adding category!');
+            }
+            finally {
+                setIsLoaderModal(false);
             }
         } else {
             message.error('Error validate form category!');
@@ -307,6 +313,9 @@ const EditCategoryPanelPage = () => {
                             <div className="mt-4">
                                 {tabs.find(tab => tab.current)?.component}
                             </div>
+                            {isLoaderModal && (
+                                <LoaderModal />
+                            )}
                         </div>
                     </div >
                 </div >
