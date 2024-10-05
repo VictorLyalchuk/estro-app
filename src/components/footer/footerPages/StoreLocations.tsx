@@ -113,9 +113,9 @@ const StoreLocations = () => {
 
           {/* Store Content */}
           <div className="p-4">
-            {/* <h2 className="text-2xl font-bold mb-4 mx-auto">
+            <h2 className="text-2xl font-bold mb-4 mx-auto">
               {selectedCity ? getCityName(selectedCity) : selectedCountry}
-            </h2> */}
+            </h2>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 text-gray-700 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6">
               {filteredStores.length > 0 ? (
