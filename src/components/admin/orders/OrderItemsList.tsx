@@ -60,6 +60,7 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
   };
 
   useEffect(() => {
+    setLoading(true)
     const loadOrders = async () => {
       try {
         const orders = await getOrdersByPage(page, itemsPerPage, step);
@@ -72,7 +73,7 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
     };
 
     loadOrders().then(() => { setLoading(false); })
-  }, [page]);
+  }, [page, step]);
 
   const handleSelectChange = (orderItem: IOrderItemsAdmin, newStatus: OrderStatus) => {
     setSelectedOrderItem({
