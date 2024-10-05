@@ -6,6 +6,7 @@ import productReducer from './product/productReducer';
 import bagReducer from "./bag/BagReducer";
 import cardReducer from "./bag/CardReducer";
 import favoritesReducer from "./favourites/FavoritesReducer";
+import orderReducer from "./order/OrderReducer";
 
 export const rootReducer = combineReducers({
     auth: AuthReducer,
@@ -13,6 +14,7 @@ export const rootReducer = combineReducers({
     card: cardReducer,
     favorites: favoritesReducer,
     products: productReducer,
+    orders: orderReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

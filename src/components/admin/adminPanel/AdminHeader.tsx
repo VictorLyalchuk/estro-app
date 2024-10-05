@@ -1,4 +1,4 @@
-import { Fragment, useState } from 'react'
+import { Fragment, useEffect, useState } from 'react'
 import { Menu, Popover, Transition } from '@headlessui/react'
 import { Bars3Icon, BellIcon, XMarkIcon, } from '@heroicons/react/24/outline'
 import { MagnifyingGlassIcon } from '@heroicons/react/20/solid'
@@ -11,12 +11,16 @@ import { APP_ENV } from '../../../env/config'
 import { BagReducerActionType } from '../../../store/bag/BagReducer'
 import { CardReducerActionType } from '../../../store/bag/CardReducer'
 import { FavoritesReducerActionType } from '../../../store/favourites/FavoritesReducer'
+import { IOrderReducerState, OrderReducerActionType } from '../../../store/order/OrderReducer'
+import { getOrderQuantity } from '../../../services/order/order-services'
 
 export default function AdminHeader() {
     const baseUrl = APP_ENV.BASE_URL;
     const { t } = useTranslation();
     const { user } = useSelector((redux: any) => redux.auth as IAuthReducerState);
+    const { countOrder } = useSelector((redux: any) => redux.orders as IOrderReducerState);
     const [searchValue, setSearchValue] = useState('');
+    const [step] = useState<number[]>([0]);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
@@ -37,12 +41,34 @@ export default function AdminHeader() {
         { name: t('Admin_Sign_out'), to: '/', action: 'logout' },
     ]
 
+    useEffect(() => {
+        const getQuantity = async () => {
+            try {
+                const quantity = await getOrderQuantity(step);
+
+                if (quantity > 0) {
+                    dispatch({
+                        type: OrderReducerActionType.ORDER_COUNT,
+                        payload: {
+                            countOrder: quantity,
+                        }
+                    });
+                }
+            } catch (error) {
+                console.error('Failed to fetch order quantity:', error);
+            }
+        };
+
+        getQuantity();
+    }, []);
+
     const handleLogout = () => {
         localStorage.removeItem("token");
         dispatch({ type: AuthReducerActionType.LOGOUT_USER, });
         dispatch({ type: BagReducerActionType.DELETE_BAG_ALL, });
         dispatch({ type: CardReducerActionType.DELETE_CARD_ALL, });
-        dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL, })
+        dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL, });
+        dispatch({ type: OrderReducerActionType.DELETE_ORDER_COUNT, });
     };
 
     const handaleSearch = (event: { key: string; }) => {
@@ -74,14 +100,20 @@ export default function AdminHeader() {
 
                                 {/* Right section on desktop */}
                                 <div className="hidden lg:ml-4 lg:flex lg:items-center lg:py-5 lg:pr-0.5">
-                                    <button
-                                        type="button"
+                                    <Link
+                                        to="/admin/orders/placed-orders"
                                         className="relative flex-shrink-0 rounded-full p-1 text-indigo-200 hover:bg-white hover:bg-opacity-10 hover:text-white focus:outline-none focus:ring-2 focus:ring-white"
                                     >
                                         <span className="absolute -inset-1.5" />
                                         <span className="sr-only">{t('Admin_View_notifications')}</span>
-                                        <BellIcon className="h-6 w-6" aria-hidden="true" />
-                                    </button>
+                                        <BellIcon className="h-7 w-7" aria-hidden="true" />
+                                        {countOrder > 0 && (
+                                            <span className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                                                {countOrder}
+                                            </span>
+                                        )}
+                                    </Link>
+
 
                                     {/* Profile dropdown */}
                                     <Menu as="div" className="relative ml-4 flex-shrink-0">

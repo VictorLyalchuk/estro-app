@@ -13,6 +13,8 @@ import { formatDateWithTime } from '../../../services/custom/format-data';
 import { OrderStatus } from '../../../interfaces/Type/OrderStatus';
 import Loader from '../../../common/Loader/loader';
 import { Link } from 'react-router-dom';
+import { OrderReducerActionType } from '../../../store/order/OrderReducer';
+import { useDispatch } from 'react-redux';
 
 const statusOptions: OrderStatus[] = [
   'Order placed',
@@ -33,6 +35,7 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
   const [orderItems, setOrderItems] = useState<IOrderItemsAdmin[]>([]);
   const { t, i18n } = useTranslation();
   const lang = i18n.language;
+  const dispatch = useDispatch();
   const [modalVisibleStatusChange, setModalVisibleStatusChange] = useState<boolean>(false);
   const [modalVisiblePrintOrder, setModalVisiblePrintOrder] = useState<boolean>(false);
   const [selectedOrderItem, setSelectedOrderItem] = useState<IOrderItemsAdmin | null>(null);
@@ -105,6 +108,15 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
         setOrderItems(orders);
         const quantity = await getOrderQuantity(step);
         setCountPage(quantity);
+
+        if (quantity > 0) {
+          dispatch({
+            type: OrderReducerActionType.ORDER_COUNT,
+            payload: {
+              countOrder: quantity,
+            }
+          });
+        }
       } catch (error) {
         console.error('Failed to fetch orders:', error);
       }

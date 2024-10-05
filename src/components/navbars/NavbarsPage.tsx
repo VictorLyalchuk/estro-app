@@ -19,6 +19,7 @@ import classNames from 'classnames';
 import { getLocalizedField } from '../../utils/localized/localized.ts';
 import { useTranslation } from 'react-i18next';
 import { useCollections } from '../../data/collectionsList.tsx';
+import { OrderReducerActionType } from '../../store/order/OrderReducer.ts';
 
 const NavbarsPage = () => {
     const { t, i18n } = useTranslation();
@@ -56,7 +57,8 @@ const NavbarsPage = () => {
         dispatch({ type: AuthReducerActionType.LOGOUT_USER });
         dispatch({ type: BagReducerActionType.DELETE_BAG_ALL });
         dispatch({ type: CardReducerActionType.DELETE_CARD_ALL, });
-        dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL })
+        dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL });
+        dispatch({ type: OrderReducerActionType.DELETE_ORDER_COUNT, });
         setUserProfile(undefined);
     };
 

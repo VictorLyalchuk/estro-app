@@ -189,7 +189,9 @@ export default function AdminPanelPage() {
 
                 {/* Actions panel */}
                 <section aria-labelledby="quick-links-title">
-                  <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-200 shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0">
+                {/* <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-200 shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0"> */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 text-gray-700 mx-auto max-w-7xl  ">
+
                     <h2 className="sr-only" id="quick-links-title">
                       {t('Admin_Quick_links')}
                     </h2>
@@ -197,12 +199,13 @@ export default function AdminPanelPage() {
                       <div
                         key={action.id}
                         className={classNames(
-                          actionIdx === 0 ? 'rounded-tl-lg rounded-tr-lg sm:rounded-tr-none' : '',
-                          actionIdx === 1 ? 'sm:rounded-tr-lg' : '',
-                          actionIdx === actions.length - 2 ? 'sm:rounded-bl-lg' : '',
-                          actionIdx === actions.length - 1 ? 'rounded-bl-lg rounded-br-lg sm:rounded-bl-none' : '',
+                          // actionIdx === 0 ? 'rounded-tl-lg rounded-tr-lg sm:rounded-tr-none' : '',
+                          // actionIdx === 1 ? 'sm:rounded-tr-lg' : '',
+                          // actionIdx === actions.length - 2 ? 'sm:rounded-bl-lg' : '',
+                          // actionIdx === actions.length - 1 ? 'rounded-bl-lg rounded-br-lg sm:rounded-bl-none' : '',
                           'group relative bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-500 hover:bg-gray-100 hover:text-indigo-500 transform transition-transform duration-300 hover:scale-105',
-                          actionIdx % 2 === 0 ? 'hover:z-20' : 'hover:z-10'
+                          actionIdx % 2 === 0 ? 'hover:z-20' : 'hover:z-10',
+                          'rounded-md p-6 shadow-md'
                         )}
                       >
                         <div>
@@ -259,7 +262,7 @@ export default function AdminPanelPage() {
                             </div>
                           ) : (
                             orderReview.map((review, index) => (
-                              <li key={index} className="py-5 relative">
+                              <li key={index} className="py-5 relative transform transition-transform duration-300 hover:scale-105">
                                 <div className="flex items-center space-x-4">
                                   <div className="flex-shrink-0">
                                     <img src={`${baseUrl}/uploads/${review?.avatar || "user404.webp"}`} className="h-8 rounded-full" />
@@ -326,7 +329,7 @@ export default function AdminPanelPage() {
                             </div>
                           ) : (
                             orderItems.map((item) => (
-                              <li key={item.id} className="py-4 relative">
+                              <li key={item.id} className="py-4 relative transform transition-transform duration-300 hover:scale-105">
                                 <div className="flex items-center space-x-4">
                                   <div className="flex-shrink-0">
                                     <img src={`${baseUrl}/uploads/1200_${item.imagePath || '/uploads/default.jpg'}`} className="h-14" />

@@ -21,6 +21,8 @@ MenuProps {
 
 body {
 	font-family: 'Satoshi', sans-serif;
+	/* @apply bg-gray-100; */
+	background-color: #F3F4F6;
 }
 
 h1,
@@ -181,13 +183,6 @@ p {
 	backdrop-filter: blur(10px);
 	box-shadow: -10px 0 10px rgba(0, 0, 0, 0.1);
 }
-
-
-
-
-
-
-
 
 
 .bg-white-container-register {

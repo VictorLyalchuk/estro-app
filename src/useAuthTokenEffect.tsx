@@ -6,6 +6,7 @@ import { jwtDecode } from 'jwt-decode'
 import { BagReducerActionType } from './store/bag/BagReducer';
 import { FavoritesReducerActionType } from './store/favourites/FavoritesReducer';
 import { CardReducerActionType } from './store/bag/CardReducer';
+import { OrderReducerActionType } from './store/order/OrderReducer';
 
 const useAuthTokenEffect = () => {
   const dispatch = useDispatch();
@@ -45,6 +46,7 @@ const useAuthTokenEffect = () => {
         dispatch({ type: BagReducerActionType.DELETE_BAG_ALL });
         dispatch({ type: CardReducerActionType.DELETE_CARD_ALL });
         dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL });
+        dispatch({ type: OrderReducerActionType.DELETE_ORDER_COUNT, });
       }
     };
 

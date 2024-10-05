@@ -8,6 +8,7 @@ import { ArrowLeftOnRectangleIcon, ChevronDoubleRightIcon, Cog6ToothIcon, Curren
 import { FavoritesReducerActionType } from '../../../../store/favourites/FavoritesReducer';
 import { useTranslation } from "react-i18next";
 import { CardReducerActionType } from '../../../../store/bag/CardReducer';
+import { OrderReducerActionType } from '../../../../store/order/OrderReducer';
 
 const DropdownUser = () => {
   const baseUrl = APP_ENV.BASE_URL;
@@ -28,7 +29,8 @@ const DropdownUser = () => {
     dispatch({ type: AuthReducerActionType.LOGOUT_USER, });
     dispatch({ type: BagReducerActionType.DELETE_BAG_ALL, });
     dispatch({ type: CardReducerActionType.DELETE_CARD_ALL, });
-    dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL, })
+    dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL, });
+    dispatch({ type: OrderReducerActionType.DELETE_ORDER_COUNT, });
   };
 
   // close on click outside
