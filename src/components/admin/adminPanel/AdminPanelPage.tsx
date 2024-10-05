@@ -117,7 +117,7 @@ export default function AdminPanelPage() {
   ]
 
   useEffect(() => {
-    getProductQuantity()
+    getProductQuantity('')
       .then(data => setProductsCount(data))
       .catch(error => console.error('Error fetching product quantity data:', error));
     getUsersQuantity()
