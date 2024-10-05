@@ -98,7 +98,7 @@ const Invoice: React.FC<ShipOrderModalProps> = ({ isOpen, setOpen, orderItem }) 
               <p><strong>${t('Orders_Product_Name')}:</strong> ${getLocalizedField(orderItem, 'name', lang)}</p>           
               <p><strong>${t('Orders_Quantity')}:</strong> ${orderItem.quantity}</p>
               <p><strong>${t('Orders_Quantity_in_stock')}:</strong> ${orderItem.product.storages?.map((storage) => {
-      const isSizeMatch = Number(storage.size) === Number(orderItem.size);
+      const isSizeMatch = String(storage.size) === String(orderItem.size);
       return isSizeMatch ? storage.productQuantity : null;
     }).filter(quantity => quantity !== null).join(', ')}</p>
               <p><strong>${t('Orders_Size')}:</strong> ${orderItem.size}</p>
@@ -203,7 +203,7 @@ const Invoice: React.FC<ShipOrderModalProps> = ({ isOpen, setOpen, orderItem }) 
                       <div className="flex justify-between border-b border-gray-300 pb-2">
                         <span className="font-medium text-gray-700">{t('Orders_Quantity_in_stock')}:</span>
                         <span className="text-gray-900">{orderItem.product.storages?.map((storage, index) => {
-                          const isSizeMatch = Number(storage.size) === Number(orderItem.size);
+                          const isSizeMatch = String(storage.size) === String(orderItem.size);
                           if (isSizeMatch) {
                             return <span key={index}>{storage.productQuantity}</span>;
                           }
