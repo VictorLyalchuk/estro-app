@@ -99,20 +99,20 @@ export default function AdminPanelPage() {
     {
       id: 7,
       icon: BanknotesIcon,
-      name: t('Financial_Reports'),
+      name: t('Sales_Report'),
       href: '/admin/report/financial-reports',
       iconForeground: 'text-rose-700',
       iconBackground: 'bg-rose-50',
-      descriptions: t('Order_financial_descriptions'),
+      descriptions: t('Order_sales_descriptions'),
     },
     {
       id: 8,
       icon: AcademicCapIcon,
-      name: t('Sales_Report'),
+      name: t('Product_Report'),
       href: '#',
       iconForeground: 'text-indigo-700',
       iconBackground: 'bg-indigo-50',
-      descriptions: t('Order_sales_descriptions'),
+      descriptions: t('Order_product_descriptions'),
     },
   ]
 
