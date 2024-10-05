@@ -120,8 +120,8 @@ const StoreLocations = () => {
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 gap-4 text-gray-700 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 mt-6">
               {filteredStores.length > 0 ? (
                 filteredStores.map((store, index) => (
-                  <div key={index} className="bg-white rounded-md p-6 shadow-md mb-2 mt-2 hover:bg-indigo-400 hover:text-white transform transition-transform duration-300 hover:scale-105">
-                    <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-screen-2xl lg:px-8 hover:bg-indigo-400">
+                  <div key={index} className="group relative bg-white p-6 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-500 hover:bg-gray-100 hover:text-indigo-500 transform transition-transform duration-300 hover:scale-105 rounded-md p-6 shadow-md">
+                    <div className="mx-auto max-w-2xl px-8 py-8 sm:px-6 sm:pt-8 lg:max-w-screen-2xl lg:px-8 hover:bg-gray-100">
                       <h3 className="text-xl font-semibold mb-2">
                         {getLocalizedField(store, 'name', lang)}
                       </h3>

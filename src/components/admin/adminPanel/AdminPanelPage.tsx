@@ -191,7 +191,6 @@ export default function AdminPanelPage() {
                 <section aria-labelledby="quick-links-title">
                 {/* <div className="divide-y divide-gray-200 overflow-hidden rounded-lg bg-gray-200 shadow sm:grid sm:grid-cols-2 sm:gap-px sm:divide-y-0"> */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-2 gap-4 text-gray-700 mx-auto max-w-7xl  ">
-
                     <h2 className="sr-only" id="quick-links-title">
                       {t('Admin_Quick_links')}
                     </h2>
