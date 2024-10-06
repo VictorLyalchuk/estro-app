@@ -199,6 +199,11 @@ export const fr = {
     "ForgotPassword_ResetPassword": "Réinitialiser le mot de passe",
     "ForgotPassword_Forgot?": "Mot de passe oublié ?",
     "ForgotPassword_FollowInstructions": "Veuillez suivre les instructions ci-dessous pour le restaurer",
+    "ResetPassword" : "Réinitialiser le mot de passe",
+    "NewPassword" : "Nouveau mot de passe",
+    "ConfirmNewPassword" : "Confirmer le nouveau mot de passe",
+    "RestoredSuccessfully" : "Restauré avec succès",
+    "Youhavesuccessfully" : "Vous avez restauré avec succès votre mot de passe. Veuillez procéder à la connexion.",
 
     // REGISTER PAGE
     "RegisterPage_RegisterNow": "Si vous n'avez pas encore de compte, inscrivez-vous maintenant",

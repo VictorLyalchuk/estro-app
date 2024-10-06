@@ -199,6 +199,11 @@ export const es = {
     "ForgotPassword_ResetPassword": "Restablecer contraseña",
     "ForgotPassword_Forgot?": "¿Olvidaste tu contraseña?",
     "ForgotPassword_FollowInstructions": "Por favor, siga las instrucciones a continuación para restaurarla",
+    "ResetPassword" : "Restablecer contraseña",
+    "NewPassword" : "Nueva contraseña",
+    "ConfirmNewPassword" : "Confirmar nueva contraseña",
+    "RestoredSuccessfully" : "Restaurado con éxito",
+    "Youhavesuccessfully" : "Ha restaurado exitosamente su contraseña. Por favor proceda a iniciar sesión.",
 
     // REGISTER PAGE
     "RegisterPage_RegisterNow": "Si aún no tienes una cuenta, regístrate ahora",

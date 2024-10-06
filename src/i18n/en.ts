@@ -200,6 +200,12 @@ export const en = {
     "ForgotPassword_ResetPassword": "Reset Password",
     "ForgotPassword_Forgot?": "Forgot your password?",
     "ForgotPassword_FollowInstructions": "Please follow the instructions below to restore it",
+    "ResetPassword" : "Reset Password",
+    "NewPassword" : "New Password",
+    "ConfirmNewPassword" : "Confirm New Password",
+    "RestoredSuccessfully" : "Restored Successfully",
+    "Youhavesuccessfully" : "You have successfully restored your password. Please proceed to login.",
+
 
     // REGISTER PAGE
     "RegisterPage_RegisterNow": "If you don't have an account yet, register now",

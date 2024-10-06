@@ -199,6 +199,11 @@ export const uk = {
     "ForgotPassword_ResetPassword": "Відновити пароль",
     "ForgotPassword_Forgot?": "Забули пароль?",
     "ForgotPassword_FollowInstructions": "Будь ласка, дотримуйтесь інструкцій нижче для його відновлення",
+    "ResetPassword" : "Скинути пароль",
+    "NewPassword" : "Новий пароль",
+    "ConfirmNewPassword" : "Підтвердьте новий пароль",
+    "RestoredSuccessfully" : "Успішно відновлено",
+    "Youhavesuccessfully" : "Ви успішно відновили свій пароль. Будь ласка, перейдіть до входу.",
 
     // REGISTER PAGE
     "RegisterPage_RegisterNow": "Якщо у вас ще немає облікового запису, зареєструйтеся зараз",

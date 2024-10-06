@@ -10,8 +10,10 @@ import { theme } from '../../../../../theme/theme';
 import { useStyles } from '../../../../../theme/styles';
 import PasswordFieldComponent from '../../../../../ui/input-with-label/PasswordFieldComponent';
 import LoaderModal from '../../../../../common/Loader/loaderModal';
+import { useTranslation } from 'react-i18next';
 
 const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
+    const { t } = useTranslation();
     const classes = useStyles();
     const [isLoaderModal, setIsLoaderModal] = useState(false);
     const [isResetPassword, setResetPassword] = useState(false);
@@ -80,21 +82,21 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
                         <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0 flex flex-col justify-center items-center">
                             {isResetPassword ? (
                                 <div className="text-center">
-                                    <h2 className="text-2xl font-bold text-gray-900">Restored Successfully</h2>
+                                    <h2 className="text-2xl font-bold text-gray-900">{t('RestoredSuccessfully')}</h2>
                                     <br />
-                                    <p className="text-gray-500">You have successfully restored your password. Please proceed to login.</p>
+                                    <p className="text-gray-500">{t('Youhavesuccessfully')}</p>
                                 </div>
                             ) : (
                                 <div className="mb-24 ">
                                     <div className="sm:mx-auto sm:w-full sm:max-w-sm" >
                                         <h2 className="mt-5 mb-5 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                                            Reset Password
+                                        {t('ResetPassword')}
                                         </h2>
                                     </div>
                                     <form onSubmit={handleSubmit}>
                                         <ThemeProvider theme={theme}>
                                             <PasswordFieldComponent
-                                                label="New Password"
+                                                label={t('NewPassword')}
                                                 name="newPassword"
                                                 id="newPassword"
                                                 value={formData.newPassword}
@@ -105,7 +107,7 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
                                                 handlePasswordToggle={handlePasswordToggle}
                                             />
                                             <PasswordFieldComponent
-                                                label="Confirm New Password"
+                                                label={t('ConfirmNewPassword')}
                                                 name="confirmPassword"
                                                 id="confirmPassword"
                                                 value={formData.confirmPassword}
@@ -118,7 +120,7 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
                                         </ThemeProvider>
                                         <FormControl fullWidth variant="outlined">
                                             <Button className={classes.button} type="submit" variant="contained" size="large" color="primary" disableElevation>
-                                                Reset Password
+                                            {t('ResetPassword')}
                                             </Button>
                                         </FormControl>
 
@@ -132,17 +134,17 @@ const ResetPassword: React.FC<{ email: string; token: string; }> = (proprs) => {
 
                             <div className="bg-white-container-login flex flex-col justify-center items-center h-full">
                                 <h1 className="text-white text-9xl hover:text-indigo-300">estro</h1>
-                                <p className="text-white text-sx mb-10 hover:text-indigo-300">SHOES, CLOTHING & ACCESSORIES</p>
+                                <p className="text-white text-sx mb-10 hover:text-indigo-300">{t('Logo_Paragraph')}</p>
 
                                 <br />
 
                                 <p className="text-center text-sx hover:text-indigo-300">
-                                    Forgot your password?
+                                {t('ForgotPassword_Forgot?')}
                                 </p>
                                 <br />
 
                                 <p className="text-center text-sx hover:text-indigo-300">
-                                    Please follow the instructions below to restore it
+                                {t('ForgotPassword_FollowInstructions')}
                                 </p>
 
                             </div>
