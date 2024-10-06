@@ -104,13 +104,14 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
         orderId: updatedOrders.orderId,
       }
       try {
+        setLoading(true);
         await editOrderItems(model);
         const orders = await getOrdersByPage(page, itemsPerPage, step);
         setOrderItems(orders);
         const quantity = await getOrderQuantity(step);
         setCountPage(quantity);
 
-        if (quantity > 0) {
+        if (quantity > 0 && step[0] === 0) {
           dispatch({
             type: OrderReducerActionType.ORDER_COUNT,
             payload: {
@@ -118,6 +119,7 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
             }
           });
         }
+        setLoading(false);
       } catch (error) {
         console.error('Failed to fetch orders:', error);
       }
