@@ -268,6 +268,9 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
                   </td>
                   <td className="py-4 pl-8 pr-4 text-sm leading-6 hidden 2xl:table-cell sm:pr-8 lg:pr-20 border-t border-b border-gray-200">
                     {item.price} €
+                    {item.order.discount > 0 && (
+                      <span className="block text-red-500 mt-1">- {item.order.discount} €</span>
+                    )}
                   </td>
                   <td className="py-4 pl-8 pr-8 text-sm leading-6 hidden xl:table-cell lg:pr-20 border-t border-b border-gray-200">
                     <div>
