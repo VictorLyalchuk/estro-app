@@ -121,9 +121,9 @@ const CompactOrders: React.FC<CompactOrdersProps> = ({ orders, onViewModeChange,
                           <p className="mt-6 font-medium text-gray-900 md:mt-10">
                             {product.dueDate === '0001-01-01T00:00:00'
                               ? t('Order_DateNotDetermined')
-                              : `${product.status} on `}
+                              : `${t(product.status)}`} {t('on')}
                             {product.dueDate !== '0001-01-01T00:00:00' && (
-                              <time dateTime={product.dueDate}>{formatDate(product.dueDate)}</time>
+                              <time>{formatDate(order.orderDate, lang)}</time>
                             )}
                           </p>
                           <div className="mt-6" aria-hidden="true">

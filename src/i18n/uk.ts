@@ -374,6 +374,7 @@ export const uk = {
     "Order_Status": "Статус",
     "Order_Method": "Метод",
     "Order_Cancelled": "Замовлення скасовано",
+    "on" : " ",
 
     // NAVBARS
     "Navbars_SearchProducts": "Пошук товарів",

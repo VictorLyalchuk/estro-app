@@ -374,6 +374,7 @@ export const fr = {
     "Order_Status": "Statut",
     "Order_Method": "Méthode",
     "Order_Cancelled": "Commande annulée",
+    "on" : " le ",
 
     // NAVBARS
     "Navbars_SearchProducts": "Rechercher des produits",
