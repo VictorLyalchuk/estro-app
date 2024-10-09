@@ -1,10 +1,11 @@
 import { Fragment, useEffect, useState } from "react";
 import { APP_ENV } from "../../env/config";
 import { Link, useParams } from "react-router-dom";
-import { ConfirmEmail } from "../../services/accounts/account-services";
+import {ConfirmEmail, getUserData} from "../../services/accounts/account-services";
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
 import {useTranslation} from "react-i18next";
+import { getMainCategory } from '../../services/category/category-services.ts';
 
 const HomeStore = () => {
   const {t} = useTranslation();
@@ -12,8 +13,15 @@ const HomeStore = () => {
   const { email, token } = useParams<{ email: string, token: string }>();
   const [emailConfirm, setEmailConfirm] = useState(false);
   const [open, setOpen] = useState(true)
+  const [mainCategory, setMainCategory] = useState();
 
   useEffect(() => {
+    getMainCategory()
+        .then(data => {
+          console.log('Fetched main category data:', data);
+          setMainCategory(data);
+        })
+        .catch(error => console.error('Error fetching main category data:', error));
     homePage(email, token);
   }, [email, token]);
 
@@ -40,9 +48,9 @@ const HomeStore = () => {
                     <div className="sm:min-h-[1800px] md:min-h-[1800px] lg:min-h-[1000px] min-h-[1300px] grid grid-cols-1 grid-rows-2 lg:grid-cols-2 lg:grid-rows-1">
                       <div className="relative flex group hover13 h-full">
                         <img
-                          src={`${baseUrl}/uploads/800_home_page_16.webp`}
+                            src={`${baseUrl}/uploads/${mainCategory?.[0]?.imagePath}`}
                           alt=""
-                          className="absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-300 ease-in-out saturate-[.77] group-hover:saturate-150"
+                          className=" absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-300 ease-in-out saturate-[.77] group-hover:saturate-150"
                         />
                         <div className="relative flex w-full flex-col items-end justify-start bg-black bg-opacity-10 p-8 sm:p-12">
                           <h1 className="mt-2 text-5xl font-medium text-white text-opacity-75">{t('HomeStore_Women')}</h1>
@@ -53,7 +61,7 @@ const HomeStore = () => {
                       </div>
                       <div className="relative flex group hover13">
                         <img
-                          src={`${baseUrl}/uploads/800_home_page_17.webp`}
+                            src={`${baseUrl}/uploads/${mainCategory?.[1]?.imagePath}`}
                           alt=""
                           className="absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-300 ease-in-out saturate-[.77] group-hover:saturate-150"
                         />

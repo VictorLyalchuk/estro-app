@@ -90,15 +90,30 @@ export async function refreshToken() {
     }
 }
 
-export async function getUserData(userEmail: string | null) {
+export async function getUserData(userEmail: string | null, userPhone: string | null = null) {
+    // Validate input: ensure at least one of email or phone is provided
+    if (!userEmail && !userPhone) {
+        throw new Error('You must provide either an email or a phone number to fetch user data.');
+    }
+
     try {
-        const response = await instance.get<IUserProfile>(`${userEmail}`);
+        // Build the query string based on the provided email or phone
+        const queryParams = new URLSearchParams();
+        if (userEmail) queryParams.append('email', userEmail);
+        if (userPhone) queryParams.append('phone', userPhone);
+
+        // Send the request to your service endpoint
+        const response = await instance.get<IUserProfile>(`/get-by-email-or-phone?${queryParams.toString()}`);
+        console.log(response.data);
         return response.data;
     } catch (error) {
         console.error('Failed to fetch user data:', error);
         throw error;
     }
 }
+
+
+
 
 export async function editUserData(user: IUserEdit) {
     try {

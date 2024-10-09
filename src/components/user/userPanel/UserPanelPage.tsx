@@ -95,6 +95,7 @@ const UserPanelPage = () => {
 
     useEffect(() => {
         if (user) {
+            console.log(user.Id);
             getUserOrders(user.Id)
                 .then(data => setCountPage(data))
                 .catch(error => console.error('Error fetching count order data:', error));
@@ -103,9 +104,17 @@ const UserPanelPage = () => {
                 .then(data => setOrdersUser(data))
                 .catch(error => console.error('Error fetching user data:', error));
 
-            getUserData(user.Email)
-                .then(data => setUserProfile(data))
-                .catch(error => console.error('Error fetching user data:', error));
+            if(user.AuthType == "phone")
+            {
+                getUserData(null, user.PhoneNumber)
+                    .then(data => setUserProfile(data))
+                    .catch(error => console.error('Error fetching user data:', error));
+            }
+            else {
+                getUserData(user.Email)
+                    .then(data => setUserProfile(data))
+                    .catch(error => console.error('Error fetching user data:', error));
+            }
             getUserBonusesByUserId(user.Id)
                 .then(data => setUserBonuses(data))  
                 .catch(error => console.error('Error fetching bonuses data:', error));

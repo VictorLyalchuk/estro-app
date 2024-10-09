@@ -86,8 +86,8 @@ const Bag = () => {
         textmask: user?.PhoneNumber,
       }));
       getUserData(user.Email)
-        .then(data => setUserProfile(data))
-        .catch(error => console.error('Error fetching user data:', error));
+          .then(data => setUserProfile(data))
+          .catch(error => console.error('Error fetching user data:', error));
     }
 
     getCountry().then(resp => setCountryOptions(resp));
@@ -126,7 +126,7 @@ const Bag = () => {
     if (isValid) {
       try {
         setIsLoaderModal(true);
-       await setOrderModel(model);
+        await setOrderModel(model);
         setQuickviewOpen(true);
       } catch (error) {
         console.error("error:", error);
@@ -182,108 +182,108 @@ const Bag = () => {
 
   const handleBlockClick = (blockName: string) => {
     setActiveBlocks((prevActiveBlocks) =>
-      prevActiveBlocks.includes(blockName)
-        ? prevActiveBlocks.filter((name) => name !== blockName)
-        : [...prevActiveBlocks, blockName]
+        prevActiveBlocks.includes(blockName)
+            ? prevActiveBlocks.filter((name) => name !== blockName)
+            : [...prevActiveBlocks, blockName]
     );
   };
 
   return (
-    <div className="bg-gray-100">
-      <div className="container mx-auto p-8 flex  relative bg-gray-100 mx-auto max-w-screen-2xl px-2 sm:px-2 lg:px-2   flex-col lg:flex-row justify-between min-h-[780px]">
-        {bagItems && bagItems.length > 0 ? (
-          <>
-            {/* Order Summary */}
-            <OrderSummary
-              bagUser={bagUser}
-              bagItems={bagItems}
-              email={user?.Email}
-              dispatch={dispatch}
-            />
-
-            <div className="w-full lg:w-2/4 p-5 lg:mb-0">
-              <form onSubmit={onSubmit}>
-
-                {/* Personal Information */}
-                <PersonalInformation
-                  theme={theme}
-                  formData={formData}
-                  handleChange={handleChange}
-                  errors={errors}
-                  activeBlock={activeBlocks}
-                  handleBlockClick={handleBlockClick}
-                  changePhoneNumber={changePhoneNumber}
-                  values={values}
+      <div className="bg-gray-100">
+        <div className="container mx-auto p-8 flex  relative bg-gray-100 mx-auto max-w-screen-2xl px-2 sm:px-2 lg:px-2   flex-col lg:flex-row justify-between min-h-[780px]">
+          {bagItems && bagItems.length > 0 ? (
+              <>
+                {/* Order Summary */}
+                <OrderSummary
+                    bagUser={bagUser}
+                    bagItems={bagItems}
+                    email={user?.Email}
+                    dispatch={dispatch}
                 />
 
-                {/* Shipping */}
-                <DeliveryInformation
-                  errors={errors}
-                  activeBlock={activeBlocks}
-                  handleBlockClick={handleBlockClick}
-                  selectedShipping={selectedShipping}
-                  setSelectedShipping={setSelectedShipping}
-                  handleChangeShipping={handleChangeShipping}
-                  //Store
-                  countryOptions={countryOptions}
-                  cityOptions={cityOptions}
-                  storeOptions={storeOptions}
-                  //Address Shipping
-                  shippingData={shippingData}
-                />
-                {/* Payment */}
-                <PaymentInformation
-                  theme={theme}
-                  errors={errors}
-                  formData={formData}
-                  activeBlock={activeBlocks}
-                  handleBlockClick={handleBlockClick}
-                  selectedPayment={selectedPayment}
-                  setSelectedPayment={setSelectedPayment}
-                  bonusBalance={userProfile?.bonusBalance || 0}
-                />
+                <div className="w-full lg:w-2/4 p-5 lg:mb-0">
+                  <form onSubmit={onSubmit}>
 
-                {/* Checkout Button */}
-                <div className="mt-8 flex justify-end">
-                  <FormControl fullWidth variant="outlined">
-                    <button
-                      type="submit"
-                      className='flex w-full items-center justify-center rounded-md border bg-indigo-600 hover:bg-indigo-700
+                    {/* Personal Information */}
+                    <PersonalInformation
+                        theme={theme}
+                        formData={formData}
+                        handleChange={handleChange}
+                        errors={errors}
+                        activeBlock={activeBlocks}
+                        handleBlockClick={handleBlockClick}
+                        changePhoneNumber={changePhoneNumber}
+                        values={values}
+                    />
+
+                    {/* Shipping */}
+                    <DeliveryInformation
+                        errors={errors}
+                        activeBlock={activeBlocks}
+                        handleBlockClick={handleBlockClick}
+                        selectedShipping={selectedShipping}
+                        setSelectedShipping={setSelectedShipping}
+                        handleChangeShipping={handleChangeShipping}
+                        //Store
+                        countryOptions={countryOptions}
+                        cityOptions={cityOptions}
+                        storeOptions={storeOptions}
+                        //Address Shipping
+                        shippingData={shippingData}
+                    />
+                    {/* Payment */}
+                    <PaymentInformation
+                        theme={theme}
+                        errors={errors}
+                        formData={formData}
+                        activeBlock={activeBlocks}
+                        handleBlockClick={handleBlockClick}
+                        selectedPayment={selectedPayment}
+                        setSelectedPayment={setSelectedPayment}
+                        bonusBalance={userProfile?.bonusBalance || 0}
+                    />
+
+                    {/* Checkout Button */}
+                    <div className="mt-8 flex justify-end">
+                      <FormControl fullWidth variant="outlined">
+                        <button
+                            type="submit"
+                            className='flex w-full items-center justify-center rounded-md border bg-indigo-600 hover:bg-indigo-700
                   px-8 py-3 text-base font-medium text-white  focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2'>
-                      {t('Bag_Confirm')}
-                    </button>
-                  </FormControl>
+                          {t('Bag_Confirm')}
+                        </button>
+                      </FormControl>
+                    </div>
+                  </form>
+
+                  {isQuickviewOpen && orderModel && (
+                      <VisaCreditCard
+                          theme={theme}
+                          isOpen={isQuickviewOpen}
+                          setOpen={setQuickviewOpen}
+                          model={orderModel}
+                      />
+                  )}
                 </div>
-              </form>
 
-              {isQuickviewOpen && orderModel && (
-                <VisaCreditCard
-                  theme={theme}
-                  isOpen={isQuickviewOpen}
-                  setOpen={setQuickviewOpen}
-                  model={orderModel}
-                />
-              )}
-            </div>
-
-            {isLoaderModal && (
-              <LoaderModal />
-            )}
-          </>
-        ) : (
-          <div className="container mx-auto p-8 flex justify-center relative bg-gray-100 mx-auto max-w-screen-2xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row">
-            <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0">
-              <div className="mt-8 flex justify-center">
-                <img src={GoodsNotFound}></img>
+                {isLoaderModal && (
+                    <LoaderModal />
+                )}
+              </>
+          ) : (
+              <div className="container mx-auto p-8 flex justify-center relative bg-gray-100 mx-auto max-w-screen-2xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row">
+                <div className="w-full lg:w-2/4 p-5 mb-8 lg:mb-0">
+                  <div className="mt-8 flex justify-center">
+                    <img src={GoodsNotFound}></img>
+                  </div>
+                  <div className="mt-8 flex justify-center">
+                    <p>{t('Bag_NoItems')}</p>
+                  </div>
+                </div>
               </div>
-              <div className="mt-8 flex justify-center">
-                <p>{t('Bag_NoItems')}</p>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </div >
+          )}
+        </div>
+      </div >
   );
 }
 

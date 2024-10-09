@@ -137,8 +137,8 @@ const RegisterPage = () => {
                 `https://verify.twilio.com/v2/Services/${twilio_service_sid}/VerificationCheck`,
                 new URLSearchParams({
                     Code: pinCode,
-                    VerificationSid: verifySid
-                    // VerificationSid: verifySid.verificationSid
+
+                    VerificationSid: verifySid.verificationSid
                 }),
                 {
                     auth: {

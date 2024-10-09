@@ -15,6 +15,7 @@ const instance = axios.create({
 
 export async function getUserBonusesByUserId(userId: any,) {
     try {
+        console.log(userId);
         const response = await instance.get<IUserBonuses[]>(`getBonuses`, { params: { userId } } );
         return response.data;
     } catch (error) {
