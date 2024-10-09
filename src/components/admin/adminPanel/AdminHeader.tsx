@@ -45,15 +45,12 @@ export default function AdminHeader() {
         const getQuantity = async () => {
             try {
                 const quantity = await getOrderQuantity(step);
-
-                if (quantity > 0) {
-                    dispatch({
-                        type: OrderReducerActionType.ORDER_COUNT,
-                        payload: {
-                            countOrder: quantity,
-                        }
-                    });
-                }
+                dispatch({
+                    type: OrderReducerActionType.ORDER_COUNT,
+                    payload: {
+                        countOrder: quantity,
+                    }
+                });
             } catch (error) {
                 console.error('Failed to fetch order quantity:', error);
             }

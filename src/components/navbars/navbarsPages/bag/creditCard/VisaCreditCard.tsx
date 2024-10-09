@@ -223,7 +223,7 @@ const VisaCreditCard: React.FC<VisaCreditCardProps> = ({ isOpen, setOpen, model,
                                                     <CardTextFieldNoLableComponent
                                                         name="card-number"
                                                         id="card-number"
-                                                        value={cardData.creditCardNumber}
+                                                        value={cardData.creditCardNumber || ''}
                                                         onChange={cardNumberOnChange}
                                                         error={errors.creditCardNumber ?? null}
                                                         autoComplete="card-number"
@@ -236,7 +236,7 @@ const VisaCreditCard: React.FC<VisaCreditCardProps> = ({ isOpen, setOpen, model,
                                                     <CardTextFieldNoLableComponent
                                                         name="card-holder"
                                                         id="card-holder"
-                                                        value={cardData.creditCardHolderName}
+                                                        value={cardData.creditCardHolderName || ''}
                                                         onChange={cardHolderNameOnChange}
                                                         error={errors.creditCardHolderName ?? null}
                                                         autoComplete="card-holder"
@@ -255,6 +255,7 @@ const VisaCreditCard: React.FC<VisaCreditCardProps> = ({ isOpen, setOpen, model,
                                                                 select
                                                                 onChange={monthOnChange}
                                                                 error={!!errors.creditCardExpMonth}
+                                                                value={cardData.creditCardExpMonth || ''}
                                                                 onBlur={cvvOnBlur}
                                                             >
                                                                 {Array.from({ length: 12 }, (_, i) => (
@@ -274,6 +275,7 @@ const VisaCreditCard: React.FC<VisaCreditCardProps> = ({ isOpen, setOpen, model,
                                                                 select
                                                                 onChange={yearOnChange}
                                                                 error={!!errors.creditCardExpYear}
+                                                                value={cardData.creditCardExpYear || ''}
                                                                 onBlur={cvvOnBlur}
                                                             >
                                                                 {creditCardYearRangeArr.map((year, index) => (
@@ -291,7 +293,7 @@ const VisaCreditCard: React.FC<VisaCreditCardProps> = ({ isOpen, setOpen, model,
                                                     <CardTextFieldNoLableComponent
                                                         name="card-ccv"
                                                         id="card-ccv"
-                                                        value={cardData.creditCardCvv}
+                                                        value={cardData.creditCardCvv || ''}
                                                         onChange={cvvOnChange}
                                                         error={errors.creditCardCvv ?? null}
                                                         autoComplete="card-ccv"

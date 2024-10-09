@@ -111,7 +111,7 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
         const quantity = await getOrderQuantity(step);
         setCountPage(quantity);
 
-        if (quantity > 0 && step[0] === 0) {
+        if (step[0] === 0) {
           dispatch({
             type: OrderReducerActionType.ORDER_COUNT,
             payload: {
