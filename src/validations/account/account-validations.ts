@@ -86,6 +86,9 @@ export const validateForm = (formData: FormData, textmask: string, authType: str
     } else if (!/[a-zA-Z]/.test(formData.newPassword)) {
       newErrors.newPassword = 'Password must contain at least one letter';
       isValid = false;
+    } else if (!/\d/.test(formData.password)) {  
+      newErrors.password = 'Password must contain at least one digit';
+      isValid = false;
     } else if (!/[^a-zA-Z0-9]/.test(formData.newPassword)) {
       newErrors.newPassword = 'Password must contain at least one symbol';
       isValid = false;
