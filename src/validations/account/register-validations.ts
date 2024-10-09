@@ -65,10 +65,13 @@ export const validateForm = (formData: FormData, textmask: string): { isValid: b
     } else if (formData.password.length < 7) {
         newErrors.password = 'Password must be at least 7 characters long';
         isValid = false;
-    } else if (!/[a-zA-Z]/.test(formData.password)) {
-        newErrors.password = 'Password must contain at least one letter';
+    } else if (!/[a-z]/.test(formData.password)) {
+        newErrors.password = 'Password must contain at least one lowercase letter';
         isValid = false;
-    } else if (!/\d/.test(formData.password)) {  
+    } else if (!/[A-Z]/.test(formData.password)) {
+        newErrors.password = 'Password must contain at least one uppercase letter';
+        isValid = false;
+    } else if (!/\d/.test(formData.password)) {
         newErrors.password = 'Password must contain at least one digit';
         isValid = false;
     } else if (!/[^a-zA-Z0-9]/.test(formData.password)) {
