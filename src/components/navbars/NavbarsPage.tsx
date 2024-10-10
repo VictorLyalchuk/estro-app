@@ -5,7 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from "react-redux";
 import { AuthReducerActionType, IAuthReducerState } from "../../store/accounts/AuthReducer.ts";
 import { IMainCategory } from '../../interfaces/Category/Main-Category/IMainCategory.ts';
-import DropdownUser from './navbarsPages/dropdownUser/DropdownUser.tsx';
+import DropdownUser from './navbarsPages/DropdownUser/DropdownUser.tsx';
 import { BagReducerActionType, IBagReducerState } from '../../store/bag/BagReducer.tsx';
 import { getMainCategories } from '../../services/category/category-services.ts';
 import { getCountBagByEmail } from '../../services/bag/bag-services.ts';
@@ -45,7 +45,6 @@ const NavbarsPage = () => {
         }
         else
         {
-            getCountBagByEmail(user?.Email, dispatch);
             getUserData(null, user?.PhoneNumber)
                 .then(data => setUserProfile(data))
                 .catch(error => console.error('Error fetching user data:', error));

@@ -15,7 +15,7 @@ interface DailyOrderTotalDTO {
 
 const ChartFour: React.FC = () => {
   const [data, setData] = useState<DailyOrderTotalDTO[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [, setLoading] = useState<boolean>(true);
 
   const fetchData = async () => {
     try {
@@ -94,7 +94,7 @@ const ChartFour: React.FC = () => {
   return (
       <div>
         <h3>{t('FinReport_OrderTotals')}</h3>
-        <ReactApexChart options={options} series={chartData.series} colors={chartData.colors} type="bar" height={350} />
+        <ReactApexChart options={options} series={chartData.series} type="bar" height={350} />
       </div>
   );
 };

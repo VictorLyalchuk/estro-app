@@ -137,7 +137,8 @@ const RegisterPage = () => {
                 `https://verify.twilio.com/v2/Services/${twilio_service_sid}/VerificationCheck`,
                 new URLSearchParams({
                     Code: pinCode,
-
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
                     VerificationSid: verifySid.verificationSid
                 }),
                 {
