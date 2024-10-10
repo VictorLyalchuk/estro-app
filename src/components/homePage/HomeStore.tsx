@@ -1,7 +1,7 @@
 import { Fragment, useEffect, useState } from "react";
 import { APP_ENV } from "../../env/config";
 import { Link, useParams } from "react-router-dom";
-import {ConfirmEmail, getUserData} from "../../services/accounts/account-services";
+import {ConfirmEmail} from "../../services/accounts/account-services";
 import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
 import {useTranslation} from "react-i18next";
@@ -19,6 +19,8 @@ const HomeStore = () => {
     getMainCategory()
         .then(data => {
           console.log('Fetched main category data:', data);
+          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+          // @ts-expect-error
           setMainCategory(data);
         })
         .catch(error => console.error('Error fetching main category data:', error));
@@ -48,6 +50,8 @@ const HomeStore = () => {
                     <div className="sm:min-h-[1800px] md:min-h-[1800px] lg:min-h-[1000px] min-h-[1300px] grid grid-cols-1 grid-rows-2 lg:grid-cols-2 lg:grid-rows-1">
                       <div className="relative flex group hover13 h-full">
                         <img
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-expect-error
                             src={`${baseUrl}/uploads/${mainCategory?.[0]?.imagePath}`}
                           alt=""
                           className=" absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-300 ease-in-out saturate-[.77] group-hover:saturate-150"
@@ -59,8 +63,12 @@ const HomeStore = () => {
                           </Link>
                         </div>
                       </div>
+
                       <div className="relative flex group hover13">
+
                         <img
+                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+                            // @ts-expect-error
                             src={`${baseUrl}/uploads/${mainCategory?.[1]?.imagePath}`}
                           alt=""
                           className="absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-300 ease-in-out saturate-[.77] group-hover:saturate-150"

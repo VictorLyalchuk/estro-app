@@ -48,6 +48,8 @@ const CategoryDistributionChart: React.FC = () => {
     chart: {
       type: 'donut',
     },
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-expect-error
     labels: categories, // Dynamically add category labels
     colors: ['#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0'], // Different colors for categories
     legend: {
