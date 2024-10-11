@@ -6,6 +6,7 @@ import { Dialog, Transition } from '@headlessui/react'
 import { CheckIcon } from '@heroicons/react/24/outline'
 import {useTranslation} from "react-i18next";
 import { getMainCategory } from '../../services/category/category-services.ts';
+import { IMainCategory } from "../../interfaces/Category/Main-Category/IMainCategory.ts";
 
 const HomeStore = () => {
   const {t} = useTranslation();
@@ -13,14 +14,11 @@ const HomeStore = () => {
   const { email, token } = useParams<{ email: string, token: string }>();
   const [emailConfirm, setEmailConfirm] = useState(false);
   const [open, setOpen] = useState(true)
-  const [mainCategory, setMainCategory] = useState();
+  const [mainCategory, setMainCategory] = useState<IMainCategory[] | null>(null);
 
   useEffect(() => {
     getMainCategory()
         .then(data => {
-          console.log('Fetched main category data:', data);
-          // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-          // @ts-expect-error
           setMainCategory(data);
         })
         .catch(error => console.error('Error fetching main category data:', error));
@@ -49,13 +47,17 @@ const HomeStore = () => {
                 <div className="mx-auto max-w-2xl space-y-16 sm:space-y-20 lg:mx-0 lg:max-w-none ">
                     <div className="sm:min-h-[1800px] md:min-h-[1800px] lg:min-h-[1000px] min-h-[1300px] grid grid-cols-1 grid-rows-2 lg:grid-cols-2 lg:grid-rows-1">
                       <div className="relative flex group hover13 h-full">
+                      {mainCategory && mainCategory.length > 0 && mainCategory[0]?.imagePath ? (
+
                         <img
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-expect-error
-                            src={`${baseUrl}/uploads/${mainCategory?.[0]?.imagePath}`}
+                          src={`${baseUrl}/uploads/${mainCategory?.[0]?.imagePath}`}
                           alt=""
                           className=" absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-300 ease-in-out saturate-[.77] group-hover:saturate-150"
                         />
+                      ) : (
+                        <div className="absolute inset-0 bg-gray-100 h-full w-full flex items-center justify-center">
+                        </div>
+                      )}
                         <div className="relative flex w-full flex-col items-end justify-start bg-black bg-opacity-10 p-8 sm:p-12">
                           <h1 className="mt-2 text-5xl font-medium text-white text-opacity-75">{t('HomeStore_Women')}</h1>
                           <Link to={"/catalog-home/women"} className="mt-4 text-xl px-1 py-1 font-semibold leading-7 text-white text-opacity-75 hover:text-indigo-400">
@@ -65,14 +67,16 @@ const HomeStore = () => {
                       </div>
 
                       <div className="relative flex group hover13">
-
+                      {mainCategory && mainCategory.length > 0 && mainCategory[0]?.imagePath ? (
                         <img
-                            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-                            // @ts-expect-error
-                            src={`${baseUrl}/uploads/${mainCategory?.[1]?.imagePath}`}
+                          src={`${baseUrl}/uploads/${mainCategory?.[1]?.imagePath}`}
                           alt=""
                           className="absolute inset-0 h-full w-full object-cover object-center transition-opacity duration-300 ease-in-out saturate-[.77] group-hover:saturate-150"
                         />
+                      ) : (
+                        <div className="absolute inset-0 bg-gray-100 h-full w-full flex items-center justify-center">
+                        </div>
+                      )}
                         <div className="relative flex w-full flex-col items-start justify-start bg-black bg-opacity-10 p-8 sm:p-12">
                           <h1 className="mt-2 text-5xl font-medium text-white text-opacity-75">{t('HomeStore_Men')}</h1>
                           <Link to={"/catalog-home/men"} className="mt-4 text-xl px-1 py-1 font-semibold leading-7 text-white text-opacity-75 hover:text-indigo-400">

@@ -104,7 +104,7 @@ Credit Card
 --------------------*/
 .react-fancy-visa-card .credit-card-box {
     perspective: 1000;
-    width: 400px;
+    width: 350px;
     height: 280px;
     position: absolute;
     top: -112px;
@@ -116,7 +116,7 @@ Credit Card
 }
 .react-fancy-visa-card .credit-card-box .front,
 .react-fancy-visa-card .credit-card-box .back {
-    width: 400px;
+    width: 350px;
     height: 250px;
     border-radius: 15px;
     backface-visibility: hidden;

@@ -263,7 +263,7 @@ export const es = {
     "Bag_OrderSummary_OrderDate": "Fecha del pedido",
     "Bag_OrderSummary_Date": "Fecha",
     "Bag_OrderSummary_Product": "Producto",
-    "Bag_OrderSummary_TotalProductPrice": "Precio total del producto:",
+    "Bag_OrderSummary_TotalProductPrice": "Total:",
     "Bag_OrderSummary_Size": "Tamaño",
     "Bag_OrderSummary_Article": "Artículo",
     "Bag_OrderSummary_Price": "Precio",

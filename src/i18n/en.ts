@@ -265,7 +265,7 @@ export const en = {
     "Bag_OrderSummary_OrderDate": "Order Date",
     "Bag_OrderSummary_Date": "Date",
     "Bag_OrderSummary_Product": "Product",
-    "Bag_OrderSummary_TotalProductPrice": "Total product price:",
+    "Bag_OrderSummary_TotalProductPrice": "Total:",
     "Bag_OrderSummary_Size": "Size",
     "Bag_OrderSummary_Article": "Article",
     "Bag_OrderSummary_Price": "Price",

@@ -263,7 +263,7 @@ export const uk = {
     "Bag_OrderSummary_OrderDate": "Дата замовлення",
     "Bag_OrderSummary_Date": "Дата",
     "Bag_OrderSummary_Product": "Товар",
-    "Bag_OrderSummary_TotalProductPrice": "Загальна вартість товару:",
+    "Bag_OrderSummary_TotalProductPrice": "Загально:",
     "Bag_OrderSummary_Size": "Розмір",
     "Bag_OrderSummary_Article": "Артикул",
     "Bag_OrderSummary_Price": "Ціна",
