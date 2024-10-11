@@ -127,7 +127,7 @@ const UserPanelPage = () => {
                 <div className="container mx-auto p-8 flex relative max-w-screen-2xl px-2 sm:px-2 lg:px-2 flex-col lg:flex-row justify-between">
                     <div className="sm:mx-auto sm:w-full">
                         <div className="w-full ">
-                            <TabsUserComponent tabs={tabs} onTabChange={handleTabChange} />
+                            <TabsUserComponent tabs={tabs} activeTab={activeTab} onTabChange={handleTabChange} />
                             <div className="mt-4">
                                 {tabs.find(tab => tab.current)?.component}
                             </div>
