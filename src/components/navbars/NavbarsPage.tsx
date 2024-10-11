@@ -37,18 +37,35 @@ const NavbarsPage = () => {
     const collections = useCollections();
 
     useEffect(() => {
-        if (user?.Email) {
-            getCountBagByEmail(user?.Email, dispatch);
-            getUserData(user.Email)
-                .then(data => setUserProfile(data))
-                .catch(error => console.error('Error fetching user data:', error));
-        }
-        else
-        {
-            getUserData(null, user?.PhoneNumber)
-                .then(data => setUserProfile(data))
-                .catch(error => console.error('Error fetching user data:', error));
-        }
+        const fetchUserData = async () => {
+            try {
+                if (user?.Email || user?.PhoneNumber) {
+                    const email = user?.Email || null;
+                    const phone = user?.PhoneNumber || null;
+                    if (email) {
+                        getCountBagByEmail(email, dispatch);
+                    } 
+                    const data = await getUserData(email, phone);
+                    setUserProfile(data);
+                }
+            } catch (error) {
+                console.error('Error fetching user data:', error);
+            }
+        };
+    
+        fetchUserData();
+        // if (user?.Email) {
+        //     getCountBagByEmail(user?.Email, dispatch);
+        //     getUserData(user.Email)
+        //         .then(data => setUserProfile(data))
+        //         .catch(error => console.error('Error fetching user data:', error));
+        // }
+        // else
+        // {
+        //     getUserData(null, user?.PhoneNumber)
+        //         .then(data => setUserProfile(data))
+        //         .catch(error => console.error('Error fetching user data:', error));
+        // }
     }, [count, user]);
 
     useEffect(() => {
@@ -59,6 +76,7 @@ const NavbarsPage = () => {
     }, []);
 
     const handleLogout = () => {
+        try {
         localStorage.removeItem("token");
         dispatch({ type: AuthReducerActionType.LOGOUT_USER });
         dispatch({ type: BagReducerActionType.DELETE_BAG_ALL });
@@ -66,6 +84,9 @@ const NavbarsPage = () => {
         dispatch({ type: FavoritesReducerActionType.DELETE_FAVORITES_ALL });
         dispatch({ type: OrderReducerActionType.DELETE_ORDER_COUNT, });
         setUserProfile(undefined);
+    } catch (error) {
+        console.error("Error during logout:", error);
+    }
     };
 
     const changeVisibleSearch = () => {
