@@ -458,7 +458,7 @@ export const uk = {
     "Products_Products": "Продукти",
     "Products_CreateProduct": "Створити Продукт",
     "Products_Id": "Ід",
-    "Products_Product_Name": "Назва Продукту",
+    "Products_Product_Name": "Назва",
     "Products_Article": "Артикул",
     "Products_Category": "Категорія",
     "Products_Price": "Ціна",

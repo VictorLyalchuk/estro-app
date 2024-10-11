@@ -436,19 +436,21 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
                     </button>
                   </Scrollink>
 
-                  <Scrollink to="product-start" smooth={true}>
-                    <button
-                      onClick={() => onPageChange(1)}
-                      disabled={page === 1}
-                      className={`inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium 
+                  <div className="hidden lg:block">
+                    <Scrollink to="product-start" smooth={true}>
+                      <button
+                        onClick={() => onPageChange(1)}
+                        disabled={page === 1}
+                        className={`inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium 
                                                 ${page === 1
-                          ? 'text-gray-300'
-                          : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
-                        }`}
-                    >
-                      {t('Begin')}
-                    </button>
-                  </Scrollink>
+                            ? 'text-gray-300'
+                            : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                          }`}
+                      >
+                        {t('Begin')}
+                      </button>
+                    </Scrollink>
+                  </div>
 
                   {[...Array(endPage - startPage + 1)].map((_, index) => {
                     const pageNumber = startPage + index;
@@ -468,19 +470,21 @@ const OrderItemsList: React.FC<OrderItemsListProps> = ({ name, step }) => {
                     );
                   })}
 
-                  <Scrollink to="product-start" smooth={true}>
-                    <button
-                      onClick={() => onPageChange(totalPages)}
-                      disabled={page >= totalPages}
-                      className={`inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium 
+                  <div className="hidden lg:block">
+                    <Scrollink to="product-start" smooth={true}>
+                      <button
+                        onClick={() => onPageChange(totalPages)}
+                        disabled={page >= totalPages}
+                        className={`inline-flex items-center border-t-2 border-transparent px-4 pt-4 text-sm font-medium 
                                                     ${page >= totalPages
-                          ? 'text-gray-300'
-                          : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
-                        }`}
-                    >
-                      {t('End')}
-                    </button>
-                  </Scrollink>
+                            ? 'text-gray-300'
+                            : 'text-gray-900 hover:border-indigo-500 hover:text-indigo-500'
+                          }`}
+                      >
+                        {t('End')}
+                      </button>
+                    </Scrollink>
+                  </div>
 
                   <Scrollink to="product-start" smooth={true}>
                     <button

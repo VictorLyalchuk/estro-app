@@ -458,7 +458,7 @@ export const es = {
     "Products_Products": "Productos",
     "Products_CreateProduct": "Crear producto",
     "Products_Id": "Id",
-    "Products_Product_Name": "Nombre del producto",
+    "Products_Product_Name": "Nombre",
     "Products_Article": "Artículo",
     "Products_Category": "Categoría",
     "Products_Price": "Precio",

@@ -460,7 +460,7 @@ export const en = {
     "Products_Products": "Products",
     "Products_CreateProduct": "Create Product",
     "Products_Id": "Id",
-    "Products_Product_Name": "Product Name",
+    "Products_Product_Name": "Name",
     "Products_Article": "Article",
     "Products_Category": "Category",
     "Products_Price": "Price",
