@@ -15,8 +15,6 @@ interface TabsComponentProps {
 }
 
 const TabsUserComponent: React.FC<TabsComponentProps> = ({ tabs, activeTab, onTabChange }) => {
-  // const currentTab = tabs.find((tab) => tab.current);
-
   return (
     <div className="bg-white rounded-md shadow-md mb-8">
       <div className="sm:hidden p-8 pt-0">
@@ -27,7 +25,7 @@ const TabsUserComponent: React.FC<TabsComponentProps> = ({ tabs, activeTab, onTa
           id="tabs"
           name="tabs"
           className="block w-full rounded-md border-gray-300 py-2 pl-3 pr-10 text-base focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-          // defaultValue={currentTab?.name}
+          // defaultValue={tabs[activeTab]?.name}
           value={tabs[activeTab]?.name}
           onChange={(e) => {
             const selectedIndex = tabs.findIndex(tab => tab.name === e.target.value);

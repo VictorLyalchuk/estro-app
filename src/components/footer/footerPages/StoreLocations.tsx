@@ -78,37 +78,41 @@ const StoreLocations = () => {
 
           {/* Country Selection */}
           <div className="p-4 bg-transparent cursor-pointer">
-            {countryOptions.map(country => (
-              <a
-                key={country.id}
-                onClick={() => {
-                  setSelectedCountry(country.countryName_en);
-                  setSelectedCity(null);
-                }}
-                className={`text-gray-700 mr-2 py-1 px-2 w-full rounded-md focus:outline-none hover:text-indigo-500 ${selectedCountry === country.countryName_en ? 'bg-indigo-500 text-white hover:text-white' : 'bg-transparent'
-                  }`}
-              >
-                {getCountryName(country)}
-              </a>
-            ))}
+            <div className="flex flex-col sm:flex-row justify-center gap-2">
+              {countryOptions.map((country) => (
+                <a
+                  key={country.id}
+                  onClick={() => {
+                    setSelectedCountry(country.countryName_en);
+                    setSelectedCity(null);
+                  }}
+                  className={`text-gray-700 py-1 px-4 sm:px-2 w-auto rounded-md focus:outline-none hover:text-indigo-500 text-center ${selectedCountry === country.countryName_en ? 'bg-indigo-500 text-white hover:text-white' : 'bg-transparent'
+                    }`}
+                >
+                  {getCountryName(country)}
+                </a>
+              ))}
+            </div>
           </div>
 
           {/* City Selection */}
           <div className="p-4 bg-transparent cursor-pointer">
-            {filteredCities.length > 0 ? (
-              filteredCities.map(city => (
-                <a
-                  key={city.id}
-                  onClick={() => setSelectedCity(city.cityName_en)}
-                  className={`text-gray-700 mr-2 py-1 px-2 w-full rounded-md focus:outline-none hover:text-indigo-500 ${selectedCity === city.cityName_en ? 'bg-indigo-500 text-white hover:text-white' : 'bg-transparent'
-                    }`}
-                >
-                  {getCityName(city)}
-                </a>
-              ))
-            ) : (
-              <p className="text-gray-500">{t('No cities available')}</p>
-            )}
+            <div className="flex flex-col sm:flex-row justify-center gap-2">
+              {filteredCities.length > 0 ? (
+                filteredCities.map(city => (
+                  <a
+                    key={city.id}
+                    onClick={() => setSelectedCity(city.cityName_en)}
+                    className={`text-gray-700 mr-2 py-1 px-2 w-auto rounded-md focus:outline-none hover:text-indigo-500 ${selectedCity === city.cityName_en ? 'bg-indigo-500 text-white hover:text-white' : 'bg-transparent'
+                      }`}
+                  >
+                    {getCityName(city)}
+                  </a>
+                ))
+              ) : (
+                <p className="text-gray-500">{t('No cities available')}</p>
+              )}
+            </div>
           </div>
 
           {/* Store Content */}
